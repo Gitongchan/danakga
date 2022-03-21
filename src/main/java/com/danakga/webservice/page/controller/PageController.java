@@ -9,11 +9,11 @@ public class PageController {
     public String index(){
         return "index";
     }
-    @GetMapping("/join")
+    @GetMapping("/joinPage")
     public String join(){
         return "join";
     }
-    @GetMapping("/login")
+    @GetMapping("/loginPage")
     public String login(){
         return "login";
     }
