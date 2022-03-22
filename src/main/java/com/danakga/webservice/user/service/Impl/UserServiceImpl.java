@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+
+import java.util.HashMap;
 
 @RequiredArgsConstructor
 @Service
@@ -36,5 +40,17 @@ public class UserServiceImpl implements UserService {
                         .build()
         );
         return userInfo.getId();
+    }
+
+    @Override
+    public HashMap<String, String> validateHandling(Errors errors) {
+        HashMap<String, String> validatorResult = new HashMap<>();
+
+        for(FieldError error : errors.getFieldErrors()) {//errors.getField를 차례로 꺼내서 error로 넣음
+            String validKeyName = String.format("valid_%s",error.getField());
+            validatorResult.put(validKeyName,error.getDefaultMessage());
+        }
+
+        return validatorResult;
     }
 }

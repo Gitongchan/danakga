@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
@@ -14,7 +16,7 @@ public class UserController{
     @Autowired private final UserService userService;
 
     @PostMapping("")
-    public String join(UserJoinDto userJoinDto){
+    public String join(@Valid UserJoinDto userJoinDto){
         System.out.println(userJoinDto);
 
         userService.join(userJoinDto);
