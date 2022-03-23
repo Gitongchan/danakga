@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<<form action="/api/user" method="post" modelAttribute="userJoinDto">
+    <input type ="text" name="userid" value="{{#userJoinDto}}{{userJoinDto.userid}}{{/userJoinDto}}" placeholder="UserId"/><br/>
+    {{#valid_userid}} <span id="valid">{{valid_userid}}</span> {{/valid_userid}}<br/>
+
+    <input type ="text" name="password" value="{{#userJoinDto}}{{userJoinDto.password}}{{/userJoinDto}}"  placeholder="Password"/><br/>
+    {{#valid_password}} <span id="valid">{{valid_password}}</span> {{/valid_password}}<br/>
+
+    <input type ="text" name="username" value="{{#userJoinDto}}{{userJoinDto.username}}{{/userJoinDto}}" placeholder="Username"/><br/>
+    {{#valid_username}} <span id="valid">{{valid_username}}</span> {{/valid_username}}<br/>
+
+    <input type ="text" name="phone" value="{{#userJoinDto}}{{userJoinDto.phone}}{{/userJoinDto}}" placeholder="Phone"/><br/>
+    {{#valid_phone}} <span id="valid">{{valid_phone}}</span> {{/valid_phone}}<br/>
+
+    <input type ="text" name="email" value="{{#userJoinDto}}{{userJoinDto.email}}{{/userJoinDto}}" placeholder="Email"/><br/>
+    {{#valid_email}} <span id="valid">{{valid_email}}</span> {{/valid_email}}<br/>
+
+    <input type="submit" value="회원가입"/>
+</form>
+</body>
+</html>
