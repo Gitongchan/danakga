@@ -1,13 +1,13 @@
 package com.danakga.webservice.user.controller;
 
-import com.danakga.webservice.user.dto.UserJoinDto;
-import com.danakga.webservice.user.repository.UserRepository;
+import com.danakga.webservice.user.dto.request.UserJoinDto;
+import com.danakga.webservice.user.dto.response.ResUserJoinDto;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -15,13 +15,9 @@ import javax.validation.Valid;
 public class UserController{
     @Autowired private final UserService userService;
 
+    //회원가입
     @PostMapping("")
-    public String join(@Valid UserJoinDto userJoinDto){
-        System.out.println(userJoinDto);
-
-        userService.join(userJoinDto);
-
-        return "회원가입성공";
+    public ResUserJoinDto join(@Valid UserJoinDto userJoinDto){
+        return userService.join(userJoinDto);
     }
-
 }

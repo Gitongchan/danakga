@@ -1,14 +1,14 @@
-package com.danakga.webservice.user.dto;
+package com.danakga.webservice.user.dto.request;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserJoinDto {
     
     private Long id;
@@ -17,9 +17,11 @@ public class UserJoinDto {
     private String userid;
 
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
+    @Pattern(regexp="(?=.*[0-9])(?=.*[a-z])(?=.*\\W)(?=\\S+$).{6,12}",
+            message = "비밀번호는 영문자와 숫자, 특수기호가 적어도 1개 이상 포함된 6자~12자의 비밀번호여야 합니다.")
     private String password;
 
-    @NotBlank(message = "사용자 이름은 필수 입력 값입니다.")
+    @NotBlank(message = "사용자명은 필수 입력 값입니다.")
     private String username;
 
     @NotBlank(message = "핸드폰번호는 필수 입력 값입니다.")
@@ -30,13 +32,5 @@ public class UserJoinDto {
 
     private String role;
 
-    public UserJoinDto(Long id, String userid, String password, String username, String phone, String email, String role) {
-        this.id = id;
-        this.userid = userid;
-        this.password = password;
-        this.username = username;
-        this.phone = phone;
-        this.email = email;
-        this.role = role;
-    }
+
 }
