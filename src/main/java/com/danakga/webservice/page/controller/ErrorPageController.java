@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ErrorPageController implements ErrorController {
 
-    @GetMapping("/error404")
+    @GetMapping("/error")
     public String error404() {
         return "errors/404";
     }
