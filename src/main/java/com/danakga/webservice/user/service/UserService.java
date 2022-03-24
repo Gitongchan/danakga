@@ -10,4 +10,6 @@ public interface UserService {
     //회원가입
     ResUserJoinDto join(UserJoinDto userJoinDto);
 
+    int userIdCheck(String userid);
+
 }

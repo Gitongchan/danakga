@@ -9,11 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -42,6 +37,15 @@ public class UserServiceImpl implements UserService {
                         .build()
         ).getId();
         return new ResUserJoinDto(id);
+    }
+
+    @Override
+    public int userIdCheck(String userid) {
+        //.isPresent , Optional객체가 있으면 true null이면 false 반환
+      if(userRepository.findByUserid(userid).isPresent()){
+       return -1; //같은 userid있으면 -1반환
+      }
+      return 1;
     }
 
 

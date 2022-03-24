@@ -17,7 +17,13 @@ public class UserController{
 
     //회원가입
     @PostMapping("")
-    public ResUserJoinDto join(@Valid UserJoinDto userJoinDto){
+    public ResUserJoinDto join(@RequestBody @Valid UserJoinDto userJoinDto){
         return userService.join(userJoinDto);
+    }
+
+    //userid체크
+    @PostMapping("/userid_check")
+    public int userIdCheck(@RequestParam("id") String id){
+        return userService.userIdCheck(id);
     }
 }
