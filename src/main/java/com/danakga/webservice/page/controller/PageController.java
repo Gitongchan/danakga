@@ -17,4 +17,12 @@ public class PageController {
     public String login(){
         return "login";
     }
+    @GetMapping("/header")
+    public String header(){
+        return "pages/header";
+    }
+    @GetMapping("/footer")
+    public String footer(){
+        return "pages/footer";
+    }
 }
