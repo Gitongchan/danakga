@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.controller;
 
 import com.danakga.webservice.user.dto.request.UserJoinDto;
+import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.dto.response.ResUserJoinDto;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,19 @@ public class UserController{
 
     //회원가입
     @PostMapping("")
-    public ResUserJoinDto join(@RequestBody @Valid UserJoinDto userJoinDto){
+    public ResUserJoinDto join(@Valid UserJoinDto userJoinDto){
         return userService.join(userJoinDto);
     }
 
     //userid체크
     @PostMapping("/userid_check")
-    public int userIdCheck(@RequestParam("id") String id){
-        return userService.userIdCheck(id);
+    public ResDupliCheckDto userIdCheck(@RequestParam("userid") String userid){
+        return userService.userIdCheck(userid);
+    }
+
+    //email체크
+    @PostMapping("/email_check")
+    public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
+        return userService.emailCheck(email);
     }
 }

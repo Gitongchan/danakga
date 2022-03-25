@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.service.Impl;
 
 import com.danakga.webservice.user.dto.request.UserJoinDto;
+import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.dto.response.ResUserJoinDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -40,12 +41,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int userIdCheck(String userid) {
+    public ResDupliCheckDto userIdCheck(String userid) {
         //.isPresent , Optional객체가 있으면 true null이면 false 반환
       if(userRepository.findByUserid(userid).isPresent()){
-       return -1; //같은 userid있으면 -1반환
+       return new ResDupliCheckDto(-1); //같은 userid있으면 -1반환
       }
-      return 1;
+      return new ResDupliCheckDto(1);
+    }
+
+    @Override
+    public ResDupliCheckDto emailCheck(String email) {
+        if(userRepository.findByEmail(email).isPresent()){
+            System.out.println("같은이메일이 존재함");
+            return new ResDupliCheckDto(-1);
+        }
+        System.out.println("같은 이메일이 없다");
+        return new ResDupliCheckDto(1);
     }
 
 
