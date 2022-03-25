@@ -53,12 +53,12 @@
 
         $('#userID').blur(function(){
 
-            console.log($('#userID').val());
+            console.log('blur: ' + $('#userID').val());
 
             if(!useridCheck.test($('#userID').val())){
                 $('.id_already').text("특수문자를 제외한 4~10자를 입력해주세요!");
             }else{
-                console.log("비밀번호 사용가능");
+                console.log("아이디 사용가능");
                 $('.id_ready').text("사용가능한 아이디입니다!");
             }
         });
