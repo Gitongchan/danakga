@@ -1,9 +1,40 @@
 
-.id_ok{
-    color: #029c07;
-    display: block;
+.id_check{
+    display: none;
 }
-.id_already{
-    color:#6A82FB;
-    display: block;
+
+.pw_check{
+    display: none;
+}
+
+.pw_confrimcheck{
+    display: none;
+}
+
+input#userID.form-control._success {
+    border-color:#e0e0e0
+}
+
+input#userID.form-control._error {
+    border-color:#B02A37;
+}
+
+input#reg-pass.form-control._success {
+    border-color:#e0e0e0
+}
+
+input#reg-pass.form-control._error {
+    border-color:#B02A37;
+}
+
+input#reg-pass-confirm.form-control._success {
+    border-color:#e0e0e0
+}
+
+input#reg-pass-confirm.form-control._error {
+    border-color:#B02A37;
+}
+
+._success:focus{
+    border-color:#0167f3 !important;
 }

@@ -27,5 +27,10 @@ public class PageController {
         return "pages/register";
     }
 
+    @GetMapping("/test/mainfunc")
+    public String testmain(){
+        return "pages/mainfunction";
+    }
+
 
 }
