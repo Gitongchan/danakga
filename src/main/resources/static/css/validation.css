@@ -11,11 +11,11 @@
     display: none;
 }
 
-input#userID.form-control._success {
+input#reg-ID.form-control._success {
     border-color:#e0e0e0
 }
 
-input#userID.form-control._error {
+input#reg-ID.form-control._error {
     border-color:#B02A37;
 }
 

@@ -30,11 +30,11 @@
                             <h3>계정이 없으신가요?</h3>
                             <p>계정을 생성하고 다낚아 사이트의 기능을 사용해보세요!</p>
                         </div>
-                        <form class="row" method="post">
+                        <form class="row" id="form-data" method="post">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="userID">아이디</label>
-                                    <input class="form-control" type="text" id="userID" oninput="checkId()" placeholder="영문 및 숫자 (4자 이상, 최대 20자)" required />
+                                    <label for="reg-ID">아이디</label>
+                                    <input class="form-control" type="text" id="reg-ID" oninput="checkId()" placeholder="영문 및 숫자 (4자 이상, 최대 20자)" required />
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -64,10 +64,10 @@
                                     <span class="pw_confrimcheck"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-ln">Last Name</label>
-                                    <input class="form-control" type="text" id="reg-ln" required />
+                                    <label for="reg-name">이름</label>
+                                    <input class="form-control" type="text" id="reg-name" required />
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="button">
-                                <button class="btn" type="submit" disabled = "disabled">회원가입</button>
+                                <button class="btn" type="submit" id="register-pass" disabled="false">회원가입</button>
                             </div>
                             <p class="outer-link">계정이 있으신가요? <a href="login.mustache">로그인하기</a>
                             </p>

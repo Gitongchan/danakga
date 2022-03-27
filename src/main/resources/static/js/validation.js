@@ -21,12 +21,12 @@
 
     let numberCheck = /[0-9]/;	// 숫자인경우
 
-    let nameCheck = /[a-zA-Z가-힣]/; // 한글, 영어만
+    let nameCheck = /[가-힣]/; // 한글, 영어만
 
 
     <!-- ID입력 시 정규식으로 확인하는 함수-->
     function checkId(){
-        const id = document.getElementById('userID').value; // ID값이 id인 입력란의 값을 저장
+        const id = document.getElementById('reg-ID').value; // ID값이 id인 입력란의 값을 저장
         console.log(useridCheck.test(id));
         if(useridCheck.test(id)) {
             $.ajax({
@@ -56,13 +56,13 @@
     };
 
     //userID에서 focus가 벗어나면 뜸
-    $('#userID').blur(function(){
+    $('#reg-ID').blur(function(){
         if(!useridCheck.test($('#userID').val())){
-            $('#userID').removeClass('_success');
-            $('#userID').addClass('_error');
+            $('#reg-ID').removeClass('_success');
+            $('#reg-ID').addClass('_error');
         }else{
-            $('#userID').removeClass('_error');
-            $('#userID').addClass('_success');
+            $('#reg-ID').removeClass('_error');
+            $('#reg-ID').addClass('_success');
         }
     });
 
@@ -89,8 +89,8 @@
     <!-- 두번째 비밀번호 input에  입력시 비밀번호 두 개가 맞는지 확인하는 함수-->
     function passwordCheckFunction() {
 
-        let password1 = $('#reg-pass').val();
-        let password2 = $('#reg-pass-confirm').val();
+        const password1 = $('#reg-pass').val();
+        const password2 = $('#reg-pass-confirm').val();
 
         if(password1 != password2) {
             $('.pw_confrimcheck').css("display","block");
@@ -106,22 +106,13 @@
 
     };
 
-
-    $('#username').blur(function(){
-
-            console.log($('#username'),val());
-
-            if($('#username').val().length < 4){
-
-                $('#helper1').text("4자 이상 입력해주세요.");
-
-            } if($('#username').val().length > 11) {
-
-                $('#helper1').text("10자 이하로 입력해주세요.");
-
-            }
-
-        });
+    <!-- 이름 유효성검사 통과하면~-->
+    $('#reg-name').blur(function(){
+        const name = document.getElementById('#reg-name').value();
+        if(!nameCheck.test(name)){
+        }else{
+        }
+    });
 
 
     $('#phone').blur(function(){
@@ -141,9 +132,32 @@
         }
 
     });
+    
+    <!-- userID, password 변경감지 하면 buttoncheck 함수 실행-->
+    $('#userID').on("propertychange change keyup paste input",function(){
+        buttoncheck();
+    });
+
+    $('#reg-pass').on("propertychange change keyup paste input",function(){
+        buttoncheck();
+    });
+
+    $('#reg-pass-confirm').on("propertychange change keyup paste input",function(){
+        buttoncheck();
+    });
+
+    <!-- 유효성검사가 정상실행 되어서 값이 입력되어있다면 실행하는 함수-->
+    const buttoncheck = function () {
+        if (!($("#userID").is("._success") && $("#reg-pass").is("._success") && $("#reg-pass-confirm").is("._success"))) {
+            $("#register-pass").attr('disabled', true);
+        } else {
+            $("#register-pass").attr('disabled', false);
+        }
+    };
 
 
 
+    //유효성검사를 통과한 form값들을 보내는 곳
     function registerCheckFunction() {
         var username = $('#username').val();
 
