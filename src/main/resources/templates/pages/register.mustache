@@ -30,11 +30,12 @@
                             <h3>계정이 없으신가요?</h3>
                             <p>계정을 생성하고 다낚아 사이트의 기능을 사용해보세요!</p>
                         </div>
-                        <form class="row" id="form-data" method="post">
+                        <form class="row" id="form-data" method="POST" action="/api/user">
+                            <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}" />
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="reg-ID">아이디</label>
-                                    <input class="form-control" type="text" id="reg-ID" oninput="checkId()" placeholder="영문 및 숫자 (4자 이상, 최대 20자)" required />
+                                    <input class="form-control" name="userid" type="text" id="reg-ID" oninput="checkId()" autofocus placeholder="영문 및 숫자 (4자 이상, 최대 20자)" required />
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -45,7 +46,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="reg-pass">비밀번호</label>
-                                    <input class="form-control" type="password" id="reg-pass" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
+                                    <input class="form-control" name="password" type="password" id="reg-pass" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -67,25 +68,30 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="reg-name">이름</label>
-                                    <input class="form-control" type="text" id="reg-name" required />
+                                    <input class="form-control" name="name" type="text" id="reg-name" placeholder="한글만 입력" required />
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-email">E-mail Address</label>
-                                    <input class="form-control" type="email" id="reg-email" required />
+                                    <label for="reg-email">이메일</label>
+                                    <input class="form-control" name="email" type="email" id="reg-email" placeholder="이메일을 입력해주세요!" required />
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-phone">Phone Number</label>
-                                    <input class="form-control" type="text" id="reg-phone" required />
+                                    <label for="reg-phone">전화번호</label>
+                                    <input class="form-control" name="phone" type="text" id="reg-phone" placeholder="이메일을 입력해주세요!" required />
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-pass">Password</label>
-                                    <input class="form-control" type="password" id="reg-pass" required />
+                                    <span class="id_check"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="reg-role">전화번호</label>
+                                    <input class="form-control" name="role" type="text" id="reg-role" placeholder="role?!" required />
                                 </div>
                             </div>
                             <div class="button">

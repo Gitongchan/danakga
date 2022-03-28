@@ -31,13 +31,13 @@ public class UserController{
     }
 
     //userid체크
-    @PostMapping("/userid_check")
+    @GetMapping("/userid_check")
     public ResDupliCheckDto userIdCheck(@RequestParam("userid") String userid){
         return userService.userIdCheck(userid);
     }
 
     //email체크
-    @PostMapping("/email_check")
+    @GetMapping("/email_check")
     public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
         return userService.emailCheck(email);
     }

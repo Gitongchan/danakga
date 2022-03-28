@@ -1,8 +1,8 @@
     // jquery 가져와서 사용하는 곳
-    let script = document.createElement('script');
-    script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
-    script.type = 'text/javascript';
-    document.getElementsByTagName('head')[0].appendChild(script);
+    // let script = document.createElement('script');
+    // script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+    // script.type = 'text/javascript';
+    // document.getElementsByTagName('head')[0].appendChild(script);
     
     // 공백 정규식
     // var regExp = /^[0-9]+$/;
@@ -23,25 +23,41 @@
 
     let nameCheck = /[가-힣]/; // 한글, 영어만
 
+    const emailCheck = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+
+    <!-- 회원가입 폼 값들 -->
+    const userid = document.getElementById('reg-ID').value;
+
+    const password1 = document.getElementById('reg-pass').value;
+    const password2 = document.getElementById('reg-pass-confirm').value;
+
+    const username = document.getElementById('reg-name').value;
+
+    const email = document.getElementById('reg-email').value;
+
+    const phone = document.getElementById('reg-phone').value;
 
     <!-- ID입력 시 정규식으로 확인하는 함수-->
     function checkId(){
-        const id = document.getElementById('reg-ID').value; // ID값이 id인 입력란의 값을 저장
-        console.log(useridCheck.test(id));
-        if(useridCheck.test(id)) {
+        console.log(useridCheck.test(userid));
+        if(!useridCheck.test(userid)) {
             $.ajax({
-                url:'/test/index', //Controller에서 인식할 주소
-                type:'post',
-                data: {userid:id},
+                url:'/api/user/userid_check', //Controller에서 인식할 주소
+                type:'get',
+                data: {userid:userid},
                 success:function(result){ //컨트롤러에서 넘어온 cnt값을 받는다
                     if(result !== -1){ //cnt가 -1이 아니면(=1일 경우) -> 사용 가능한 아이디
                         $('.id_check').css("display","block");
                         $('.id_check').css("color","#6A82FB");
                         $('.id_check').text("사용가능한 아이디입니다.");
+                        $('#reg-ID').removeClass('_error');
+                        $('#reg-ID').addClass('_success');
                     } else { // cnt가 -1일 경우 -> 이미 존재하는 아이디
                         $('.id_check').css("display","block");
                         $('.id_check').css("color","#B02A37");
                         $('.id_check').text("이미 존재하는 아이디입니다.");
+                        $('#reg-ID').removeClass('_success');
+                        $('#reg-ID').addClass('_error');
                         buttoncheck();
                     }
                 },
@@ -52,10 +68,12 @@
             $('.id_check').css("display","block");
             $('.id_check').css("color","#B02A37");
             $('.id_check').text("공백 및 특수문자를 제외한 영문, 숫자 4~10자를 입력해주세요!");
+            $('#reg-ID').removeClass('_success');
+            $('#reg-ID').addClass('_error');
             buttoncheck();
         }
 
-    };
+    }
 
     //userID에서 focus가 벗어나면 뜸
     $('#reg-ID').blur(function(){
@@ -108,14 +126,25 @@
         }
     }
 
-    <!-- 이름 유효성검사 통과하면~-->
+    <!-- 이름 입력 시 유효성 검사-->
     $('#reg-name').blur(function(){
-        const name = document.getElementById('#reg-name').value();
+        const name = $('#reg-name').val();
         if(!nameCheck.test(name)){
+            <!-- 실패 시 -->
+
         }else{
         }
     });
 
+    <!--이메일 입력 시 유효성 검사-->
+    $('#reg-email').blur(function(){
+        if(!emailCheck.test($('#reg-email').val())){
+            $('#helper4').text("이메일 형식을 올바르게 작성해주세요!");
+        }else{
+
+        }
+
+    });
 
     $('#phone').blur(function(){
 
@@ -158,44 +187,35 @@
         }
     };
 
-
-
-    //유효성검사를 통과한 form값들을 보내는 곳
-    function registerCheckFunction() {
-        var username = $('#username').val();
-
+    const registerOK = function() {
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+        console.log(token);
+        console.log(header);
         $.ajax({
-
-            type: 'POST',
-
-            url: './UserRegisterCheckServlet',
-
-            data:  {username: username},
-
-            success: function(result) {
-
-                if(result == 1) {
-
-                    $('#registerCheckMessage').html('*사용 가능한 아이디입니다.');
-
-                    $('#registerCheckMessage').css('color','green');
-
-                }
-
-                else {
-
-                    $('#registerCheckMessage').html('*이미 사용중인 아이디입니다.');
-
-                    $('#registerCheckMessage').css('color','#d64643');
-
-                }
-
+            type : "POST",
+            contentType : "application/json",
+            url : "/api/user",
+            data : {
+                id:1,
+                userid:userid,
+                password:password1,
+                name:username,
+                phone:phone,
+                email:email,
+                role:"1"
             }
-
-
-
+            /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+            ,beforeSend : function(xhr){
+                xhr.setRequestHeader(header, token);
+            },
+            async: true, //동기, 비동기 여부
+            cache :false, // 캐시 여부
+            success : function(data) {
+                console.log(data);
+            },
+            error:function (jqXHR, textStatus, errorThrown){
+                alert("에러 발생~~ \n" + textStatus + " : " + errorThrown);
+            }
         });
-
-    } ;
-
-
+    };
