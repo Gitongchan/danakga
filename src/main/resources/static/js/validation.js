@@ -34,7 +34,7 @@
                 type:'post',
                 data: {userid:id},
                 success:function(result){ //컨트롤러에서 넘어온 cnt값을 받는다
-                    if(result != -1){ //cnt가 -1이 아니면(=1일 경우) -> 사용 가능한 아이디
+                    if(result !== -1){ //cnt가 -1이 아니면(=1일 경우) -> 사용 가능한 아이디
                         $('.id_check').css("display","block");
                         $('.id_check').css("color","#6A82FB");
                         $('.id_check').text("사용가능한 아이디입니다.");
@@ -42,6 +42,7 @@
                         $('.id_check').css("display","block");
                         $('.id_check').css("color","#B02A37");
                         $('.id_check').text("이미 존재하는 아이디입니다.");
+                        buttoncheck();
                     }
                 },
                 error:function(){
@@ -51,13 +52,14 @@
             $('.id_check').css("display","block");
             $('.id_check').css("color","#B02A37");
             $('.id_check').text("공백 및 특수문자를 제외한 영문, 숫자 4~10자를 입력해주세요!");
+            buttoncheck();
         }
 
     };
 
     //userID에서 focus가 벗어나면 뜸
     $('#reg-ID').blur(function(){
-        if(!useridCheck.test($('#userID').val())){
+        if(!useridCheck.test($('#reg-ID').val())){
             $('#reg-ID').removeClass('_success');
             $('#reg-ID').addClass('_error');
         }else{
@@ -75,6 +77,7 @@
             $('.pw_check').css("display","none");
             $('#reg-pass').removeClass("_error");
             $('#reg-pass').addClass("_success");
+            pwCheck();
         }else{
             <!-- 비밀번호 정규화 false-->
             $('.pw_check').css("display","block");
@@ -85,26 +88,25 @@
         }
     });
 
-    
-    <!-- 두번째 비밀번호 input에  입력시 비밀번호 두 개가 맞는지 확인하는 함수-->
-    function passwordCheckFunction() {
 
+    const pwCheck = function() {
+        <!-- 두번째 비밀번호 input에  입력시 비밀번호 두 개가 맞는지 확인하는 함수-->
         const password1 = $('#reg-pass').val();
         const password2 = $('#reg-pass-confirm').val();
 
-        if(password1 != password2) {
+        if(password1 !== password2) {
             $('.pw_confrimcheck').css("display","block");
             $('.pw_confrimcheck').css("color","#B02A37");
             $('.pw_confrimcheck').text("비밀번호가 일치하지 않습니다!");
             $('#reg-pass-confirm').removeClass("_success");
             $('#reg-pass-confirm').addClass("_error");
+            buttoncheck();
         }  else{
             $('.pw_confrimcheck').css("display","none");
             $('#reg-pass-confirm').removeClass("_error");
             $('#reg-pass-confirm').addClass("_success");
         }
-
-    };
+    }
 
     <!-- 이름 유효성검사 통과하면~-->
     $('#reg-name').blur(function(){
@@ -148,7 +150,8 @@
 
     <!-- 유효성검사가 정상실행 되어서 값이 입력되어있다면 실행하는 함수-->
     const buttoncheck = function () {
-        if (!($("#userID").is("._success") && $("#reg-pass").is("._success") && $("#reg-pass-confirm").is("._success"))) {
+        const result = ($("#reg-ID").is("._success") && $("#reg-pass").is("._success") && $("#reg-pass-confirm").is("._success"));
+        if (result===false) {
             $("#register-pass").attr('disabled', true);
         } else {
             $("#register-pass").attr('disabled', false);

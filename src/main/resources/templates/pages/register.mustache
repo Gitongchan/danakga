@@ -56,7 +56,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="reg-pass-confirm">비밀번호 확인</label>
-                                    <input class="form-control" type="password" id="reg-pass-confirm" onkeyup="passwordCheckFunction()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
+                                    <input class="form-control" type="password" id="reg-pass-confirm" onkeyup="pwCheck()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="button">
-                                <button class="btn" type="submit" id="register-pass" disabled="false">회원가입</button>
+                                <button class="btn" type="submit" id="register-pass" disabled="disabled">회원가입</button>
                             </div>
                             <p class="outer-link">계정이 있으신가요? <a href="login.mustache">로그인하기</a>
                             </p>
