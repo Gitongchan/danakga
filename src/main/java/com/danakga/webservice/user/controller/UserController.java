@@ -6,6 +6,7 @@ import com.danakga.webservice.user.dto.response.ResUserJoinDto;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
@@ -15,6 +16,13 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 public class UserController{
     @Autowired private final UserService userService;
+
+    @GetMapping(value = "/token")
+    public CsrfToken getToken(CsrfToken token) {
+        System.out.println("실행됨");
+        System.out.println("token = " + token);
+        return token;
+    }
 
     //회원가입
     @PostMapping("")
