@@ -17,14 +17,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
         return userRepository.findByUserid(userid)
                 .orElseThrow(() -> new UsernameNotFoundException((userid)));
     }
 
-    @Autowired private final UserRepository userRepository;
-
+    //회원가입
     @Override
     public ResUserJoinDto join(UserJoinDto userJoinDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
         return new ResUserJoinDto(id);
     }
 
+    //유저 아이디 중복 체크
     @Override
     public ResDupliCheckDto userIdCheck(String userid) {
         //.isPresent , Optional객체가 있으면 true null이면 false 반환
@@ -56,6 +58,7 @@ public class UserServiceImpl implements UserService {
       return new ResDupliCheckDto(1);
     }
 
+    //이메일 중복 체크
     @Override
     public ResDupliCheckDto emailCheck(String email) {
         if(userRepository.findByEmail(email).isPresent()){
