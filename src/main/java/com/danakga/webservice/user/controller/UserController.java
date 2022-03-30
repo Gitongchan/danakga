@@ -1,16 +1,15 @@
 package com.danakga.webservice.user.controller;
 
-import com.danakga.webservice.user.dto.request.UserJoinDto;
+import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.dto.response.ResUserJoinDto;
-import com.danakga.webservice.user.dto.response.ResUserModifyDto;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 
@@ -29,11 +28,15 @@ public class UserController{
 
     //회원가입
     @PostMapping("")
-    public ResUserJoinDto join(@Valid UserJoinDto userJoinDto){
-        return userService.join(userJoinDto);
+    public ResUserJoinDto join(@Valid UserInfoDto userInfoDto){
+        return userService.join(userInfoDto);
     }
 
-    //회원정보 수정
+    //회원정보 조회
+    @GetMapping("")
+    public UserInfoDto check(@LoginUser UserInfoDto userInfoDto){
+        return userInfoDto;
+    }
 
 
     //userid체크

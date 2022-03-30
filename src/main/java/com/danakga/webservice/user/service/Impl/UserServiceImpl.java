@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.service.Impl;
 
-import com.danakga.webservice.user.dto.request.UserJoinDto;
+import com.danakga.webservice.user.dto.request.UserAdapter;
+import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.dto.response.ResUserJoinDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -8,6 +9,7 @@ import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,28 +23,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-        return userRepository.findByUserid(userid)
+        UserInfo userInfo = userRepository.findByUserid(userid)
                 .orElseThrow(() -> new UsernameNotFoundException((userid)));
+
+        return new UserAdapter(userInfo);
     }
 
     //회원가입
     @Override
-    public ResUserJoinDto join(UserJoinDto userJoinDto) {
+    public ResUserJoinDto join(UserInfoDto userInfoDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String rawPassword = userJoinDto.getPassword();
-        userJoinDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
+        String rawPassword = userInfoDto.getPassword();
+        userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
 
         //임시로 권한 USER로 지정
-        userJoinDto.setRole("ROLE_USER");
+        userInfoDto.setRole("ROLE_USER");
 
         final Long id = userRepository.save(
                 UserInfo.builder()
-                        .userid(userJoinDto.getUserid())
-                        .password(userJoinDto.getPassword())
-                        .name(userJoinDto.getName())
-                        .phone(userJoinDto.getPhone())
-                        .email(userJoinDto.getEmail())
-                        .role(userJoinDto.getRole())
+                        .userid(userInfoDto.getUserid())
+                        .password(userInfoDto.getPassword())
+                        .name(userInfoDto.getName())
+                        .phone(userInfoDto.getPhone())
+                        .email(userInfoDto.getEmail())
+                        .role(userInfoDto.getRole())
                         .build()
         ).getId();
         return new ResUserJoinDto(id);
