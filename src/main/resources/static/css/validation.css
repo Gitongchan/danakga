@@ -1,40 +1,41 @@
 
-.id_check{
+
+#id_check{
     display: none;
 }
 
-.pw_check{
+#pw_check{
     display: none;
+    color:#B02A37;
 }
 
-.pw_confrimcheck{
+#pw_confirmcheck{
     display: none;
+    color: #B02A37;
 }
 
-input#reg-ID.form-control._success {
+#name_check{
+    display: none;
+    color: #B02A37;
+}
+
+
+#em_check{
+    display: none;
+    color: #B02A37;
+}
+
+#phone_check{
+    display: none;
+    color: #B02A37;
+}
+
+._success {
     border-color:#e0e0e0
 }
-
-input#reg-ID.form-control._error {
+._error {
     border-color:#B02A37;
 }
-
-input#reg-pass.form-control._success {
-    border-color:#e0e0e0
-}
-
-input#reg-pass.form-control._error {
-    border-color:#B02A37;
-}
-
-input#reg-pass-confirm.form-control._success {
-    border-color:#e0e0e0
-}
-
-input#reg-pass-confirm.form-control._error {
-    border-color:#B02A37;
-}
-
 ._success:focus{
     border-color:#0167f3 !important;
 }
