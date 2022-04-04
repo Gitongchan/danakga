@@ -3,7 +3,9 @@ package com.danakga.webservice.user.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
+import com.danakga.webservice.user.dto.response.ResUserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserJoinDto;
+import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,32 +23,34 @@ public class UserController{
 
     @GetMapping(value = "/token")
     public CsrfToken getToken(CsrfToken token) {
-        System.out.println("실행됨");
         System.out.println("token = " + token);
         return token;
     }
 
     //회원가입
     @PostMapping("")
-    public ResUserJoinDto join(@Valid UserInfoDto userInfoDto){
+    public ResUserJoinDto join(@Valid @RequestBody UserInfoDto userInfoDto){
+        System.out.println("userInfoDto = " + userInfoDto);
         return userService.join(userInfoDto);
     }
 
     //회원정보 조회
-    @GetMapping("")
-    public UserInfoDto check(@LoginUser UserInfoDto userInfoDto){
-        return userInfoDto;
+    @GetMapping("/check")
+    public ResUserInfoDto check(@LoginUser UserInfo userInfo){
+        System.out.println("로그인된 회원 : userInfoDto.getUserid() = " + userInfo.getUserid());
+        System.out.println("회원 이메일 : userInfo.getEmail() = " + userInfo.getEmail());
+        return new ResUserInfoDto(userInfo);
     }
 
 
     //userid체크
-    @PostMapping("/userid_check")
+    @GetMapping("/userid_check")
     public ResDupliCheckDto userIdCheck(@RequestParam("userid") String userid){
         return userService.userIdCheck(userid);
     }
 
     //email체크
-    @PostMapping("/email_check")
+    @GetMapping("/email_check")
     public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
         return userService.emailCheck(email);
     }
