@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
       }
       return 1;
     }
-
+    
     //이메일 중복 체크
     @Override
     public Integer emailCheck(String email) {

@@ -32,7 +32,7 @@ public class UserController{
     public ResUserResultDto join(@Valid @RequestBody UserInfoDto userInfoDto){
         System.out.println("userInfoDto = " + userInfoDto);
         Long result = userService.join(userInfoDto);
-        return new ResUserResultDto(result,"회원가입 성공");
+        return new ResUserResultDto(result,"회원가입 성공.");
     }
 
     //회원정보 조회
@@ -43,12 +43,12 @@ public class UserController{
 
     //회원정보 수정
     @PutMapping
-    public ResUserResultDto update(@LoginUser UserInfo userInfo,UserInfoDto userInfoDto){
+    public ResUserResultDto update(@LoginUser UserInfo userInfo,@Valid @RequestBody UserInfoDto userInfoDto){
         System.out.println("userInfo = " + userInfo.getName());
         System.out.println("userInfoDto = " + userInfoDto.getName());
         Long result = userService.update(userInfo,userInfoDto);
         return result == -1L ?
-                new ResUserResultDto(result,"회원정보 변경 실패") : new ResUserResultDto(result,"회원정보 변경 성공");
+                new ResUserResultDto(result,"회원정보 변경 실패.") : new ResUserResultDto(result,"회원정보 변경 성공.");
     }
 
 
