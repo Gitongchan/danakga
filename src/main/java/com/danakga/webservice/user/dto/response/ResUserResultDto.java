@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResUserJoinDto {
+public class ResUserResultDto {
     private Long id;
     private String message;
 
-    public ResUserJoinDto(Long id) {
+    public ResUserResultDto(Long id , String message) {
         this.id = id;
-        this.message = "회원가입 성공";
+        this.message = message;
     }
 }
