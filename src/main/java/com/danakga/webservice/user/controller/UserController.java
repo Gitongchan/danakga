@@ -4,7 +4,7 @@ import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
-import com.danakga.webservice.user.dto.response.ResUserJoinDto;
+import com.danakga.webservice.user.dto.response.ResUserResultDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +29,23 @@ public class UserController{
 
     //회원가입
     @PostMapping("")
-    public ResUserJoinDto join(@Valid @RequestBody UserInfoDto userInfoDto){
+    public ResUserResultDto join(@Valid @RequestBody UserInfoDto userInfoDto){
         System.out.println("userInfoDto = " + userInfoDto);
         return userService.join(userInfoDto);
     }
 
     //회원정보 조회
-    @GetMapping("/check")
+    @GetMapping("")
     public ResUserInfoDto check(@LoginUser UserInfo userInfo){
-        System.out.println("로그인된 회원 : userInfoDto.getUserid() = " + userInfo.getUserid());
-        System.out.println("회원 이메일 : userInfo.getEmail() = " + userInfo.getEmail());
         return new ResUserInfoDto(userInfo);
+    }
+
+    //회원정보 수정
+    @PutMapping
+    public ResUserResultDto update(@LoginUser UserInfo userInfo,UserInfoDto userInfoDto){
+        System.out.println("userInfo = " + userInfo.getName());
+        System.out.println("userInfoDto = " + userInfoDto.getName());
+        return userService.update(userInfo,userInfoDto);
     }
 
 

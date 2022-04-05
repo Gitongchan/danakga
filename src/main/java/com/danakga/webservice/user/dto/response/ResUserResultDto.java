@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResUserModifyDto {
+public class ResUserResultDto {
     private Long id;
     private String message;
 
-    public ResUserModifyDto(Long id) {
+    public ResUserResultDto(Long id , String message) {
         this.id = id;
-        this.message = "회원정보 수정 완료";
+        this.message = message;
     }
 }

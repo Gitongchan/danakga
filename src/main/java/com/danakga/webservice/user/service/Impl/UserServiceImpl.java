@@ -1,9 +1,10 @@
 package com.danakga.webservice.user.service.Impl;
 
+import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
-import com.danakga.webservice.user.dto.response.ResUserJoinDto;
+import com.danakga.webservice.user.dto.response.ResUserResultDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     //회원가입
     @Override
-    public ResUserJoinDto join(UserInfoDto userInfoDto) {
+    public ResUserResultDto join(UserInfoDto userInfoDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String rawPassword = userInfoDto.getPassword();
         userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
                         .role(userInfoDto.getRole())
                         .build()
         ).getId();
-        return new ResUserJoinDto(id);
+        return new ResUserResultDto(id,"회원가입 성공");
     }
 
     //유저 아이디 중복 체크
@@ -71,6 +72,30 @@ public class UserServiceImpl implements UserService {
         System.out.println("같은 이메일이 없다");
         return new ResDupliCheckDto(1);
     }
+
+    //회원 정보 수정
+    public ResUserResultDto update(UserInfo userInfo , UserInfoDto userInfoDto){
+        //로그인 사용자 검증 이후 동작함
+        if(userRepository.findById(userInfo.getId()).isPresent()){
+
+            userInfoDto.setRole("ROLE_USER");//임시로 권한 USER로 지정
+
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
+                            .userid(userInfo.getUserid()) //그대로 유지
+                            .password(userInfoDto.getPassword())
+                            .name(userInfoDto.getName())
+                            .phone(userInfoDto.getPhone())
+                            .email(userInfoDto.getEmail())
+                            .role(userInfoDto.getRole())
+                            .build()
+            );
+            return new ResUserResultDto(userInfo.getId(),"회원정보 변경 완료.");
+        }
+            return new ResUserResultDto(userInfo.getId(),"회원정보 변경 실패.");
+    }
+
 
 
 
