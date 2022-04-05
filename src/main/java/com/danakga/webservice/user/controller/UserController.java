@@ -31,7 +31,8 @@ public class UserController{
     @PostMapping("")
     public ResUserResultDto join(@Valid @RequestBody UserInfoDto userInfoDto){
         System.out.println("userInfoDto = " + userInfoDto);
-        return userService.join(userInfoDto);
+        Long result = userService.join(userInfoDto);
+        return new ResUserResultDto(result,"회원가입 성공");
     }
 
     //회원정보 조회
@@ -45,19 +46,21 @@ public class UserController{
     public ResUserResultDto update(@LoginUser UserInfo userInfo,UserInfoDto userInfoDto){
         System.out.println("userInfo = " + userInfo.getName());
         System.out.println("userInfoDto = " + userInfoDto.getName());
-        return userService.update(userInfo,userInfoDto);
+        Long result = userService.update(userInfo,userInfoDto);
+        return result == -1L ?
+                new ResUserResultDto(result,"회원정보 변경 실패") : new ResUserResultDto(result,"회원정보 변경 성공");
     }
 
 
     //userid체크
     @GetMapping("/userid_check")
     public ResDupliCheckDto userIdCheck(@RequestParam("userid") String userid){
-        return userService.userIdCheck(userid);
+        return new ResDupliCheckDto(userService.userIdCheck(userid));
     }
 
     //email체크
     @GetMapping("/email_check")
     public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
-        return userService.emailCheck(email);
+        return new ResDupliCheckDto(userService.userIdCheck(email));
     }
 }

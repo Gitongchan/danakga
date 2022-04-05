@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
     //회원가입
-    ResUserResultDto join(UserInfoDto userInfoDto);
+    Long join(UserInfoDto userInfoDto);
     //회원정보 수정
-    ResUserResultDto update(@LoginUser UserInfo userInfo , UserInfoDto userInfoDto);
+    Long update(@LoginUser UserInfo userInfo , UserInfoDto userInfoDto);
     //아이디 중복 체크
-    ResDupliCheckDto userIdCheck(String userid);
+    Integer userIdCheck(String userid);
     //이메일 중복 체크
-    ResDupliCheckDto emailCheck(String email);
+    Integer emailCheck(String email);
 }

@@ -1,6 +1,5 @@
 package com.danakga.webservice.user.service.Impl;
 
-import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
@@ -31,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     //회원가입
     @Override
-    public ResUserResultDto join(UserInfoDto userInfoDto) {
+    public Long join(UserInfoDto userInfoDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String rawPassword = userInfoDto.getPassword();
         userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService {
         //임시로 권한 USER로 지정
         userInfoDto.setRole("ROLE_USER");
 
-        final Long id = userRepository.save(
+        return userRepository.save(
                 UserInfo.builder()
                         .userid(userInfoDto.getUserid())
                         .password(userInfoDto.getPassword())
@@ -49,32 +48,29 @@ public class UserServiceImpl implements UserService {
                         .role(userInfoDto.getRole())
                         .build()
         ).getId();
-        return new ResUserResultDto(id,"회원가입 성공");
     }
 
     //유저 아이디 중복 체크
     @Override
-    public ResDupliCheckDto userIdCheck(String userid) {
+    public Integer userIdCheck(String userid) {
         //.isPresent , Optional객체가 있으면 true null이면 false 반환
       if(userRepository.findByUserid(userid).isPresent()){
-       return new ResDupliCheckDto(-1); //같은 userid있으면 -1반환
+       return -1; //같은 userid있으면 -1반환
       }
-      return new ResDupliCheckDto(1);
+      return 1;
     }
 
     //이메일 중복 체크
     @Override
-    public ResDupliCheckDto emailCheck(String email) {
+    public Integer emailCheck(String email) {
         if(userRepository.findByEmail(email).isPresent()){
-            System.out.println("같은이메일이 존재함");
-            return new ResDupliCheckDto(-1);
+            return -1; //같은 이메일 존재할 때
         }
-        System.out.println("같은 이메일이 없다");
-        return new ResDupliCheckDto(1);
+        return 1; // 같은 이메일 없을 때
     }
 
     //회원 정보 수정
-    public ResUserResultDto update(UserInfo userInfo , UserInfoDto userInfoDto){
+    public Long update(UserInfo userInfo , UserInfoDto userInfoDto){
         //로그인 사용자 검증 이후 동작함
         if(userRepository.findById(userInfo.getId()).isPresent()){
 
@@ -91,9 +87,9 @@ public class UserServiceImpl implements UserService {
                             .role(userInfoDto.getRole())
                             .build()
             );
-            return new ResUserResultDto(userInfo.getId(),"회원정보 변경 완료.");
+            return userInfo.getId();
         }
-            return new ResUserResultDto(userInfo.getId(),"회원정보 변경 실패.");
+            return -1L;
     }
 
 
