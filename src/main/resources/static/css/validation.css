@@ -30,12 +30,6 @@
     color: #B02A37;
 }
 
-._success {
-    border-color:#e0e0e0
-}
-._error {
+.register-form .form-group .form-control._error{
     border-color:#B02A37;
-}
-._success:focus{
-    border-color:#0167f3 !important;
 }
