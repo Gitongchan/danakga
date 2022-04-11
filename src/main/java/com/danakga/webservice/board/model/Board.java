@@ -1,18 +1,18 @@
 package com.danakga.webservice.board.model;
 
+import com.danakga.webservice.board.util.BaseTimeEntity;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board {
+public class Board extends BaseTimeEntity {
 
     //id auto_increment 사용
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,9 +46,6 @@ public class Board {
     private String bd_deleted;
 
     //한명의 유저는 여러 게시글 작성 가능 board(many), user
-    //jpa 연관관계로 외래키나 1:다 1:1 이런 테이블 구조 잡아야하는듯
-    //한쪽만 정의된 것을 단방향이라고 하고 양방향도 있지만 가이드에서도 지향하지 않음
-    //양방향으로 하면 코드가 두 배로 불어난다고 하고 거의 양방향으로 할 일이 없다고도 함.
     @ManyToOne
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
