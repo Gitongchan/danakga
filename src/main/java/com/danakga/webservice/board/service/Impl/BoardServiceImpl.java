@@ -28,9 +28,14 @@ public class BoardServiceImpl implements BoardService {
         final Long id = boardRepository.save(
                 Board.builder()
                         .bd_id(reqBoardWriteDto.getBd_id())
-                        .bd_title(reqBoardWriteDto.getBd_title())
+                        .bd_type(reqBoardWriteDto.getBd_type())
+                        .bd_number(reqBoardWriteDto.getBd_number())
+                        .bd_views(reqBoardWriteDto.getBd_views())
                         .bd_writer(userid)
+                        .bd_title(reqBoardWriteDto.getBd_title())
                         .bd_content(reqBoardWriteDto.getBd_content())
+                        .bd_filepath(reqBoardWriteDto.getBd_filepath())
+                        .bd_deleted(reqBoardWriteDto.getBd_deleted())
                         .build()
         ).getBd_id();
         return new ResBoardWriteDto(id);

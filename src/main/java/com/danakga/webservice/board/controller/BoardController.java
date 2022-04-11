@@ -26,14 +26,13 @@ public class BoardController {
 
     @PostMapping("/write")
     public ResBoardWriteDto write(@LoginUser UserInfo userInfo, @RequestBody ReqBoardWriteDto reqBoardWriteDto) {
-        //이렇게 바로 getter로 받아다가 넣어서 쓰는건지 아니면 다른 방법이 있는건지 더 찾아봐야할듯
+        //가져다 쓰는건 이렇게 get으로 꺼내와서 쓰는게 맞는듯
         return boardService.write(reqBoardWriteDto, userInfo.getUserid());
     }
-    
-    // 4/4 게시글 수정
-//    @GetMapping("/post/edit/{id}")
-//    public String edit(@PathVariable Long id, Board board) {
-//        return "/post/edit";
-//    }
+
+    @GetMapping("/post/edit/{id}")
+    public String edit(@PathVariable Long id, Board board) {
+        return "/post/edit";
+    }
 
 }

@@ -9,9 +9,8 @@ import java.util.List;
 
 public interface BoardService {
 
-    //게시판 리스트
+    //게시판 목록
     List<Board> list();
-    //게시글 보기
 
     //게시글 작성
     ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, String userid);
