@@ -84,10 +84,12 @@ public class UserInfo implements UserDetails {
     @Column(name = "u_com_banknum")
     private String companyBanknum;
 
-
-
     @Builder
-    public UserInfo(Long id, String userid, String password, String name, String phone, String email, String role) {
+    public UserInfo(Long id, String userid, String password, String name, String phone, String email,
+                    String role, String userAdrNum, String userDefAdr, String userDetailAdr,
+                    String comId,
+                    String companyName, String companyNum, String companyAdrNum,
+                    String companyDefNum, String companyDetailAdr, String companyBanknum) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -95,7 +97,20 @@ public class UserInfo implements UserDetails {
         this.phone = phone;
         this.email = email;
         this.role = role;
+        this.userAdrNum = userAdrNum;
+        this.userDefAdr = userDefAdr;
+        this.userDetailAdr = userDetailAdr;
+        this.comId = comId;
+        this.companyName = companyName;
+        this.companyNum = companyNum;
+        this.companyAdrNum = companyAdrNum;
+        this.companyDefNum = companyDefNum;
+        this.companyDetailAdr = companyDetailAdr;
+        this.companyBanknum = companyBanknum;
     }
+
+
+
     // 사용자의 권한을 콜렉션 형태로 반환
     // 단, 클래스 자료형은 GrantedAuthority를 구현해야함
     @Override

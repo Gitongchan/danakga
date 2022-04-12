@@ -2,8 +2,6 @@ package com.danakga.webservice.user.service.Impl;
 
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
-import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
-import com.danakga.webservice.user.dto.response.ResUserResultDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
@@ -37,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
         //임시로 권한 USER로 지정
         userInfoDto.setRole("ROLE_USER");
+        
+
 
         return userRepository.save(
                 UserInfo.builder()
@@ -46,6 +46,9 @@ public class UserServiceImpl implements UserService {
                         .phone(userInfoDto.getPhone())
                         .email(userInfoDto.getEmail())
                         .role(userInfoDto.getRole())
+                        .userAdrNum(userInfoDto.getUserAdrNum())
+                        .userDefAdr(userInfoDto.getUserDefAdr())
+                        .userDetailAdr(userInfoDto.getUserDetailAdr())
                         .build()
         ).getId();
     }
@@ -85,6 +88,9 @@ public class UserServiceImpl implements UserService {
                             .phone(userInfoDto.getPhone())
                             .email(userInfoDto.getEmail())
                             .role(userInfoDto.getRole())
+                            .userAdrNum(userInfoDto.getUserAdrNum())
+                            .userDefAdr(userInfoDto.getUserDefAdr())
+                            .userDetailAdr(userInfoDto.getUserDetailAdr())
                             .build()
             );
             return userInfo.getId();

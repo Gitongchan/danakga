@@ -12,7 +12,8 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder
 public class UserInfoDto {
-    
+    //일반사용자 Dto
+
     private Long id;
     
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
@@ -35,7 +36,15 @@ public class UserInfoDto {
     @Email(message = "이메일 형식에 맞지 않습니다")
     private String email;
 
+    //권한 ( user,manager,admin)
     private String role;
 
+    //회원 우편번호
+    private String userAdrNum;
 
+    //회원 기본주소
+    private String userDefAdr;
+
+    //회원 상세 주소
+    private String userDetailAdr;
 }
