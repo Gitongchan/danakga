@@ -17,6 +17,10 @@ public class ResUserInfoDto {
     private String name;
     private String phone;
     private String role;
+    private String userAdrNum;
+    private String userDefAdr;
+    private String userDetailAdr;
+
 
     public ResUserInfoDto(UserInfo userInfo) {
         this.id = userInfo.getId();
@@ -26,5 +30,8 @@ public class ResUserInfoDto {
         this.name = userInfo.getName();
         this.phone = userInfo.getPhone();
         this.role = userInfo.getRole();
+        this.userAdrNum = userInfo.getUserAdrNum();
+        this.userDefAdr = userInfo.getUserDefAdr();
+        this.userDetailAdr = userInfo.getUserDetailAdr();
     }
 }
