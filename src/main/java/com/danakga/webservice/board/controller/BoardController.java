@@ -25,14 +25,15 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public ResBoardWriteDto write(@LoginUser UserInfo userInfo, @RequestBody ReqBoardWriteDto reqBoardWriteDto) {
-        //가져다 쓰는건 이렇게 get으로 꺼내와서 쓰는게 맞는듯
-        return boardService.write(reqBoardWriteDto, userInfo.getUserid());
+    public ResBoardWriteDto write(@RequestBody ReqBoardWriteDto reqBoardWriteDto) {
+        //@Login user 없이는 값 들어감 일단
+        //시큐리티 설정에 csrf().disable() 없어서 post 안됐었음
+        return boardService.write(reqBoardWriteDto);
     }
 
-    @GetMapping("/post/edit/{id}")
-    public String edit(@PathVariable Long id, Board board) {
-        return "/post/edit";
-    }
+//    @GetMapping("/post/edit/{id}")
+//    public String edit(@PathVariable Long id, Board board) {
+//        return "/post/edit";
+//    }
 
 }

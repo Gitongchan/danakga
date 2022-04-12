@@ -13,7 +13,7 @@ public interface BoardService {
     List<Board> list();
 
     //게시글 작성
-    ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, String userid);
+    ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto);
 
     //게시글 수정
     ResBoardUpdateDto update(Board board);

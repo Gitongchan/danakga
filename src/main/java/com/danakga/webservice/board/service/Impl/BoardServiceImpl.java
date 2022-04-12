@@ -24,14 +24,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, String userid) {
+    public ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto) {
         final Long id = boardRepository.save(
                 Board.builder()
                         .bd_id(reqBoardWriteDto.getBd_id())
                         .bd_type(reqBoardWriteDto.getBd_type())
-                        .bd_number(reqBoardWriteDto.getBd_number())
                         .bd_views(reqBoardWriteDto.getBd_views())
-                        .bd_writer(userid)
+                        .bd_writer(reqBoardWriteDto.getBd_writer())
                         .bd_title(reqBoardWriteDto.getBd_title())
                         .bd_content(reqBoardWriteDto.getBd_content())
                         .bd_filepath(reqBoardWriteDto.getBd_filepath())
