@@ -58,7 +58,7 @@ public class UserInfo implements UserDetails {
     /*                    사업자 등록을 하면 추가되는 컬럼                  */
     //사업자등록번호
     @Column(name = "u_com_id")
-    private String comId;
+    private String companyId;
 
     //회사명
     @Column(name = "u_com_name")
@@ -87,7 +87,7 @@ public class UserInfo implements UserDetails {
     @Builder
     public UserInfo(Long id, String userid, String password, String name, String phone, String email,
                     String role, String userAdrNum, String userDefAdr, String userDetailAdr,
-                    String comId,
+                    String companyId,
                     String companyName, String companyNum, String companyAdrNum,
                     String companyDefNum, String companyDetailAdr, String companyBanknum) {
         this.id = id;
@@ -100,7 +100,7 @@ public class UserInfo implements UserDetails {
         this.userAdrNum = userAdrNum;
         this.userDefAdr = userDefAdr;
         this.userDetailAdr = userDetailAdr;
-        this.comId = comId;
+        this.companyId = companyId;
         this.companyName = companyName;
         this.companyNum = companyNum;
         this.companyAdrNum = companyAdrNum;
