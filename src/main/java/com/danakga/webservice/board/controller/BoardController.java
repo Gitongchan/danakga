@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,13 +26,13 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public ResBoardWriteDto write(@RequestBody ReqBoardWriteDto reqBoardWriteDto) {
-        //@Login user 없이는 값 들어감 일단
-        //시큐리티 설정에 csrf().disable() 없어서 post 안됐었음
+    public ResBoardWriteDto write(@Valid @RequestBody ReqBoardWriteDto reqBoardWriteDto) {
+        //일단 @Login user 없이는 값 들어감 
+        //정현이가 token 해결해주면 @Login user해서 해보기
         return boardService.write(reqBoardWriteDto);
     }
 
-//    @GetMapping("/post/edit/{id}")
+//    @PutMapping("/post/edit/{id}")
 //    public String edit(@PathVariable Long id, Board board) {
 //        return "/post/edit";
 //    }

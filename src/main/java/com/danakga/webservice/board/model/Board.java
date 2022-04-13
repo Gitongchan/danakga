@@ -38,9 +38,15 @@ public class Board extends BaseTimeEntity {
     @Column(name = "bd_filepath")
     private String bd_filepath;
 
-    //String Y = 게시글 보임, N = 숨겨주기
-    @Column(name = "bd_deleted", columnDefinition="VARCHAR(2) default 'Y'")
+    //String Y = 게시글 삭제, N = 보여줌
+    @Column(name = "bd_deleted", nullable = false)
     private String bd_deleted;
+
+    //insert시 기본값으로 bd_deleted에 "N"값 적용
+    @PrePersist
+    public void deleted() {
+        this.bd_deleted = "N";
+    }
 
     //한명의 유저는 여러 게시글 작성 가능 board(many), user(one)
 //    @ManyToOne

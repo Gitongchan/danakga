@@ -7,7 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @MappedSuperclass // entity 클래스가 해당 클래스를 상속받을 경우 이 클래스의 필드도 컬럼으로 인식
@@ -15,10 +15,11 @@ import java.time.LocalDateTime;
 public class BaseTimeEntity {
 
     //entity가 생성되어 저장될 때 까지의 시간 자동 저장
+    //LocalDateTime은 시간까지, LocalDate는 날짜까지만
     @CreatedDate
-    private LocalDateTime bd_created;
+    private LocalDate bd_created;
 
     // 조회한 entity의 값을 변경할 때 시간 자동 저장
     @LastModifiedDate
-    private LocalDateTime bd_modified;
+    private LocalDate bd_modified;
 }
