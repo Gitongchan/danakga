@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.user.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
@@ -42,7 +43,7 @@ public class UserController{
     }
 
     //회원정보 수정
-    @PutMapping
+    @PutMapping("")
     public ResUserResultDto update(@LoginUser UserInfo userInfo,@Valid @RequestBody UserInfoDto userInfoDto){
         System.out.println("userInfo = " + userInfo.getName());
         System.out.println("userInfoDto = " + userInfoDto.getName());
@@ -62,5 +63,14 @@ public class UserController{
     @GetMapping("/email_check")
     public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
         return new ResDupliCheckDto(userService.userIdCheck(email));
+    }
+    
+    
+    /**              마이페이지 기능               **/
+    @PostMapping("/company_register")
+    public ResUserResultDto CompanyRegister(@LoginUser UserInfo userInfo,@RequestBody CompanyUserInfoDto companyUserInfoDto){
+        Long result = userService.companyRegister(userInfo,companyUserInfoDto);
+        return result == -1L ?
+                new ResUserResultDto(result,"사업자 등록 실패.") : new ResUserResultDto(result,"사업자 등록 성공.");
     }
 }
