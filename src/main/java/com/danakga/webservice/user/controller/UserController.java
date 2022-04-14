@@ -67,10 +67,20 @@ public class UserController{
     
     
     /**              마이페이지 기능               **/
-    @PostMapping("/company_register")
+
+    //사업자 등록
+    @PutMapping("/company_register")
     public ResUserResultDto CompanyRegister(@LoginUser UserInfo userInfo,@RequestBody CompanyUserInfoDto companyUserInfoDto){
         Long result = userService.companyRegister(userInfo,companyUserInfoDto);
         return result == -1L ?
                 new ResUserResultDto(result,"사업자 등록 실패.") : new ResUserResultDto(result,"사업자 등록 성공.");
+    }
+
+    //회원 탈퇴
+    @PutMapping("/user_deleted")
+    public ResUserResultDto userDeleted(@LoginUser UserInfo userInfo,@RequestBody UserInfoDto userInfoDto){
+        Long result = userService.userDeleted(userInfo,userInfoDto);
+        return result == -1L ?
+                new ResUserResultDto(result,"회원 탈퇴 실패") : new ResUserResultDto(result,"회원 탈퇴 성공");
     }
 }

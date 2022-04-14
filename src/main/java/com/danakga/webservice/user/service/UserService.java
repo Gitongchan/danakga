@@ -20,4 +20,9 @@ public interface UserService extends UserDetailsService {
 
     //사업자 회원 등록
     Long companyRegister(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto);
+    
+    //회원 탈퇴
+    Long userDeleted(UserInfo userInfo,UserInfoDto userInfoDto);
+
+
 }

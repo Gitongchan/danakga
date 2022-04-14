@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired private final UserRepository userRepository;
+    @Autowired
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
@@ -36,7 +37,6 @@ public class UserServiceImpl implements UserService {
 
         //임시로 권한 USER로 지정
         userInfoDto.setRole("ROLE_USER");
-        
 
 
         return userRepository.save(
@@ -58,16 +58,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer userIdCheck(String userid) {
         //.isPresent , Optional객체가 있으면 true null이면 false 반환
-      if(userRepository.findByUserid(userid).isPresent()){
-       return -1; //같은 userid있으면 -1반환
-      }
-      return 1;
+        if (userRepository.findByUserid(userid).isPresent()) {
+            return -1; //같은 userid있으면 -1반환
+        }
+        return 1;
     }
-    
+
     //이메일 중복 체크
     @Override
     public Integer emailCheck(String email) {
-        if(userRepository.findByEmail(email).isPresent()){
+        if (userRepository.findByEmail(email).isPresent()) {
             return -1; //같은 이메일 존재할 때
         }
         return 1; // 같은 이메일 없을 때
@@ -75,9 +75,9 @@ public class UserServiceImpl implements UserService {
 
     //회원 정보 수정
     @Override
-    public Long update(UserInfo userInfo , UserInfoDto userInfoDto){
+    public Long update(UserInfo userInfo, UserInfoDto userInfoDto) {
         //로그인 사용자 검증 이후 동작함
-        if(userRepository.findById(userInfo.getId()).isPresent()){
+        if (userRepository.findById(userInfo.getId()).isPresent()) {
 
             userInfoDto.setRole("ROLE_USER");//임시로 권한 USER로 지정
 
@@ -97,20 +97,20 @@ public class UserServiceImpl implements UserService {
             );
             return userInfo.getId();
         }
-            return -1L;
+        return -1L;
     }
 
     //사업자 회원 등록
     @Override
     public Long companyRegister(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
-        if(userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_USER")){
+        if (userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_USER")) {
             companyUserInfoDto.setRole("ROLE_MANAGER");
 
             userRepository.save(
                     UserInfo.builder()
                             .id(userInfo.getId()) //로그인 유저 키값을 받아옴
                             //유저의 정보는 그대로 유지
-                            .userid(userInfo.getUserid()) 
+                            .userid(userInfo.getUserid())
                             .password(userInfo.getPassword())
                             .name(userInfo.getName())
                             .phone(userInfo.getPhone())
@@ -132,8 +132,31 @@ public class UserServiceImpl implements UserService {
             return userInfo.getId();
         }
         return -1L;
+
     }
 
-
-
+    //회원 탈퇴
+    @Override
+    public Long userDeleted(UserInfo userInfo, UserInfoDto userInfoDto) {
+        if (userRepository.findById(userInfo.getId()).isPresent()) {
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
+                            .userid(userInfo.getUserid()) //그대로 유지
+                            .password(userInfo.getPassword())
+                            .name(userInfo.getName())
+                            .phone(userInfo.getPhone())
+                            .email(userInfo.getEmail())
+                            .role(userInfo.getRole())
+                            .userAdrNum(userInfo.getUserAdrNum())
+                            .userDefAdr(userInfo.getUserDefAdr())
+                            .userDetailAdr(userInfo.getUserDetailAdr())
+                            .userDeleted(true)  //전부 유지하고 deleted만 true로 변경
+                            //시간은 update시 자동으로 현재시간으로 저장
+                            .build()
+            );
+            return userInfo.getId();
+        }
+        return -1L;
+    }
 }

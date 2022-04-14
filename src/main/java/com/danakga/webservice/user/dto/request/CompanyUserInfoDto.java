@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,5 +36,11 @@ public class CompanyUserInfoDto {
 
     //회사 계좌
     private String companyBanknum;
+    
+    //사업자 탈퇴 여부
+    private boolean companyDeleted;
+
+    //사업자 탈퇴 날짜
+    private LocalDateTime companyDeletedDate;
 
 }

@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,12 +86,32 @@ public class UserInfo implements UserDetails {
     @Column(name = "u_com_banknum")
     private String companyBanknum;
 
+    /**                            탈퇴 관련                            **/
+
+    //회원 탈퇴 여부
+    @Column(name = "u_deleted")
+    private boolean userDeleted;
+
+    //회원 탈퇴 날짜
+    @Column(name = "u_deleted_date")
+    @UpdateTimestamp
+    private LocalDateTime userDeletedDate;
+
+    //사업자 탈퇴 여부
+    @Column(name = "u_com_deleted")
+    private boolean companyDeleted;
+
+    //사업자 탈퇴 날짜
+    @Column(name = "u_com_deleted_date")
+    private LocalDateTime companyDeltedDate;
+
     @Builder
     public UserInfo(Long id, String userid, String password, String name, String phone, String email,
                     String role, String userAdrNum, String userDefAdr, String userDetailAdr,
                     String companyId,
                     String companyName, String companyNum, String companyAdrNum,
-                    String companyDefNum, String companyDetailAdr, String companyBanknum) {
+                    String companyDefNum, String companyDetailAdr, String companyBanknum,
+                    boolean userDeleted,LocalDateTime userDeletedDate,boolean companyDeleted,LocalDateTime companyDeltedDate) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -107,6 +129,10 @@ public class UserInfo implements UserDetails {
         this.companyDefNum = companyDefNum;
         this.companyDetailAdr = companyDetailAdr;
         this.companyBanknum = companyBanknum;
+        this.userDeleted = userDeleted;
+        this.userDeletedDate = userDeletedDate;
+        this.companyDeleted = companyDeleted;
+        this.companyDeltedDate = companyDeltedDate;
     }
 
 
