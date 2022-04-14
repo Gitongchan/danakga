@@ -17,31 +17,79 @@ import java.util.Set;
 @Entity
 @Getter
 public class UserInfo implements UserDetails {
+    //공통부분
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "u_id")
     private Long id;
 
-    @Column(name = "userid")
+    @Column(name = "u_userid")
     private String userid;
 
-    @Column(name = "password")
+    @Column(name = "u_password")
     private String password;
 
-    @Column(name = "name")
+    @Column(name = "u_name")
     private String name;
 
-    @Column(name = "phone")
+    @Column(name = "u_phone")
     private String phone;
 
-    @Column(name = "email")
+    @Column(name = "u_email")
     private String email;
-
-    @Column(name = "role")
+    
+    //권한
+    @Column(name = "u_role")
     private String role;
 
+    //회원 우편번호 
+    @Column(name = "u_adr_num")
+    private String userAdrNum;
+
+    //회원 기본주소
+    @Column(name = "u_def_adr")
+    private String userDefAdr;
+
+    //회원 상세 주소
+    @Column(name = "u_detail_adr")
+    private String userDetailAdr;
+
+    /*                          --사업자 부분--                          */
+    /*                    사업자 등록을 하면 추가되는 컬럼                  */
+    //사업자등록번호
+    @Column(name = "u_com_id")
+    private String companyId;
+
+    //회사명
+    @Column(name = "u_com_name")
+    private String companyName;
+
+    //회사연락처
+    @Column(name = "u_com_num")
+    private String companyNum;
+
+    //회사 우편번호
+    @Column(name = "u_com_adr_num")
+    private String companyAdrNum;
+
+    //회사 기본주소
+    @Column(name = "u_com_def_adr")
+    private String companyDefNum;
+
+    //회사 상세주소
+    @Column(name = "u_com_detail_adr")
+    private String companyDetailAdr;
+
+    //회사 계좌
+    @Column(name = "u_com_banknum")
+    private String companyBanknum;
+
     @Builder
-    public UserInfo(Long id, String userid, String password, String name, String phone, String email, String role) {
+    public UserInfo(Long id, String userid, String password, String name, String phone, String email,
+                    String role, String userAdrNum, String userDefAdr, String userDetailAdr,
+                    String companyId,
+                    String companyName, String companyNum, String companyAdrNum,
+                    String companyDefNum, String companyDetailAdr, String companyBanknum) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -49,7 +97,20 @@ public class UserInfo implements UserDetails {
         this.phone = phone;
         this.email = email;
         this.role = role;
+        this.userAdrNum = userAdrNum;
+        this.userDefAdr = userDefAdr;
+        this.userDetailAdr = userDetailAdr;
+        this.companyId = companyId;
+        this.companyName = companyName;
+        this.companyNum = companyNum;
+        this.companyAdrNum = companyAdrNum;
+        this.companyDefNum = companyDefNum;
+        this.companyDetailAdr = companyDetailAdr;
+        this.companyBanknum = companyBanknum;
     }
+
+
+
     // 사용자의 권한을 콜렉션 형태로 반환
     // 단, 클래스 자료형은 GrantedAuthority를 구현해야함
     @Override

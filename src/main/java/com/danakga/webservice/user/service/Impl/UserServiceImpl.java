@@ -1,9 +1,8 @@
 package com.danakga.webservice.user.service.Impl;
 
+import com.danakga.webservice.user.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
-import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
-import com.danakga.webservice.user.dto.response.ResUserResultDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
@@ -37,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
         //임시로 권한 USER로 지정
         userInfoDto.setRole("ROLE_USER");
+        
+
 
         return userRepository.save(
                 UserInfo.builder()
@@ -46,6 +47,9 @@ public class UserServiceImpl implements UserService {
                         .phone(userInfoDto.getPhone())
                         .email(userInfoDto.getEmail())
                         .role(userInfoDto.getRole())
+                        .userAdrNum(userInfoDto.getUserAdrNum())
+                        .userDefAdr(userInfoDto.getUserDefAdr())
+                        .userDetailAdr(userInfoDto.getUserDetailAdr())
                         .build()
         ).getId();
     }
@@ -70,6 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //회원 정보 수정
+    @Override
     public Long update(UserInfo userInfo , UserInfoDto userInfoDto){
         //로그인 사용자 검증 이후 동작함
         if(userRepository.findById(userInfo.getId()).isPresent()){
@@ -85,6 +90,9 @@ public class UserServiceImpl implements UserService {
                             .phone(userInfoDto.getPhone())
                             .email(userInfoDto.getEmail())
                             .role(userInfoDto.getRole())
+                            .userAdrNum(userInfoDto.getUserAdrNum())
+                            .userDefAdr(userInfoDto.getUserDefAdr())
+                            .userDetailAdr(userInfoDto.getUserDetailAdr())
                             .build()
             );
             return userInfo.getId();
@@ -92,6 +100,39 @@ public class UserServiceImpl implements UserService {
             return -1L;
     }
 
+    //사업자 회원 등록
+    @Override
+    public Long companyRegister(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
+        if(userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_USER")){
+            companyUserInfoDto.setRole("ROLE_MANAGER");
+
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
+                            //유저의 정보는 그대로 유지
+                            .userid(userInfo.getUserid()) 
+                            .password(userInfo.getPassword())
+                            .name(userInfo.getName())
+                            .phone(userInfo.getPhone())
+                            .email(userInfo.getEmail())
+                            .userAdrNum(userInfo.getUserAdrNum())
+                            .userDefAdr(userInfo.getUserDefAdr())
+                            .userDetailAdr(userInfo.getUserDetailAdr())
+                            //사업자 등록으로 받은 정보만 user_info로 업데이트
+                            .role(companyUserInfoDto.getRole())
+                            .companyId(companyUserInfoDto.getCompanyId())
+                            .companyName(companyUserInfoDto.getCompanyName())
+                            .companyNum(companyUserInfoDto.getCompanyNum())
+                            .companyAdrNum(companyUserInfoDto.getCompanyAdrNum())
+                            .companyDefNum(companyUserInfoDto.getCompanyDefNum())
+                            .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
+                            .companyBanknum(companyUserInfoDto.getCompanyBanknum())
+                            .build()
+            );
+            return userInfo.getId();
+        }
+        return -1L;
+    }
 
 
 

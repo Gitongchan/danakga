@@ -22,5 +22,15 @@ public class PageController {
         return "pages/index";
     }
 
+    @GetMapping("/test/val")
+    public String testval(){
+        return "pages/register";
+    }
+
+    @GetMapping("/test/mainfunc")
+    public String testmain(){
+        return "pages/mainfunction";
+    }
+
 
 }
