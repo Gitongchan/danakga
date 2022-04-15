@@ -90,7 +90,7 @@ public class UserInfo implements UserDetails {
 
     //회원 탈퇴 여부
     @Column(name = "u_deleted")
-    private boolean userDeleted;
+    private boolean isEnabled;
 
     //회원 탈퇴 날짜
     @Column(name = "u_deleted_date")
@@ -111,7 +111,7 @@ public class UserInfo implements UserDetails {
                     String companyId,
                     String companyName, String companyNum, String companyAdrNum,
                     String companyDefNum, String companyDetailAdr, String companyBanknum,
-                    boolean userDeleted,LocalDateTime userDeletedDate,boolean companyDeleted,LocalDateTime companyDeltedDate) {
+                    boolean isEnabled,LocalDateTime userDeletedDate,boolean companyDeleted,LocalDateTime companyDeltedDate) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -129,7 +129,7 @@ public class UserInfo implements UserDetails {
         this.companyDefNum = companyDefNum;
         this.companyDetailAdr = companyDetailAdr;
         this.companyBanknum = companyBanknum;
-        this.userDeleted = userDeleted;
+        this.isEnabled = isEnabled;
         this.userDeletedDate = userDeletedDate;
         this.companyDeleted = companyDeleted;
         this.companyDeltedDate = companyDeltedDate;

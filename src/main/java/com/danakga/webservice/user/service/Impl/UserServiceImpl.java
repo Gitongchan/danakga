@@ -37,8 +37,13 @@ public class UserServiceImpl implements UserService {
 
         //임시로 권한 USER로 지정
         userInfoDto.setRole("ROLE_USER");
-
-
+        
+        //중복 id,email 검증
+        Integer idCheckResult = userIdCheck(userInfoDto.getUserid());
+        Integer emailCheckResult = emailCheck(userInfoDto.getEmail());
+        if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
+            return -1L;
+        }
         return userRepository.save(
                 UserInfo.builder()
                         .userid(userInfoDto.getUserid())
@@ -50,6 +55,7 @@ public class UserServiceImpl implements UserService {
                         .userAdrNum(userInfoDto.getUserAdrNum())
                         .userDefAdr(userInfoDto.getUserDefAdr())
                         .userDetailAdr(userInfoDto.getUserDetailAdr())
+                        .isEnabled(true)
                         .build()
         ).getId();
     }
@@ -138,7 +144,15 @@ public class UserServiceImpl implements UserService {
     //회원 탈퇴
     @Override
     public Long userDeleted(UserInfo userInfo, UserInfoDto userInfoDto) {
-        if (userRepository.findById(userInfo.getId()).isPresent()) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+        System.out.println("userInfo.getUserid() = " + userInfo.getPassword());
+        System.out.println("userInfoDto = " + userInfoDto.getPassword());
+
+        if (userRepository.findById(userInfo.getId()).isPresent()
+                &&bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
+       /*     userRepository.delete(userInfo);
+            return 1L;*/
             userRepository.save(
                     UserInfo.builder()
                             .id(userInfo.getId()) //로그인 유저 키값을 받아옴
@@ -151,8 +165,7 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfo.getUserAdrNum())
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userDeleted(true)  //전부 유지하고 deleted만 true로 변경
-                            //시간은 update시 자동으로 현재시간으로 저장
+                            .isEnabled(false)
                             .build()
             );
             return userInfo.getId();

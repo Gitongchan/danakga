@@ -33,7 +33,8 @@ public class UserController{
     public ResUserResultDto join(@Valid @RequestBody UserInfoDto userInfoDto){
         System.out.println("userInfoDto = " + userInfoDto);
         Long result = userService.join(userInfoDto);
-        return new ResUserResultDto(result,"회원가입 성공.");
+        return result == -1L ?
+                new ResUserResultDto(result,"회원가입 실패.") : new ResUserResultDto(result,"회원가입 성공.");
     }
 
     //회원정보 조회

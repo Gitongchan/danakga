@@ -51,7 +51,7 @@ public class UserInfoDto {
     private String userDetailAdr;
 
     //회원 탈퇴 여부
-    private boolean userDeleted;
+    private boolean isEnabled;
     
     //회원 탈퇴 날짜
     private LocalDateTime userDeletedDate;
