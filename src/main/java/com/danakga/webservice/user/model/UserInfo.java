@@ -160,6 +160,13 @@ public class UserInfo implements UserDetails {
         return password;
     }
 
+    // 계정 사용 가능 여부 반환
+    @Override
+    public boolean isEnabled() {
+        // 계정이 사용 가능한지 확인하는 로직
+        return isEnabled; // true -> 사용 가능
+    }
+
     // 계정 만료 여부 반환
     @Override
     public boolean isAccountNonExpired() {
@@ -181,10 +188,5 @@ public class UserInfo implements UserDetails {
         return true; // true -> 만료되지 않았음
     }
 
-    // 계정 사용 가능 여부 반환
-    @Override
-    public boolean isEnabled() {
-        // 계정이 사용 가능한지 확인하는 로직
-        return true; // true -> 사용 가능
-    }
+
 }
