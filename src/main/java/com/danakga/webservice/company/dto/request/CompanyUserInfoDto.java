@@ -1,4 +1,4 @@
-package com.danakga.webservice.user.dto.request;
+package com.danakga.webservice.company.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +38,7 @@ public class CompanyUserInfoDto {
     private String companyBanknum;
     
     //사업자 탈퇴 여부
-    private boolean companyDeleted;
+    private boolean companyEnabled;
 
     //사업자 탈퇴 날짜
     private LocalDateTime companyDeletedDate;

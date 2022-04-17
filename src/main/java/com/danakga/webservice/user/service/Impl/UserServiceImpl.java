@@ -1,6 +1,6 @@
 package com.danakga.webservice.user.service.Impl;
 
-import com.danakga.webservice.user.dto.request.CompanyUserInfoDto;
+import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
         //임시로 권한 USER로 지정
         userInfoDto.setRole("ROLE_USER");
-        userInfoDto.setDeleted(true);
+        userInfoDto.setUserEnabled(true);
 
         //중복 id,email 검증
         Integer idCheckResult = userIdCheck(userInfoDto.getUserid());
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
                         .userAdrNum(userInfoDto.getUserAdrNum())
                         .userDefAdr(userInfoDto.getUserDefAdr())
                         .userDetailAdr(userInfoDto.getUserDetailAdr())
-                        .userDeleted(userInfoDto.isDeleted())
+                        .userEnabled(userInfoDto.isUserEnabled())
                         .build()
         ).getId();
     }
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfoDto.getUserAdrNum())
                             .userDefAdr(userInfoDto.getUserDefAdr())
                             .userDetailAdr(userInfoDto.getUserDetailAdr())
-                            .userDeleted(userInfo.isUserDeleted())
+                            .userEnabled(userInfo.isUserEnabled())
                             .build()
             );
             return userInfo.getId();
@@ -112,7 +112,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long companyRegister(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
         if (userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_USER")) {
+
             companyUserInfoDto.setRole("ROLE_MANAGER");
+            companyUserInfoDto.setCompanyEnabled(true);;
 
             userRepository.save(
                     UserInfo.builder()
@@ -135,6 +137,7 @@ public class UserServiceImpl implements UserService {
                             .companyDefNum(companyUserInfoDto.getCompanyDefNum())
                             .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
                             .companyBanknum(companyUserInfoDto.getCompanyBanknum())
+                            .companyEnabled(companyUserInfoDto.isCompanyEnabled())
                             .build()
             );
             return userInfo.getId();
@@ -153,11 +156,7 @@ public class UserServiceImpl implements UserService {
 
         if (userRepository.findById(userInfo.getId()).isPresent()
                 && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
-            /*
-            userRepository.delete(userInfo);
-            return 1L;
-            */
-            userInfoDto.setDeleted(false);
+            userInfoDto.setUserEnabled(false);
 
             userRepository.save(
                     UserInfo.builder()
@@ -171,7 +170,7 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfo.getUserAdrNum())
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userDeleted(userInfoDto.isDeleted())
+                            .userEnabled(userInfoDto.isUserEnabled())
                             .build()
             );
             return userInfo.getId();

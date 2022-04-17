@@ -13,7 +13,7 @@ public class UserAdapter extends User {
     private UserInfo userInfo;
 
     public UserAdapter(UserInfo userInfo) {
-        super(userInfo.getUserid(),userInfo.getPassword(),userInfo.isUserDeleted() , userInfo.isAccountNonExpired(),
+        super(userInfo.getUserid(),userInfo.getPassword(),userInfo.isUserEnabled() , userInfo.isAccountNonExpired(),
                 userInfo.isCredentialsNonExpired(), userInfo.isAccountNonExpired(),
                 userInfo.getAuthorities());
         this.userInfo = userInfo;

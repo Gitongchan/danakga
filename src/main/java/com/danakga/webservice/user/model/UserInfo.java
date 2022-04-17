@@ -89,8 +89,8 @@ public class UserInfo implements UserDetails {
     /**                            탈퇴 관련                            **/
 
     //회원 탈퇴 여부
-    @Column(name = "u_Deleted")
-    private boolean userDeleted;
+    @Column(name = "u_Enabled")
+    private boolean userEnabled;
 
     //회원 탈퇴 날짜
     @Column(name = "u_deleted_date")
@@ -98,8 +98,8 @@ public class UserInfo implements UserDetails {
     private LocalDateTime userDeletedDate;
 
     //사업자 탈퇴 여부
-    @Column(name = "u_com_deleted")
-    private boolean companyDeleted;
+    @Column(name = "u_com_enabled")
+    private boolean companyEnabled;
 
     //사업자 탈퇴 날짜
     @Column(name = "u_com_deleted_date")
@@ -111,7 +111,7 @@ public class UserInfo implements UserDetails {
                     String companyId,
                     String companyName, String companyNum, String companyAdrNum,
                     String companyDefNum, String companyDetailAdr, String companyBanknum,
-                    boolean userDeleted,LocalDateTime userDeletedDate,boolean companyDeleted,LocalDateTime companyDeltedDate) {
+                    boolean userEnabled,LocalDateTime userDeletedDate,boolean companyEnabled,LocalDateTime companyDeltedDate) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -129,9 +129,9 @@ public class UserInfo implements UserDetails {
         this.companyDefNum = companyDefNum;
         this.companyDetailAdr = companyDetailAdr;
         this.companyBanknum = companyBanknum;
-        this.userDeleted = userDeleted;
+        this.userEnabled = userEnabled;
         this.userDeletedDate = userDeletedDate;
-        this.companyDeleted = companyDeleted;
+        this.companyEnabled = companyEnabled;
         this.companyDeltedDate = companyDeltedDate;
     }
 
@@ -150,7 +150,7 @@ public class UserInfo implements UserDetails {
     // 계정 사용 가능 여부 반환
     @Override
     public boolean isEnabled() {
-        return userDeleted; // true -> 사용 가능
+        return userEnabled; // true -> 사용 가능
     }
 
     // 사용자의 id를 반환 (unique한 값)

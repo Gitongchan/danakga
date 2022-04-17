@@ -1,6 +1,6 @@
 package com.danakga.webservice.user.service;
 
-import com.danakga.webservice.user.dto.request.CompanyUserInfoDto;
+import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.security.core.userdetails.UserDetailsService;

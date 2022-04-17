@@ -26,9 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/user/**").authenticated()
-                .antMatchers("/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
-                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/api/user/**").authenticated()
+                .antMatchers("/api/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+                .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll() //다른 요청은 모두 허용
                 .and()
                     .formLogin()
