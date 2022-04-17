@@ -2,6 +2,7 @@ package com.danakga.webservice.user.exception;
 
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,8 +30,10 @@ public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHand
             } else if (exception instanceof UsernameNotFoundException) {
                 errorMessage = "계정이 존재하지 않습니다. 회원가입 진행 후 로그인 해주세요.";
             } else if (exception instanceof AuthenticationCredentialsNotFoundException) {
-                errorMessage = "인증 요청이 거부되었습니다. 관리자에게 문의하세요."; }
-            else {
+                errorMessage = "인증 요청이 거부되었습니다. 관리자에게 문의하세요.";
+            } else if(exception instanceof DisabledException) {
+                errorMessage = "탈퇴한 사용자 이거나, 정지된 사용자 입니다.";
+            } else {
                 errorMessage = "알 수 없는 이유로 로그인에 실패하였습니다 관리자에게 문의하세요.";
             }
 

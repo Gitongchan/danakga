@@ -37,7 +37,8 @@ public class UserServiceImpl implements UserService {
 
         //임시로 권한 USER로 지정
         userInfoDto.setRole("ROLE_USER");
-        
+        userInfoDto.setDeleted(true);
+
         //중복 id,email 검증
         Integer idCheckResult = userIdCheck(userInfoDto.getUserid());
         Integer emailCheckResult = emailCheck(userInfoDto.getEmail());
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
                         .userAdrNum(userInfoDto.getUserAdrNum())
                         .userDefAdr(userInfoDto.getUserDefAdr())
                         .userDetailAdr(userInfoDto.getUserDetailAdr())
-                        .isEnabled(true)
+                        .userDeleted(userInfoDto.isDeleted())
                         .build()
         ).getId();
     }
@@ -99,6 +100,7 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfoDto.getUserAdrNum())
                             .userDefAdr(userInfoDto.getUserDefAdr())
                             .userDetailAdr(userInfoDto.getUserDetailAdr())
+                            .userDeleted(userInfo.isUserDeleted())
                             .build()
             );
             return userInfo.getId();
@@ -150,9 +152,13 @@ public class UserServiceImpl implements UserService {
         System.out.println("userInfoDto = " + userInfoDto.getPassword());
 
         if (userRepository.findById(userInfo.getId()).isPresent()
-                &&bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
-       /*     userRepository.delete(userInfo);
-            return 1L;*/
+                && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
+            /*
+            userRepository.delete(userInfo);
+            return 1L;
+            */
+            userInfoDto.setDeleted(false);
+
             userRepository.save(
                     UserInfo.builder()
                             .id(userInfo.getId()) //로그인 유저 키값을 받아옴
@@ -165,7 +171,7 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfo.getUserAdrNum())
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
-                            .isEnabled(false)
+                            .userDeleted(userInfoDto.isDeleted())
                             .build()
             );
             return userInfo.getId();
