@@ -108,6 +108,15 @@ public class UserServiceImpl implements UserService {
         return -1L;
     }
 
+    //업체명 중복 체크
+    @Override
+    public Integer companyNameCheck(String companyName) {
+        if (userRepository.findByCompanyName(companyName).isPresent()) {
+            return -1; //같은 이메일 존재할 때
+        }
+        return 1; // 같은 이메일 없을 때
+    }
+    
     //사업자 회원 등록
     @Override
     public Long companyRegister(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
@@ -128,6 +137,7 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfo.getUserAdrNum())
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
+                            .userEnabled(userInfo.isUserEnabled())
                             //사업자 등록으로 받은 정보만 user_info로 업데이트
                             .role(companyUserInfoDto.getRole())
                             .companyId(companyUserInfoDto.getCompanyId())

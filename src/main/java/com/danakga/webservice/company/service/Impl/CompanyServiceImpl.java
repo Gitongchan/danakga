@@ -19,7 +19,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
         if(userRepository.findById(userInfo.getId()).isPresent()&& userInfo.getRole().equals("ROLE_MANAGER")){
-
             companyUserInfoDto.setCompanyEnabled(false);
             companyUserInfoDto.setRole("ROLE_USER");
 
@@ -35,6 +34,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .userAdrNum(userInfo.getUserAdrNum())
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
+                            .userEnabled(userInfo.isUserEnabled())
                             //사업자 등록으로 받은 정보만 user_info로 업데이트
                             .role(companyUserInfoDto.getRole())
                             .companyId(companyUserInfoDto.getCompanyId())
@@ -48,8 +48,9 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyDeltedDate(companyUserInfoDto.getCompanyDeletedDate())
                             .build()
             );
+            return userInfo.getId();
         }
-        return null;
+        return -1L;
     }
 
 }

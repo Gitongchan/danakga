@@ -44,7 +44,7 @@ public class UserController{
 
     //사업자 등록
     @PutMapping("/company_register")
-    public ResResultDto CompanyRegister(@LoginUser UserInfo userInfo, @RequestBody CompanyUserInfoDto companyUserInfoDto){
+    public ResResultDto companyRegister(@LoginUser UserInfo userInfo, @RequestBody CompanyUserInfoDto companyUserInfoDto){
         Long result = userService.companyRegister(userInfo,companyUserInfoDto);
         return result == -1L ?
                 new ResResultDto(result,"사업자 등록 실패.") : new ResResultDto(result,"사업자 등록 성공.");
@@ -56,5 +56,11 @@ public class UserController{
         Long result = userService.userDeleted(userInfo,userInfoDto);
         return result == -1L ?
                 new ResResultDto(result,"회원 탈퇴 실패") : new ResResultDto(result,"회원 탈퇴 성공");
+    }
+
+    //업체명 중복 체크
+    @GetMapping("/companyName_check")
+    public ResDupliCheckDto companyNameCheck(@RequestParam("companyName") String companyName){
+        return new ResDupliCheckDto(userService.companyNameCheck(companyName));
     }
 }

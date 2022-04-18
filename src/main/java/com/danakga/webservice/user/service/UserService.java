@@ -24,5 +24,6 @@ public interface UserService extends UserDetailsService {
     //회원 탈퇴
     Long userDeleted(UserInfo userInfo,UserInfoDto userInfoDto);
 
+    Integer companyNameCheck(String companyName);
 
 }
