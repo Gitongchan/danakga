@@ -32,7 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .anyRequest().permitAll() //다른 요청은 모두 허용
                 .and()
                     .formLogin()
-                    .loginPage("/login")
+                    .loginPage("/pages/login")
+                    .loginProcessingUrl("/login")
                     .failureHandler(customAuthFailureHandler)
                     .defaultSuccessUrl("/") // 로그인 성공 후 리다이렉트 주소
                 .and()

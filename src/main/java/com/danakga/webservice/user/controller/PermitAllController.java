@@ -26,7 +26,7 @@ public class PermitAllController {
     }
 
     //회원가입
-    @PostMapping("")
+    @PostMapping("/signup")
     public ResResultDto join(@Valid @RequestBody UserInfoDto userInfoDto){
         System.out.println("userInfoDto = " + userInfoDto);
         Long result = userService.join(userInfoDto);

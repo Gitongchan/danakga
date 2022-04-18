@@ -71,7 +71,7 @@
             } else {
                 console.log("정규식 성공이에요!!!");
                 <!-- 정규식 성공 시-->
-                fetch(`/api/user/userid_check?userid=${userData.userid.value}`)
+                fetch(`/api/userid_check?userid=${userData.userid.value}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.result === 1) {
@@ -122,7 +122,7 @@
                 buttoncheck();
             } else {
                 <!-- 정규식 성공 시-->
-                fetch(`/api/user/email_check?email=${userData.email.value}`)
+                fetch(`/api/email_check?email=${userData.email.value}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.result === 1) {
@@ -216,7 +216,7 @@
             email: userData.email.value
         }
         console.log(postData);
-        fetch("/api/user", {
+        fetch("/api/signup", {
             method: "POST",
             headers: {
                 'header': header,
