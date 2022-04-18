@@ -6,8 +6,7 @@ function login(event){
     event.preventDefault();
     console.log(loginID.value);
     console.log(loginPW.value);
-
 }
 
 console.log(loginForm);
-loginForm.addEventListener('submit',login);
+loginForm.addEventListener('click',login);
