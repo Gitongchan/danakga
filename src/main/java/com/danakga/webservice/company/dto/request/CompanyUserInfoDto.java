@@ -1,9 +1,11 @@
-package com.danakga.webservice.user.dto.request;
+package com.danakga.webservice.company.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -34,5 +36,11 @@ public class CompanyUserInfoDto {
 
     //회사 계좌
     private String companyBanknum;
+    
+    //사업자 탈퇴 여부
+    private boolean companyEnabled;
+
+    //사업자 탈퇴 날짜
+    private LocalDateTime companyDeletedDate;
 
 }

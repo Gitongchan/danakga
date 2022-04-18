@@ -9,6 +9,13 @@
     <input type="hidden" name="_csrf.parameterName" value="_csrf.token" />
     <input type ="text" name="userid" placeholder="userid"/><br/>
     <input type ="password" name="password" placeholder="Password"/><br/>
+
+    <span>
+        {{#error}}
+            <p id="valid" class="alert alert-danger">{{exception}}</p>
+        {{/error}}
+    </span>
+
     <button>로그인</button>
 </form>
 </body>

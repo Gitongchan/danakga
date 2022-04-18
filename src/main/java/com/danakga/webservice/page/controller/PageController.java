@@ -13,10 +13,6 @@ public class PageController {
     public String join(){
         return "join";
     }
-    @GetMapping("/loginPage")
-    public String login(){
-        return "login";
-    }
     @GetMapping("/test/index")
     public String testindex(){
         return "pages/index";

@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,12 +86,32 @@ public class UserInfo implements UserDetails {
     @Column(name = "u_com_banknum")
     private String companyBanknum;
 
+    /**                            탈퇴 관련                            **/
+
+    //회원 탈퇴 여부
+    @Column(name = "u_Enabled")
+    private boolean userEnabled;
+
+    //회원 탈퇴 날짜
+    @Column(name = "u_deleted_date")
+    @UpdateTimestamp
+    private LocalDateTime userDeletedDate;
+
+    //사업자 탈퇴 여부
+    @Column(name = "u_com_enabled")
+    private boolean companyEnabled;
+
+    //사업자 탈퇴 날짜
+    @Column(name = "u_com_deleted_date")
+    private LocalDateTime companyDeltedDate;
+
     @Builder
     public UserInfo(Long id, String userid, String password, String name, String phone, String email,
                     String role, String userAdrNum, String userDefAdr, String userDetailAdr,
                     String companyId,
                     String companyName, String companyNum, String companyAdrNum,
-                    String companyDefNum, String companyDetailAdr, String companyBanknum) {
+                    String companyDefNum, String companyDetailAdr, String companyBanknum,
+                    boolean userEnabled,LocalDateTime userDeletedDate,boolean companyEnabled,LocalDateTime companyDeltedDate) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -107,6 +129,10 @@ public class UserInfo implements UserDetails {
         this.companyDefNum = companyDefNum;
         this.companyDetailAdr = companyDetailAdr;
         this.companyBanknum = companyBanknum;
+        this.userEnabled = userEnabled;
+        this.userDeletedDate = userDeletedDate;
+        this.companyEnabled = companyEnabled;
+        this.companyDeltedDate = companyDeltedDate;
     }
 
 
@@ -120,6 +146,11 @@ public class UserInfo implements UserDetails {
             roles.add(new SimpleGrantedAuthority(role));
         }
         return roles;
+    }
+    // 계정 사용 가능 여부 반환
+    @Override
+    public boolean isEnabled() {
+        return userEnabled; // true -> 사용 가능
     }
 
     // 사용자의 id를 반환 (unique한 값)
@@ -155,10 +186,4 @@ public class UserInfo implements UserDetails {
         return true; // true -> 만료되지 않았음
     }
 
-    // 계정 사용 가능 여부 반환
-    @Override
-    public boolean isEnabled() {
-        // 계정이 사용 가능한지 확인하는 로직
-        return true; // true -> 사용 가능
-    }
 }

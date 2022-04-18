@@ -1,4 +1,4 @@
-package com.danakga.webservice.user.dto.response;
+package com.danakga.webservice.util.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ResUserResultDto {
+public class ResResultDto {
     private Long id;
     private String message;
 
-    public ResUserResultDto(Long id , String message) {
+    public ResResultDto(Long id , String message) {
         this.id = id;
         this.message = message;
     }
