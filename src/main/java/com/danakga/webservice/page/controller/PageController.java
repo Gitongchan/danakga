@@ -28,10 +28,5 @@ public class PageController {
         return "pages/mainfunction";
     }
 
-    @GetMapping("/test/login")
-    public String testlogin(){
-        return "pages/login";
-    }
-
 
 }
