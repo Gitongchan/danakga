@@ -65,6 +65,7 @@ public class BoardController {
             } catch (Exception e1) {
                 e1.getStackTrace();
             }
+        System.out.println("commit test");
         return boardService.write(reqBoardWriteDto, reqFileUploadDto, files, userInfo);
     }
 
