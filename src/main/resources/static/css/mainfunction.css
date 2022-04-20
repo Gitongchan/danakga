@@ -4,6 +4,14 @@
     position: relative;
 }
 
+#searchText{
+    width:calc(100% - 60px);
+    height: 40px;
+    border: 1px solid #029c07;
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+}
+
 .form-group button{
     width: 90px;
     height: 24px;
