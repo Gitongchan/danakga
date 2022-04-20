@@ -15,13 +15,13 @@ public class File {
     @Id @GeneratedValue
     private Long f_id;
 
-    @Column(name="originFileName", nullable=false)
-    private String f_originName;
+    @Column(name="f_origin", nullable=false)
+    private String f_origin;
 
-    @Column(name="filename", nullable=false)
+    @Column(name="f_name", nullable=false)
     private String f_name;
 
-    @Column(name="filepath", nullable=false)
+    @Column(name="f_path", nullable=false)
     private String f_path;
 
     @ManyToOne
@@ -29,9 +29,9 @@ public class File {
     private Board board;
 
     @Builder
-    public File(Long f_id, String f_originName, String f_name, String f_path, Board board) {
+    public File(Long f_id, String f_origin, String f_name, String f_path, Board board) {
         this.f_id = f_id;
-        this.f_originName = f_originName;
+        this.f_origin = f_origin;
         this.f_name = f_name;
         this.f_path = f_path;
         this.board = board;

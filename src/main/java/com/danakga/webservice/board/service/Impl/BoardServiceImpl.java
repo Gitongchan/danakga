@@ -1,15 +1,19 @@
 package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
+import com.danakga.webservice.board.dto.request.ReqFileUploadDto;
 import com.danakga.webservice.board.dto.response.ResBoardUpdateDto;
 import com.danakga.webservice.board.dto.response.ResBoardWriteDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.repository.BoardRepository;
+import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Service
@@ -27,7 +31,7 @@ public class BoardServiceImpl implements BoardService {
     //jpa는 id값만 확인하기 때문에 외래키로 설정한 값에 그대로 넣어주면 DB 테이블에 id값 들어옴!
     //.userInfo(userInfo)안해주면 외래키로 설정된 컬럼에 null값이 박힘
     @Override
-    public ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, UserInfo userInfo) {
+    public ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, ReqFileUploadDto reqFileUploadDto, MultipartFile files, UserInfo userInfo) {
         final Long id = boardRepository.save(
                 Board.builder()
                         .bd_id(reqBoardWriteDto.getBd_id())
