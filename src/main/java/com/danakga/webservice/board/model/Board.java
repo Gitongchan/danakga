@@ -1,18 +1,20 @@
 package com.danakga.webservice.board.model;
 
-import com.danakga.webservice.board.util.BaseTimeEntity;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board extends BaseTimeEntity {
+public class Board {
 
     //id auto_increment 사용
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +46,12 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
+    @CreationTimestamp
+    private LocalDateTime bd_created;
+
+    @UpdateTimestamp
+    private LocalDateTime bd_modified;
+
     //insert시 기본값으로 bd_deleted에 "N"값 적용
     @PrePersist
     public void deleted() {
@@ -54,7 +62,7 @@ public class Board extends BaseTimeEntity {
     @Builder
     public Board(Long bd_id, String bd_type, int bd_views,
                  String bd_writer,String bd_title,
-                 String bd_content, String bd_deleted, UserInfo userInfo) {
+                 String bd_content, String bd_deleted, UserInfo userInfo, LocalDateTime bd_created, LocalDateTime bd_modified) {
         this.bd_id = bd_id;
         this.bd_type = bd_type;
         this.bd_views = bd_views;
@@ -63,5 +71,7 @@ public class Board extends BaseTimeEntity {
         this.bd_content = bd_content;
         this.bd_deleted = bd_deleted;
         this.userInfo = userInfo;
+        this.bd_created = bd_created;
+        this.bd_modified = bd_modified;
     }
 }
