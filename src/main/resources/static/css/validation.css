@@ -1,0 +1,35 @@
+
+
+#id_check{
+    display: none;
+}
+
+#pw_check{
+    display: none;
+    color:#B02A37;
+}
+
+#pw_confirmcheck{
+    display: none;
+    color: #B02A37;
+}
+
+#name_check{
+    display: none;
+    color: #B02A37;
+}
+
+
+#em_check{
+    display: none;
+    color: #B02A37;
+}
+
+#phone_check{
+    display: none;
+    color: #B02A37;
+}
+
+.register-form .form-group .form-control._error{
+    border-color:#B02A37;
+}
