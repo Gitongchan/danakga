@@ -1,6 +1,5 @@
 package com.danakga.webservice.user.service;
 
-import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,13 +16,9 @@ public interface UserService extends UserDetailsService {
 
     //이메일 중복 체크
     Integer emailCheck(String email);
-
-    //사업자 회원 등록
-    Long companyRegister(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto);
     
     //회원 탈퇴
     Long userDeleted(UserInfo userInfo,UserInfoDto userInfoDto);
 
-    Integer companyNameCheck(String companyName);
 
 }

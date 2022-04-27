@@ -56,35 +56,6 @@ public class UserInfo implements UserDetails {
     @Column(name = "u_detail_adr")
     private String userDetailAdr;
 
-    /*                          --사업자 부분--                          */
-    /*                    사업자 등록을 하면 추가되는 컬럼                  */
-    //사업자등록번호
-    @Column(name = "u_com_id")
-    private String companyId;
-
-    //회사명
-    @Column(name = "u_com_name")
-    private String companyName;
-
-    //회사연락처
-    @Column(name = "u_com_num")
-    private String companyNum;
-
-    //회사 우편번호
-    @Column(name = "u_com_adr_num")
-    private String companyAdrNum;
-
-    //회사 기본주소
-    @Column(name = "u_com_def_adr")
-    private String companyDefNum;
-
-    //회사 상세주소
-    @Column(name = "u_com_detail_adr")
-    private String companyDetailAdr;
-
-    //회사 계좌
-    @Column(name = "u_com_banknum")
-    private String companyBanknum;
 
     /**                            탈퇴 관련                            **/
 
@@ -97,21 +68,11 @@ public class UserInfo implements UserDetails {
     @UpdateTimestamp
     private LocalDateTime userDeletedDate;
 
-    //사업자 탈퇴 여부
-    @Column(name = "u_com_enabled")
-    private boolean companyEnabled;
-
-    //사업자 탈퇴 날짜
-    @Column(name = "u_com_deleted_date")
-    private LocalDateTime companyDeltedDate;
 
     @Builder
     public UserInfo(Long id, String userid, String password, String name, String phone, String email,
                     String role, String userAdrNum, String userDefAdr, String userDetailAdr,
-                    String companyId,
-                    String companyName, String companyNum, String companyAdrNum,
-                    String companyDefNum, String companyDetailAdr, String companyBanknum,
-                    boolean userEnabled,LocalDateTime userDeletedDate,boolean companyEnabled,LocalDateTime companyDeltedDate) {
+                    boolean userEnabled,LocalDateTime userDeletedDate) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -122,17 +83,8 @@ public class UserInfo implements UserDetails {
         this.userAdrNum = userAdrNum;
         this.userDefAdr = userDefAdr;
         this.userDetailAdr = userDetailAdr;
-        this.companyId = companyId;
-        this.companyName = companyName;
-        this.companyNum = companyNum;
-        this.companyAdrNum = companyAdrNum;
-        this.companyDefNum = companyDefNum;
-        this.companyDetailAdr = companyDetailAdr;
-        this.companyBanknum = companyBanknum;
         this.userEnabled = userEnabled;
         this.userDeletedDate = userDeletedDate;
-        this.companyEnabled = companyEnabled;
-        this.companyDeltedDate = companyDeltedDate;
     }
 
 

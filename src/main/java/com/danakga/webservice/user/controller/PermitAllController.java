@@ -45,4 +45,5 @@ public class PermitAllController {
     public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
         return new ResDupliCheckDto(userService.userIdCheck(email));
     }
+
 }
