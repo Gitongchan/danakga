@@ -87,38 +87,29 @@ const testUser = {
 
 const cb_value = {
     mainvalue:{
-        1:"낚시대",
-        2:"릴",
-        3:"라인",
-        4:"밑밥",
-        5:"루어",
-        6:"의류",
-        7:"공통장비",
-        8:"바다소품"
+        item1:"브랜드",
+        item2:"낚시대",
+        item3:"릴",
+        item4:"라인",
+        item5:"밑밥",
+        item6:"루어",
+        item7:"의류",
+        item8:"공통장비",
+        item9:"바다소품"
     },
     mainsubvalue:{
-        1:{
+        item1:{
             sub1:"약한 낚시대",
             sub2:"약약한 낚시대",
             sub3:"강한 낚시대"
-        },
-        2:{
-
-        },
-        3:{
-
-        },
-        4:{
-
-        },
-        5:{
-
-        },
+        }
     },
     subvalue:{
-        1:"바다",
-        2:"민물",
-        3:"루어",
-        4:"브랜드"
+        subitem1:"바다",
+        subitem2:"민물",
+        subitem3:"루어",
+        subitem4:"브랜드"
     }
 }
+
+export {Product, testUser, cb_value}
