@@ -5,6 +5,7 @@ import com.danakga.webservice.board.dto.request.ReqFileUploadDto;
 import com.danakga.webservice.board.dto.response.ResBoardWriteDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.service.BoardService;
+import com.danakga.webservice.board.service.FileService;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,8 +22,8 @@ import java.util.UUID;
 @RequestMapping("/api/board")
 public class BoardController {
 
-    @Autowired
-    private final BoardService boardService;
+    @Autowired private final BoardService boardService;
+    @Autowired private final FileService fileService;
 
     //게시판 목록
     @GetMapping("/list")
@@ -35,8 +35,6 @@ public class BoardController {
     @PostMapping("/postwrite")
     public ResBoardWriteDto write(@Valid @RequestBody ReqBoardWriteDto reqBoardWriteDto, ReqFileUploadDto reqFileUploadDto,
                                   MultipartFile files, @LoginUser UserInfo userInfo) {
-
-
         //이 작업을 service에서 해줘야 할거같은데 그럼 글 작성과 동시에 build로 db에 값을 넣을 수 있나?, file의 Long id만 넣어주는게 되나?
         //file은 다른 테이블에 저장되기 때문에 따로 mapping을 따서 fileupload 메소드를 만들어줘야 할 거 같은 생각
         try {
@@ -57,15 +55,18 @@ public class BoardController {
                     e2.getStackTrace();
                 }
             }
-
             //File로 저장 경로와 저장 할 파일명 합쳐서 multipartfile의 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-            File filepath = new File(savepath + fileName);
-            files.transferTo(filepath);
+            String filepath = savepath + "\\" + fileName;
+            files.transferTo(new File(filepath));
+
+            //set으로 설정한 파일명, 경로 값 넘겨주기
+            reqFileUploadDto.setF_originName(originFileName);
+            reqFileUploadDto.setF_name(fileName);
+            reqFileUploadDto.setF_path(filepath);
 
             } catch (Exception e1) {
                 e1.getStackTrace();
             }
-        System.out.println("commit test");
         return boardService.write(reqBoardWriteDto, reqFileUploadDto, files, userInfo);
     }
 

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class File {
+public class Files {
 
     @Id @GeneratedValue
     private Long f_id;
@@ -29,7 +29,7 @@ public class File {
     private Board board;
 
     @Builder
-    public File(Long f_id, String f_origin, String f_name, String f_path, Board board) {
+    public Files(Long f_id, String f_origin, String f_name, String f_path, Board board) {
         this.f_id = f_id;
         this.f_origin = f_origin;
         this.f_name = f_name;

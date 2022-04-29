@@ -18,6 +18,7 @@ public interface BoardService {
     //게시글 작성
     ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, ReqFileUploadDto reqFileUploadDto, MultipartFile files, UserInfo userInfo);
 
-    //게시글 수정
-    ResBoardUpdateDto update(Board board);
+
+//    //게시글 수정
+//    ResBoardUpdateDto update(Board board);
 }
