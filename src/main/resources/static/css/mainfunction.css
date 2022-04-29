@@ -58,19 +58,24 @@
 
 .search_cate_title{
     margin: 10px 15px;
-    width: 120px;
+    width: 100px;
     font-size: 14px;
     font-weight: 700;
     color:black;
-    display: flex;
+    display: inline;
+}
+
+.search_cate_list{
+    float: right;
+    top:0;
+    width: calc(100% - 120px);
+}
+
+.search_option_list{
+    margin: 10px 10px;
 }
 
 
-/*.search_option_wrap::after{*/
-/*    display: block;*/
-/*    clear: both;*/
-/*    content:'';*/
-/*}*/
 /*
     Screen Size
     xs <576px
