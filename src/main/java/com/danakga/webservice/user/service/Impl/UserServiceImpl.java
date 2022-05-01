@@ -91,6 +91,10 @@ public class UserServiceImpl implements UserService {
         //로그인 사용자 검증 이후 동작함
         if (userRepository.findById(userInfo.getId()).isPresent()) {
 
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String rawPassword = userInfoDto.getPassword();
+            userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
+
             userRepository.save(
                     UserInfo.builder()
                             .id(userInfo.getId()) //로그인 유저 키값을 받아옴
@@ -99,7 +103,7 @@ public class UserServiceImpl implements UserService {
                             .name(userInfoDto.getName())
                             .phone(userInfoDto.getPhone())
                             .email(userInfoDto.getEmail())
-                            .role(userInfoDto.getRole())
+                            .role(userInfo.getRole())
                             .userAdrNum(userInfoDto.getUserAdrNum())
                             .userDefAdr(userInfoDto.getUserDefAdr())
                             .userDetailAdr(userInfoDto.getUserDetailAdr())

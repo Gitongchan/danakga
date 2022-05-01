@@ -85,6 +85,4 @@ public class CompanyUserInfoDto {
     //사업자 탈퇴 날짜
     private LocalDateTime companyDeletedDate;
 
-
-
 }
