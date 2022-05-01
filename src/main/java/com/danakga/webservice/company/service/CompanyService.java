@@ -7,7 +7,7 @@ import com.danakga.webservice.user.model.UserInfo;
 
 public interface CompanyService {
     //사업자탈퇴
-    Long companyDeleted(UserInfo userInfo, CompanyInfoDto companyInfoDto);
+    Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto);
 
     //업체명 체크
     Integer companyNameCheck(String companyName);

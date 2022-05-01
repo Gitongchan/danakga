@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@DynamicUpdate  //더티체킹 , 변경된 값만 확인한 이후 업데이트 쿼리 전송
 public class UserInfo implements UserDetails {
     //공통부분
     @Id
@@ -65,7 +67,6 @@ public class UserInfo implements UserDetails {
 
     //회원 탈퇴 날짜
     @Column(name = "u_deleted_date")
-    @UpdateTimestamp
     private LocalDateTime userDeletedDate;
 
 
@@ -86,6 +87,10 @@ public class UserInfo implements UserDetails {
         this.userEnabled = userEnabled;
         this.userDeletedDate = userDeletedDate;
     }
+
+
+
+
 
 
 

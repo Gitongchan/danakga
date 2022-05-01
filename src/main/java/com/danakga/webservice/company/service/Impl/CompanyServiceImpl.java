@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -21,11 +24,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired private final UserRepository userRepository;
     @Autowired private final UserService userService;
 
-    //사업자탈퇴a
-    @Override
-    public Long companyDeleted(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
-        return null;
-    }
+
 
     //업체명 중복 체크
     @Override
@@ -37,6 +36,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     //사업자 회원 등록
+    @Transactional
     @Override
     public Long companyRegister(CompanyUserInfoDto companyUserInfoDto) {
 
@@ -45,8 +45,10 @@ public class CompanyServiceImpl implements CompanyService {
         String rawPassword = companyUserInfoDto.getPassword();
         companyUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
 
+        //가입시 자동 설정
         companyUserInfoDto.setRole("ROLE_MANAGER");
         companyUserInfoDto.setCompanyEnabled(true);
+        companyUserInfoDto.setUserEnabled(true);
 
         //중복 id,email 검증
         Integer idCheckResult = userService.userIdCheck(companyUserInfoDto.getUserid());
@@ -57,20 +59,21 @@ public class CompanyServiceImpl implements CompanyService {
         else{
             System.out.println("실행됨");
             UserInfo singUpUserInfo =
-            userRepository.save(
-                    UserInfo.builder()
-                            .userid(companyUserInfoDto.getUserid())
-                            .password(companyUserInfoDto.getPassword())
-                            .name(companyUserInfoDto.getName())
-                            .phone(companyUserInfoDto.getPhone())
-                            .email(companyUserInfoDto.getEmail())
-                            .role(companyUserInfoDto.getRole())
-                            .userAdrNum(companyUserInfoDto.getUserAdrNum())
-                            .userDefAdr(companyUserInfoDto.getUserDefAdr())
-                            .userDetailAdr(companyUserInfoDto.getUserDetailAdr())
-                            .userEnabled(companyUserInfoDto.isUserEnabled())
-                            .build()
-            );
+                    userRepository.save(
+                            UserInfo.builder()
+                                    .userid(companyUserInfoDto.getUserid())
+                                    .password(companyUserInfoDto.getPassword())
+                                    .name(companyUserInfoDto.getName())
+                                    .phone(companyUserInfoDto.getPhone())
+                                    .email(companyUserInfoDto.getEmail())
+                                    .role(companyUserInfoDto.getRole())
+                                    .userAdrNum(companyUserInfoDto.getUserAdrNum())
+                                    .userDefAdr(companyUserInfoDto.getUserDefAdr())
+                                    .userDetailAdr(companyUserInfoDto.getUserDetailAdr())
+                                    .userEnabled(companyUserInfoDto.isUserEnabled())
+                                    .build()
+                    );
+
             companyRepository.save(
                     CompanyInfo.builder()
                             .companyId(companyUserInfoDto.getCompanyId())
@@ -86,7 +89,58 @@ public class CompanyServiceImpl implements CompanyService {
             );
             return singUpUserInfo.getId();
         }
+    }
 
+    //사업자탈퇴
+    @Transactional
+    @Override
+    public Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
+
+        if(userRepository.findById(userInfo.getId()).isPresent()&& userInfo.getRole().equals("ROLE_MANAGER")) {
+
+            companyUserInfoDto.setCompanyEnabled(false);
+            companyUserInfoDto.setRole("ROLE_USER");
+
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
+                            //유저의 정보는 그대로 유지
+                            .userid(userInfo.getUserid())
+                            .password(userInfo.getPassword())
+                            .name(userInfo.getName())
+                            .phone(userInfo.getPhone())
+                            .email(userInfo.getEmail())
+                            .userAdrNum(userInfo.getUserAdrNum())
+                            .userDefAdr(userInfo.getUserDefAdr())
+                            .userDetailAdr(userInfo.getUserDetailAdr())
+                            .userEnabled(userInfo.isUserEnabled())
+                            //권한만 변경
+                            .role(companyUserInfoDto.getRole())
+                            .build()
+            );
+
+            CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
+                    ()->CompanyInfo.builder().build()
+            );
+
+            companyRepository.save(
+                    CompanyInfo.builder()
+                            .companyId(deleteCompanyInfo.getCompanyId())
+                            .userInfo(userInfo)
+                            .companyName(deleteCompanyInfo.getCompanyName())
+                            .companyNum(deleteCompanyInfo.getCompanyNum())
+                            .companyAdrNum(deleteCompanyInfo.getCompanyAdrNum())
+                            .companyDefNum(deleteCompanyInfo.getCompanyDefNum())
+                            .companyDetailAdr(deleteCompanyInfo.getCompanyDetailAdr())
+                            .companyBanknum(deleteCompanyInfo.getCompanyBanknum())
+                            .companyEnabled(companyUserInfoDto.isCompanyEnabled())
+                            .companyDeltedDate(LocalDateTime.now())
+                            .build()
+
+            );
+            return userInfo.getId();
+        }
+        return -1L;
     }
 
 }

@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -82,12 +85,11 @@ public class UserServiceImpl implements UserService {
     }
 
     //회원 정보 수정
+    @Transactional
     @Override
     public Long update(UserInfo userInfo, UserInfoDto userInfoDto) {
         //로그인 사용자 검증 이후 동작함
         if (userRepository.findById(userInfo.getId()).isPresent()) {
-
-            userInfoDto.setRole("ROLE_USER");//임시로 권한 USER로 지정
 
             userRepository.save(
                     UserInfo.builder()
@@ -113,6 +115,7 @@ public class UserServiceImpl implements UserService {
 
     //회원 탈퇴
     @Override
+    @Transactional
     public Long userDeleted(UserInfo userInfo, UserInfoDto userInfoDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -121,8 +124,6 @@ public class UserServiceImpl implements UserService {
 
         if (userRepository.findById(userInfo.getId()).isPresent()
                 && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
-            userInfoDto.setUserEnabled(false);
-
             userRepository.save(
                     UserInfo.builder()
                             .id(userInfo.getId()) //로그인 유저 키값을 받아옴
@@ -135,9 +136,11 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfo.getUserAdrNum())
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userEnabled(userInfoDto.isUserEnabled())
+                            .userDeletedDate(LocalDateTime.now())
+                            .userEnabled(false)
                             .build()
             );
+
             return userInfo.getId();
         }
         return -1L;
