@@ -1,6 +1,6 @@
 package com.danakga.webservice.user.service.Impl;
 
-import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
+import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -12,13 +12,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private final UserRepository userRepository;
+
+    @Autowired private final UserRepository userRepository;
+    @Autowired private final CompanyRepository companyRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
@@ -81,12 +85,15 @@ public class UserServiceImpl implements UserService {
     }
 
     //회원 정보 수정
+    @Transactional
     @Override
     public Long update(UserInfo userInfo, UserInfoDto userInfoDto) {
         //로그인 사용자 검증 이후 동작함
         if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-            userInfoDto.setRole("ROLE_USER");//임시로 권한 USER로 지정
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String rawPassword = userInfoDto.getPassword();
+            userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
 
             userRepository.save(
                     UserInfo.builder()
@@ -96,7 +103,7 @@ public class UserServiceImpl implements UserService {
                             .name(userInfoDto.getName())
                             .phone(userInfoDto.getPhone())
                             .email(userInfoDto.getEmail())
-                            .role(userInfoDto.getRole())
+                            .role(userInfo.getRole())
                             .userAdrNum(userInfoDto.getUserAdrNum())
                             .userDefAdr(userInfoDto.getUserDefAdr())
                             .userDetailAdr(userInfoDto.getUserDetailAdr())
@@ -108,56 +115,11 @@ public class UserServiceImpl implements UserService {
         return -1L;
     }
 
-    //업체명 중복 체크
-    @Override
-    public Integer companyNameCheck(String companyName) {
-        if (userRepository.findByCompanyName(companyName).isPresent()) {
-            return -1; //같은 이메일 존재할 때
-        }
-        return 1; // 같은 이메일 없을 때
-    }
     
-    //사업자 회원 등록
-    @Override
-    public Long companyRegister(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
-        if (userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_USER")) {
-
-            companyUserInfoDto.setRole("ROLE_MANAGER");
-            companyUserInfoDto.setCompanyEnabled(true);;
-
-            userRepository.save(
-                    UserInfo.builder()
-                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
-                            //유저의 정보는 그대로 유지
-                            .userid(userInfo.getUserid())
-                            .password(userInfo.getPassword())
-                            .name(userInfo.getName())
-                            .phone(userInfo.getPhone())
-                            .email(userInfo.getEmail())
-                            .userAdrNum(userInfo.getUserAdrNum())
-                            .userDefAdr(userInfo.getUserDefAdr())
-                            .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userEnabled(userInfo.isUserEnabled())
-                            //사업자 등록으로 받은 정보만 user_info로 업데이트
-                            .role(companyUserInfoDto.getRole())
-                            .companyId(companyUserInfoDto.getCompanyId())
-                            .companyName(companyUserInfoDto.getCompanyName())
-                            .companyNum(companyUserInfoDto.getCompanyNum())
-                            .companyAdrNum(companyUserInfoDto.getCompanyAdrNum())
-                            .companyDefNum(companyUserInfoDto.getCompanyDefNum())
-                            .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
-                            .companyBanknum(companyUserInfoDto.getCompanyBanknum())
-                            .companyEnabled(companyUserInfoDto.isCompanyEnabled())
-                            .build()
-            );
-            return userInfo.getId();
-        }
-        return -1L;
-
-    }
 
     //회원 탈퇴
     @Override
+    @Transactional
     public Long userDeleted(UserInfo userInfo, UserInfoDto userInfoDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -166,8 +128,6 @@ public class UserServiceImpl implements UserService {
 
         if (userRepository.findById(userInfo.getId()).isPresent()
                 && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
-            userInfoDto.setUserEnabled(false);
-
             userRepository.save(
                     UserInfo.builder()
                             .id(userInfo.getId()) //로그인 유저 키값을 받아옴
@@ -180,11 +140,15 @@ public class UserServiceImpl implements UserService {
                             .userAdrNum(userInfo.getUserAdrNum())
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userEnabled(userInfoDto.isUserEnabled())
+                            .userDeletedDate(LocalDateTime.now())
+                            .userEnabled(false)
                             .build()
             );
+
             return userInfo.getId();
         }
         return -1L;
     }
+
+
 }

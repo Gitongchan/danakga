@@ -2,10 +2,7 @@ package com.danakga.webservice.user.dto.request;
 
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-
-import java.util.Collection;
 
 
 @Getter
