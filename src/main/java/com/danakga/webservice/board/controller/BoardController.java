@@ -1,11 +1,10 @@
 package com.danakga.webservice.board.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
-import com.danakga.webservice.board.dto.request.ReqFileUploadDto;
-import com.danakga.webservice.board.dto.response.ResBoardDto;
+import com.danakga.webservice.board.dto.response.ResBoardWriteDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.service.BoardService;
-import com.danakga.webservice.board.service.FileService;
+import com.danakga.webservice.board.service.FilesService;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import java.util.List;
 public class BoardController {
 
     @Autowired private final BoardService boardService;
-    @Autowired private final FileService fileService;
+    @Autowired private final FilesService filesService;
 
     //게시판 목록
     @GetMapping("/list")
@@ -30,9 +29,11 @@ public class BoardController {
     }
 
     //게시글 작성
+    //파일은 RequestBody로 받게되면 Excption 발생 , RequestParam, Part 둘 중 하나로 받기
+    // RequestBody는 json 형태의 데이터, file은 Multipart/form-data
     @PostMapping("/postwrite")
-    public ResBoardDto write(@Valid @RequestBody ReqBoardWriteDto reqBoardWriteDto, ReqFileUploadDto reqFileUploadDto,
-                             MultipartFile files, @LoginUser UserInfo userInfo) {
+    public ResBoardWriteDto write(@Valid @RequestBody ReqBoardWriteDto reqBoardWriteDto, @LoginUser UserInfo userInfo,
+                                  @RequestParam(value= "images", required = false) List<MultipartFile> files) {
         return boardService.write(reqBoardWriteDto, userInfo);
     }
 
