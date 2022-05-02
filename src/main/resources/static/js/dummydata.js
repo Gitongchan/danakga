@@ -85,39 +85,71 @@ const testUser = {
     }
 }
 const cb_barnd ={
-        1:"블랙이소",
-        2:"털보네",
-        3:"용명"
+        brand1:"블랙이소",
+        brand2:"털보네",
+        brand3:"용명"
 }
+
 const cb_mainvalue = {
-    mainvalue:{
         brand:{
             p_name:"브랜드",
-            cb_barnd
+            sub_value:{
+                brand1:"블랙이소",
+                brand2:"털보네",
+                brand3:"용명"
+            }
         },
         fishingType:{
             p_name:"낚시종류",
-            cb_subvalue
+            sub_value:{
+                _1_item1:"바다",
+                _1_item2:"민물",
+                _1_item3:"루어"
+            }
         },
-        item2:"낚시 종류",
-        item3:"낚시대",
-        item4:"릴",
-        item5:"라인",
-        item6:"밑밥",
+        rod:{
+            p_name:"낚시대",
+            sub_value : {
+                _2_item1:"강한낚시대",
+                _2_item2:"들 강한 낚시대",
+                _2_item3:"굉장히 강한 낚시대",
+                _2_item4:"엄청나게 강한 낚시대"
+            }
+        },
+        reel:{
+            p_name:"릴",
+            sub_value : {
+                _3_item1:"스피닝릴",
+                _3_item2:"큰릴",
+                _3_item3:"릴릴",
+                _3_item4:"어쭈릴"
+            }
+        },
+        line:{
+            p_name:"라인",
+            sub_value : {
+                _4_item1:"라인",
+                _4_item2:"하라인",
+                _4_item3:"주웅 라인",
+                _4_item4:"대라인"
+            }
+        },
+        chum:{
+            p_name:"밑밥",
+            sub_value : {
+                _5_item1:"강한낚시대",
+                _5_item2:"들 강한 낚시대",
+                _5_item3:"굉장히 강한 낚시대",
+                _5_item4:"엄청나게 강한 낚시대"
+            }
+        },
         item7:"루어",
         item8:"의류",
         item9:"공통장비",
         item10:"바다소품"
-    }
-}
-
-const cb_subvalue ={
-        fishing_type:{
-            1:"바다",
-            2:"민물",
-            3:"루어"
-        }
 }
 
 
-export {Product, testUser, cb_mainvalue}
+
+
+export {Product, testUser, cb_mainvalue, cb_barnd}
