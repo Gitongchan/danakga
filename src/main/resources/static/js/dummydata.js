@@ -84,32 +84,40 @@ const testUser = {
         u_com_adr_num: "144-223"
     }
 }
-
-const cb_value = {
+const cb_barnd ={
+        1:"블랙이소",
+        2:"털보네",
+        3:"용명"
+}
+const cb_mainvalue = {
     mainvalue:{
-        item1:"브랜드",
-        item2:"낚시대",
-        item3:"릴",
-        item4:"라인",
-        item5:"밑밥",
-        item6:"루어",
-        item7:"의류",
-        item8:"공통장비",
-        item9:"바다소품"
-    },
-    mainsubvalue:{
-        item1:{
-            sub1:"약한 낚시대",
-            sub2:"약약한 낚시대",
-            sub3:"강한 낚시대"
-        }
-    },
-    subvalue:{
-        subitem1:"바다",
-        subitem2:"민물",
-        subitem3:"루어",
-        subitem4:"브랜드"
+        brand:{
+            p_name:"브랜드",
+            cb_barnd
+        },
+        fishingType:{
+            p_name:"낚시종류",
+            cb_subvalue
+        },
+        item2:"낚시 종류",
+        item3:"낚시대",
+        item4:"릴",
+        item5:"라인",
+        item6:"밑밥",
+        item7:"루어",
+        item8:"의류",
+        item9:"공통장비",
+        item10:"바다소품"
     }
 }
 
-export {Product, testUser, cb_value}
+const cb_subvalue ={
+        fishing_type:{
+            1:"바다",
+            2:"민물",
+            3:"루어"
+        }
+}
+
+
+export {Product, testUser, cb_mainvalue}
