@@ -1,6 +1,7 @@
 package com.danakga.webservice.board.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
+import com.danakga.webservice.board.dto.request.ReqFileUploadDto;
 import com.danakga.webservice.board.dto.response.ResBoardWriteDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.service.BoardService;
@@ -20,7 +21,6 @@ import java.util.List;
 public class BoardController {
 
     @Autowired private final BoardService boardService;
-    @Autowired private final FilesService filesService;
 
     //게시판 목록
     @GetMapping("/list")
@@ -33,8 +33,10 @@ public class BoardController {
     // RequestBody는 json 형태의 데이터, file은 Multipart/form-data
     @PostMapping("/postwrite")
     public ResBoardWriteDto write(@Valid @RequestBody ReqBoardWriteDto reqBoardWriteDto, @LoginUser UserInfo userInfo,
-                                  @RequestParam(value= "images", required = false) List<MultipartFile> files) {
-        return boardService.write(reqBoardWriteDto, userInfo);
+                                  @RequestParam(value= "images", required = false) List<MultipartFile> files,
+                                  ReqFileUploadDto reqFileUploadDto) {
+
+        return boardService.write(reqBoardWriteDto, userInfo, reqFileUploadDto, files);
     }
 
     //게시글 수정
