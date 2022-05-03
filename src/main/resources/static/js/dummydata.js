@@ -94,53 +94,53 @@ const cb_mainvalue = {
         brand:{
             p_name:"브랜드",
             sub_value:{
-                brand1:"블랙이소",
-                brand2:"털보네",
-                brand3:"용명"
+                item1:"블랙이소",
+                item2:"털보네",
+                item3:"용명"
             }
         },
         fishingType:{
             p_name:"낚시종류",
             sub_value:{
-                _1_item1:"바다",
-                _1_item2:"민물",
-                _1_item3:"루어"
+                item1:"바다",
+                item2:"민물",
+                item3:"루어"
             }
         },
         rod:{
             p_name:"낚시대",
             sub_value : {
-                _2_item1:"강한낚시대",
-                _2_item2:"들 강한 낚시대",
-                _2_item3:"굉장히 강한 낚시대",
-                _2_item4:"엄청나게 강한 낚시대"
+                item1:"강한낚시대",
+                item2:"들 강한 낚시대",
+                item3:"굉장히 강한 낚시대",
+                item4:"엄청나게 강한 낚시대"
             }
         },
         reel:{
             p_name:"릴",
             sub_value : {
-                _3_item1:"스피닝릴",
-                _3_item2:"큰릴",
-                _3_item3:"릴릴",
-                _3_item4:"어쭈릴"
+                item1:"스피닝릴",
+                item2:"큰릴",
+                item3:"릴릴",
+                item4:"어쭈릴"
             }
         },
         line:{
             p_name:"라인",
             sub_value : {
-                _4_item1:"라인",
-                _4_item2:"하라인",
-                _4_item3:"주웅 라인",
-                _4_item4:"대라인"
+                item1:"라인",
+                item2:"하라인",
+                item3:"주웅 라인",
+                item4:"대라인"
             }
         },
         chum:{
             p_name:"밑밥",
             sub_value : {
-                _5_item1:"강한낚시대",
-                _5_item2:"들 강한 낚시대",
-                _5_item3:"굉장히 강한 낚시대",
-                _5_item4:"엄청나게 강한 낚시대"
+                item1:"강한낚시대",
+                item2:"들 강한 낚시대",
+                item3:"굉장히 강한 낚시대",
+                item4:"엄청나게 강한 낚시대"
             }
         },
         item7:"루어",
