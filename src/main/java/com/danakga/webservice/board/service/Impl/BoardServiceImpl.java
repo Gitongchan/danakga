@@ -23,6 +23,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired private final BoardRepository boardRepository;
     @Autowired private final FilesService filesService;
+    //이렇게 선언해서 쓰는지, 파라미터로 가져와서 넣어주는지 찾아봐야함
     private Board board;
 
     //게시판 목록
@@ -32,7 +33,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     //jpa는 id값만 확인하기 때문에 외래키로 설정한 값에 그대로 넣어주면 DB 테이블에 id값 들어옴
-    //.userInfo(userInfo)안해주면 외래키로 설정된 컬럼에 null값이 박힘
     @Override
     public ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, UserInfo userInfo,
                                   ReqFileUploadDto reqFileUploadDto, List<MultipartFile> files) {
@@ -55,14 +55,9 @@ public class BoardServiceImpl implements BoardService {
         return new ResBoardWriteDto(bd_id);
     }
 
-    @Override
-    public ResBoardUpdateDto update(Board board) {
-        return null;
-    }
-
 //    @Override
-//    public ResBoardUpdateDto update(Board board) {
-//        return null;
+//    public ResBoardUpdateDto update(UserInfo userInfo,Board board) {
+//        final Long bd_id;
+//        return new ResBoardUpdateDto(bd_id);
 //    }
-
 }

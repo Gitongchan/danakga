@@ -28,7 +28,7 @@ public class FileServiceImpl implements FilesService {
     public ResFileUploadDto saveFileUpload(ReqFileUploadDto reqFileUploadDto, List<MultipartFile> files, Board board) {
 
             //파일 저장 경로
-            //보통 static에 files를 하나 만들어서 저장한다고 함
+            //보통 static에 files를 하나 만들어서 저장
             String savepath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\";
 
             //파일 저장되는 폳더 없으면 생성
@@ -49,10 +49,9 @@ public class FileServiceImpl implements FilesService {
                 //확장자명 없으면 처리 x
                 if(ObjectUtils.isEmpty(contentType)) {
                     break;
-                }
-                //jpg, png 두개만 처리
-                //contains로 해당 값이 포함되어 있는지 확인
-                else {
+                } else {
+                    //jpg, png 두개만 처리
+                    //contains로 해당 값이 포함되어 있는지 확인
                     if(contentType.contains("image/jpeg"))
                         originalFilename = ".jpg";
                     else if(contentType.contains("image/png"))

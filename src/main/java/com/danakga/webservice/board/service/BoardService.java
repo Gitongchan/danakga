@@ -20,5 +20,5 @@ public interface BoardService {
                            ReqFileUploadDto reqFileUploadDto, List<MultipartFile> files);
 
     //게시글 수정
-    ResBoardUpdateDto update(Board board);
+//    ResBoardUpdateDto update(UserInfo userInfo, Board board);
 }

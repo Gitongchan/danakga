@@ -41,8 +41,8 @@ public class BoardController {
 
     //게시글 수정
 //    @PutMapping("/post/edit/{id}")
-//    public String edit(@PathVariable Long id, Board board) {
-//        return "/post/edit";
+//    public String edit(@PathVariable Long id, @LoginUser UserInfo userInfo,Board board) {
+//        return boardService.update(userInfo, board);
 //    }
 
 }
