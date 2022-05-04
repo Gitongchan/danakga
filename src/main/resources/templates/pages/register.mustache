@@ -81,16 +81,37 @@
                                     <input class="form-control" name="email" type="email" id="reg-email" onkeyup="regeisterCheck.EMAIL()" oninput="buttoncheck()" placeholder="이메일을 입력해주세요." required />
                                 </div>
                             </div>
+
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <label for="sample4_postcode">우편번호</label>
+                                    <input type="text" class="form-control col-sm-8 col-8" id="sample4_postcode" placeholder="우편번호" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="button">
+                                        <button class="btn" id="PostCode" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="sample4_roadAddress">도로명주소</label>
+                                    <input type="text" class="form-control" id="sample4_roadAddress" placeholder="도로명주소" required><br>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="sample4_jibunAddress">지번주소</label>
+                                    <input type="text" class="form-control" id="sample4_jibunAddress" placeholder="지번주소" required>
+                                </div>
+                            </div>
                             <div class="col-sm-12">
                                 <div class="form_group">
-                                    <input type="text" id="sample4_postcode" placeholder="우편번호">
-                                    <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
-                                    <input type="text" id="sample4_roadAddress" placeholder="도로명주소">
-                                    <input type="text" id="sample4_jibunAddress" placeholder="지번주소">
                                     <span id="guide" style="color:#999;display:none"></span>
-                                    <input type="text" id="sample4_detailAddress" placeholder="상세주소">
-                                    <input type="text" id="sample4_extraAddress" placeholder="참고항목">
-
+                                    <input type="text" class="form-control" id="sample4_detailAddress" placeholder="상세주소">
+<!--                                    <input type="text" class="form-control" id="sample4_extraAddress" placeholder="참고항목">-->
                                 </div>
                             </div>
                             <div class="col-sm-12">
