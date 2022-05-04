@@ -33,7 +33,11 @@
         password2: document.getElementById('reg-pass-confirm'),
         username: document.getElementById('reg-name'),
         email: document.getElementById('reg-email'),
-        phone: document.getElementById('reg-phone')
+        phone: document.getElementById('reg-phone'),
+        postCode: document.getElementById('sample4_postcode'),
+        sample4_roadAddress: document.getElementById('sample4_roadAddress'),
+        sample4_jibunAddress: document.getElementById('sample4_jibunAddress'),
+        sample4_detailAddress: document.getElementById('sample4_detailAddress')
     }
 
     <!-- 유효성검사가 정상실행 되어서 값이 입력되어있다면 실행하는 함수-->
@@ -213,7 +217,10 @@
             password: userData.password1.value,
             name: userData.username.value,
             phone: userData.phone.value,
-            email: userData.email.value
+            email: userData.email.value,
+            u_adr_num:userData.postCode.value,
+            u_def_adr:userData.sample4_roadAddress.value,
+            u_detail_adr:userData.sample4_detailAddress.value
         }
         console.log(postData);
         fetch("/api/signup", {
