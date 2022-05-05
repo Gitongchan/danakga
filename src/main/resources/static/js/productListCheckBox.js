@@ -1,4 +1,4 @@
-import {cb_mainvalue,cb_barnd} from "./dummydata.js";
+import {cb_mainvalue,cb_barnd,category} from "./dummydata.js";
 
 const search_option_wrap = document.querySelector('.search_option_wrap');
 
@@ -39,3 +39,12 @@ const productList = [];
         주 메뉴를 뿌리고, 그 해당하는 메뉴마다 for in 을 돌려서 메뉴 객체 안에 있는 세부 메뉴를 뿌린다?
         그렇다면, 메뉴 하나하나 다 for in문을 만들어서 돌려야하나 ?
     */
+
+const types = category[0].keys()//제조사, 인텔CPU 종류
+
+// for type in types{
+//     oneCategory = category[0][type]//oneCategory = {		intel: "인텔",		amd:"AMD"	}
+//     for num in oneCategory[0]{//num = intel: "인텔"
+//         <label value="num.key">num.value<label>
+//             }
+//             }

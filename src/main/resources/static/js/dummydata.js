@@ -149,7 +149,17 @@ const cb_mainvalue = {
         item10:"바다소품"
 }
 
+const category = {
+    "제조사" : {
+        intel: "인텔",
+            amd:"AMD"
+    },
+    "인텔 CPU 종류":{
+        intel_i9_12:"코어i9-12세대"
+    }
+}
 
 
 
-export {Product, testUser, cb_mainvalue, cb_barnd}
+
+export {Product, testUser, cb_mainvalue, cb_barnd, category}
