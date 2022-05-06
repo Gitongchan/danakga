@@ -12,20 +12,17 @@
     <style>
         /* 줄 바꿈 태그 길이 설정*/
         hr{
-            width:90%
+            width:100%
         }
         label{
             font-weight: bold;
         }
-
-
     </style>
 </head>
 <body>
 <!-- Cotainer는 그렇게 양쪽 여백을 주게 되어있고  fluid 뭐시기는 여백 없음-->
 <div class="container">
-    <div class="form-group">
-        <br><br><br>
+    <div class="row">
         <h3>회원정보 수정</h3>
         <hr>
         <label class="col-sm-2 control-label">아이디*</label>
@@ -35,36 +32,40 @@
     </div>
 <hr>
     <form class="was-validated">
-        <div class="form-group">
+        <div class="mb-3 mt-3">
             <label for="uname" class="col-sm-2 control-label">이메일 주소*</label>
-            <input type="email" style=width:50%; id="uname" placeholder="abcd@example.com" name="uname" required>
-            <button id ="mailbtn" class = "btn btn-primary">메일 인증</button>
-            <div class="invalid-feedback" style="width: 70%; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게 입력해주세요</div>
+            <input type="text" class="form-control col-10" id="uname" placeholder="abcd@example.com" name="uname" required>
+            <button id="emailbtn" class="btn btn-primary" style="">메일 인증</button><br>
+            <div style="color: #bd081c; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게 입력해주세요</div>
         </div>
     </form>
 <hr>
-    <div class="form-group">
+    <div class="row">
         <label class="col-sm-2 control-label">이름*</label>
-        <span style="width: 50%">박정현</span> <!-- 아이디 값 불러오기 -->
-        <a href="#" style="text-align: right; color:#696969;">개명하셨다면? 이름 변경 ></a>
+        <span style="width: 65%">박정현</span> <!-- 아이디 값 불러오기 -->
+        <a href="#" class="col-sm-2 col-10" style=" color:#696969;">개명하셨다면? 이름 변경 ></a>
     </div>
 <hr>
-    <div class="form-group">
+    <div class="row">
         <label class="col-sm-2 control-label">비밀번호*</label>
-        <span class="col-sm-2">비밀번호 변경 ∨</span> <!-- 아이디 값 불러오기 -->
+        <a href="#" class="col-sm-2" style="color:#696969;">비밀번호 변경 ∨</a>
     </div>
-<hr><br><br>
-    <div class="form-group">
+<hr>
+    <div class="row">
         <label style="vertical-align:top;" class="col-sm-2 control-label">배송지 정보</label>
-        <textarea style="resize:none; border:1px solid black; border-radius: 30px; width: 70%; height: 20%" rows="15" cols="30" name="contents"></textarea>
+        <textarea style="resize:none; border:1px solid black; border-radius: 30px; width: auto; height: auto;" rows="15" cols="135" name="contents"></textarea>
     </div>
-    <button type="button" class="btn btn-primary" style="position: absolute; right: 0;  border:1px solid darkblue; border-radius: 10px;">변경 완료</button>
+    <div class="row">
+        <label class="col-sm-10 control-label"></label>
+        <button type="button" class="btn btn-success">변경 완료</button>
+    </div>
 
 
+
+<!--""-->
 <br>
 <br>
 </div>
-<h1>어 된다?</h1>
 
 </body>
 </html>
