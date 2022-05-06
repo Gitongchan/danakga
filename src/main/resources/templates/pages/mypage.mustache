@@ -37,7 +37,7 @@
     <form class="was-validated">
         <div class="form-group">
             <label for="uname" class="col-sm-2 control-label">이메일 주소*</label>
-            <input type="email" style=width:50%; id="uname" placeholder="abcd@example.com" name="uname" required>
+            <input type="email" style=width:60%; id="uname" placeholder="abcd@example.com" name="uname" required>
             <button id ="mailbtn" class = "btn btn-primary">메일 인증</button>
             <div class="invalid-feedback" style="width: 70%; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게 입력해주세요</div>
         </div>
@@ -45,26 +45,30 @@
 <hr>
     <div class="form-group">
         <label class="col-sm-2 control-label">이름*</label>
-        <span style="width: 50%">박정현</span> <!-- 아이디 값 불러오기 -->
+        <span style="width: 55%">박정현</span> <!-- 아이디 값 불러오기 -->
         <a href="#" style="text-align: right; color:#696969;">개명하셨다면? 이름 변경 ></a>
     </div>
 <hr>
     <div class="form-group">
         <label class="col-sm-2 control-label">비밀번호*</label>
-        <span class="col-sm-2">비밀번호 변경 ∨</span> <!-- 아이디 값 불러오기 -->
+        <a href="#" class="col-sm-2" style="color:#696969;">비밀번호 변경 ∨</a>
     </div>
 <hr><br><br>
     <div class="form-group">
         <label style="vertical-align:top;" class="col-sm-2 control-label">배송지 정보</label>
         <textarea style="resize:none; border:1px solid black; border-radius: 30px; width: 70%; height: 20%" rows="15" cols="30" name="contents"></textarea>
     </div>
-    <button type="button" class="btn btn-primary" style="position: absolute; right: 0;  border:1px solid darkblue; border-radius: 10px;">변경 완료</button>
+    <div class="form-group">
+        <label class="col-sm-10 control-label"></label>
+        <button type="button" class="btn btn-success">변경 완료</button>
+    </div>
 
 
+
+<!--"position: absolute; right: 0;  border:1px solid darkblue; border-radius: 10px;"-->
 <br>
 <br>
 </div>
-<h1>어 된다?</h1>
 
 </body>
 </html>
