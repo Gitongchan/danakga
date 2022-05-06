@@ -4,6 +4,7 @@ import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.request.ReqFileUploadDto;
 import com.danakga.webservice.board.dto.response.ResBoardUpdateDto;
 import com.danakga.webservice.board.dto.response.ResBoardWriteDto;
+import com.danakga.webservice.board.dto.response.ResPostDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.service.BoardService;
@@ -23,13 +24,25 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired private final BoardRepository boardRepository;
     @Autowired private final FilesService filesService;
-    //이렇게 선언해서 쓰는지, 파라미터로 가져와서 넣어주는지 찾아봐야함
+    //선언해서 쓰는지, 파라미터로 가져와서 넣어주는지 찾아봐야함
     private Board board;
 
     //게시판 목록
     @Override
     public List<Board> list() {
         return boardRepository.findAll();
+    }
+
+    //게시글 아이디 찾기
+    @Override
+    public Board bd_IdCheck(Long bd_id) {
+        return boardRepository.findById(bd_id).orElseThrow(() -> { throw new IllegalArgumentException("게시글 없음");}) ;
+    }
+
+    //게시글 보기
+    @Override
+    public ResPostDto post() {
+        return null;
     }
 
     //jpa는 id값만 확인하기 때문에 외래키로 설정한 값에 그대로 넣어주면 DB 테이블에 id값 들어옴
@@ -51,13 +64,15 @@ public class BoardServiceImpl implements BoardService {
         if(!CollectionUtils.isEmpty(files)) {
             filesService.saveFileUpload(reqFileUploadDto, files, board);
         }
-
         return new ResBoardWriteDto(bd_id);
     }
 
+
+    //게시글 수정
 //    @Override
-//    public ResBoardUpdateDto update(UserInfo userInfo,Board board) {
-//        final Long bd_id;
-//        return new ResBoardUpdateDto(bd_id);
+//    public ResBoardUpdateDto edit(UserInfo userInfo, Board board) {
+//        return null;
 //    }
+
+
 }
