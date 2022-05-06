@@ -11,11 +11,18 @@ import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -120,6 +127,22 @@ public class CompanyServiceImpl implements CompanyService {
             companyUserInfoDto.setCompanyEnabled(false);
             companyUserInfoDto.setRole("ROLE_USER");
 
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+            updatedAuthorities.clear();
+            updatedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    auth.getPrincipal(), auth.getCredentials(),updatedAuthorities
+            );
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+            System.out.println("newAuth.getAuthorities() = " + newAuth.getAuthorities());
+
+            System.out.println(userInfo.getRole()+" -- 현재 권한 ");
+            System.out.println(userInfo.getAuthorities() + "현재권한 getAuthor");
+
             userRepository.save(
                     UserInfo.builder()
                             .id(userInfo.getId()) //로그인 유저 키값을 받아옴
@@ -141,7 +164,6 @@ public class CompanyServiceImpl implements CompanyService {
             CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
                     ()->CompanyInfo.builder().build()
             );
-
             companyRepository.save(
                     CompanyInfo.builder()
                             .companyId(deleteCompanyInfo.getCompanyId())
