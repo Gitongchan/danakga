@@ -9,12 +9,10 @@ public class PageController {
     public String index(){
         return "testindex";
     }
-
     @GetMapping("/joinPage")
     public String join(){
         return "join";
     }
-
     @GetMapping("/test/index")
     public String testindex(){
         return "pages/index";
@@ -29,9 +27,6 @@ public class PageController {
     public String testmain(){
         return "pages/mainfunction";
     }
-
-    @GetMapping("/page/manager/test")
-    public String managerTest() {return "managerTest"; }
 
 
 }
