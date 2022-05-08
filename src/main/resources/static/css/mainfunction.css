@@ -13,6 +13,8 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
     border: 1px solid #0d6efd;
     border-right: none;
     border-radius: 2px 0 0 2px;
+    margin-left:-2px;
+
 }
 .searchBtn{
     position: absolute;
@@ -114,7 +116,6 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
     width: 113px;
     height: 40px;
     border: 1px solid #bfbfbf;
-    margin-left: -1px;
     margin-bottom: -1px;
 }
 
@@ -124,6 +125,10 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
     text-align: center;
     font-size: 14px;
     letter-spacing: -.4px;
+}
+
+.tbl_list{
+    border-collapse: collapse;
 }
 
 .tbl_list caption{
@@ -156,6 +161,7 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
     vertical-align: middle;
     width:140px;
     padding: 15px 21px 15px 26px;
+    height: 120px;
 }
 .title_price{
     width:550px;
