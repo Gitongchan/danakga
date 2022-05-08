@@ -15,13 +15,13 @@ public class Files {
     @Id @GeneratedValue
     private Long f_id;
 
-    @Column(name="f_origin", nullable=false)
+    @Column(name="f_origin")
     private String f_origin;
 
-    @Column(name="f_name", nullable=false)
+    @Column(name="f_name")
     private String f_name;
 
-    @Column(name="f_path", nullable=false)
+    @Column(name="f_path")
     private String f_path;
 
     @ManyToOne

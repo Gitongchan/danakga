@@ -28,10 +28,10 @@ public class Board {
     @Column(name = "bd_writer")
     private String bd_writer;
 
-    @Column(name = "bd_title")
+    @Column(name = "bd_title", nullable = false)
     private String bd_title;
 
-    @Column(name = "bd_content", columnDefinition = "TEXT")
+    @Column(name = "bd_content", columnDefinition = "TEXT", nullable = false)
     private String bd_content;
 
     //String Y = 게시글 삭제, N = 보여줌
