@@ -11,20 +11,20 @@ import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class CompanyServiceImpl implements CompanyService {
     @Autowired private final CompanyRepository companyRepository;
     @Autowired private final UserRepository userRepository;
     @Autowired private final UserService userService;
-
-
 
     //업체명 중복 체크
     @Override
@@ -36,7 +36,6 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     //사업자 회원 등록
-    @Transactional
     @Override
     public Long companyRegister(CompanyUserInfoDto companyUserInfoDto) {
 
@@ -91,8 +90,29 @@ public class CompanyServiceImpl implements CompanyService {
         }
     }
 
+    //사업자 정보 수정
+    @Override
+    public Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
+        CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
+                ()->CompanyInfo.builder().build()
+        );
+        companyRepository.save(
+                CompanyInfo.builder()
+                        .companyId(updateCompanyInfo.getCompanyId())
+                        .userInfo(userInfo)
+                        .companyName(companyInfoDto.getCompanyName())
+                        .companyNum(companyInfoDto.getCompanyNum())
+                        .companyAdrNum(companyInfoDto.getCompanyAdrNum())
+                        .companyDefNum(companyInfoDto.getCompanyDefNum())
+                        .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
+                        .companyBanknum(companyInfoDto.getCompanyBanknum())
+                        .companyEnabled(updateCompanyInfo.isCompanyEnabled())
+                        .build()
+        );
+        return updateCompanyInfo.getCompanyId();
+    }
+
     //사업자탈퇴
-    @Transactional
     @Override
     public Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
 
@@ -122,7 +142,6 @@ public class CompanyServiceImpl implements CompanyService {
             CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
                     ()->CompanyInfo.builder().build()
             );
-
             companyRepository.save(
                     CompanyInfo.builder()
                             .companyId(deleteCompanyInfo.getCompanyId())
@@ -142,5 +161,4 @@ public class CompanyServiceImpl implements CompanyService {
         }
         return -1L;
     }
-
 }
