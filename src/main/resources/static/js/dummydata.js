@@ -94,26 +94,26 @@ const cb_mainvalue = {
         brand:{
             p_name:"브랜드",
             sub_value:{
-                item1:"블랙이소",
-                item2:"털보네",
-                item3:"용명"
+                barnd_item1:"블랙이소",
+                barnd_item2:"털보네",
+                barnd_item3:"용명"
             }
         },
         fishingType:{
             p_name:"낚시종류",
             sub_value:{
-                item1:"바다",
-                item2:"민물",
-                item3:"루어"
+                fishing_item1:"바다",
+                fishing_item2:"민물",
+                fishing_item3:"루어"
             }
         },
         rod:{
             p_name:"낚시대",
             sub_value : {
                 item1:"강한낚시대",
-                item2:"들 강한 낚시대",
-                item3:"굉장히 강한 낚시대",
-                item4:"엄청나게 강한 낚시대"
+                item2:"123낚시대",
+                item3:"456강한 낚시대",
+                item4:"77강한 낚시대"
             }
         },
         reel:{
@@ -139,14 +139,10 @@ const cb_mainvalue = {
             sub_value : {
                 item1:"강한낚시대",
                 item2:"들 강한 낚시대",
-                item3:"굉장히 강한 낚시대",
-                item4:"엄청나게 강한 낚시대"
+                item3:"123강한 낚시대",
+                item4:"123강한 낚시대"
             }
-        },
-        item7:"루어",
-        item8:"의류",
-        item9:"공통장비",
-        item10:"바다소품"
+        }
 }
 
 const category = {

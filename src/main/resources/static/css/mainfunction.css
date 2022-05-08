@@ -1,3 +1,7 @@
+body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div, h1, h2, h3, h4, h5{
+    margin:0;
+    padding: 0;
+}
 .form-group.searchDP{
     position: relative;
     margin-bottom: 10px;
@@ -34,6 +38,11 @@
 .search_option_wrap{
     margin-bottom: 30px;
     border: 1px solid #8a8a8a;
+    position: relative;
+    min-height: 253px;
+    margin-top: 12px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box
 }
 .serach_option_title{
     border-style: solid;
@@ -57,24 +66,113 @@
 }
 
 .search_cate_title{
-    margin: 10px 15px;
     width: 100px;
     font-size: 14px;
     font-weight: 700;
+    float:left;
     color:black;
-    display: inline;
 }
 
 .search_cate_list{
-    float: right;
-    top:0;
-    width: calc(100% - 120px);
+    width: 640px;
+    height: 27px;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .search_option_list{
     margin: 10px 10px;
+    display:flex;
+    flex-direction: column;
+
 }
 
+.search_option_item{
+    display: flex;
+    margin: 10px 15px;
+}
+
+.cate_item{
+    width:120px;
+    flex-shrink: 0;
+}
+
+.cate_list{
+    display:flex;
+}
+
+.category_list_wrap{
+    position: relative;
+}
+
+.category_list_wrap ul{
+    display: flex;
+}
+
+.category_list_wrap ul li{
+    width: 113px;
+    height: 40px;
+    border: 1px solid #bfbfbf;
+    margin-left: -1px;
+    margin-bottom: -1px;
+}
+
+.category_list_wrap ul li a{
+    display: block;
+    line-height: 40px;
+    text-align: center;
+    font-size: 14px;
+    letter-spacing: -.4px;
+}
+
+.tbl_list caption{
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+}
+
+.web_hidden{
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+}
+
+.scroll_box{
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: 1px solid #b3b3b3;
+    border-top-color: rgb(179, 179, 179);
+}
+
+.item_images{
+    position: relative;
+    vertical-align: middle;
+    width:140px;
+    padding: 15px 21px 15px 26px;
+}
+.title_price{
+    width:550px;
+}
+
+.title_price p a{
+    padding: 15px 0;
+    color:black;
+}
+
+td.right_price{
+    width: 143px;
+    text-align: right;
+    padding-right: 14px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
 
 /*
     Screen Size

@@ -2,65 +2,68 @@
 <section class="content-wrap">
     <div class="container">
         <div class="row">
-                <article class="col-sm-12 col-md-7 main_left_content">
-                    <div class="form-group searchDP">
-                        <label for="searchText"></label>
-                        <input type="text" id="searchText"/>
+            <article class="col-sm-12 col-md-7 main_left_content">
+                <div class="form-group searchDP">
+                    <label for="searchText"></label>
+                    <input type="text" id="searchText"/>
 
-                        <label for="searchBtn"></label>
-                        <button class="searchBtn" id="searchBtn">검색</button>
-                    </div>
-                    <div class="search_option_wrap">
-                        <div class="serach_option_title">
-                            <div class="title_name">
-                                장비 분류
-                            </div>
+                    <label for="searchBtn"></label>
+                    <button class="searchBtn" id="searchBtn">검색</button>
+                </div>
+                <div class="search_option_wrap">
+                    <div class="serach_option_title">
+                        <div class="title_name">
+                            장비 분류
                         </div>
+                    </div>
+                </div>
+
+                <div class="item_list_view">
+                    <div class="category_list_wrap">
+                        <ul>
+                            <li class="fisrt"><a href="#">신상품순</a></li>
+                            <li class=""><a href="#">낮은 가격순</a></li>
+                            <li class=""><a href="#">높은 가격순</a></li>
+                            <li class=""><a href="#">상품명 순</a></li>
+                        </ul>
                     </div>
 
-                    <div class="product_list_wrap">
-                        <div>
-                            <ul>
-                                <li><a href="#">신상품순</a></li>
-                                <li><a href="#">낮은 가격순</a></li>
-                                <li><a href="#">높은 가격순</a></li>
-                                <li><a href="#">상품명 순</a></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div>
-                                <table>
-                                    <caption>상품 목록</caption>
-                                    <colgroup>
-                                        <col class="product_img">
-                                        <col class="product_content">
-                                        <col class="product_right">
-                                    </colgroup>
-                                    <thead>
-                                        <tr class="">
-                                            <th class="">상품</th>
-                                            <th class="">품목</th>
-                                            <th class="">선택</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>이미지</td>
-                                        <td>내용</td>
-                                        <td>가격 및 담기 버튼</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                    <div>
+                        <div class="scroll_box">
+                            <table class="tbl_list">
+                                <caption>상품 목록</caption>
+                                <colgroup>
+                                    <col class="product_img">
+                                    <col class="product_content">
+                                    <col class="product_right">
+                                </colgroup>
+                                <thead>
+                                <tr class="web_hidden">
+                                    <th class="">상품</th>
+                                    <th class="">품목</th>
+                                    <th class="">선택</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="item_images">이미지</td>
+                                    <td class="title_price">
+                                        <p class=""><a href="">AMD 라이젠5 PRO 4650G (르누아르) (멀티팩(정품))</a></p>
+                                    </td>
+                                    <td class="right_price">가격 및 담기 버튼</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </article>
-                <article class="col-sm-12 col-md-5 main_right_content">
-                    <div class="bg-danger">
-                        장바구니 부분
-                    </div>
-                </article>
-            </div>
+                </div>
+            </article>
+            <article class="col-sm-12 col-md-5 main_right_content">
+                <div class="bg-danger">
+                    장바구니 부분
+                </div>
+            </article>
         </div>
+    </div>
 </section>
 {{>pages/footer}}
