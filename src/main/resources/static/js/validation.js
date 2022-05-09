@@ -213,17 +213,17 @@
         const token = document.querySelector('meta[name="_csrf"]').content;
 
         const postData = {
-            userid: userData.userid.value,
-            password: userData.password1.value,
-            name: userData.username.value,
-            phone: userData.phone.value,
-            email: userData.email.value,
+            u_userid: userData.userid.value,
+            u_password: userData.password1.value,
+            u_name: userData.username.value,
+            u_phone: userData.phone.value,
+            u_email: userData.email.value,
             u_adr_num:userData.postCode.value,
             u_def_adr:userData.sample4_roadAddress.value,
             u_detail_adr:userData.sample4_detailAddress.value
         }
         console.log(postData);
-        fetch("/api/signup", {
+        fetch("/signup", {
             method: "POST",
             headers: {
                 'header': header,
