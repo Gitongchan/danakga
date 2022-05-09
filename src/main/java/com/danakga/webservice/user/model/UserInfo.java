@@ -50,9 +50,13 @@ public class UserInfo implements UserDetails {
     @Column(name = "u_adr_num")
     private String userAdrNum;
 
-    //회원 기본주소
-    @Column(name = "u_def_adr")
-    private String userDefAdr;
+    //회원 도로명 주소
+    @Column(name = "u_street_adr")
+    private String userStreetAdr;
+
+    //회원 지번 주소
+    @Column(name = "u_lot_adr")
+    private String userLotAdr;
 
     //회원 상세 주소
     @Column(name = "u_detail_adr")
@@ -72,7 +76,7 @@ public class UserInfo implements UserDetails {
 
     @Builder
     public UserInfo(Long id, String userid, String password, String name, String phone, String email,
-                    String role, String userAdrNum, String userDefAdr, String userDetailAdr,
+                    String role, String userAdrNum, String userLotAdr,String userStreetAdr, String userDetailAdr,
                     boolean userEnabled,LocalDateTime userDeletedDate) {
         this.id = id;
         this.userid = userid;
@@ -82,7 +86,8 @@ public class UserInfo implements UserDetails {
         this.email = email;
         this.role = role;
         this.userAdrNum = userAdrNum;
-        this.userDefAdr = userDefAdr;
+        this.userLotAdr = userLotAdr;
+        this.userStreetAdr = userStreetAdr;
         this.userDetailAdr = userDetailAdr;
         this.userEnabled = userEnabled;
         this.userDeletedDate = userDeletedDate;
