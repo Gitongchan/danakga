@@ -11,6 +11,6 @@ import lombok.*;
 public class ReqFileUploadDto {
     private Long f_id;
     private String f_originName;
-    private String f_name;
+    private String f_savename;
     private String f_path;
 }

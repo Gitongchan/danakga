@@ -18,8 +18,8 @@ public class Files {
     @Column(name="f_origin")
     private String f_origin;
 
-    @Column(name="f_name")
-    private String f_name;
+    @Column(name="f_savename")
+    private String f_savename;
 
     @Column(name="f_path")
     private String f_path;
@@ -29,10 +29,10 @@ public class Files {
     private Board board;
 
     @Builder
-    public Files(Long f_id, String f_origin, String f_name, String f_path, Board board) {
+    public Files(Long f_id, String f_origin, String f_savename, String f_path, Board board) {
         this.f_id = f_id;
         this.f_origin = f_origin;
-        this.f_name = f_name;
+        this.f_savename = f_savename;
         this.f_path = f_path;
         this.board = board;
     }

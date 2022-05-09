@@ -38,8 +38,8 @@ public class BoardController {
 
     //게시글 작성
     //consumes은 들어오는 데이터 타입을 정의할 때 사용하고 mediatype으로 json과 formdata를 받는다
-    //@RequestBody는 데이터 형식을 json형태로 받기 때문에  @RequestPart로 데이터를 받는다, Param은 404임
-    //HTTP 요청시 multipart/ 로 시작하는 경우는 multipart 요청으로 판단
+    //@RequestBody는 데이터 형식을 json형태로 받기 때문에 파일을 받아오지 못함
+    //HTTP 요청시 multipart/ 로 시작하는 경우는 multipart 요청으로 판단해서 RequestPart로 받아야함
     @PostMapping(value = "/postwrite", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResBoardWriteDto write(@LoginUser UserInfo userInfo,
                                   @Valid @RequestPart ReqBoardWriteDto reqBoardWriteDto,
