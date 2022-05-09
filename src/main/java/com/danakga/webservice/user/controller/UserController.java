@@ -45,8 +45,15 @@ public class UserController{
     @PutMapping("/user_deleted")
     public ResResultDto userDeleted(@LoginUser UserInfo userInfo, @RequestBody UserInfoDto userInfoDto){
         Long result = userService.userDeleted(userInfo,userInfoDto);
-        return result == -1L ?
-                new ResResultDto(result,"회원 탈퇴 실패") : new ResResultDto(result,"회원 탈퇴 성공");
+
+        if(result.equals(-1L)){
+            return new ResResultDto(result,"회원 탈퇴 실패");
+        }
+        else if(result.equals(-2L)){
+            return new ResResultDto(result,"일반회원만 탈퇴할 수 있습니다");
+        }
+        else return new ResResultDto(result,"회원 탈퇴 성공");
+
     }
 
 
