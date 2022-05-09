@@ -58,7 +58,8 @@ public class UserServiceImpl implements UserService {
                         .email(userInfoDto.getEmail())
                         .role(userInfoDto.getRole())
                         .userAdrNum(userInfoDto.getUserAdrNum())
-                        .userDefAdr(userInfoDto.getUserDefAdr())
+                        .userLotAdr(userInfoDto.getUserLotAdr())
+                        .userStreetAdr(userInfoDto.getUserStreetAdr())
                         .userDetailAdr(userInfoDto.getUserDetailAdr())
                         .userEnabled(userInfoDto.isUserEnabled())
                         .build()
@@ -107,7 +108,8 @@ public class UserServiceImpl implements UserService {
                             .email(userInfoDto.getEmail())
                             .role(modifyUser.getRole())
                             .userAdrNum(userInfoDto.getUserAdrNum())
-                            .userDefAdr(userInfoDto.getUserDefAdr())
+                            .userLotAdr(userInfoDto.getUserLotAdr())
+                            .userStreetAdr(userInfoDto.getUserStreetAdr())
                             .userDetailAdr(userInfoDto.getUserDetailAdr())
                             .userEnabled(modifyUser.isUserEnabled())
                             .build()
@@ -125,34 +127,32 @@ public class UserServiceImpl implements UserService {
     public Long userDeleted(UserInfo userInfo, UserInfoDto userInfoDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        System.out.println("userInfo.getUserid() = " + userInfo.getPassword());
-        System.out.println("userInfoDto = " + userInfoDto.getPassword());
-
         userInfoDto.setUserEnabled(false);//사용자 이용 중지
-        userInfoDto.setRole("ROLE_USER");
-        //로그인 상태의 권한이기 때문에 사업자가 사업자 탈퇴이후 ,회원탈퇴를 진행하면 MANAGER로 변경됨
-        //이를 해결하기위해 회원탈퇴후에는 항상 USER
+
         if(!userInfo.getRole().equals("ROLE_USER")) return -2L;
 
         if (userRepository.findById(userInfo.getId()).isPresent()
                 && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
+
+            UserInfo DeleteUser = userRepository.findById(userInfo.getId()).get();
+
             userRepository.save(
                     UserInfo.builder()
-                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
-                            .userid(userInfo.getUserid()) //그대로 유지
-                            .password(userInfo.getPassword())
-                            .name(userInfo.getName())
-                            .phone(userInfo.getPhone())
-                            .email(userInfo.getEmail())
-                            .role(userInfo.getRole())
-                            .userAdrNum(userInfo.getUserAdrNum())
-                            .userDefAdr(userInfo.getUserDefAdr())
-                            .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userDeletedDate(LocalDateTime.now())
+                            .id(DeleteUser.getId()) //로그인 유저 키값을 받아옴
+                            .userid(DeleteUser.getUserid()) //그대로 유지
+                            .password(DeleteUser.getPassword())
+                            .name(DeleteUser.getName())
+                            .phone(DeleteUser.getPhone())
+                            .email(DeleteUser.getEmail())
+                            .role(DeleteUser.getRole())
+                            .userAdrNum(DeleteUser.getUserAdrNum())
+                            .userStreetAdr(DeleteUser.getUserStreetAdr())
+                            .userLotAdr(DeleteUser.getUserLotAdr())
+                            .userDetailAdr(DeleteUser.getUserDetailAdr())
+                            .userDeletedDate(LocalDateTime.now()) //현재시간
                             .userEnabled(userInfoDto.isUserEnabled())
                             .build()
             );
-
             return userInfo.getId();
         }
         return -1L;
