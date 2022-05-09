@@ -38,9 +38,13 @@ public class CompanyInfo {
     @Column(name = "com_adr_num")
     private String companyAdrNum;
 
-    //회사 기본주소
-    @Column(name = "com_def_adr")
-    private String companyDefNum;
+    //회사 도로명 주소
+    @Column(name = "com_street_adr")
+    private String companyStreetNum;
+
+    //회사 지번 주소
+    @Column(name = "com_lot_adr")
+    private String companyLotNum;
 
     //회사 상세주소
     @Column(name = "com_detail_adr")
@@ -60,14 +64,15 @@ public class CompanyInfo {
 
     @Builder
     public CompanyInfo(Long companyId, UserInfo userInfo, String companyName, String companyNum,
-                       String companyAdrNum, String companyDefNum, String companyDetailAdr,
+                       String companyAdrNum, String companyStreetNum,String companyLotNum, String companyDetailAdr,
                        String companyBanknum, boolean companyEnabled, LocalDateTime companyDeltedDate) {
         this.companyId = companyId;
         this.userInfo = userInfo;
         this.companyName = companyName;
         this.companyNum = companyNum;
         this.companyAdrNum = companyAdrNum;
-        this.companyDefNum = companyDefNum;
+        this.companyStreetNum = companyStreetNum;
+        this.companyLotNum = companyLotNum;
         this.companyDetailAdr = companyDetailAdr;
         this.companyBanknum = companyBanknum;
         this.companyEnabled = companyEnabled;

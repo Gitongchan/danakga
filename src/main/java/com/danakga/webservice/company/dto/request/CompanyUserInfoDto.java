@@ -4,6 +4,7 @@ import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -44,8 +45,11 @@ public class CompanyUserInfoDto {
     //회원 우편번호
     private String userAdrNum;
 
-    //회원 기본주소
-    private String userDefAdr;
+    //회원 지번 주소
+    private String userLotAdr;
+
+    //회원 도로명 주소
+    private String userStreetAdr;
 
     //회원 상세 주소
     private String userDetailAdr;
@@ -70,8 +74,11 @@ public class CompanyUserInfoDto {
     //회사 우편번호
     private String companyAdrNum;
 
-    //회사 기본주소
-    private String companyDefNum;
+    //회사 지번 주소
+    private String companyLotNum;
+
+    //회사 도로명 주소
+    private String companyStreetNum;
 
     //회사 상세주소
     private String companyDetailAdr;
