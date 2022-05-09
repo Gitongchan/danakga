@@ -44,8 +44,11 @@ public class UserInfoDto {
     //회원 우편번호
     private String userAdrNum;
 
-    //회원 기본주소
-    private String userDefAdr;
+    //회원 지번 주소
+    private String userLotAdr;
+
+    //회원 도로명 주소
+    private String userStreetAdr;
 
     //회원 상세 주소
     private String userDetailAdr;
