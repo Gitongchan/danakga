@@ -3,6 +3,7 @@ package com.danakga.webservice.user.service.Impl;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
+import com.danakga.webservice.user.dto.response.ResUserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
@@ -156,6 +157,16 @@ public class UserServiceImpl implements UserService {
             return userInfo.getId();
         }
         return -1L;
+    }
+
+    @Override
+    public UserInfo userInfoCheck(UserInfo userInfo) {
+        UserInfo checkUserInfo = null;
+        if(userRepository.findById(userInfo.getId()).isPresent()) {
+            checkUserInfo = userRepository.findById(userInfo.getId()).get();
+            return checkUserInfo;
+        }
+        return null;
     }
 
 
