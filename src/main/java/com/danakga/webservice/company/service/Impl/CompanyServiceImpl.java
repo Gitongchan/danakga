@@ -118,6 +118,15 @@ public class CompanyServiceImpl implements CompanyService {
         else return -1L;
     }
 
+    //사업자 회사 정보 조회
+    @Override
+    public CompanyInfo companyInfoCheck(UserInfo userInfo) {
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+            return companyRepository.findByUserInfo(userInfo).get();
+        }
+        return null;
+    }
+
     //사업자탈퇴
     @Override
     public Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {

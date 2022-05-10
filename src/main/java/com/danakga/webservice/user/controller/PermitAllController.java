@@ -15,6 +15,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class PermitAllController {
+
     @Autowired
     private final UserService userService;
 
