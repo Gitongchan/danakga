@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ResCompanyInfoDto {
+    //회원명
+    private String username;
 
     //사업자등록번호
     private Long companyId;
@@ -38,9 +40,6 @@ public class ResCompanyInfoDto {
 
     //회사 계좌
     private String companyBanknum;
-
-    //회원명
-    private String username;
 
 
 

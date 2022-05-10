@@ -1,6 +1,9 @@
 package com.danakga.webservice.user.service.Impl;
 
+import com.danakga.webservice.company.dto.request.CompanyInfoDto;
+import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
+import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
@@ -24,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired private final UserRepository userRepository;
     @Autowired private final CompanyRepository companyRepository;
+    private final CompanyService companyService;
 
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
@@ -159,15 +163,65 @@ public class UserServiceImpl implements UserService {
         return -1L;
     }
 
+    //회원 정보 조회
     @Override
     public UserInfo userInfoCheck(UserInfo userInfo) {
-        UserInfo checkUserInfo = null;
+
         if(userRepository.findById(userInfo.getId()).isPresent()) {
-            checkUserInfo = userRepository.findById(userInfo.getId()).get();
-            return checkUserInfo;
+            return  userRepository.findById(userInfo.getId()).get();
         }
         return null;
     }
 
+    //사업자 등록
+    //일반회원으로 등록된 사용자의 사업자 등록
+    @Override
+    public Long companyRegister(UserInfo userInfo, UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto) {
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+            return -1L;
+        }
+        if(userRepository.findById(userInfo.getId()).isPresent()){
+
+            UserInfo registerUserInfo = userRepository.findById(userInfo.getId()).get();
+
+            userInfoDto.setRole("ROLE_MANAGER"); // 권한 MANAGER로 변경
+            companyInfoDto.setCompanyEnabled(true); // 사업자 서비스 이용 가능
+
+
+
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(registerUserInfo.getId())
+                            .userid(registerUserInfo.getUserid())
+                            .password(registerUserInfo.getPassword())
+                            .name(registerUserInfo.getName())
+                            .phone(registerUserInfo.getPhone())
+                            .email(registerUserInfo.getEmail())
+                            .role(userInfoDto.getRole())
+                            .userAdrNum(registerUserInfo.getUserAdrNum())
+                            .userStreetAdr(registerUserInfo.getUserStreetAdr())
+                            .userLotAdr(registerUserInfo.getUserLotAdr())
+                            .userDetailAdr(registerUserInfo.getUserDetailAdr())
+                            .userEnabled(registerUserInfo.isUserEnabled())
+                            .build()
+            );
+            companyRepository.save(
+                    CompanyInfo.builder()
+                            .companyId(companyInfoDto.getCompanyId())
+                            .userInfo(registerUserInfo)
+                            .companyName(companyInfoDto.getCompanyName())
+                            .companyNum(companyInfoDto.getCompanyNum())
+                            .companyAdrNum(companyInfoDto.getCompanyAdrNum())
+                            .companyLotAdr(companyInfoDto.getCompanyLotAdr())
+                            .companyStreetAdr(companyInfoDto.getCompanyStreetAdr())
+                            .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
+                            .companyBanknum(companyInfoDto.getCompanyBanknum())
+                            .companyEnabled(companyInfoDto.isCompanyEnabled())
+                            .build()
+            );
+            return registerUserInfo.getId();
+        }
+        return -1L;
+    }
 
 }
