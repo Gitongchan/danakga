@@ -39,7 +39,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Long companyRegister(CompanyUserInfoDto companyUserInfoDto) {
 
-
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String rawPassword = companyUserInfoDto.getPassword();
         companyUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
@@ -101,7 +100,7 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(
                 CompanyInfo.builder()
                         .companyId(updateCompanyInfo.getCompanyId())
-                        .userInfo(userInfo)
+                        .userInfo(updateCompanyInfo.getUserInfo())
                         .companyName(companyInfoDto.getCompanyName())
                         .companyNum(companyInfoDto.getCompanyNum())
                         .companyAdrNum(companyInfoDto.getCompanyAdrNum())
@@ -121,24 +120,25 @@ public class CompanyServiceImpl implements CompanyService {
 
         if(userRepository.findById(userInfo.getId()).isPresent()&& userInfo.getRole().equals("ROLE_MANAGER")) {
 
+            UserInfo comUserInfo = userRepository.findById(userInfo.getId()).get();
+
             companyUserInfoDto.setCompanyEnabled(false);
             companyUserInfoDto.setRole("ROLE_USER");
 
             userRepository.save(
                     UserInfo.builder()
-                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
+                            .id(comUserInfo.getId()) //로그인 유저 키값을 받아옴
                             //유저의 정보는 그대로 유지
-                            .userid(userInfo.getUserid())
-                            .password(userInfo.getPassword())
-                            .name(userInfo.getName())
-                            .phone(userInfo.getPhone())
-                            .email(userInfo.getEmail())
-                            .userAdrNum(userInfo.getUserAdrNum())
-                            .userLotAdr(userInfo.getUserLotAdr())
-                            .userStreetAdr(userInfo.getUserStreetAdr())
-                            .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userEnabled(userInfo.isUserEnabled())
-                            //권한만 변경
+                            .userid(comUserInfo.getUserid())
+                            .password(comUserInfo.getPassword())
+                            .name(comUserInfo.getName())
+                            .phone(comUserInfo.getPhone())
+                            .email(comUserInfo.getEmail())
+                            .userAdrNum(comUserInfo.getUserAdrNum())
+                            .userLotAdr(comUserInfo.getUserLotAdr())
+                            .userStreetAdr(comUserInfo.getUserStreetAdr())
+                            .userDetailAdr(comUserInfo.getUserDetailAdr())
+                            .userEnabled(comUserInfo.isUserEnabled())
                             .role(companyUserInfoDto.getRole())
                             .build()
             );
