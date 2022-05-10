@@ -39,7 +39,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Long companyRegister(CompanyUserInfoDto companyUserInfoDto) {
 
-
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String rawPassword = companyUserInfoDto.getPassword();
         companyUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
@@ -67,7 +66,8 @@ public class CompanyServiceImpl implements CompanyService {
                                     .email(companyUserInfoDto.getEmail())
                                     .role(companyUserInfoDto.getRole())
                                     .userAdrNum(companyUserInfoDto.getUserAdrNum())
-                                    .userDefAdr(companyUserInfoDto.getUserDefAdr())
+                                    .userStreetAdr(companyUserInfoDto.getUserStreetAdr())
+                                    .userLotAdr(companyUserInfoDto.getUserLotAdr())
                                     .userDetailAdr(companyUserInfoDto.getUserDetailAdr())
                                     .userEnabled(companyUserInfoDto.isUserEnabled())
                                     .build()
@@ -80,7 +80,8 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyName(companyUserInfoDto.getCompanyName())
                             .companyNum(companyUserInfoDto.getCompanyNum())
                             .companyAdrNum(companyUserInfoDto.getCompanyAdrNum())
-                            .companyDefNum(companyUserInfoDto.getCompanyDefNum())
+                            .companyLotAdr(companyUserInfoDto.getCompanyLotAdr())
+                            .companyStreetAdr(companyUserInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
                             .companyBanknum(companyUserInfoDto.getCompanyBanknum())
                             .companyEnabled(companyUserInfoDto.isCompanyEnabled())
@@ -93,23 +94,28 @@ public class CompanyServiceImpl implements CompanyService {
     //사업자 정보 수정
     @Override
     public Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
-        CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
-                ()->CompanyInfo.builder().build()
-        );
-        companyRepository.save(
-                CompanyInfo.builder()
-                        .companyId(updateCompanyInfo.getCompanyId())
-                        .userInfo(userInfo)
-                        .companyName(companyInfoDto.getCompanyName())
-                        .companyNum(companyInfoDto.getCompanyNum())
-                        .companyAdrNum(companyInfoDto.getCompanyAdrNum())
-                        .companyDefNum(companyInfoDto.getCompanyDefNum())
-                        .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
-                        .companyBanknum(companyInfoDto.getCompanyBanknum())
-                        .companyEnabled(updateCompanyInfo.isCompanyEnabled())
-                        .build()
-        );
-        return updateCompanyInfo.getCompanyId();
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+
+            CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
+                    ()->CompanyInfo.builder().build()
+            );
+            companyRepository.save(
+                    CompanyInfo.builder()
+                            .companyId(updateCompanyInfo.getCompanyId())
+                            .userInfo(updateCompanyInfo.getUserInfo())
+                            .companyName(companyInfoDto.getCompanyName())
+                            .companyNum(companyInfoDto.getCompanyNum())
+                            .companyAdrNum(companyInfoDto.getCompanyAdrNum())
+                            .companyLotAdr(companyInfoDto.getCompanyLotAdr())
+                            .companyStreetAdr(companyInfoDto.getCompanyStreetAdr())
+                            .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
+                            .companyBanknum(companyInfoDto.getCompanyBanknum())
+                            .companyEnabled(updateCompanyInfo.isCompanyEnabled())
+                            .build()
+            );
+            return updateCompanyInfo.getCompanyId();
+        }
+        else return -1L;
     }
 
     //사업자탈퇴
@@ -118,23 +124,25 @@ public class CompanyServiceImpl implements CompanyService {
 
         if(userRepository.findById(userInfo.getId()).isPresent()&& userInfo.getRole().equals("ROLE_MANAGER")) {
 
+            UserInfo comUserInfo = userRepository.findById(userInfo.getId()).get();
+
             companyUserInfoDto.setCompanyEnabled(false);
             companyUserInfoDto.setRole("ROLE_USER");
 
             userRepository.save(
                     UserInfo.builder()
-                            .id(userInfo.getId()) //로그인 유저 키값을 받아옴
+                            .id(comUserInfo.getId()) //로그인 유저 키값을 받아옴
                             //유저의 정보는 그대로 유지
-                            .userid(userInfo.getUserid())
-                            .password(userInfo.getPassword())
-                            .name(userInfo.getName())
-                            .phone(userInfo.getPhone())
-                            .email(userInfo.getEmail())
-                            .userAdrNum(userInfo.getUserAdrNum())
-                            .userDefAdr(userInfo.getUserDefAdr())
-                            .userDetailAdr(userInfo.getUserDetailAdr())
-                            .userEnabled(userInfo.isUserEnabled())
-                            //권한만 변경
+                            .userid(comUserInfo.getUserid())
+                            .password(comUserInfo.getPassword())
+                            .name(comUserInfo.getName())
+                            .phone(comUserInfo.getPhone())
+                            .email(comUserInfo.getEmail())
+                            .userAdrNum(comUserInfo.getUserAdrNum())
+                            .userLotAdr(comUserInfo.getUserLotAdr())
+                            .userStreetAdr(comUserInfo.getUserStreetAdr())
+                            .userDetailAdr(comUserInfo.getUserDetailAdr())
+                            .userEnabled(comUserInfo.isUserEnabled())
                             .role(companyUserInfoDto.getRole())
                             .build()
             );
@@ -149,7 +157,8 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyName(deleteCompanyInfo.getCompanyName())
                             .companyNum(deleteCompanyInfo.getCompanyNum())
                             .companyAdrNum(deleteCompanyInfo.getCompanyAdrNum())
-                            .companyDefNum(deleteCompanyInfo.getCompanyDefNum())
+                            .companyLotAdr(deleteCompanyInfo.getCompanyLotAdr())
+                            .companyStreetAdr(deleteCompanyInfo.getCompanyStreetAdr())
                             .companyDetailAdr(deleteCompanyInfo.getCompanyDetailAdr())
                             .companyBanknum(deleteCompanyInfo.getCompanyBanknum())
                             .companyEnabled(companyUserInfoDto.isCompanyEnabled())
