@@ -80,8 +80,8 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyName(companyUserInfoDto.getCompanyName())
                             .companyNum(companyUserInfoDto.getCompanyNum())
                             .companyAdrNum(companyUserInfoDto.getCompanyAdrNum())
-                            .companyLotNum(companyUserInfoDto.getCompanyLotNum())
-                            .companyStreetNum(companyUserInfoDto.getCompanyStreetNum())
+                            .companyLotAdr(companyUserInfoDto.getCompanyLotAdr())
+                            .companyStreetAdr(companyUserInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
                             .companyBanknum(companyUserInfoDto.getCompanyBanknum())
                             .companyEnabled(companyUserInfoDto.isCompanyEnabled())
@@ -94,24 +94,28 @@ public class CompanyServiceImpl implements CompanyService {
     //사업자 정보 수정
     @Override
     public Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
-        CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
-                ()->CompanyInfo.builder().build()
-        );
-        companyRepository.save(
-                CompanyInfo.builder()
-                        .companyId(updateCompanyInfo.getCompanyId())
-                        .userInfo(updateCompanyInfo.getUserInfo())
-                        .companyName(companyInfoDto.getCompanyName())
-                        .companyNum(companyInfoDto.getCompanyNum())
-                        .companyAdrNum(companyInfoDto.getCompanyAdrNum())
-                        .companyLotNum(companyInfoDto.getCompanyLotAdr())
-                        .companyStreetNum(companyInfoDto.getCompanyStreetAdr())
-                        .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
-                        .companyBanknum(companyInfoDto.getCompanyBanknum())
-                        .companyEnabled(updateCompanyInfo.isCompanyEnabled())
-                        .build()
-        );
-        return updateCompanyInfo.getCompanyId();
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+
+            CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
+                    ()->CompanyInfo.builder().build()
+            );
+            companyRepository.save(
+                    CompanyInfo.builder()
+                            .companyId(updateCompanyInfo.getCompanyId())
+                            .userInfo(updateCompanyInfo.getUserInfo())
+                            .companyName(companyInfoDto.getCompanyName())
+                            .companyNum(companyInfoDto.getCompanyNum())
+                            .companyAdrNum(companyInfoDto.getCompanyAdrNum())
+                            .companyLotAdr(companyInfoDto.getCompanyLotAdr())
+                            .companyStreetAdr(companyInfoDto.getCompanyStreetAdr())
+                            .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
+                            .companyBanknum(companyInfoDto.getCompanyBanknum())
+                            .companyEnabled(updateCompanyInfo.isCompanyEnabled())
+                            .build()
+            );
+            return updateCompanyInfo.getCompanyId();
+        }
+        else return -1L;
     }
 
     //사업자탈퇴
@@ -153,8 +157,8 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyName(deleteCompanyInfo.getCompanyName())
                             .companyNum(deleteCompanyInfo.getCompanyNum())
                             .companyAdrNum(deleteCompanyInfo.getCompanyAdrNum())
-                            .companyLotNum(deleteCompanyInfo.getCompanyLotNum())
-                            .companyStreetNum(deleteCompanyInfo.getCompanyStreetNum())
+                            .companyLotAdr(deleteCompanyInfo.getCompanyLotAdr())
+                            .companyStreetAdr(deleteCompanyInfo.getCompanyStreetAdr())
                             .companyDetailAdr(deleteCompanyInfo.getCompanyDetailAdr())
                             .companyBanknum(deleteCompanyInfo.getCompanyBanknum())
                             .companyEnabled(companyUserInfoDto.isCompanyEnabled())

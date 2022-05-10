@@ -75,10 +75,10 @@ public class CompanyUserInfoDto {
     private String companyAdrNum;
 
     //회사 지번 주소
-    private String companyLotNum;
+    private String companyLotAdr;
 
     //회사 도로명 주소
-    private String companyStreetNum;
+    private String companyStreetAdr;
 
     //회사 상세주소
     private String companyDetailAdr;
