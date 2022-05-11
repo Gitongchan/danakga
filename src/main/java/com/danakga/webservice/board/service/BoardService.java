@@ -1,9 +1,6 @@
 package com.danakga.webservice.board.service;
 
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
-import com.danakga.webservice.board.dto.request.ReqFileUploadDto;
-import com.danakga.webservice.board.dto.response.ResBoardUpdateDto;
-import com.danakga.webservice.board.dto.response.ResBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResPostDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.user.model.UserInfo;
@@ -23,8 +20,7 @@ public interface BoardService {
     ResPostDto post();
 
     //게시글 작성
-    ResBoardWriteDto write(ReqBoardWriteDto reqBoardWriteDto, UserInfo userInfo,
-                           ReqFileUploadDto reqFileUploadDto, List<MultipartFile> files);
+    Long write(ReqBoardWriteDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
 //    ResBoardUpdateDto edit(UserInfo userInfo, Board board);
