@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.service;
 
 import com.danakga.webservice.user.dto.request.UserInfoDto;
+import com.danakga.webservice.user.dto.response.ResUserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -19,6 +20,8 @@ public interface UserService extends UserDetailsService {
     
     //회원 탈퇴
     Long userDeleted(UserInfo userInfo,UserInfoDto userInfoDto);
+
+    UserInfo userInfoCheck(UserInfo userInfo);
 
 
 }

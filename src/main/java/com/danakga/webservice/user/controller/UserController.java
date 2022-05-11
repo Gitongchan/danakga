@@ -18,11 +18,11 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 public class UserController{
     @Autowired private final UserService userService;
-
+    /**              마이페이지 기능               **/
     //회원정보 조회
     @GetMapping("")
     public ResUserInfoDto check(@LoginUser UserInfo userInfo){
-        return new ResUserInfoDto(userInfo);
+        return new ResUserInfoDto(userService.userInfoCheck(userInfo));
     }
 
     //회원정보 수정
@@ -35,18 +35,19 @@ public class UserController{
                 new ResResultDto(result,"회원정보 변경 실패.") : new ResResultDto(result,"회원정보 변경 성공.");
     }
 
-    
-    
-    /**              마이페이지 기능               **/
-
-
-
     //회원 탈퇴
     @PutMapping("/user_deleted")
     public ResResultDto userDeleted(@LoginUser UserInfo userInfo, @RequestBody UserInfoDto userInfoDto){
         Long result = userService.userDeleted(userInfo,userInfoDto);
-        return result == -1L ?
-                new ResResultDto(result,"회원 탈퇴 실패") : new ResResultDto(result,"회원 탈퇴 성공");
+
+        if(result.equals(-1L)){
+            return new ResResultDto(result,"회원 탈퇴 실패");
+        }
+        else if(result.equals(-2L)){
+            return new ResResultDto(result,"일반회원만 탈퇴할 수 있습니다");
+        }
+        else return new ResResultDto(result,"회원 탈퇴 성공");
+
     }
 
 

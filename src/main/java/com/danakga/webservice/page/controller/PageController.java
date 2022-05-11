@@ -28,10 +28,5 @@ public class PageController {
         return "pages/mainfunction";
     }
 
-    @GetMapping("/boardlist")
-    public String boardlist(){
-        return "pages/boardlist";
-    }
-
 
 }

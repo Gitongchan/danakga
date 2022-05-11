@@ -28,11 +28,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         http.authorizeRequests()
                 .antMatchers("/api/user/**").authenticated()
                 .antMatchers("/api/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+                .antMatchers("/page/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
                 .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll() //다른 요청은 모두 허용
                 .and()
                     .formLogin()
-                    .loginPage("/pages/login")
+                    .loginPage("/login")
                     .loginProcessingUrl("/login")
                     .failureHandler(customAuthFailureHandler)
                     .defaultSuccessUrl("/") // 로그인 성공 후 리다이렉트 주소
