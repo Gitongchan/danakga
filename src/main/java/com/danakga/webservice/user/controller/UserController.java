@@ -20,7 +20,8 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 public class UserController{
     @Autowired private final UserService userService;
-    private final CompanyService companyService;
+    @Autowired private final CompanyService companyService;
+
     /**              마이페이지 기능               **/
     //회원정보 조회
     @GetMapping("")
@@ -59,9 +60,23 @@ public class UserController{
     public ResResultDto companyRegister(@LoginUser UserInfo userInfo ,
                                         UserInfoDto userInfoDto, @RequestBody CompanyInfoDto companyInfoDto){
 
+        //회사명 중복 체크
+        if(companyService.companyNameCheck(companyInfoDto.getCompanyName()).equals(-1)){
+            return new ResResultDto(-3L,"사업자 등록 실패, 이미 사용되고있는 회사명입니다");
+        }
+
         Long result = userService.companyRegister(userInfo,userInfoDto,companyInfoDto);
-        return result == -1L ?
-                new ResResultDto(result,"사업자 등록 실패.") : new ResResultDto(result,"사업자 등록 성공.");
+
+        if(result == -1L) {
+            return new ResResultDto(result,"사업자 등록 실패, 유저 정보를 받아올 수 없습니다.");
+        }
+        else if(result == -2L) {
+            return new ResResultDto(result,"사업자 등록 실패, 이미 사업자로 등록되었습니다.");
+        }
+        else{
+            return new ResResultDto(result,"사업자 등록 성공.");
+        }
+
     }
 
 

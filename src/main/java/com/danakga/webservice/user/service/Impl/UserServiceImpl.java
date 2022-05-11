@@ -4,6 +4,7 @@ import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.company.service.CompanyService;
+import com.danakga.webservice.company.service.Impl.CompanyServiceImpl;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired private final UserRepository userRepository;
     @Autowired private final CompanyRepository companyRepository;
-    private final CompanyService companyService;
+
 
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
@@ -177,17 +178,20 @@ public class UserServiceImpl implements UserService {
     //일반회원으로 등록된 사용자의 사업자 등록
     @Override
     public Long companyRegister(UserInfo userInfo, UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto) {
+
         if(companyRepository.findByUserInfo(userInfo).isPresent()){
             return -1L;
         }
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+            return -2L; //이미 등록된 사업자 일 때
+        }
+
         if(userRepository.findById(userInfo.getId()).isPresent()){
 
             UserInfo registerUserInfo = userRepository.findById(userInfo.getId()).get();
 
             userInfoDto.setRole("ROLE_MANAGER"); // 권한 MANAGER로 변경
             companyInfoDto.setCompanyEnabled(true); // 사업자 서비스 이용 가능
-
-
 
             userRepository.save(
                     UserInfo.builder()
@@ -218,8 +222,8 @@ public class UserServiceImpl implements UserService {
                             .companyBanknum(companyInfoDto.getCompanyBanknum())
                             .companyEnabled(companyInfoDto.isCompanyEnabled())
                             .build()
-            );
-            return registerUserInfo.getId();
+            );            return registerUserInfo.getId();
+
         }
         return -1L;
     }
