@@ -28,5 +28,9 @@ public class PageController {
         return "pages/mainfunction";
     }
 
+    @GetMapping("/mypage")
+    public String mypage(){
+        return "pages/mypage";
+    }
 
 }
