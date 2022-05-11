@@ -86,6 +86,39 @@
                                     <span class="em_check" id="em_check">이메일 형식을 올바르게 작성해주세요!</span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
                                 </div>
                             </div>
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <label for="sample4_postcode">우편번호</label>
+                                    <input type="text" class="form-control col-sm-8 col-8" id="sample4_postcode" placeholder="우편번호" readonly required>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="button">
+                                        <button class="btn" id="PostCode" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="sample4_roadAddress">도로명주소</label>
+                                    <input type="text" class="form-control" id="sample4_roadAddress" placeholder="도로명주소" readonly required><br>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="sample4_jibunAddress">지번주소</label>
+                                    <input type="text" class="form-control" id="sample4_jibunAddress" placeholder="지번주소" readonly required>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <span id="guide" style="color:#999;display:none"></span>
+                                    <label for="sample4_detailAddress">상세주소</label>
+                                    <input type="text" class="form-control" id="sample4_detailAddress" placeholder="상세주소">
+<!--                                    <input type="text" class="form-control" id="sample4_extraAddress" placeholder="참고항목">-->
+                                </div>
+                            </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="reg-phone">전화번호</label>
@@ -98,7 +131,7 @@
                                 </div>
                             </div>
                             <div class="button">
-                                <button class="btn" id="register-pass" onclick="registerOK()" disabled="true">회원가입</button>
+                                <button class="btn" id="register-pass" disabled="true">회원가입</button>
                             </div>
                             <p class="outer-link">계정이 있으신가요? <a href="/login">로그인하기</a>
                             </p>

@@ -33,7 +33,11 @@
         password2: document.getElementById('reg-pass-confirm'),
         username: document.getElementById('reg-name'),
         email: document.getElementById('reg-email'),
-        phone: document.getElementById('reg-phone')
+        phone: document.getElementById('reg-phone'),
+        postCode: document.getElementById('sample4_postcode'),
+        sample4_roadAddress: document.getElementById('sample4_roadAddress'),
+        sample4_jibunAddress: document.getElementById('sample4_jibunAddress'),
+        sample4_detailAddress: document.getElementById('sample4_detailAddress')
     }
 
     <!-- 유효성검사가 정상실행 되어서 값이 입력되어있다면 실행하는 함수-->
@@ -43,7 +47,8 @@
             userData.password2.classList.contains("_success") &&
             userData.username.classList.contains("_success") &&
             userData.email.classList.contains("_success") &&
-            userData.phone.classList.contains("_success"))
+            userData.phone.classList.contains("_success") &&
+            userData.sample4_detailAddress.classList.contains("_success"))
         if (!result) {
             <!-- 유효성 검사를 모두 통과못했다면-->
             document.getElementById('register-pass').disabled = true;
@@ -146,27 +151,6 @@
         }
     }
 
-    <!-- 첫 번째 비밀번호 정규식 체크하는 부분(password input에 focus가 떠나게 되면)-->
-    userData.password1.onblur = function () {
-        console.log(passwordCheck.test(userData.password1.value));
-        if (!passwordCheck.test(userData.password1.value)) {
-            <!--비밀번호 정규화 실패 시-->
-            document.getElementById('pw_check').style.display = "block";
-            document.getElementById('pw_check').innerHTML = "숫자, 영문, 특수문자 포함 최소8자 이상입력해주세요!";
-            userData.password1.classList.remove('_success');
-            userData.password1.classList.add('_error');
-            buttoncheck();
-        } else {
-            <!-- 비밀번호 정규화 성공시-->
-            document.getElementById("pw_check").style.display = "none";
-            userData.password1.classList.remove('_error');
-            userData.password1.classList.add('_success');
-            regeisterCheck.PW();
-            buttoncheck();
-        }
-    };
-
-
     <!-- 이름 입력 후 focus 벗어나면 유효성 검사-->
     userData.username.onblur = function () {
         if (!nameCheck.test(userData.username.value)) {
@@ -200,10 +184,11 @@
         }
     };
 
+    //회원가입 버튼 부분
+    const registerOK = document.getElementById("register-pass");
 
-    // 비동기 회원가입
-    const registerOK = function () {
-
+    registerOK.addEventListener('click',async function () {
+        event.preventDefault();
         // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const token = document.querySelector('meta[name="_csrf"]').content;
@@ -213,10 +198,14 @@
             password: userData.password1.value,
             name: userData.username.value,
             phone: userData.phone.value,
-            email: userData.email.value
+            email: userData.email.value,
+            userAdrNum:userData.postCode.value,
+            userLotAdr:userData.sample4_jibunAddress.value,
+            userStreetAdr:userData.sample4_roadAddress.value,
+            userDetailAdr:userData.sample4_detailAddress.value
         }
         console.log(postData);
-        fetch("/api/signup", {
+        await fetch("/api/signup", {
             method: "POST",
             headers: {
                 'header': header,
@@ -228,7 +217,7 @@
         })
             .then(res => {
                 if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
-                    res.text().then(text => console.log(text)); // 텍스트 출력
+                    location.href= '/test/index';
                 } else { // 실패를 알리는 HTTP 상태 코드면
                     console.error(res.statusText);
                     console.error(res);
@@ -236,4 +225,4 @@
             })
             .then(data => console.log(data))
             .catch(error => console.log(error))
-    }
+    })
