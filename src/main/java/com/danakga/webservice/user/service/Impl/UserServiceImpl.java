@@ -126,6 +126,12 @@ public class UserServiceImpl implements UserService {
         System.out.println("userInfo.getUserid() = " + userInfo.getPassword());
         System.out.println("userInfoDto = " + userInfoDto.getPassword());
 
+        userInfoDto.setUserEnabled(false);//사용자 이용 중지
+        userInfoDto.setRole("ROLE_USER");
+        //로그인 상태의 권한이기 때문에 사업자가 사업자 탈퇴이후 ,회원탈퇴를 진행하면 MANAGER로 변경됨
+        //이를 해결하기위해 회원탈퇴후에는 항상 USER
+        if(!userInfo.getRole().equals("ROLE_USER")) return -2L;
+
         if (userRepository.findById(userInfo.getId()).isPresent()
                 && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
             userRepository.save(
@@ -141,7 +147,7 @@ public class UserServiceImpl implements UserService {
                             .userDefAdr(userInfo.getUserDefAdr())
                             .userDetailAdr(userInfo.getUserDetailAdr())
                             .userDeletedDate(LocalDateTime.now())
-                            .userEnabled(false)
+                            .userEnabled(userInfoDto.isUserEnabled())
                             .build()
             );
 

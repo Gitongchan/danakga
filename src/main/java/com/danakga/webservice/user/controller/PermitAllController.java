@@ -13,7 +13,6 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
 public class PermitAllController {
     @Autowired
     private final UserService userService;
