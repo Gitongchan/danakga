@@ -1,5 +1,6 @@
 package com.danakga.webservice.user.dto.request;
 
+import com.danakga.webservice.user.model.UserInfo;
 import lombok.*;
 import org.apache.tomcat.jni.Local;
 
@@ -12,7 +13,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserInfoDto {
     //일반사용자 Dto
 
@@ -44,8 +44,11 @@ public class UserInfoDto {
     //회원 우편번호
     private String userAdrNum;
 
-    //회원 기본주소
-    private String userDefAdr;
+    //회원 지번 주소
+    private String userLotAdr;
+
+    //회원 도로명 주소
+    private String userStreetAdr;
 
     //회원 상세 주소
     private String userDetailAdr;
@@ -55,4 +58,5 @@ public class UserInfoDto {
 
     //회원 탈퇴 날짜
     private LocalDateTime userDeletedDate;
+
 }

@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@DynamicUpdate  //더티체킹 , 변경된 값만 확인한 이후 업데이트 쿼리 전송
 public class UserInfo implements UserDetails {
     //공통부분
     @Id
@@ -48,43 +50,18 @@ public class UserInfo implements UserDetails {
     @Column(name = "u_adr_num")
     private String userAdrNum;
 
-    //회원 기본주소
-    @Column(name = "u_def_adr")
-    private String userDefAdr;
+    //회원 도로명 주소
+    @Column(name = "u_street_adr")
+    private String userStreetAdr;
+
+    //회원 지번 주소
+    @Column(name = "u_lot_adr")
+    private String userLotAdr;
 
     //회원 상세 주소
     @Column(name = "u_detail_adr")
     private String userDetailAdr;
 
-    /*                          --사업자 부분--                          */
-    /*                    사업자 등록을 하면 추가되는 컬럼                  */
-    //사업자등록번호
-    @Column(name = "u_com_id")
-    private String companyId;
-
-    //회사명
-    @Column(name = "u_com_name")
-    private String companyName;
-
-    //회사연락처
-    @Column(name = "u_com_num")
-    private String companyNum;
-
-    //회사 우편번호
-    @Column(name = "u_com_adr_num")
-    private String companyAdrNum;
-
-    //회사 기본주소
-    @Column(name = "u_com_def_adr")
-    private String companyDefNum;
-
-    //회사 상세주소
-    @Column(name = "u_com_detail_adr")
-    private String companyDetailAdr;
-
-    //회사 계좌
-    @Column(name = "u_com_banknum")
-    private String companyBanknum;
 
     /**                            탈퇴 관련                            **/
 
@@ -94,24 +71,13 @@ public class UserInfo implements UserDetails {
 
     //회원 탈퇴 날짜
     @Column(name = "u_deleted_date")
-    @UpdateTimestamp
     private LocalDateTime userDeletedDate;
 
-    //사업자 탈퇴 여부
-    @Column(name = "u_com_enabled")
-    private boolean companyEnabled;
-
-    //사업자 탈퇴 날짜
-    @Column(name = "u_com_deleted_date")
-    private LocalDateTime companyDeltedDate;
 
     @Builder
     public UserInfo(Long id, String userid, String password, String name, String phone, String email,
-                    String role, String userAdrNum, String userDefAdr, String userDetailAdr,
-                    String companyId,
-                    String companyName, String companyNum, String companyAdrNum,
-                    String companyDefNum, String companyDetailAdr, String companyBanknum,
-                    boolean userEnabled,LocalDateTime userDeletedDate,boolean companyEnabled,LocalDateTime companyDeltedDate) {
+                    String role, String userAdrNum, String userLotAdr,String userStreetAdr, String userDetailAdr,
+                    boolean userEnabled,LocalDateTime userDeletedDate) {
         this.id = id;
         this.userid = userid;
         this.password = password;
@@ -120,21 +86,12 @@ public class UserInfo implements UserDetails {
         this.email = email;
         this.role = role;
         this.userAdrNum = userAdrNum;
-        this.userDefAdr = userDefAdr;
+        this.userLotAdr = userLotAdr;
+        this.userStreetAdr = userStreetAdr;
         this.userDetailAdr = userDetailAdr;
-        this.companyId = companyId;
-        this.companyName = companyName;
-        this.companyNum = companyNum;
-        this.companyAdrNum = companyAdrNum;
-        this.companyDefNum = companyDefNum;
-        this.companyDetailAdr = companyDetailAdr;
-        this.companyBanknum = companyBanknum;
         this.userEnabled = userEnabled;
         this.userDeletedDate = userDeletedDate;
-        this.companyEnabled = companyEnabled;
-        this.companyDeltedDate = companyDeltedDate;
     }
-
 
 
     // 사용자의 권한을 콜렉션 형태로 반환
