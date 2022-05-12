@@ -1,0 +1,11 @@
+.mypage_sidebar{
+    display: flex;
+    padding: 30px 30px;
+}
+
+.mypage_list{
+    width: 150px;
+    height: 500px;
+    border: #8a8a8a 1px solid;
+    margin-right: 30px;
+}

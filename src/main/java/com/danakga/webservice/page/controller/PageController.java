@@ -28,5 +28,9 @@ public class PageController {
         return "pages/mainfunction";
     }
 
+    @GetMapping("/test/mypageNav")
+    public String testnav(){
+        return "pages/mypageNAV";
+    }
 
 }
