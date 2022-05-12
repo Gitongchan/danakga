@@ -32,5 +32,9 @@ public class PageController {
     public String testnav(){
         return "pages/mypageNAV";
     }
+    @GetMapping("/mypage")
+    public String mypage(){
+        return "pages/mypage";
+    }
 
 }
