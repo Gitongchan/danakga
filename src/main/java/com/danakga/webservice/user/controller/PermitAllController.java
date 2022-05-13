@@ -47,4 +47,9 @@ public class PermitAllController {
         return new ResDupliCheckDto(userService.userIdCheck(email));
     }
 
+    //id찾기
+
+
+    //pw찾기
+
 }

@@ -29,4 +29,7 @@ public interface UserService extends UserDetailsService {
     //사업자 등록 (회원으로 등록된 사용자의 사업자 등록)
     Long companyRegister(UserInfo userInfo,UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto);
 
+    //사업자 복구
+    Long companyRestore(UserInfo userInfo,UserInfoDto userInfoDto,CompanyInfoDto companyInfoDto);
+
 }

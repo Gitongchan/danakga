@@ -46,13 +46,6 @@ public class CompanyServiceImpl implements CompanyService {
         companyUserInfoDto.setCompanyEnabled(true);
         companyUserInfoDto.setUserEnabled(true);
 
-        //중복 id,email 검증
-        Integer idCheckResult = userService.userIdCheck(companyUserInfoDto.getUserid());
-        Integer emailCheckResult = userService.emailCheck(companyUserInfoDto.getEmail());
-        if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
-            return -1L;
-        }
-        else{
             System.out.println("실행됨");
             UserInfo singUpUserInfo =
                     userRepository.save(
@@ -86,7 +79,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .build()
             );
             return singUpUserInfo.getId();
-        }
+
     }
 
     //사업자 정보 수정
@@ -129,7 +122,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
 
-        if(userRepository.findById(userInfo.getId()).isPresent()&& userInfo.getRole().equals("ROLE_MANAGER")) {
+        if(userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_MANAGER")) {
 
             UserInfo comUserInfo = userRepository.findById(userInfo.getId()).get();
 

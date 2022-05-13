@@ -10,6 +10,7 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -77,6 +78,15 @@ public class UserController{
             return new ResResultDto(result,"사업자 등록 성공.");
         }
 
+    }
+
+    //탈퇴한 사업자 복구
+    @PutMapping("/companyinfo_restore")
+    public ResResultDto companyRestore(@LoginUser UserInfo userInfo ,UserInfoDto userInfoDto,CompanyInfoDto companyInfoDto){
+
+        Long result = userService.companyRestore(userInfo,userInfoDto,companyInfoDto);
+        return result == -1L ?
+                new ResResultDto(result,"사업자 정보 복구 실패.") : new ResResultDto(result,"사업자 정보 복구 성공.");
     }
 
 

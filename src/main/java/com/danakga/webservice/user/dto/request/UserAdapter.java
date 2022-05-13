@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.User;
 
 @Getter
 public class UserAdapter extends User {
-    private UserInfo userInfo;
+    private final UserInfo userInfo;
 
     public UserAdapter(UserInfo userInfo) {
         super(userInfo.getUserid(),userInfo.getPassword(),userInfo.isUserEnabled() , userInfo.isAccountNonExpired(),
