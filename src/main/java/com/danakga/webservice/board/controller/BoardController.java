@@ -28,7 +28,7 @@ public class BoardController {
         return boardService.list();
     }
 
-    //파일 업로드 후 할거
+    //게시글 아이디 받아오기
     @GetMapping("/post/{id}")
     public ResPostDto findById(@PathVariable("id") Long bd_id) {
         boardService.bd_IdCheck(bd_id);
@@ -41,8 +41,8 @@ public class BoardController {
     //HTTP 요청시 multipart/ 로 시작하는 경우는 multipart 요청으로 판단해서 RequestPart로 받아야함
     @PostMapping(value = "/postwrite", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto write(@LoginUser UserInfo userInfo,
-                                  @Valid @RequestPart ReqBoardWriteDto reqBoardWriteDto,
-                                  @RequestPart(value = "images", required = false) List<MultipartFile> files) {
+                              @Valid @RequestPart ReqBoardWriteDto reqBoardWriteDto,
+                              @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 작성 로직 실행
         Long result = boardService.write(reqBoardWriteDto, userInfo, files);
