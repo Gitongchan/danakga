@@ -33,3 +33,48 @@
 .register-form .form-group .form-control._error{
     border-color:#B02A37;
 }
+
+/*
+    Screen Size
+    xs <576px
+    sm >= 576px
+    md >= 768px
+    lg >= 992px
+    xl >= 1200px
+    xxl >= 1400px
+
+    @media all and (max-width: 1024px){
+	//브라우저 창 width가 1024px보다 작아지는 순간부터 적용
+	//태블릿
+    }
+    @media all and (max-width: 768px){
+        //브라우저 창 width가 768px보다 작아지는 순간부터 적용
+        //모바일
+    }
+    @media all and (min-width: 768px){
+        //브라우저 창 width가 768px보다 커지는 순간부터 적용
+        //태블릿
+    }
+    @media all and (min-width: 1024px){
+        //브라우저 창 width가 1024px보다 커지는 순간부터 적용
+        //데스크탑
+    }
+
+*/
+
+/*
+    768보다 작아지는 순간 적용
+    mobile?
+*/
+@media screen and (max-width: 576px) {
+}
+
+/*
+    768보다 커지는 순간 적용
+    Desktop
+*/
+@media screen and (min-width: 768px){
+    #PostCode{
+        margin-top:18px;
+    }
+}

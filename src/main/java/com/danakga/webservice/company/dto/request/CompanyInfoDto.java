@@ -16,6 +16,7 @@ public class CompanyInfoDto {
 
     //userinfo
     private UserInfo usreInfo;
+
     //사업자등록번호
     private Long companyId;
 
@@ -28,8 +29,11 @@ public class CompanyInfoDto {
     //회사 우편번호
     private String companyAdrNum;
 
-    //회사 기본주소
-    private String companyDefNum;
+    //회원 지번 주소
+    private String companyLotAdr;
+
+    //회원 도로명 주소
+    private String companyStreetAdr;
 
     //회사 상세주소
     private String companyDetailAdr;
