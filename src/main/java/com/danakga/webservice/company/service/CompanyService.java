@@ -19,4 +19,7 @@ public interface CompanyService {
 
     //사업자 회사 정보 수정
     Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto);
+
+    //사업자 회사 정보 조회
+    CompanyInfo companyInfoCheck(UserInfo userInfo);
 }

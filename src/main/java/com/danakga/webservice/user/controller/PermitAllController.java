@@ -15,6 +15,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class PermitAllController {
+
     @Autowired
     private final UserService userService;
 
@@ -45,5 +46,10 @@ public class PermitAllController {
     public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
         return new ResDupliCheckDto(userService.userIdCheck(email));
     }
+
+    //id찾기
+
+
+    //pw찾기
 
 }

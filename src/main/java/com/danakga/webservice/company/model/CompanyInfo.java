@@ -18,6 +18,7 @@ public class CompanyInfo {
 
     //사업자등록번호
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="com_id")
     private Long companyId;
 
