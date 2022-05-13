@@ -50,6 +50,7 @@ public class FileServiceImpl implements FilesService {
 
                 //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
                 String filepath = savepath + "\\" + saveFileName;
+                System.out.println(filepath);
                 try {
                     multipartFile.transferTo(new File(filepath));
                 } catch (IOException e) {
