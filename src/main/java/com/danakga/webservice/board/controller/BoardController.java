@@ -1,29 +1,26 @@
 package com.danakga.webservice.board.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
-import com.danakga.webservice.board.dto.request.ReqFileUploadDto;
-import com.danakga.webservice.board.dto.response.ResBoardWriteDto;
+import com.danakga.webservice.board.dto.response.ResPostDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/board")
 public class BoardController {
 
-    @Autowired
-    private final BoardService boardService;
+    @Autowired private final BoardService boardService;
 
     //게시판 목록
     @GetMapping("/list")
@@ -31,48 +28,33 @@ public class BoardController {
         return boardService.list();
     }
 
+    //게시글 아이디 받아오기
+    @GetMapping("/post/{id}")
+    public ResPostDto findById(@PathVariable("id") Long bd_id) {
+        boardService.bd_IdCheck(bd_id);
+        return null;
+    }
+
     //게시글 작성
-    @PostMapping("/postwrite")
-    public ResBoardWriteDto write(@Valid @RequestBody ReqBoardWriteDto reqBoardWriteDto, ReqFileUploadDto reqFileUploadDto,
-                                  MultipartFile files, @LoginUser UserInfo userInfo) {
+    //consumes은 들어오는 데이터 타입을 정의할 때 사용하고 mediatype으로 json과 formdata를 받는다
+    //@RequestBody는 데이터 형식을 json형태로 받기 때문에 파일을 받아오지 못함
+    //HTTP 요청시 multipart/ 로 시작하는 경우는 multipart 요청으로 판단해서 RequestPart로 받아야함
+    @PostMapping(value = "/postwrite", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResResultDto write(@LoginUser UserInfo userInfo,
+                              @Valid @RequestPart ReqBoardWriteDto reqBoardWriteDto,
+                              @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
+        //게시글 작성 로직 실행
+        Long result = boardService.write(reqBoardWriteDto, userInfo, files);
 
-        //이 작업을 service에서 해줘야 할거같은데 그럼 글 작성과 동시에 build로 db에 값을 넣을 수 있나?, file의 Long id만 넣어주는게 되나?
-        //file은 다른 테이블에 저장되기 때문에 따로 mapping을 따서 fileupload 메소드를 만들어줘야 할 거 같은 생각
-        try {
-            //UUID로 파일명 중복되지 않게 유일한 식별자로 파일명 저장
-            UUID uuid = UUID.randomUUID();
-            //실제 첨부파일로 등록된 파일명
-            String originFileName = files.getOriginalFilename();
-            //db에 저장 할 파일명
-            String fileName = uuid + "__" + originFileName;
-            //파일 저장 경로
-            String savepath = System.getProperty("user.dir") + "\\files";
-
-            //파일 저장되는 폳더 없으면 생성
-            if(!new File(savepath).exists()) {
-                try{
-                    new File(savepath).mkdir();
-                } catch (Exception e2) {
-                    e2.getStackTrace();
-                }
-            }
-
-            //File로 저장 경로와 저장 할 파일명 합쳐서 multipartfile의 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-            File filepath = new File(savepath + fileName);
-            files.transferTo(filepath);
-
-            } catch (Exception e1) {
-                e1.getStackTrace();
-            }
-        System.out.println("commit test");
-        return boardService.write(reqBoardWriteDto, reqFileUploadDto, files, userInfo);
+        return result == -1L ?
+                new ResResultDto (result, "게시글 작성에 실패했습니다.") : new ResResultDto(result, "게시글을 작성했습니다.");
     }
 
     //게시글 수정
 //    @PutMapping("/post/edit/{id}")
-//    public String edit(@PathVariable Long id, Board board) {
-//        return "/post/edit";
+//    public ResBoardUpdateDto edit(@PathVariable Long bd_id, @LoginUser UserInfo userInfo, Board board) {
+//        return boardService.edit(userInfo, board);
 //    }
 
 }

@@ -7,14 +7,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResBoardUpdateDto {
+public class ResPostDto {
 
     private Long bd_id;
-    private String message;
+    private String bd_writer;
+    private String bd_title;
+    private String bd_content;
 
-    public ResBoardUpdateDto(Long bd_id) {
-        this.bd_id = bd_id;
-        this.message = "게시글 수정 성공";
-    }
-    
 }

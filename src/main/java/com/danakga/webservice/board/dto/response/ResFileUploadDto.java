@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResBoardWriteDto {
+public class ResFileUploadDto {
 
-    private Long id;
+    private Long f_id;
     private String message;
 
-    public ResBoardWriteDto(Long id) {
-        this.id = id;
-        this.message = "게시글 작성 성공";
+    public ResFileUploadDto(Long f_id) {
+        this.f_id = f_id;
+        this.message = "파일 업로드 성공";
     }
 }
