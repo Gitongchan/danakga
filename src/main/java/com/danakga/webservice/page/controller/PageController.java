@@ -32,9 +32,15 @@ public class PageController {
     public String testnav(){
         return "pages/mypageNAV";
     }
+
     @GetMapping("/mypage")
     public String mypage(){
         return "pages/mypage";
+    }
+
+    @GetMapping("/orderlist")
+    public String mypageOrderlist(){
+        return "pages/orderlist";
     }
 
 }

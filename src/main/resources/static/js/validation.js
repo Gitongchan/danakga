@@ -1,8 +1,8 @@
-    //jquery 가져와서 사용하는 곳
-    let script = document.createElement('script');
-    script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
-    script.type = 'text/javascript';
-    document.getElementsByTagName('head')[0].appendChild(script);
+    // //jquery 가져와서 사용하는 곳
+    // let script = document.createElement('script');
+    // script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+    // script.type = 'text/javascript';
+    // document.getElementsByTagName('head')[0].appendChild(script);
 
     // 공백 정규식
     // var regExp = /^[0-9]+$/;
