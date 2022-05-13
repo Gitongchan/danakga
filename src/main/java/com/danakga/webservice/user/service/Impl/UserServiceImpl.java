@@ -1,6 +1,10 @@
 package com.danakga.webservice.user.service.Impl;
 
+import com.danakga.webservice.company.dto.request.CompanyInfoDto;
+import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
+import com.danakga.webservice.company.service.CompanyService;
+import com.danakga.webservice.company.service.Impl.CompanyServiceImpl;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
@@ -9,6 +13,7 @@ import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired private final UserRepository userRepository;
     @Autowired private final CompanyRepository companyRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
@@ -159,15 +165,127 @@ public class UserServiceImpl implements UserService {
         return -1L;
     }
 
+    //회원 정보 조회
     @Override
     public UserInfo userInfoCheck(UserInfo userInfo) {
-        UserInfo checkUserInfo = null;
+
         if(userRepository.findById(userInfo.getId()).isPresent()) {
-            checkUserInfo = userRepository.findById(userInfo.getId()).get();
-            return checkUserInfo;
+            return  userRepository.findById(userInfo.getId()).get();
         }
         return null;
     }
 
+    //사업자 등록
+    //일반회원으로 등록된 사용자의 사업자 등록
+    @Override
+    public Long companyRegister(UserInfo userInfo, UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto) {
 
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+            return -1L;//가입된 유저 정보 있으면 -1L
+        }
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+            return -2L; //이미 등록된 사업자 일 때
+        }
+
+        if(userRepository.findById(userInfo.getId()).isPresent()){
+
+            UserInfo registerUserInfo = userRepository.findById(userInfo.getId()).get();
+
+            userInfoDto.setRole("ROLE_MANAGER"); // 권한 MANAGER로 변경
+            companyInfoDto.setCompanyEnabled(true); // 사업자 서비스 이용 가능
+
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(registerUserInfo.getId())
+                            .userid(registerUserInfo.getUserid())
+                            .password(registerUserInfo.getPassword())
+                            .name(registerUserInfo.getName())
+                            .phone(registerUserInfo.getPhone())
+                            .email(registerUserInfo.getEmail())
+                            .role(userInfoDto.getRole())
+                            .userAdrNum(registerUserInfo.getUserAdrNum())
+                            .userStreetAdr(registerUserInfo.getUserStreetAdr())
+                            .userLotAdr(registerUserInfo.getUserLotAdr())
+                            .userDetailAdr(registerUserInfo.getUserDetailAdr())
+                            .userEnabled(registerUserInfo.isUserEnabled())
+                            .build()
+            );
+            companyRepository.save(
+                    CompanyInfo.builder()
+                            .companyId(companyInfoDto.getCompanyId())
+                            .userInfo(registerUserInfo)
+                            .companyName(companyInfoDto.getCompanyName())
+                            .companyNum(companyInfoDto.getCompanyNum())
+                            .companyAdrNum(companyInfoDto.getCompanyAdrNum())
+                            .companyLotAdr(companyInfoDto.getCompanyLotAdr())
+                            .companyStreetAdr(companyInfoDto.getCompanyStreetAdr())
+                            .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
+                            .companyBanknum(companyInfoDto.getCompanyBanknum())
+                            .companyEnabled(companyInfoDto.isCompanyEnabled())
+                            .build()
+            );            return registerUserInfo.getId();
+
+        }
+        return -1L;
+    }
+
+    //탈퇴한 회원 복구
+    @Override
+    public Long companyRestore(UserInfo userInfo, UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto) {
+
+
+        if (userRepository.findById(userInfo.getId()).isEmpty()) {
+            return -1L; //사용자 정보 없음
+        }
+
+        UserInfo restoreUserInfo = userRepository.findById(userInfo.getId()).get();
+
+        if (companyRepository.findByUserInfo(restoreUserInfo).isEmpty()) {
+            return -1L; //로그인된 사용자가 사업자 등록이 안되어있음
+        }
+
+        CompanyInfo restoreComUserInfo = companyRepository.findByUserInfo(restoreUserInfo).get();
+
+
+        if (!restoreComUserInfo.isCompanyEnabled()) {
+            userInfoDto.setRole("ROLE_MANAGER");
+            companyInfoDto.setCompanyEnabled(true);
+            companyInfoDto.setCompanyDeletedDate(null);
+
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(restoreUserInfo.getId())
+                            .userid(restoreUserInfo.getUserid())
+                            .password(restoreUserInfo.getPassword())
+                            .name(restoreUserInfo.getName())
+                            .phone(restoreUserInfo.getPhone())
+                            .email(restoreUserInfo.getEmail())
+                            .role(userInfoDto.getRole())
+                            .userAdrNum(restoreUserInfo.getUserAdrNum())
+                            .userStreetAdr(restoreUserInfo.getUserStreetAdr())
+                            .userLotAdr(restoreUserInfo.getUserLotAdr())
+                            .userDetailAdr(restoreUserInfo.getUserDetailAdr())
+                            .userEnabled(restoreUserInfo.isUserEnabled())
+                            .build()
+            );
+            companyRepository.save(
+                    CompanyInfo.builder()
+                            .companyId(restoreComUserInfo.getCompanyId())
+                            .userInfo(restoreUserInfo)
+                            .companyName(restoreComUserInfo.getCompanyName())
+                            .companyNum(restoreComUserInfo.getCompanyNum())
+                            .companyAdrNum(restoreComUserInfo.getCompanyAdrNum())
+                            .companyLotAdr(restoreComUserInfo.getCompanyLotAdr())
+                            .companyStreetAdr(restoreComUserInfo.getCompanyStreetAdr())
+                            .companyDetailAdr(restoreComUserInfo.getCompanyDetailAdr())
+                            .companyBanknum(restoreComUserInfo.getCompanyBanknum())
+                            .companyEnabled(companyInfoDto.isCompanyEnabled())
+                            .companyDeltedDate(companyInfoDto.getCompanyDeletedDate())
+                            .build()
+            );
+            return restoreUserInfo.getId();
+
+        }
+        return -1L; //이미 사업자 이용중임
+    }
 }

@@ -5,13 +5,11 @@ import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.company.service.CompanyService;
-import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,13 +46,6 @@ public class CompanyServiceImpl implements CompanyService {
         companyUserInfoDto.setCompanyEnabled(true);
         companyUserInfoDto.setUserEnabled(true);
 
-        //중복 id,email 검증
-        Integer idCheckResult = userService.userIdCheck(companyUserInfoDto.getUserid());
-        Integer emailCheckResult = userService.emailCheck(companyUserInfoDto.getEmail());
-        if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
-            return -1L;
-        }
-        else{
             System.out.println("실행됨");
             UserInfo singUpUserInfo =
                     userRepository.save(
@@ -88,7 +79,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .build()
             );
             return singUpUserInfo.getId();
-        }
+
     }
 
     //사업자 정보 수정
@@ -118,11 +109,20 @@ public class CompanyServiceImpl implements CompanyService {
         else return -1L;
     }
 
+    //사업자 회사 정보 조회
+    @Override
+    public CompanyInfo companyInfoCheck(UserInfo userInfo) {
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+            return companyRepository.findByUserInfo(userInfo).get();
+        }
+        return null;
+    }
+
     //사업자탈퇴
     @Override
     public Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
 
-        if(userRepository.findById(userInfo.getId()).isPresent()&& userInfo.getRole().equals("ROLE_MANAGER")) {
+        if(userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_MANAGER")) {
 
             UserInfo comUserInfo = userRepository.findById(userInfo.getId()).get();
 
