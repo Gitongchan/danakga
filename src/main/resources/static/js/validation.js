@@ -48,25 +48,16 @@
             userData.username.classList.contains("_success") &&
             userData.email.classList.contains("_success") &&
             userData.phone.classList.contains("_success") &&
-            userData.sample4_detailAddress.classList.contains("_success"))
-        if (!result) {
-            <!-- 유효성 검사를 모두 통과못했다면-->
-            document.getElementById('register-pass').disabled = true;
-        } else {
-            <!-- 유효성 검사를 모두 통과했다면 버튼 활성화-->
-            document.getElementById('register-pass').disabled = false;
-
-        }
+            userData.postCode.classList.contains("_success"))
+        document.getElementById('register-pass').disabled = !result;
     }
 
     <!-- 회원가입 아이디 및 패스워드 확인 함수-->
     const regeisterCheck = {
         ID: () => {
             const checkbool = useridCheck.test(userData.userid.value);
-            console.log(useridCheck.test(userData.userid.value));
             if (checkbool === false) {
                 <!-- 정규식 실패 시-->
-                console.log("정규식 실패에요!!!")
                 document.getElementById('id_check').innerHTML = '공백 및 특수문자를 제외한 영문 및 숫자 4~20자를 입력해주세요!';
                 document.getElementById('id_check').style.display = 'block';
                 document.getElementById('id_check').style.color = '#B02A37';
@@ -74,7 +65,6 @@
                 userData.userid.classList.add("_error");
                 buttoncheck();
             } else {
-                console.log("정규식 성공이에요!!!");
                 <!-- 정규식 성공 시-->
                 fetch(`/api/userid_check?userid=${userData.userid.value}`)
                     .then(response => response.json())
@@ -151,6 +141,26 @@
         }
     }
 
+    <!-- 첫 번째 비밀번호 정규식 체크하는 부분(password input에 focus가 떠나게 되면)-->
+    userData.password1.onblur = function () {
+        console.log(passwordCheck.test(userData.password1.value));
+        if (!passwordCheck.test(userData.password1.value)) {
+            <!--비밀번호 정규화 실패 시-->
+            document.getElementById('pw_check').style.display = "block";
+            document.getElementById('pw_check').innerHTML = "숫자, 영문, 특수문자 포함 최소8자 이상입력해주세요!";
+            userData.password1.classList.remove('_success');
+            userData.password1.classList.add('_error');
+            buttoncheck();
+        } else {
+            <!-- 비밀번호 정규화 성공시-->
+            document.getElementById("pw_check").style.display = "none";
+            userData.password1.classList.remove('_error');
+            userData.password1.classList.add('_success');
+            regeisterCheck.PW();
+            buttoncheck();
+        }
+    };
+
     <!-- 이름 입력 후 focus 벗어나면 유효성 검사-->
     userData.username.onblur = function () {
         if (!nameCheck.test(userData.username.value)) {
@@ -188,7 +198,6 @@
     const registerOK = document.getElementById("register-pass");
 
     registerOK.addEventListener('click',async function () {
-        event.preventDefault();
         // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const token = document.querySelector('meta[name="_csrf"]').content;
@@ -215,14 +224,13 @@
             },
             body: JSON.stringify(postData)
         })
-            .then(res => {
-                if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
-                    location.href= '/test/index';
-                } else { // 실패를 알리는 HTTP 상태 코드면
-                    console.error(res.statusText);
-                    console.error(res);
+            .then(res => res.json())
+            .then(data => {
+                if(data.result === 1){
+                    //성공시
+                }else{
+                    //실패시
                 }
             })
-            .then(data => console.log(data))
             .catch(error => console.log(error))
     })
