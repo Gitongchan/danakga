@@ -1,11 +1,31 @@
 .mypage_sidebar{
     display: flex;
-    padding: 30px 30px;
+    margin: 30px 30px;
 }
 
 .mypage_list{
     width: 150px;
     height: 500px;
     border: #8a8a8a 1px solid;
+    border-radius: 15px;
     margin-right: 30px;
 }
+
+.mypage_list ul{
+    text-align: center;
+    margin-top : 20px;
+}
+
+.mypage_list ul li{
+    text-align: center;
+    margin-bottom : 20px;
+}
+
+.mypage_list ul li a{
+    color:black;
+}
+
+.mypage_list ul li a:hover{
+    color:#0167f3;
+}
+

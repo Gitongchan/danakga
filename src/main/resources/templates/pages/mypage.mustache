@@ -2,10 +2,11 @@
 
 <style>
     /* 줄 바꿈 태그 길이 설정*/
-    hr{
-        width:100%
+    hr {
+        width: 100%
     }
-    label{
+
+    label {
         font-weight: bold;
     }
 </style>
@@ -14,50 +15,62 @@
 <!-- Cotainer는 그렇게 양쪽 여백을 주게 되어있고  fluid 뭐시기는 여백 없음-->
 <div class="container">
     <div class="row">
-        <h3>회원정보 수정</h3>
-        <hr>
-        <label class="col-sm-2 control-label">아이디*</label>
-        <span>wjdgus54321</span> <!-- 아이디 값 불러오기 -->
-        <!--P는 블록 태그이고 span은 인라인 태그에요!-->
-        <!-- <p class="col-sm-2">wjdgus43993</p>-->
-    </div>
-    <hr>
-    <form class="was-validated">
-        <div class="mb-3 mt-3">
-            <label for="uname" class="col-sm-2 control-label">이메일 주소*</label>
-            <input type="text" class="form-control col-10" id="uname" placeholder="abcd@example.com" name="uname" required="">
-            <div class = "col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
-            <button id="emailbtn" class="btn btn-primary">메일 인증</button><br>
+        <section class="mypage_sidebar">
+            {{>pages/mypageNAV}}
+            <article>
+            <h3>회원정보 수정</h3>
+            <hr>
+            <label class="col-sm-2 control-label">아이디*</label>
+            <span>wjdgus54321</span> <!-- 아이디 값 불러오기 -->
+            <!--P는 블록 태그이고 span은 인라인 태그에요!-->
+            <!-- <p class="col-sm-2">wjdgus43993</p>-->
+
+            <hr>
+            <form class="was-validated">
+                <div class="mb-3 mt-3">
+                    <label for="uname" class="col-sm-2 control-label">이메일 주소*</label>
+                    <input type="text" class="form-control col-10" id="uname" placeholder="abcd@example.com"
+                           name="uname"
+                           required>
+                    <div class="col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
+                        <button id="emailbtn" class="btn btn-primary">메일 인증</button>
+                        <br>
+                    </div>
+                    <div style="color: #bd081c; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게
+                        입력해주세요
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">이름*</label>
+                <span style="width:100px">박정현</span> <!-- 아이디 값 불러오기 -->
+                <a href="#" class="col-8 col-md-6 col-sm-8" style=" color:#696969;">개명하셨다면? 이름 변경 &gt;</a>
             </div>
-            <div style="color: #bd081c; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게 입력해주세요</div>
-        </div>
-    </form>
-    <hr>
-    <div class="row">
-        <label class="col-sm-2 control-label">이름*</label>
-        <span style="width:100px">박정현</span> <!-- 아이디 값 불러오기 -->
-        <a href="#" class="col-8 col-md-6 col-sm-8" style=" color:#696969;">개명하셨다면? 이름 변경 &gt;</a>
-    </div>
-    <hr>
-    <div class="row">
-        <label class="col-sm-2 control-label">비밀번호*</label>
-        <a href="#" class="col-sm-10 col-md-8 col-12" style="color:#696969;">비밀번호 변경 ∨</a>
-    </div>
-    <hr>
-    <div class="row">
-        <label style="vertical-align:top;" class="col-sm-2 control-label">배송지 정보</label>
-        <textarea style="resize:none; border:1px solid black; border-radius: 30px; width: auto; height: auto;" rows="15" cols="135" name="contents"></textarea>
-    </div>
+            <hr>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">비밀번호*</label>
+                <a href="#" class="col-sm-10 col-md-8 col-12" style="color:#696969;">비밀번호 변경 ∨</a>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label style="vertical-align:top;" class="col-sm-2 control-label">배송지 정보</label>
+                <textarea style="resize:none; border:1px solid black; border-radius: 30px; width: auto; height: auto;"
+                          rows="15" cols="135" name="contents"></textarea>
+            </div>
 
 
-        <div class = "col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
+            <div class="col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
+                <br>
+                <button type="button" class="btn btn-success">변경 완료</button>
+            </div>
+
+            <!--""-->
             <br>
-            <button type="button" class="btn btn-success">변경 완료</button>
-        </div>
-
-    <!--""-->
-    <br>
-    <br>
+            <br>
+            </article>
+        </section>
+    </div>
 </div>
 
 {{>pages/footer}}
