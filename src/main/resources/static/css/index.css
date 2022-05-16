@@ -1,0 +1,6 @@
+.userinfo{
+    width:130px;
+    display: flex;
+    justify-content: space-between;
+}
+

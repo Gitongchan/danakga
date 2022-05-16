@@ -47,8 +47,7 @@
             userData.password2.classList.contains("_success") &&
             userData.username.classList.contains("_success") &&
             userData.email.classList.contains("_success") &&
-            userData.phone.classList.contains("_success") &&
-            userData.postCode.classList.contains("_success"))
+            userData.phone.classList.contains("_success"))
         document.getElementById('register-pass').disabled = !result;
     }
 
