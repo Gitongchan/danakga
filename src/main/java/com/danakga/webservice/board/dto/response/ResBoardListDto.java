@@ -17,4 +17,5 @@ public class ResBoardListDto {
     private String bd_title;
     private LocalDateTime bd_created;
     private int bd_views;
+    private String bd_deleted;
 }

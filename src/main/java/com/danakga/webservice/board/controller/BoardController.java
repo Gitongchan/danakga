@@ -2,7 +2,6 @@ package com.danakga.webservice.board.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
-import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;

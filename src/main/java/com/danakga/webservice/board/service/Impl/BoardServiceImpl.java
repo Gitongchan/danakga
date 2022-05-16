@@ -42,12 +42,15 @@ public class BoardServiceImpl implements BoardService {
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
         boards.forEach(entity -> {
-            ResBoardListDto listDto = new ResBoardListDto();
-            listDto.setBd_title(entity.getBd_title());
-            listDto.setBd_writer(entity.getBd_writer());
-            listDto.setBd_created(entity.getBd_created());
-            listDto.setBd_views(entity.getBd_views());
-            boardListDto.add(listDto);
+            if(entity.getBd_deleted().equals("N")) {
+                ResBoardListDto listDto = new ResBoardListDto();
+                listDto.setBd_title(entity.getBd_title());
+                listDto.setBd_writer(entity.getBd_writer());
+                listDto.setBd_created(entity.getBd_created());
+                listDto.setBd_views(entity.getBd_views());
+                listDto.setBd_deleted(entity.getBd_deleted());
+                boardListDto.add(listDto);
+            }
         });
 
         return boardListDto;
