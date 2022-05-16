@@ -1,8 +1,7 @@
 package com.danakga.webservice.board.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
-import com.danakga.webservice.board.dto.response.ResPostDto;
-import com.danakga.webservice.board.model.Board;
+import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
@@ -24,13 +23,13 @@ public class BoardController {
 
     //게시판 목록
     @GetMapping("/list")
-    public List<Board> list() {
-        return boardService.list();
+    public List<ResBoardListDto> list() {
+        return boardService.boardList();
     }
 
     //게시글 아이디 받아오기
     @GetMapping("/post/{id}")
-    public ResPostDto findById(@PathVariable("id") Long bd_id) {
+    public ResBoardListDto findById(@PathVariable("id") Long bd_id) {
         boardService.bd_IdCheck(bd_id);
         return null;
     }

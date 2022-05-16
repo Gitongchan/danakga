@@ -1,7 +1,7 @@
 package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
-import com.danakga.webservice.board.dto.response.ResPostDto;
+import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.service.BoardService;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,8 +28,32 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 목록
     @Override
-    public List<Board> list() {
-        return boardRepository.findAll();
+    public List<ResBoardListDto> boardList() {
+
+        //게시글도 수정 후 다시 보여지는데 최신화해서 보여주는게 맞는지
+        //Long타입의 메소드가 아니여서 return은 어떤거로 줄지
+//        if(boardRepository.findById(board.getBd_id()).isEmpty()){
+//            return null;
+//        }
+//        UserInfo recentBoard = userRepository.findById(board.getBd_id()).get();
+
+
+        List<Board> boards = boardRepository.findAll();
+        List<ResBoardListDto> boardListDto = new ArrayList<>();
+
+        boards.forEach(entity -> {
+            if(entity.getBd_deleted().equals("N")) {
+                ResBoardListDto listDto = new ResBoardListDto();
+                listDto.setBd_title(entity.getBd_title());
+                listDto.setBd_writer(entity.getBd_writer());
+                listDto.setBd_created(entity.getBd_created());
+                listDto.setBd_views(entity.getBd_views());
+                listDto.setBd_deleted(entity.getBd_deleted());
+                boardListDto.add(listDto);
+            }
+        });
+
+        return boardListDto;
     }
 
     //게시글 아이디 찾기
@@ -41,7 +66,7 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 보기
     @Override
-    public ResPostDto post() {
+    public ResBoardListDto post() {
         return null;
     }
 
