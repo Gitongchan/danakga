@@ -52,7 +52,7 @@ public class Board {
     //insert시 기본값으로 bd_deleted에 "N"값 적용
     @PrePersist
     public void deleted() {
-        this.bd_deleted = "Y";
+        this.bd_deleted = "N";
     }
 
     //setter 대신 사용 , 나머지 매개변수들 넣어야함
