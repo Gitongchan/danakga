@@ -10,6 +10,10 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,27 +27,21 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired private final BoardRepository boardRepository;
     @Autowired private final FilesService filesService;
-    private final UserRepository userRepository;
+    @Autowired private final UserRepository userRepository;
     private Board board;
 
     //게시판 목록
     @Override
-    public List<ResBoardListDto> boardList() {
-
-        //게시글도 수정 후 다시 보여지는데 최신화해서 보여주는게 맞는지
-        //Long타입의 메소드가 아니여서 return은 어떤거로 줄지
-//        if(boardRepository.findById(board.getBd_id()).isEmpty()){
-//            return null;
-//        }
-//        UserInfo recentBoard = userRepository.findById(board.getBd_id()).get();
-
+    public List<ResBoardListDto> boardList(Pageable pageable) {
 
         List<Board> boards = boardRepository.findAll();
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
+        //게시글 목록을 삭제되지 않은 deleted = "N"의 값을 가지고 있는 게시글만 출력
         boards.forEach(entity -> {
-            if(entity.getBd_deleted().equals("N")) {
+            if (entity.getBd_deleted().equals("N")) {
                 ResBoardListDto listDto = new ResBoardListDto();
+                listDto.setBd_id(entity.getBd_id());
                 listDto.setBd_title(entity.getBd_title());
                 listDto.setBd_writer(entity.getBd_writer());
                 listDto.setBd_created(entity.getBd_created());
@@ -64,12 +62,13 @@ public class BoardServiceImpl implements BoardService {
         });
     }
 
-    //게시글 보기
+    //개별 게시글 보기
     @Override
     public ResBoardListDto post() {
         return null;
     }
 
+    //게시글 작성
     @Override
     public Long write(ReqBoardWriteDto reqBoardWriteDto,
                       UserInfo userInfo, List<MultipartFile> files) {
@@ -77,17 +76,17 @@ public class BoardServiceImpl implements BoardService {
         if(userRepository.findById(userInfo.getId()).isEmpty()){
             return -1L;
         }
-        UserInfo fileUserInfo = userRepository.findById(userInfo.getId()).get();
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
         if(CollectionUtils.isEmpty(files)) {
             boardRepository.save(
                     board = Board.builder()
                             .bd_type(reqBoardWriteDto.getBd_type())
                             .bd_views(reqBoardWriteDto.getBd_views())
-                            .bd_writer(fileUserInfo.getUserid())
+                            .bd_writer(recentUserInfo.getUserid())
                             .bd_title(reqBoardWriteDto.getBd_title())
                             .bd_content(reqBoardWriteDto.getBd_content())
-                            .userInfo(fileUserInfo)
+                            .userInfo(recentUserInfo)
                             .build()
             );
             return board.getBd_id();
@@ -105,10 +104,10 @@ public class BoardServiceImpl implements BoardService {
                                 board = Board.builder()
                                         .bd_type(reqBoardWriteDto.getBd_type())
                                         .bd_views(reqBoardWriteDto.getBd_views())
-                                        .bd_writer(fileUserInfo.getUserid())
+                                        .bd_writer(recentUserInfo.getUserid())
                                         .bd_title(reqBoardWriteDto.getBd_title())
                                         .bd_content(reqBoardWriteDto.getBd_content())
-                                        .userInfo(fileUserInfo)
+                                        .userInfo(recentUserInfo)
                                         .build()
                         );
 
