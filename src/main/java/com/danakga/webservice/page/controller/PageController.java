@@ -23,6 +23,12 @@ public class PageController {
         return "pages/register";
     }
 
+    @GetMapping("/companyval")
+    public String companyval(){
+        return "pages/companyRegister";
+    }
+
+
     @GetMapping("/test/mainfunc")
     public String testmain(){
         return "pages/mainfunction";

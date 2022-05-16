@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .loginPage("/login")
                     .loginProcessingUrl("/login")
                     .failureHandler(customAuthFailureHandler)
-                    .defaultSuccessUrl("/") // 로그인 성공 후 리다이렉트 주소
+                    .defaultSuccessUrl("/test/index") // 로그인 성공 후 리다이렉트 주소
                 .and()
                     .logout() // 8
                     .logoutUrl("/user/logout")
