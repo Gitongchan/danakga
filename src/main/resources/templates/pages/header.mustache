@@ -85,10 +85,33 @@
                     <!-- End Main Menu Search -->
                 </div>
                 <div class="col-lg-4 col-md-2 col-5">
-                    <div class="middle-right-area">
+                    <div class="middle-right-area _user">
                         <div class="view_id">
+                            <span id="text_id"></span>
+                        </div>
+                        <span>|</span>
+                        <div class="userinfo">
+                            <a href="/mypage">
+                                <span>내 정보</span>
+                            </a>
+                            <form method="POST" action="/user/logout">
+                                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                                <button>로그아웃</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="middle-right-area _noInfo">
+                        <div class="view_id">
+                            <span class="text_id">로그인이 필요합니다!</span>
                         </div>
                         <div class="userinfo">
+                            <a href="/login">
+                                <span>로그인</span>
+                            </a>
+                            <span>|</span>
+                            <a href="/register">
+                                <span>회원가입</span>
+                            </a>
                         </div>
                     </div>
                 </div>
