@@ -13,7 +13,7 @@ import java.util.List;
 public interface BoardService {
 
     //게시판 목록
-    List<ResBoardListDto> boardList(Pageable pageable, int page);
+    List<ResBoardListDto> boardList(Pageable pageable);
 
     //게시글 아이디 찾기
     Board bd_IdCheck(Long bd_id);

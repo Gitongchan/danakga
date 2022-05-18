@@ -31,7 +31,7 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 목록
     @Override
-    public List<ResBoardListDto> boardList(Pageable pageable, int page) {
+    public List<ResBoardListDto> boardList(Pageable pageable) {
 
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         String deleted = "N";
