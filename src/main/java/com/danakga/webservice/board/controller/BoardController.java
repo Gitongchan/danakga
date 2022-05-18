@@ -29,8 +29,9 @@ public class BoardController {
 
     //게시판 목록
     @GetMapping("/list")
-    public List<ResBoardListDto> list(@PageableDefault(size = 5,direction = Sort.Direction.DESC) Pageable pageable) {
-        return boardService.boardList(pageable);
+    public List<ResBoardListDto> list(@PageableDefault(page = 0, size = 10,direction = Sort.Direction.DESC) Pageable pageable,
+                                      @PathVariable("page") int page) {
+        return boardService.boardList(pageable, page);
     }
 
     //게시글 아이디 받아오기
