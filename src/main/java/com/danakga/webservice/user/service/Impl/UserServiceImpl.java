@@ -288,4 +288,13 @@ public class UserServiceImpl implements UserService {
         }
         return -1L; //이미 사업자 이용중임
     }
+
+    @Override
+    public String useridFind(UserInfoDto userInfoDto) {
+        if(userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
+            return findUserInfo.getUserid();
+        }
+        return null;
+    }
 }
