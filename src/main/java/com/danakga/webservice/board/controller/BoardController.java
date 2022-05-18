@@ -8,6 +8,7 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,8 +29,7 @@ public class BoardController {
 
     //게시판 목록
     @GetMapping("/list")
-    public List<ResBoardListDto> list(@PageableDefault(size = 10, sort = "bd_id", direction = Sort.Direction.DESC)
-                                                  Pageable pageable) {
+    public List<ResBoardListDto> list(Pageable pageable) {
         return boardService.boardList(pageable);
     }
 

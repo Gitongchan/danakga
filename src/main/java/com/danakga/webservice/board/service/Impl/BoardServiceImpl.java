@@ -10,10 +10,7 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +31,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<ResBoardListDto> boardList(Pageable pageable) {
 
-        List<Board> boards = boardRepository.findAll();
+
+        List<Board> boards = boardRepository.findAll(pageable).getContent();
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
         //게시글 목록을 삭제되지 않은 deleted = "N"의 값을 가지고 있는 게시글만 출력
