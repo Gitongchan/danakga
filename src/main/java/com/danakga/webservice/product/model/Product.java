@@ -2,6 +2,7 @@ package com.danakga.webservice.product.model;
 
 import com.danakga.webservice.company.model.CompanyInfo;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -36,7 +37,7 @@ public class Product {
     @Column(name = "pd_brand")
     private String productBrand;
 
-    //상품상태
+    //상품상태(판매중,품절)
     @Column(name = "pd_state")
     private String productState;
 
@@ -60,7 +61,7 @@ public class Product {
     @Column(name = "pd_stock")
     private Integer productStock;
 
-    //상품등록일
+    //상품등록일 (+수정 날짜)
     @Column(name = "pd_upload_date")
     private LocalDateTime productUploadDate;
 
@@ -72,7 +73,23 @@ public class Product {
     @Column(name = "pd_order_cnt")
     private Integer productOrderCount;
 
-
-
-
+    @Builder
+    public Product(Long productId, CompanyInfo productCompanyId, String productType, String productBrand,
+                   String productState,String productName, String productPhoto, String productContent,
+                   String productPrice, Integer productStock, LocalDateTime productUploadDate,
+                   Integer productViewCount, Integer productOrderCount) {
+        this.productId = productId;
+        this.productCompanyId = productCompanyId;
+        this.productType = productType;
+        this.productBrand = productBrand;
+        this.productState = productState;
+        this.productName = productName;
+        this.productPhoto = productPhoto;
+        this.productContent = productContent;
+        this.productPrice = productPrice;
+        this.productStock = productStock;
+        this.productUploadDate = productUploadDate;
+        this.productViewCount = productViewCount;
+        this.productOrderCount = productOrderCount;
+    }
 }
