@@ -29,7 +29,7 @@ public class BoardController {
 
     //게시판 목록
     @GetMapping("/list")
-    public List<ResBoardListDto> list(Pageable pageable) {
+    public List<ResBoardListDto> list(@PageableDefault(size = 5,direction = Sort.Direction.DESC) Pageable pageable) {
         return boardService.boardList(pageable);
     }
 
