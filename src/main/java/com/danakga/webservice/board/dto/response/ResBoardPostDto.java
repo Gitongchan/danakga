@@ -20,4 +20,5 @@ public class ResBoardPostDto {
     private LocalDateTime bd_modified;
     private LocalDateTime bd_created;
     private int bd_views;
+    private String file_path;
 }

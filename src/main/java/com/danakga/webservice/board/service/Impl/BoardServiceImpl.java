@@ -4,7 +4,9 @@ import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.model.Board;
+import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardRepository;
+import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.board.service.FilesService;
 import com.danakga.webservice.user.model.UserInfo;
@@ -27,6 +29,7 @@ import java.util.Optional;
 public class BoardServiceImpl implements BoardService {
 
     @Autowired private final BoardRepository boardRepository;
+    @Autowired private final FileRepository fileRepository;
     @Autowired private final FilesService filesService;
     @Autowired private final UserRepository userRepository;
     private Board board;
@@ -58,11 +61,16 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResBoardPostDto getpost(Long bd_id) {
 
-        //.get()에서 경고뜨는 isPresent() 사용해서 해야함
-        //파일은 어떻게 불러올건지
-        Optional<Board> boardWrapper = boardRepository.findById(bd_id);
-        Board board = boardWrapper.get();
 
+        //.get()에서 경고뜨는 isPresent() 사용해서 해야함
+        //파일은 저장된 경로만 전송
+        Optional<Board> boardWrapper = boardRepository.findById(bd_id);
+        Optional<Board_Files> filesWrapper = fileRepository.findById(bd_id);
+
+        Board board = boardWrapper.get();
+        Board_Files board_Files = filesWrapper.get();
+
+        //게시글에 필요한 정보만 보내줄 것 (수정해야 함)
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
         resBoardPostDto.setBd_id(board.getBd_id());
         resBoardPostDto.setBd_writer(board.getBd_writer());
@@ -71,6 +79,11 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBd_created(board.getBd_created());
         resBoardPostDto.setBd_modified(board.getBd_modified());
         resBoardPostDto.setBd_views(board.getBd_views());
+
+        //하나의 id에 이미지가 파일이 여러게면 for문 없이도 같은 id를 다 찾아서 경로 값을 넘겨 주는지?
+        if(board.getBd_id().equals(board_Files.getF_id())) {
+            resBoardPostDto.setFile_path(board_Files.getF_path());
+        }
 
         return resBoardPostDto;
     }
