@@ -1,0 +1,13 @@
+.userinfo{
+    width:130px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.middle-right-area._user{
+    display: none;
+}
+
+.middle-right-area._noInfo{
+}
+
