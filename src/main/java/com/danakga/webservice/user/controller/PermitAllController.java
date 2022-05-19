@@ -2,6 +2,7 @@ package com.danakga.webservice.user.controller;
 
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
+import com.danakga.webservice.user.dto.response.ResUserIdDto;
 import com.danakga.webservice.user.service.UserService;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,13 @@ public class PermitAllController {
     }
 
     //id찾기
+    @GetMapping("/userid_find")
+    public ResUserIdDto findUserid(@RequestBody UserInfoDto userInfoDto){
+        String result = userService.useridFind(userInfoDto);
+        System.out.println(result);
+        return result == null ?
+                new ResUserIdDto(null,"아이디 찾기 실패.") : new ResUserIdDto(result,"아이디 찾기 성공.");
+    }
 
 
     //pw찾기
