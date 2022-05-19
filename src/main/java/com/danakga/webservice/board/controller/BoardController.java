@@ -1,4 +1,5 @@
 package com.danakga.webservice.board.controller;
+
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
@@ -7,11 +8,16 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,8 +29,8 @@ public class BoardController {
 
     //게시판 목록
     @GetMapping("/list")
-    public List<ResBoardListDto> list() {
-        return boardService.boardList();
+    public List<ResBoardListDto> list(@PageableDefault(page = 0, size = 10,direction = Sort.Direction.DESC) Pageable pageable) {
+        return boardService.boardList(pageable);
     }
 
     //게시글 아이디 받아오기
