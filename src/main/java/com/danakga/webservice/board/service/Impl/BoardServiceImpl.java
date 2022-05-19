@@ -2,6 +2,7 @@ package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.service.BoardService;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class BoardServiceImpl implements BoardService {
     public List<ResBoardListDto> boardList(Pageable pageable) {
 
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
-        String deleted = "N";
+        final String deleted = "N";
         List<Board> boards = boardRepository.findAllByBdDeleted(deleted, pageable).getContent();
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
@@ -52,12 +54,25 @@ public class BoardServiceImpl implements BoardService {
         return boardListDto;
     }
 
-    //게시글 아이디 찾기
+    //게시글 조회
     @Override
-    public Board bd_IdCheck(Long bd_id) {
-        return boardRepository.findById(bd_id).orElseThrow(() -> {
-            throw new IllegalArgumentException("게시글 없음");
-        });
+    public ResBoardPostDto getpost(Long bd_id) {
+
+        //.get()에서 경고뜨는 isPresent() 사용해서 해야함
+        //파일은 어떻게 불러올건지
+        Optional<Board> boardWrapper = boardRepository.findById(bd_id);
+        Board board = boardWrapper.get();
+
+        ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
+        resBoardPostDto.setBd_id(board.getBd_id());
+        resBoardPostDto.setBd_writer(board.getBd_writer());
+        resBoardPostDto.setBd_title(board.getBd_title());
+        resBoardPostDto.setBd_content(board.getBd_content());
+        resBoardPostDto.setBd_created(board.getBd_created());
+        resBoardPostDto.setBd_modified(board.getBd_modified());
+        resBoardPostDto.setBd_views(board.getBd_views());
+
+        return resBoardPostDto;
     }
 
     //개별 게시글 보기

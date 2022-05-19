@@ -2,6 +2,7 @@ package com.danakga.webservice.board.service;
 
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Page;
@@ -15,8 +16,8 @@ public interface BoardService {
     //게시판 목록
     List<ResBoardListDto> boardList(Pageable pageable);
 
-    //게시글 아이디 찾기
-    Board bd_IdCheck(Long bd_id);
+    //게시글 조회
+    ResBoardPostDto getpost(Long bd_id);
 
     //게시글 보기
     ResBoardListDto post();
