@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class Board_Files {
 
     @Id @GeneratedValue
+    @Column(name = "f_id")
     private Long f_id;
 
     @Column(name="f_origin")

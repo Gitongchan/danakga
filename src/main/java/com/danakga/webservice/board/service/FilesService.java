@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface FilesService {
 
-    ResFileUploadDto saveFileUpload(List<MultipartFile> files, Board board);
+    Long saveFileUpload(List<MultipartFile> files, Board board);
 }

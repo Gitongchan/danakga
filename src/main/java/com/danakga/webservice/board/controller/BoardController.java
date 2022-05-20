@@ -34,8 +34,8 @@ public class BoardController {
 
     //게시글 조회
     @GetMapping("/post/{id}")
-    public ResBoardPostDto getpost(@PathVariable("id") Long bd_id) {
-        return  boardService.getpost(bd_id);
+    public ResBoardPostDto getpost(@PathVariable("id") Long id) {
+        return  boardService.getpost(id);
     }
 
     //게시글 작성
@@ -47,8 +47,13 @@ public class BoardController {
         //게시글 작성 로직 실행
         Long result = boardService.write(reqBoardWriteDto, userInfo, files);
 
-        return result == -1L ?
-                new ResResultDto (result, "게시글 작성에 실패했습니다.") : new ResResultDto(result, "게시글을 작성했습니다.");
+        if(result.equals(-2L)) {
+            return new ResResultDto(result, "게시글 등록 실패 했습니다(사진 업로드 오류)");
+        } else if(result.equals(-1L)) {
+            return new ResResultDto(result, "게시글 등록 실패 했습니다");
+        } else {
+            return new ResResultDto(result, "게시글을 작성 했습니다.");
+        }
     }
 
     //게시글 수정

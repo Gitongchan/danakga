@@ -19,9 +19,6 @@ public interface BoardService {
     //게시글 조회
     ResBoardPostDto getpost(Long bd_id);
 
-    //게시글 보기
-    ResBoardListDto post();
-
     //게시글 작성
     Long write(ReqBoardWriteDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 

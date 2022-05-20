@@ -13,16 +13,12 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -59,18 +55,22 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 조회
     @Override
-    public ResBoardPostDto getpost(Long bd_id) {
-
+    public ResBoardPostDto getpost(Long id) {
 
         //.get()에서 경고뜨는 isPresent() 사용해서 해야함
-        //파일은 저장된 경로만 전송
-        Optional<Board> boardWrapper = boardRepository.findById(bd_id);
-        Optional<Board_Files> filesWrapper = fileRepository.findById(bd_id);
+        //isPresent()는 boolean 형으로 반환하기 때문에 return을 어떻게 해줘야 할지 고민
+        //Optional로 가져오면 파일이 1개만 담겨서 옴
+        Optional<Board> boardWrapper = boardRepository.findById(id);// 3
+        Optional<Board_Files> filesWrapper = fileRepository.findById(id); //3
 
         Board board = boardWrapper.get();
         Board_Files board_Files = filesWrapper.get();
 
-        //게시글에 필요한 정보만 보내줄 것 (수정해야 함)
+        //board_Files를 List로 변환
+        List<Board_Files> files = Arrays.asList(board_Files);
+        List<ResBoardPostDto> postDto = new ArrayList<>();
+
+        //개별 게시글에 필요한 정보 담아서 보내주기
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
         resBoardPostDto.setBd_id(board.getBd_id());
         resBoardPostDto.setBd_writer(board.getBd_writer());
@@ -80,18 +80,13 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBd_modified(board.getBd_modified());
         resBoardPostDto.setBd_views(board.getBd_views());
 
-        //하나의 id에 이미지가 파일이 여러게면 for문 없이도 같은 id를 다 찾아서 경로 값을 넘겨 주는지?
         if(board.getBd_id().equals(board_Files.getF_id())) {
-            resBoardPostDto.setFile_path(board_Files.getF_path());
+            files.forEach(entity -> {
+                resBoardPostDto.setFile_origin(board_Files.getF_origin());
+                resBoardPostDto.setFile_path(board_Files.getF_path());
+            });
         }
-
         return resBoardPostDto;
-    }
-
-    //개별 게시글 보기
-    @Override
-    public ResBoardListDto post() {
-        return null;
     }
 
     //게시글 작성
@@ -136,8 +131,10 @@ public class BoardServiceImpl implements BoardService {
                                         .userInfo(recentUserInfo)
                                         .build()
                         );
+                        if(!filesService.saveFileUpload(files, board).equals(1L)) {
+                            return -2L;
+                        }
 
-                        filesService.saveFileUpload(files, board);
                         return board.getBd_id();
                     }
                 }
