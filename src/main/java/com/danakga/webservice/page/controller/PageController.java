@@ -9,18 +9,15 @@ public class PageController {
     public String index(){
         return "testindex";
     }
-    @GetMapping("/joinPage")
-    public String join(){
-        return "join";
-    }
+
     @GetMapping("/test/index")
     public String testindex(){
         return "pages/index";
     }
 
-    @GetMapping("/test/val")
+    @GetMapping("/register")
     public String testval(){
-        return "pages/register";
+        return "pages/userRegister";
     }
 
     @GetMapping("/companyval")

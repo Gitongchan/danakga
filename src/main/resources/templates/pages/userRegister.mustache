@@ -30,7 +30,15 @@
                             <h3>계정이 없으신가요?</h3>
                             <p>계정을 생성하고 다낚아 사이트의 기능을 사용해보세요!</p>
                         </div>
-                        <form class="row" id="form-data" name="formValues">
+                        <div class="search_tab" role="tablist">
+                            <button id="tap-member" class="search_tab-button _select" role="tab" aria-selected="true">
+                                <h3 id="tap-member-on">일반회원</h3>
+                            </button>
+                            <button id="tap-company" class="search_tab-button" role="tab" aria-selected="false">
+                                <h3 id="tap-company-on">사업자 회원</h3>
+                            </button>
+                        </div>
+                        <form class="row user" id="form-data" name="formValues">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="reg-ID">아이디</label>
@@ -84,6 +92,17 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <span class="em_check" id="em_check">이메일 형식을 올바르게 작성해주세요!</span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
+                                </div>
+                            </div>
+                            <div class="col-sm-12 cn_name _hide">
+                                <div class="form-group">
+                                    <label for="reg-companyName">회사명</label>
+                                    <input class="form-control" name="companyName" type="text" id="reg-companyName" onkeyup="regeisterCheck.companyName()" oninput="buttoncheck()" placeholder="회사명을 입력해주세요." required />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 cn_name _hide" id="companydesc">
+                                <div class="form-group">
+                                    <span class="cn_check" id="cn_check">회사명을 올바르게 작성해주세요!</span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
                                 </div>
                             </div>
                             <div class="col-sm-8">
