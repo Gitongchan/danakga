@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface FileRepository extends JpaRepository<Board_Files, Long> {
 
-    Optional<Board_Files> findById(Long id);
+    List<Board_Files> findByBoard(Board board);
 }

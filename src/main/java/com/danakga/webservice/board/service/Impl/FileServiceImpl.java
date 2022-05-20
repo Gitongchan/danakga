@@ -1,6 +1,5 @@
 package com.danakga.webservice.board.service.Impl;
 
-import com.danakga.webservice.board.dto.response.ResFileUploadDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.FileRepository;

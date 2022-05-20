@@ -58,19 +58,16 @@ public class BoardServiceImpl implements BoardService {
     public ResBoardPostDto getpost(Long id) {
 
         //.get()에서 경고뜨는 isPresent() 사용해서 해야함
-        //isPresent()는 boolean 형으로 반환하기 때문에 return을 어떻게 해줘야 할지 고민
-        //Optional로 가져오면 파일이 1개만 담겨서 옴
-        Optional<Board> boardWrapper = boardRepository.findById(id);// 3
-        Optional<Board_Files> filesWrapper = fileRepository.findById(id); //3
-
+        Optional<Board> boardWrapper = boardRepository.findById(id);
         Board board = boardWrapper.get();
-        Board_Files board_Files = filesWrapper.get();
 
-        //board_Files를 List로 변환
-        List<Board_Files> files = Arrays.asList(board_Files);
+        List<Board_Files> files = fileRepository.findByBoard(board);
+
+        //Map을 List에 넣어서 여러개를 받을 수 있게 함
+        List<Map<String, Object>> mapFiles = new ArrayList<>();
         List<ResBoardPostDto> postDto = new ArrayList<>();
 
-        //개별 게시글에 필요한 정보 담아서 보내주기
+        //개별 게시글 값 set
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
         resBoardPostDto.setBd_id(board.getBd_id());
         resBoardPostDto.setBd_writer(board.getBd_writer());
@@ -80,12 +77,19 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBd_modified(board.getBd_modified());
         resBoardPostDto.setBd_views(board.getBd_views());
 
-        if(board.getBd_id().equals(board_Files.getF_id())) {
-            files.forEach(entity -> {
-                resBoardPostDto.setFile_origin(board_Files.getF_origin());
-                resBoardPostDto.setFile_path(board_Files.getF_path());
-            });
-        }
+
+        //file 정보 값 set
+        //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
+        //그래서 map 생성자도 반복문 안으로 넣어줘서 List<Map>에 한번 담고 다시 생성돼서 돌아가는 식
+        files.forEach(entity -> {
+            Map<String, Object> filesmap = new HashMap<>();
+            filesmap.put("file_name",entity.getF_savename());
+            filesmap.put("file_path",entity.getF_path());
+            mapFiles.add(filesmap);
+            resBoardPostDto.setFiles(mapFiles);
+        });
+        postDto.add(resBoardPostDto);
+
         return resBoardPostDto;
     }
 
