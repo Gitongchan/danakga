@@ -48,7 +48,7 @@ public class BoardController {
         Long result = boardService.write(reqBoardWriteDto, userInfo, files);
 
         if(result.equals(-2L)) {
-            return new ResResultDto(result, "게시글 등록 실패 했습니다(사진 업로드 오류)");
+            return new ResResultDto(result, "게시글 등록 실패 했습니다(이미지 업로드 오류)");
         } else if(result.equals(-1L)) {
             return new ResResultDto(result, "게시글 등록 실패 했습니다");
         } else {

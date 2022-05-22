@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,4 +24,5 @@ public class ResBoardPostDto {
     private LocalDateTime bd_created;
     private int bd_views;
     private List<Map<String,Object>> files;
+    private ResponseEntity<?> errorCode;
 }

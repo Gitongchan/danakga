@@ -3,6 +3,7 @@ package com.danakga.webservice.board.service.Impl;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
+import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardRepository;
@@ -37,6 +38,7 @@ public class BoardServiceImpl implements BoardService {
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
         List<Board> boards = boardRepository.findAllByBdDeleted(deleted, pageable).getContent();
+
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
         boards.forEach(entity -> {
@@ -49,7 +51,6 @@ public class BoardServiceImpl implements BoardService {
                 listDto.setBd_deleted(entity.getBdDeleted());
                 boardListDto.add(listDto);
         });
-
         return boardListDto;
     }
 
@@ -57,10 +58,14 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResBoardPostDto getpost(Long id) {
 
-        //.get()에서 경고뜨는 isPresent() 사용해서 해야함
         Optional<Board> boardWrapper = boardRepository.findById(id);
-        Board board = boardWrapper.get();
+        
+        //id가 없는 값이 들어와서 boardWrapper가 비어있는 경우 Exception 처리
+        if(boardWrapper.isEmpty()) {
+            throw new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다.");
+        }
 
+        Board board = boardWrapper.get();
         List<Board_Files> files = fileRepository.findByBoard(board);
 
         //Map을 List에 넣어서 여러개를 받을 수 있게 함
@@ -77,9 +82,9 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBd_modified(board.getBd_modified());
         resBoardPostDto.setBd_views(board.getBd_views());
 
-
         //file 정보 값 set
         //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
+        //Map.put() == List.add() 와 같은 기능
         //그래서 map 생성자도 반복문 안으로 넣어줘서 List<Map>에 한번 담고 다시 생성돼서 돌아가는 식
         files.forEach(entity -> {
             Map<String, Object> filesmap = new HashMap<>();
@@ -89,7 +94,6 @@ public class BoardServiceImpl implements BoardService {
             resBoardPostDto.setFiles(mapFiles);
         });
         postDto.add(resBoardPostDto);
-
         return resBoardPostDto;
     }
 

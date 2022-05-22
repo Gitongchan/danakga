@@ -3,9 +3,7 @@ package com.danakga.webservice.board.service;
 import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
-import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.user.model.UserInfo;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
