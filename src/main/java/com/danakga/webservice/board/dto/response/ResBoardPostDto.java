@@ -24,5 +24,4 @@ public class ResBoardPostDto {
     private LocalDateTime bd_created;
     private int bd_views;
     private List<Map<String,Object>> files;
-    private ResponseEntity<?> errorCode;
 }
