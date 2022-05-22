@@ -60,9 +60,9 @@ public class BoardServiceImpl implements BoardService {
 
         Optional<Board> boardWrapper = boardRepository.findById(id);
         
-        //id가 없는 값이 들어와서 boardWrapper가 비어있는 경우 Exception 처리
+        //id가 없는 값이 들어와서 boardWrapper가 비어있는 경우 Exception 처리 (@ResponseBody로 에러 코드, 에러 메시지 보냄)
         if(boardWrapper.isEmpty()) {
-            throw new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다.");
+            throw new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다.");
         }
 
         Board board = boardWrapper.get();
@@ -81,11 +81,13 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBd_created(board.getBd_created());
         resBoardPostDto.setBd_modified(board.getBd_modified());
         resBoardPostDto.setBd_views(board.getBd_views());
+        postDto.add(resBoardPostDto);
 
         //file 정보 값 set
         //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
-        //Map.put() == List.add() 와 같은 기능
         //그래서 map 생성자도 반복문 안으로 넣어줘서 List<Map>에 한번 담고 다시 생성돼서 돌아가는 식
+        //Map.put() == List.add() 와 같은 기능
+        //Map에 담긴 값을 Dto에 선언했던 Lise<Map<?,?>>에 담아줌
         files.forEach(entity -> {
             Map<String, Object> filesmap = new HashMap<>();
             filesmap.put("file_name",entity.getF_savename());
@@ -93,7 +95,6 @@ public class BoardServiceImpl implements BoardService {
             mapFiles.add(filesmap);
             resBoardPostDto.setFiles(mapFiles);
         });
-        postDto.add(resBoardPostDto);
         return resBoardPostDto;
     }
 
