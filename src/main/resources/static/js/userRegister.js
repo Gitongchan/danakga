@@ -34,7 +34,7 @@ const userData = {
     username: document.getElementById('reg-name'),
     email: document.getElementById('reg-email'),
     phone: document.getElementById('reg-phone'),
-    companyName: document.getElementById('reg-phone'),
+    companyName: document.getElementById('reg-companyName'),
     postCode: document.getElementById('sample4_postcode'),
     sample4_roadAddress: document.getElementById('sample4_roadAddress'),
     sample4_jibunAddress: document.getElementById('sample4_jibunAddress'),
@@ -48,7 +48,8 @@ function buttoncheck() {
         userData.password2.classList.contains("_success") &&
         userData.username.classList.contains("_success") &&
         userData.email.classList.contains("_success") &&
-        userData.phone.classList.contains("_success"))
+        userData.phone.classList.contains("_success") &&
+        userData.sample4_detailAddress.classList.contains("_success"))
         document.getElementById('register-pass').disabled = !result;
 }
 
@@ -220,86 +221,69 @@ userData.phone.onblur = function () {
     }
 };
 
+<!-- 지번 입력 후 focus 벗어나면 유효성 검사 -->
+userData.sample4_detailAddress.onblur = function () {
+    if (!(userData.sample4_detailAddress.value.length === 0)) {
+        //성공
+        userData.sample4_detailAddress.classList.remove("_error");
+        userData.sample4_detailAddress.classList.add("_success");
+        buttoncheck();
+    } else {
+        //실패
+        userData.sample4_detailAddress.classList.remove("_success");
+        userData.sample4_detailAddress.classList.add("_error");
+        buttoncheck();
+    }
+};
+
+const post_btn = document.getElementById("PostCode");
+post_btn.addEventListener('click',sample4_execDaumPostcode);
+
 //버튼 값 가져오기
 const register_pass = document.getElementById('register-pass');
-const utapcss = document.getElementById('tap-member');
-const ctapcss = document.getElementById('tap-company');
+const utap_css = document.getElementById('tap-member');
+const ctap_css = document.getElementById('tap-company');
 const hide_name = document.querySelector('.register-form #form-data .cn_name._hide');
 const desc = document.getElementById('companydesc');
+
+const uRegisterOK = document.querySelector('#register-pass.btn.uregister-pass');
+const cRegisterOK = document.querySelector('#register-pass.btn.cregister-pass');
+
 
 //일반회원 탭을 눌렀을 때
 const userTap = document.getElementById('tap-member');
 userTap.addEventListener('click',()=>{
-    ctapcss.classList.remove('_select');
-    utapcss.classList.add('_select');
+    ctap_css.classList.remove('_select');
+    utap_css.classList.add('_select');
     hide_name.classList.remove('_select');
     desc.classList.remove('_select');
     register_pass.classList.remove('cregister-pass');
     register_pass.classList.add('uregister-pass');
+    cRegisterOK.style.display = 'none';
+    uRegisterOK.style.display = 'block';
+
 });
 
 
 //사업자 회원 탭을 눌렀을 때
 const companyTap = document.getElementById('tap-company');
 companyTap.addEventListener('click',()=>{
-    utapcss.classList.remove('_select');
-    ctapcss.classList.add('_select');
+    utap_css.classList.remove('_select');
+    ctap_css.classList.add('_select');
     hide_name.classList.add('_select');
     desc.classList.add('_select');
     register_pass.classList.remove('uregister-pass');
     register_pass.classList.add('cregister-pass');
+
+    uRegisterOK.style.display = 'none';
+    cRegisterOK.style.display = 'block';
+    //사업자 회원일 때 회원가입 기능 ON
+    cRegisterOK.addEventListener('click',companyBtn);
+
 });
 
-
-//회원가입 버튼 부분 (일반회원, 사업자 회원)
-const registerOK = document.querySelector(".btn.uregister-pass");
-const cRegisterOK = document.querySelector(".btn.cregister-pass");
-
-
-
-//일반 회원일 때
-registerOK.addEventListener('click',  function () {
-    event.preventDefault();
-    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
-
-    const postData = {
-        userid: userData.userid.value,
-        password: userData.password1.value,
-        name: userData.username.value,
-        phone: userData.phone.value,
-        email: userData.email.value,
-        userAdrNum: userData.postCode.value,
-        userLotAdr: userData.sample4_jibunAddress.value,
-        userStreetAdr: userData.sample4_roadAddress.value,
-        userDetailAdr: userData.sample4_detailAddress.value
-    }
-    console.log(postData);
-    fetch("/api/signup", {
-        method: "POST",
-        headers: {
-            'header': header,
-            'X-Requested-With': 'XMLHttpRequest',
-            "Content-Type": "application/json",
-            'X-CSRF-Token': token
-        },
-        body: JSON.stringify(postData)
-    })
-        .then(res => {
-            if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
-                location.href = '/index';
-            } else { // 실패를 알리는 HTTP 상태 코드면
-                console.error(res.statusText);
-                console.error(res);
-            }
-        })
-        .then(data => console.log(data))
-        .catch(error => console.log(error))
-});
-
-//사업자 회원일 때
-cRegisterOK.addEventListener('click',function() {
+// 사업자 버튼 눌렸을 때 버튼 동작하는 함수
+const companyBtn = function() {
     event.preventDefault();
     // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
     const header = document.querySelector('meta[name="_csrf_header"]').content;
@@ -317,7 +301,6 @@ cRegisterOK.addEventListener('click',function() {
         companyStreetAdr: userData.sample4_roadAddress.value,
         companyDetailAdr: userData.sample4_detailAddress.value
     }
-    console.log(postData);
     fetch("/api/company/signup", {
         method: "POST",
         headers: {
@@ -330,7 +313,47 @@ cRegisterOK.addEventListener('click',function() {
     })
         .then(res => {
             if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
-                alert("사업자 회원가입 완료!")
+
+            } else { // 실패를 알리는 HTTP 상태 코드면
+                console.error(res.statusText);
+                console.error(res);
+            }
+        })
+        .then(data => console.log(data))
+        .catch(error => console.log(error))
+}
+
+//일반 회원일 때
+uRegisterOK.addEventListener('click',  function () {
+    event.preventDefault();
+    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    const token = document.querySelector('meta[name="_csrf"]').content;
+
+    const postData = {
+        userid: userData.userid.value,
+        password: userData.password1.value,
+        name: userData.username.value,
+        phone: userData.phone.value,
+        email: userData.email.value,
+        userAdrNum: userData.postCode.value,
+        userLotAdr: userData.sample4_jibunAddress.value,
+        userStreetAdr: userData.sample4_roadAddress.value,
+        userDetailAdr: userData.sample4_detailAddress.value
+    }
+    fetch("/api/signup", {
+        method: "POST",
+        headers: {
+            'header': header,
+            'X-Requested-With': 'XMLHttpRequest',
+            "Content-Type": "application/json",
+            'X-CSRF-Token': token
+        },
+        body: JSON.stringify(postData)
+    })
+        .then(res => {
+            if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
+
             } else { // 실패를 알리는 HTTP 상태 코드면
                 console.error(res.statusText);
                 console.error(res);
@@ -339,3 +362,4 @@ cRegisterOK.addEventListener('click',function() {
         .then(data => console.log(data))
         .catch(error => console.log(error))
 });
+

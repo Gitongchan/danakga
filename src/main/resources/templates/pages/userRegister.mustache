@@ -114,7 +114,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <div class="button">
-                                        <button class="btn" id="PostCode" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
+                                        <button class="btn" id="PostCode">우편번호 찾기</button>
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +133,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <span id="guide" style="color:#999;display:none"></span>
-                                    <label for="sample4_detailAddress">상세주소</label>
+                                    <label for="sample4_detailAddress">상세주소*</label>
                                     <input type="text" class="form-control" id="sample4_detailAddress" placeholder="상세주소">
 <!--                                    <input type="text" class="form-control" id="sample4_extraAddress" placeholder="참고항목">-->
                                 </div>
@@ -150,7 +150,8 @@
                                 </div>
                             </div>
                             <div class="button">
-                                <button class="btn" id="register-pass" disabled="true">회원가입</button>
+                                <button class="btn uregister-pass" id="register-pass" disabled="true">회원가입</button>
+                                <button class="btn cregister-pass" id="register-pass" disabled="true">회원가입</button>
                             </div>
                             <p class="outer-link">계정이 있으신가요? <a href="/login">로그인하기</a>
                             </p>
@@ -163,7 +164,7 @@
     <!-- End Account Register Area -->
 
     {{>pages/footer1}}
-    <script src="/js/validation.js"></script>
-    <script src="/js/addressFind.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="/js/addressFind.js"></script>
+    <script src="/js/userRegister.js"></script>
     {{>pages/footer2}}
