@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ResBoardListDto {
 
-    private Long bd_id;
-    private String bd_writer;
-    private String bd_title;
-    private LocalDateTime bd_created;
-    private int bd_views;
-    private String bd_deleted;
+    private Long bdId;
+    private String bdWriter;
+    private String bdTitle;
+    private LocalDateTime bdCreated;
+    private int bdViews;
+    private String bdDeleted;
 }

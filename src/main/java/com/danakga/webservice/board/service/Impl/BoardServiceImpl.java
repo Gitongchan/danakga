@@ -14,7 +14,9 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,18 +39,19 @@ public class BoardServiceImpl implements BoardService {
 
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
+        pageable = PageRequest.of(0, 5, Sort.by("bdId").descending());
         List<Board> boards = boardRepository.findAllByBdDeleted(deleted, pageable).getContent();
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
         boards.forEach(entity -> {
             ResBoardListDto listDto = new ResBoardListDto();
-                listDto.setBd_id(entity.getBd_id());
-                listDto.setBd_title(entity.getBd_title());
-                listDto.setBd_writer(entity.getBd_writer());
-                listDto.setBd_created(entity.getBd_created());
-                listDto.setBd_views(entity.getBd_views());
-                listDto.setBd_deleted(entity.getBdDeleted());
+                listDto.setBdId(entity.getBdId());
+                listDto.setBdTitle(entity.getBdTitle());
+                listDto.setBdWriter(entity.getBdWriter());
+                listDto.setBdCreated(entity.getBdCreated());
+                listDto.setBdViews(entity.getBdViews());
+                listDto.setBdDeleted(entity.getBdDeleted());
                 boardListDto.add(listDto);
         });
         return boardListDto;
@@ -74,13 +77,13 @@ public class BoardServiceImpl implements BoardService {
 
         //개별 게시글 값 set
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
-        resBoardPostDto.setBd_id(board.getBd_id());
-        resBoardPostDto.setBd_writer(board.getBd_writer());
-        resBoardPostDto.setBd_title(board.getBd_title());
-        resBoardPostDto.setBd_content(board.getBd_content());
-        resBoardPostDto.setBd_created(board.getBd_created());
-        resBoardPostDto.setBd_modified(board.getBd_modified());
-        resBoardPostDto.setBd_views(board.getBd_views());
+        resBoardPostDto.setBdId(board.getBdId());
+        resBoardPostDto.setBdWriter(board.getBdWriter());
+        resBoardPostDto.setBdTitle(board.getBdTitle());
+        resBoardPostDto.setBdContent(board.getBdContent());
+        resBoardPostDto.setBdCreated(board.getBdCreated());
+        resBoardPostDto.setBdModified(board.getBdModified());
+        resBoardPostDto.setBdViews(board.getBdViews());
         postDto.add(resBoardPostDto);
 
         //file 정보 값 set
@@ -90,8 +93,8 @@ public class BoardServiceImpl implements BoardService {
         //Map에 담긴 값을 Dto에 선언했던 Lise<Map<?,?>>에 담아줌
         files.forEach(entity -> {
             Map<String, Object> filesmap = new HashMap<>();
-            filesmap.put("file_name",entity.getF_savename());
-            filesmap.put("file_path",entity.getF_path());
+            filesmap.put("file_name",entity.getFSavename());
+            filesmap.put("file_path",entity.getFPath());
             mapFiles.add(filesmap);
             resBoardPostDto.setFiles(mapFiles);
         });
@@ -111,15 +114,15 @@ public class BoardServiceImpl implements BoardService {
         if(CollectionUtils.isEmpty(files)) {
             boardRepository.save(
                     board = Board.builder()
-                            .bd_type(reqBoardWriteDto.getBd_type())
-                            .bd_views(reqBoardWriteDto.getBd_views())
-                            .bd_writer(recentUserInfo.getUserid())
-                            .bd_title(reqBoardWriteDto.getBd_title())
-                            .bd_content(reqBoardWriteDto.getBd_content())
+                            .bdType(reqBoardWriteDto.getBdType())
+                            .bdViews(reqBoardWriteDto.getBdViews())
+                            .bdWriter(recentUserInfo.getUserid())
+                            .bdTitle(reqBoardWriteDto.getBdTitle())
+                            .bdContent(reqBoardWriteDto.getBdContent())
                             .userInfo(recentUserInfo)
                             .build()
             );
-            return board.getBd_id();
+            return board.getBdId();
         }
         else if(!CollectionUtils.isEmpty(files)) {
 
@@ -132,11 +135,11 @@ public class BoardServiceImpl implements BoardService {
                     if(originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
                         boardRepository.save(
                                 board = Board.builder()
-                                        .bd_type(reqBoardWriteDto.getBd_type())
-                                        .bd_views(reqBoardWriteDto.getBd_views())
-                                        .bd_writer(recentUserInfo.getUserid())
-                                        .bd_title(reqBoardWriteDto.getBd_title())
-                                        .bd_content(reqBoardWriteDto.getBd_content())
+                                        .bdType(reqBoardWriteDto.getBdType())
+                                        .bdViews(reqBoardWriteDto.getBdViews())
+                                        .bdWriter(recentUserInfo.getUserid())
+                                        .bdTitle(reqBoardWriteDto.getBdTitle())
+                                        .bdContent(reqBoardWriteDto.getBdContent())
                                         .userInfo(recentUserInfo)
                                         .build()
                         );
@@ -144,7 +147,7 @@ public class BoardServiceImpl implements BoardService {
                             return -2L;
                         }
 
-                        return board.getBd_id();
+                        return board.getBdId();
                     }
                 }
             }

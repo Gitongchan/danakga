@@ -57,9 +57,9 @@ public class FileServiceImpl implements FilesService {
 
                  fileRepository.save(
                         Board_Files.builder()
-                                .f_savename(saveFileName)
-                                .f_origin(originFileName)
-                                .f_path(filepath)
+                                .fSavename(saveFileName)
+                                .fOrigin(originFileName)
+                                .fPath(filepath)
                                 .board(board)
                                 .build()
                 );
