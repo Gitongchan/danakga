@@ -1,6 +1,5 @@
 package com.danakga.webservice.board.service.Impl;
 
-import com.danakga.webservice.board.dto.response.ResFileUploadDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.FileRepository;
@@ -22,9 +21,8 @@ public class FileServiceImpl implements FilesService {
     @Autowired private final FileRepository fileRepository;
 
     @Override
-    public ResFileUploadDto saveFileUpload(List<MultipartFile> files, Board board) {
+    public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
-            Long f_id = null;
             //파일 저장 경로
             String savepath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\";
 
@@ -57,15 +55,15 @@ public class FileServiceImpl implements FilesService {
                     e.printStackTrace();
                 }
 
-                f_id = fileRepository.save(
+                 fileRepository.save(
                         Board_Files.builder()
-                                .f_savename(saveFileName)
-                                .f_origin(originFileName)
-                                .f_path(filepath)
+                                .fSavename(saveFileName)
+                                .fOrigin(originFileName)
+                                .fPath(filepath)
                                 .board(board)
                                 .build()
-                ).getF_id();
+                );
             }
-        return new ResFileUploadDto(f_id);
+        return 1L;
     }
 }

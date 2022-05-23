@@ -6,17 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResBoardListDto {
+public class ResBoardPostDto {
 
     private Long bdId;
     private String bdWriter;
     private String bdTitle;
+    private String bdContent;
+    private LocalDateTime bdModified;
     private LocalDateTime bdCreated;
     private int bdViews;
-    private String bdDeleted;
+    private List<Map<String,Object>> files;
 }
