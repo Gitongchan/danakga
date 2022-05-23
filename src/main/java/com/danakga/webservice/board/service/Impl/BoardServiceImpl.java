@@ -68,7 +68,13 @@ public class BoardServiceImpl implements BoardService {
             throw new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다.");
         }
 
+        //조회수 증가 (쿠키로 중복 검증 해야함)
+        //게시글을 먼저 조회하고 +1 해주기 때문에 처음 들어가면 0임 (중고나라도 똑같음)
+        boardRepository.updateView(id);
+
         Board board = boardWrapper.get();
+
+
         List<Board_Files> files = fileRepository.findByBoard(board);
 
         //Map을 List에 넣어서 여러개를 받을 수 있게 함
@@ -98,6 +104,7 @@ public class BoardServiceImpl implements BoardService {
             mapFiles.add(filesmap);
             resBoardPostDto.setFiles(mapFiles);
         });
+
         return resBoardPostDto;
     }
 
