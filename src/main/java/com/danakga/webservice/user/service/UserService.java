@@ -32,4 +32,7 @@ public interface UserService extends UserDetailsService {
     //사업자 복구
     Long companyRestore(UserInfo userInfo,UserInfoDto userInfoDto,CompanyInfoDto companyInfoDto);
 
+    //아이디 찾기
+    String useridFind(UserInfoDto userInfoDto);
+
 }

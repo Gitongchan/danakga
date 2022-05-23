@@ -2,7 +2,7 @@ package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.response.ResFileUploadDto;
 import com.danakga.webservice.board.model.Board;
-import com.danakga.webservice.board.model.Files;
+import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.FilesService;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,7 @@ public class FileServiceImpl implements FilesService {
                 }
 
                 f_id = fileRepository.save(
-                        Files.builder()
+                        Board_Files.builder()
                                 .f_savename(saveFileName)
                                 .f_origin(originFileName)
                                 .f_path(filepath)

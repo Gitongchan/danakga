@@ -10,7 +10,12 @@ public class PageController {
         return "testindex";
     }
 
-    @GetMapping("/test/index")
+    @GetMapping("/joinPage")
+    public String join(){
+        return "join";
+    }
+
+    @GetMapping("/index")
     public String testindex(){
         return "pages/index";
     }
@@ -19,12 +24,6 @@ public class PageController {
     public String testval(){
         return "pages/userRegister";
     }
-
-    @GetMapping("/companyval")
-    public String companyval(){
-        return "pages/companyRegister";
-    }
-
 
     @GetMapping("/test/mainfunc")
     public String testmain(){

@@ -41,7 +41,7 @@
                         <form class="row user" id="form-data" name="formValues">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-ID">아이디</label>
+                                    <label for="reg-ID">아이디*</label>
                                     <input class="form-control" name="userid" type="text" id="reg-ID" oninput="regeisterCheck.ID()" onchange="buttoncheck()" autofocus placeholder="영문 및 숫자 (4자 이상, 최대 20자)" required />
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-pass">비밀번호</label>
+                                    <label for="reg-pass">비밀번호*</label>
                                     <input class="form-control" name="password" type="password" id="reg-pass" oninput="buttoncheck()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-pass-confirm">비밀번호 확인</label>
+                                    <label for="reg-pass-confirm">비밀번호 확인*</label>
                                     <input class="form-control" type="password" id="reg-pass-confirm" onkeyup="regeisterCheck.PW()" oninput="buttoncheck()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-name">이름</label>
+                                    <label for="reg-name">이름*</label>
                                     <input class="form-control" name="name" type="text" id="reg-name" oninput="buttoncheck()" placeholder="한글만 입력하세요!" required />
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-email">이메일</label>
+                                    <label for="reg-email">이메일*</label>
                                     <input class="form-control" name="email" type="email" id="reg-email" onkeyup="regeisterCheck.EMAIL()" oninput="buttoncheck()" placeholder="이메일을 입력해주세요." required />
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="reg-phone">전화번호</label>
+                                    <label for="reg-phone">전화번호*</label>
                                     <input class="form-control" name="phone" type="text" id="reg-phone" minlength="10" maxlength="11" oninput="buttoncheck()" placeholder="(-빼고)전화번호를 입력해주세요." required />
                                 </div>
                             </div>
@@ -162,4 +162,8 @@
     </div>
     <!-- End Account Register Area -->
 
-    {{>pages/footer}}
+    {{>pages/footer1}}
+    <script src="/js/validation.js"></script>
+    <script src="/js/addressFind.js"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    {{>pages/footer2}}

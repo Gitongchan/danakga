@@ -26,15 +26,17 @@ public class CompanyPermitAllController {
     //사업자 회원가입
     @PostMapping("/signup")
     public ResResultDto companyRegister(@RequestBody CompanyUserInfoDto companyUserInfoDto){
-        Long result = companyService.companyRegister(companyUserInfoDto);
-        //중복 id,email 검증
+
         Integer idCheckResult = userService.userIdCheck(companyUserInfoDto.getUserid());
         Integer emailCheckResult = userService.emailCheck(companyUserInfoDto.getEmail());
 
+        //중복 id,email 검증
         if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
-            return new ResResultDto(result,"회원가입 실패, 아이디,이메일을 다시 확인하세요.");
+            return new ResResultDto(-1L,"회원가입 실패, 아이디,이메일을 다시 확인하세요.");
+        }else{
+            Long result = companyService.companyRegister(companyUserInfoDto);
+            return result == -1L ?
+                    new ResResultDto(result,"사업자 등록 실패.") : new ResResultDto(result,"사업자 등록 성공.");
         }
-        return result == -1L ?
-                new ResResultDto(result,"사업자 등록 실패.") : new ResResultDto(result,"사업자 등록 성공.");
     }
 }
