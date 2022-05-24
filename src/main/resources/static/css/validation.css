@@ -80,6 +80,9 @@
     display: block;
 }
 
+#register-pass.btn.cregister-pass{
+    display: none;
+}
 
 /*
     Screen Size

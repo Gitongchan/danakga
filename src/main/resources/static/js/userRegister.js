@@ -50,7 +50,8 @@ function buttoncheck() {
         userData.email.classList.contains("_success") &&
         userData.phone.classList.contains("_success") &&
         userData.sample4_detailAddress.classList.contains("_success"))
-        document.getElementById('register-pass').disabled = !result;
+        document.querySelector('#register-pass.btn.uregister-pass').disabled = !result;
+        document.querySelector('#register-pass.btn.cregister-pass').disabled = !result;
 }
 
 <!-- 회원가입 아이디 및 패스워드 확인 함수-->
@@ -151,15 +152,15 @@ const regeisterCheck = {
                     document.getElementById('cn_check').innerHTML = '사용 가능한 회사명입니다!!';
                     document.getElementById('cn_check').style.display = 'block';
                     document.getElementById('cn_check').style.color = '#0167f3';
-                    userData.email.classList.remove("_error");
-                    userData.email.classList.add("_success");
+                    userData.companyName.classList.remove("_error");
+                    userData.companyName.classList.add("_success");
                     buttoncheck();
                 } else {
                     document.getElementById('cn_check').innerHTML = '등록된 회사명입니다!!';
                     document.getElementById('cn_check').style.display = 'block';
                     document.getElementById('cn_check').style.color = '#B02A37';
-                    userData.email.classList.remove("_success");
-                    userData.email.classList.add("_error");
+                    userData.companyName.classList.remove("_success");
+                    userData.companyName.classList.add("_error");
                     buttoncheck();
                 }
             })
@@ -240,7 +241,6 @@ const post_btn = document.getElementById("PostCode");
 post_btn.addEventListener('click',sample4_execDaumPostcode);
 
 //버튼 값 가져오기
-const register_pass = document.getElementById('register-pass');
 const utap_css = document.getElementById('tap-member');
 const ctap_css = document.getElementById('tap-company');
 const hide_name = document.querySelector('.register-form #form-data .cn_name._hide');
@@ -257,8 +257,6 @@ userTap.addEventListener('click',()=>{
     utap_css.classList.add('_select');
     hide_name.classList.remove('_select');
     desc.classList.remove('_select');
-    register_pass.classList.remove('cregister-pass');
-    register_pass.classList.add('uregister-pass');
     cRegisterOK.style.display = 'none';
     uRegisterOK.style.display = 'block';
 
@@ -272,8 +270,6 @@ companyTap.addEventListener('click',()=>{
     ctap_css.classList.add('_select');
     hide_name.classList.add('_select');
     desc.classList.add('_select');
-    register_pass.classList.remove('uregister-pass');
-    register_pass.classList.add('cregister-pass');
 
     uRegisterOK.style.display = 'none';
     cRegisterOK.style.display = 'block';
