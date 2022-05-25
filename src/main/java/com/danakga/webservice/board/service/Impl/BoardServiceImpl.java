@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
@@ -35,12 +38,12 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 목록
     @Override
-    public List<ResBoardListDto> boardList(Pageable pageable) {
+    public List<ResBoardListDto> boardList(Pageable pageable, String board_type) {
 
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
         pageable = PageRequest.of(0, 5, Sort.by("bdId").descending());
-        List<Board> boards = boardRepository.findAllByBdDeleted(deleted, pageable).getContent();
+        List<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable).getContent();
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
@@ -59,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 조회
     @Override
-    public ResBoardPostDto getpost(Long id) {
+    public ResBoardPostDto getpost(Long id, HttpServletRequest request, HttpServletResponse response) {
 
         Optional<Board> boardWrapper = boardRepository.findById(id);
         
@@ -68,42 +71,50 @@ public class BoardServiceImpl implements BoardService {
             throw new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다.");
         }
 
-        //조회수 증가 (쿠키로 중복 검증 해야함)
-        //게시글을 먼저 조회하고 +1 해주기 때문에 처음 들어가면 0임 (중고나라도 똑같음)
-        boardRepository.updateView(id);
-
         Board board = boardWrapper.get();
-
-
         List<Board_Files> files = fileRepository.findByBoard(board);
+
+        //조회수 증가 (중복 증가 방지를 위한 쿠키로 검증 후 증가
+        //네이버 카페 경우도 게시글 클릭 후 들어가면 증가x 다시 목록으로 나오면 증가
+        Cookie[] getCookies = request.getCookies();
+
+        //쿠키값이 null이면 쿠키 생성해서 담아주고 -> 조회수 증가, 쿠키가 있다면 증가 안하고 로직 실행
+        //쿠키 값 중복 방지 위해서 []로 감싸줌
+        if(getCookies == null) {
+            Cookie postCookie = new Cookie("postview", "p_" + "[" + id + "]");
+            //쿠키 사용시간 1시간 설정
+            postCookie.setMaxAge(60 * 60);
+            System.out.println("쿠키 이름 : " + postCookie.getName());
+            response.addCookie(postCookie);
+            boardRepository.updateView(id);
+        }
 
         //Map을 List에 넣어서 여러개를 받을 수 있게 함
         List<Map<String, Object>> mapFiles = new ArrayList<>();
-        List<ResBoardPostDto> postDto = new ArrayList<>();
+        ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
         //개별 게시글 값 set
-        ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
-        resBoardPostDto.setBdId(board.getBdId());
-        resBoardPostDto.setBdWriter(board.getBdWriter());
-        resBoardPostDto.setBdTitle(board.getBdTitle());
-        resBoardPostDto.setBdContent(board.getBdContent());
-        resBoardPostDto.setBdCreated(board.getBdCreated());
-        resBoardPostDto.setBdModified(board.getBdModified());
-        resBoardPostDto.setBdViews(board.getBdViews());
-        postDto.add(resBoardPostDto);
+            resBoardPostDto.setBdId(board.getBdId());
+            resBoardPostDto.setBdWriter(board.getBdWriter());
+            resBoardPostDto.setBdTitle(board.getBdTitle());
+            resBoardPostDto.setBdContent(board.getBdContent());
+            resBoardPostDto.setBdCreated(board.getBdCreated());
+            resBoardPostDto.setBdModified(board.getBdModified());
+            resBoardPostDto.setBdViews(board.getBdViews());
 
         //file 정보 값 set
         //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
         //그래서 map 생성자도 반복문 안으로 넣어줘서 List<Map>에 한번 담고 다시 생성돼서 돌아가는 식
         //Map.put() == List.add() 와 같은 기능
         //Map에 담긴 값을 Dto에 선언했던 Lise<Map<?,?>>에 담아줌
-        files.forEach(entity -> {
-            Map<String, Object> filesmap = new HashMap<>();
-            filesmap.put("file_name",entity.getFSavename());
-            filesmap.put("file_path",entity.getFPath());
-            mapFiles.add(filesmap);
-            resBoardPostDto.setFiles(mapFiles);
-        });
+        //for(Board_Files board_files : files) {} 으로도 가능
+            files.forEach(entity -> {
+                Map<String, Object> filesmap = new HashMap<>();
+                filesmap.put("file_name",entity.getFSavename());
+                filesmap.put("file_path",entity.getFPath());
+                mapFiles.add(filesmap);
+            });
+        resBoardPostDto.setFiles(mapFiles);
 
         return resBoardPostDto;
     }

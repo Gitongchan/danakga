@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -24,16 +26,18 @@ public class BoardController {
 
     @Autowired private final BoardService boardService;
 
-    //게시판 목록, 페이징
-    @GetMapping("/list")
-    public List<ResBoardListDto> list(Pageable pageable) {
-        return boardService.boardList(pageable);
+    //게시판 목록,구분,페이징
+    @GetMapping("/list/{type}")
+    public List<ResBoardListDto> list(Pageable pageable, @PathVariable("type") String board_type) {
+        return boardService.boardList(pageable, board_type);
     }
 
     //게시글 조회
     @GetMapping("/post/{id}")
-    public ResBoardPostDto getpost(@PathVariable("id") Long id) {
-        return  boardService.getpost(id);
+    public ResBoardPostDto getpost(@PathVariable("id") Long id,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
+        return  boardService.getpost(id, request, response);
     }
 
     //게시글 작성

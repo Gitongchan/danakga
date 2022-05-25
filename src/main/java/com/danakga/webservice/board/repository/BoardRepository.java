@@ -17,7 +17,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findById(Long id);
 
     //게시판 목록 페이징
-    Page<Board> findAllByBdDeleted(String deleted, Pageable pageable);
+    Page<Board> findAllByBdDeletedAndBdType(String deleted, String type, Pageable pageable);
 
     //조회수 증가
     @Transactional
