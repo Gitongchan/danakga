@@ -22,7 +22,7 @@ public class PageController {
 
     @GetMapping("/register")
     public String testval(){
-        return "pages/register";
+        return "pages/userRegister";
     }
 
     @GetMapping("/test/mainfunc")
