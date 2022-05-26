@@ -74,20 +74,41 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardWrapper.get();
         List<Board_Files> files = fileRepository.findByBoard(board);
 
-        //조회수 증가 (중복 증가 방지를 위한 쿠키로 검증 후 증가
-        //네이버 카페 경우도 게시글 클릭 후 들어가면 증가x 다시 목록으로 나오면 증가
-        Cookie[] getCookies = request.getCookies();
+        //조회수 증가, 쿠키로 중복 증가 방지
+        //쿠키가 있으면 그 쿠키가 해당 게시글 쿠키인지 확인하고 아니라면 조회수 올리고 setvalue로 해당 게시글의 쿠키 값도 넣어줘야함
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
 
-        //쿠키값이 null이면 쿠키 생성해서 담아주고 -> 조회수 증가, 쿠키가 있다면 증가 안하고 로직 실행
-        //쿠키 값 중복 방지 위해서 []로 감싸줌
-        if(getCookies == null) {
-            Cookie postCookie = new Cookie("postview", "p_" + "[" + id + "]");
+        //기존에 쿠키를 가지고 있다면 해당 쿠키를 oldCookie에 담아줌
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("postView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+
+        //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 id가 없다면 조회수 증가
+        //그리고 해당 게시글 id에 대한 쿠키를 다시 담아서 보냄
+        if(oldCookie != null) {
+            if(!oldCookie.getValue().contains("[" + id.toString() + "]")) {
+                boardRepository.updateView(id);
+                oldCookie.setValue(oldCookie.getValue() + "[" + id + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            boardRepository.updateView(id);
+            Cookie postCookie = new Cookie("postView", "[" + id + "]");
+            postCookie.setPath("/");
             //쿠키 사용시간 1시간 설정
             postCookie.setMaxAge(60 * 60);
-            System.out.println("쿠키 이름 : " + postCookie.getName());
+            System.out.println("쿠키 이름 : " + postCookie.getValue());
             response.addCookie(postCookie);
-            boardRepository.updateView(id);
         }
+
+
 
         //Map을 List에 넣어서 여러개를 받을 수 있게 함
         List<Map<String, Object>> mapFiles = new ArrayList<>();
@@ -133,7 +154,6 @@ public class BoardServiceImpl implements BoardService {
             boardRepository.save(
                     board = Board.builder()
                             .bdType(reqBoardWriteDto.getBdType())
-                            .bdViews(reqBoardWriteDto.getBdViews())
                             .bdWriter(recentUserInfo.getUserid())
                             .bdTitle(reqBoardWriteDto.getBdTitle())
                             .bdContent(reqBoardWriteDto.getBdContent())
@@ -154,7 +174,6 @@ public class BoardServiceImpl implements BoardService {
                         boardRepository.save(
                                 board = Board.builder()
                                         .bdType(reqBoardWriteDto.getBdType())
-                                        .bdViews(reqBoardWriteDto.getBdViews())
                                         .bdWriter(recentUserInfo.getUserid())
                                         .bdTitle(reqBoardWriteDto.getBdTitle())
                                         .bdContent(reqBoardWriteDto.getBdContent())

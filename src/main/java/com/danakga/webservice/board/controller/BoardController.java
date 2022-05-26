@@ -37,13 +37,13 @@ public class BoardController {
     public ResBoardPostDto getpost(@PathVariable("id") Long id,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        return  boardService.getpost(id, request, response);
+        return boardService.getpost(id, request, response);
     }
 
     //게시글 작성
     @PostMapping(value = "/postwrite", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto write(@LoginUser UserInfo userInfo,
-                              @Valid @RequestPart ReqBoardWriteDto reqBoardWriteDto,
+                              @Valid @RequestPart(value="keys") ReqBoardWriteDto reqBoardWriteDto,
                               @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 작성 로직 실행

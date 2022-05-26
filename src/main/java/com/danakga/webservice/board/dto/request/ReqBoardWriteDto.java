@@ -12,7 +12,6 @@ public class ReqBoardWriteDto {
 
     // @AllArgsConstructor로 모든 필드의 값을 파라미터로 받는 생성자 생성하여 form값 받아옴
     private String bdType;
-    private int bdViews;
     @NotBlank(message = "제목은 필수로 입력해야 합니다.")
     private String bdTitle;
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
