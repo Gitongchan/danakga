@@ -88,20 +88,19 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
-        //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 id가 없다면 조회수 증가
-        //그리고 해당 게시글 id에 대한 쿠키를 다시 담아서 보냄
+        //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 현재 게시글의 id가 없다면 조회수 증가
+        //그리고 현제 게시글 id를 쿠키에 다시 담아서 보냄
+        //쿠키가 없다면 새로 생성 후 조회 수 증가
         if(oldCookie != null) {
             if(!oldCookie.getValue().contains("[" + id.toString() + "]")) {
                 boardRepository.updateView(id);
                 oldCookie.setValue(oldCookie.getValue() + "[" + id + "]");
-                oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60);
                 response.addCookie(oldCookie);
             }
         } else {
-            boardRepository.updateView(id);
             Cookie postCookie = new Cookie("postView", "[" + id + "]");
-            postCookie.setPath("/");
+            boardRepository.updateView(id);
             //쿠키 사용시간 1시간 설정
             postCookie.setMaxAge(60 * 60);
             System.out.println("쿠키 이름 : " + postCookie.getValue());
@@ -193,11 +192,17 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-//게시글 수정
-//    @Override
-//    public ResBoardUpdateDto edit(UserInfo userInfo, Board board) {
-//        return null;
-//    }
+    //게시글 수정
+    @Override
+    public Long edit(Long id,UserInfo userInfo) {
+        return null;
+    }
+
+    //게시글 삭제
+    @Override
+    public Long delete(Long id, UserInfo userInfo) {
+        return null;
+    }
 
 
 }
