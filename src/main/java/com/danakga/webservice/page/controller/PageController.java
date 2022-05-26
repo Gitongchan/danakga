@@ -30,13 +30,12 @@ public class PageController {
         return "pages/mainfunction";
     }
 
-    @GetMapping("/test/mypageNav")
-    public String testnav(){
-        return "pages/mypageNAV";
-    }
     @GetMapping("/mypage")
     public String mypage(){
         return "pages/mypage";
     }
+
+    @GetMapping("/boardedit")
+    public String boardEdition(){return "pages/boardedit";}
 
 }

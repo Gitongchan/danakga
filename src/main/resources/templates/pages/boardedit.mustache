@@ -1,0 +1,92 @@
+{{>pages/header}}
+<div class="container">
+    <form id="boardform" enctype="multipart/form-data">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="board_Title">제목</label>
+                <input class="form-control" name="bdTitle" type="text" id="board_Title" placeholder="제목을 입력해주세요" required />
+            </div>
+        </div>
+        <div id="col-sm-12">
+            <label for="editor">글 작성</label>
+            <textarea name="boardinfo" id="editor" ></textarea>
+        </div>
+        <div>
+            <input type="file" name="file" id="file" required multiple/>
+        </div>
+        <div class="align-center">
+            <div class="button">
+                <button class="btn" id="submit">글 등록</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{{>pages/footer1}}
+<script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+<script>
+    let editor;
+
+    ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .then( newEditor => {
+                editor = newEditor;
+            } )
+            .catch( error => {
+                console.error( error );
+            } );
+
+    // Assuming there is a <button id="submit">Submit</button> in your application.
+    document.querySelector( '#submit' ).addEventListener( 'click', (e) => {
+        e.preventDefault();
+        //토큰 값
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const token = document.querySelector('meta[name="_csrf"]').content;
+        //텍스트 에디터에서 값 가져옴
+        const editorData = editor.getData();
+        console.log(editorData);
+
+        const file = document.getElementById('file');
+        const boarddata = {
+            bdType:"자유게시판",
+            bdTitle: document.getElementById('board_Title').value,
+            bdViews: 0,
+            bdContent : editorData
+        }
+
+        const formData = new FormData();
+        formData.append("images", file);
+        formData.append(
+                "keys",
+                new Blob([JSON.stringify(boarddata)], { type: "application/json" })
+        );
+
+        // data.files.forEach((file) => formData.append("files", file));
+
+        fetch("/api/board/postwrite", {
+            method: "POST",
+            headers: {
+                'header': header,
+                'processData': false,
+                'contentType':false,
+                'X-CSRF-Token': token
+            },
+            body: formData
+        })
+                .then(res => {
+                    if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
+                        alert("글작성완료");
+                    } else { // 실패를 알리는 HTTP 상태 코드면
+                        console.error(res.statusText);
+                        console.error(res);
+                    }
+                })
+                .then(data => console.log(data))
+                .catch(error => console.log(error))
+        // ...
+    } );
+
+</script>
+<script src="/js/boardEdit.js"></script>
+{{>pages/footer2}}

@@ -5,6 +5,7 @@ const span_id = document.createElement('span');
 const login_info = document.querySelector('.userinfo');
 const div_id = document.querySelector('.view_id');
 
+document.getElementById()
 //로그인 안되어있다면 로그인, 회원가입 > 로그인 되어있다면 내정보|로그아웃
 
 const left_a = document.createElement('a');
