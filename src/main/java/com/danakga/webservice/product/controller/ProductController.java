@@ -21,7 +21,7 @@ public class ProductController {
 
     @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto productUpload(@LoginUser UserInfo userInfo,
-                                      @RequestPart ProductDto productDto,
+                                      @RequestPart(value = "product") ProductDto productDto,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files){
 
         Long result = productService.productUpload(userInfo,productDto,files);
