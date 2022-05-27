@@ -39,6 +39,13 @@ public class FileServiceImpl implements FilesService {
             // multipartfile : files  files에서 더 꺼낼게 없을 때 까지 multipartfile에 담아줌
             for(MultipartFile multipartFile : files) {
 
+                final long maxRequestSize = 30 * 1024 * 1024;
+                final long maxFileSize = 10 * 1024 * 1024;
+
+                //exception은 맞게 찾았고, properties에서 설정한 값보다 큰 값이 들어오면 컨트롤러로 들어오기도 전에
+                //처리가 진행되버려서 바로 오류가 뜸;;
+                //그래서 현재 properties에서 설정한 값보다 큰 사이즈의 값이 들어오면 에러 메시지를 보내줄 수가 없음;
+
                 //파일명 소문자로 추출
                 String originFileName = multipartFile.getOriginalFilename().toLowerCase();
 
