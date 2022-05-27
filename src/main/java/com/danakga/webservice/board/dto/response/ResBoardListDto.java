@@ -19,4 +19,5 @@ public class ResBoardListDto {
     private LocalDateTime bdCreated;
     private int bdViews;
     private String bdDeleted;
+    private int totalPage;
 }

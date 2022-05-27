@@ -14,6 +14,7 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -43,11 +44,12 @@ public class BoardServiceImpl implements BoardService {
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
         pageable = PageRequest.of(page, 10, Sort.by("bdId").descending());
-        List<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable).getContent();
+        Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable);
+        List<Board> boardList = boards.getContent();
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
-        boards.forEach(entity -> {
+        boardList.forEach(entity -> {
             ResBoardListDto listDto = new ResBoardListDto();
                 listDto.setBdId(entity.getBdId());
                 listDto.setBdTitle(entity.getBdTitle());
@@ -55,6 +57,7 @@ public class BoardServiceImpl implements BoardService {
                 listDto.setBdCreated(entity.getBdCreated());
                 listDto.setBdViews(entity.getBdViews());
                 listDto.setBdDeleted(entity.getBdDeleted());
+                listDto.setTotalPage(boards.getTotalPages());
                 boardListDto.add(listDto);
         });
         return boardListDto;
