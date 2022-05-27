@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReqBoardWriteDto {
+public class ReqBoardDto {
 
     // @AllArgsConstructor로 모든 필드의 값을 파라미터로 받는 생성자 생성하여 form값 받아옴
     private String bdType;
