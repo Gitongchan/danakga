@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
                             .productBrand(productDto.getProductBrand())
                             .productContent(productDto.getProductContent())
                             .productName(productDto.getProductName())
-                            .productPhoto(productDto.getProductPhoto())
+                            .productPhoto(null)
                             .productPrice(productDto.getProductPrice())
                             .productState(productDto.getProductState())
                             .productStock(productDto.getProductStock())
@@ -64,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
                 //List에 값이 있으면 saveFileUpload 실행
                 if (!CollectionUtils.isEmpty(files)) {
                     if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
+
                         Product product = productRepository.save(
                                 Product.builder()
                                         .productCompanyId(uploadCompany)
@@ -82,6 +83,7 @@ public class ProductServiceImpl implements ProductService {
                         );
 
                         Long result = productFilesService.uploadFile(files, product);
+
                         if(result.equals(-1L)){
                             return -2L; //파일업로드 실패하면 -2L반환
                         }
