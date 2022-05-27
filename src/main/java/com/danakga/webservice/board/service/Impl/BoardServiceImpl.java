@@ -58,6 +58,7 @@ public class BoardServiceImpl implements BoardService {
                 listDto.setBdViews(entity.getBdViews());
                 listDto.setBdDeleted(entity.getBdDeleted());
                 listDto.setTotalPage(boards.getTotalPages());
+                listDto.setTotalElement(boards.getTotalElements());
                 boardListDto.add(listDto);
         });
         return boardListDto;

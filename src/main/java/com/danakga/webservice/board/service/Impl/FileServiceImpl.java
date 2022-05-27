@@ -1,5 +1,6 @@
 package com.danakga.webservice.board.service.Impl;
 
+import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.FileRepository;
@@ -24,12 +25,12 @@ public class FileServiceImpl implements FilesService {
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
             //파일 저장 경로
-            String savepath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\";
+            String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\";
 
             //파일 저장되는 폳더 없으면 생성
-            if(!new File(savepath).exists()) {
+            if(!new File(savePath).exists()) {
                 try{
-                    new File(savepath).mkdir();
+                    new File(savePath).mkdir();
                 } catch (Exception e2) {
                     e2.getStackTrace();
                 }
@@ -39,6 +40,18 @@ public class FileServiceImpl implements FilesService {
             // multipartfile : files  files에서 더 꺼낼게 없을 때 까지 multipartfile에 담아줌
             for(MultipartFile multipartFile : files) {
 
+                final long maxRequestSize = 30 * 1024 * 1024;
+                final long maxFileSize = 15 * 1024 * 1024;
+
+                //request 용량 초과
+                if(multipartFile.getSize() >= maxRequestSize) {
+                    throw new CustomException.SizeLimitExceededException("파일 업로드 용량을 초과 했습니다.(MAX_REQUEST_SIZE)");
+                }
+//                if(multipartFile.getSize()[multipartFile] >= maxFileSize) {
+//                    throw new CustomException.FileSizeLimitExceededException("하나의 파일에 10MB이상 업로드 할 수 없습니다.(MAX_FILE_SIZE)");
+//                }
+
+
                 //파일명 소문자로 추출
                 String originFileName = multipartFile.getOriginalFilename().toLowerCase();
 
@@ -47,10 +60,9 @@ public class FileServiceImpl implements FilesService {
                 String saveFileName = uuid + "__" + originFileName;
 
                 //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-                String filepath = savepath + "\\" + saveFileName;
-                System.out.println(filepath);
+                String filePath = savePath + "\\" + saveFileName;
                 try {
-                    multipartFile.transferTo(new File(filepath));
+                    multipartFile.transferTo(new File(filePath));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -59,7 +71,7 @@ public class FileServiceImpl implements FilesService {
                         Board_Files.builder()
                                 .fSavename(saveFileName)
                                 .fOrigin(originFileName)
-                                .fPath(filepath)
+                                .fPath(filePath)
                                 .board(board)
                                 .build()
                 );

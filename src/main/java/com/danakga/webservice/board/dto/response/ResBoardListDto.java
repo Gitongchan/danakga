@@ -20,4 +20,5 @@ public class ResBoardListDto {
     private int bdViews;
     private String bdDeleted;
     private int totalPage;
+    private long totalElement;
 }
