@@ -1,6 +1,5 @@
 package com.danakga.webservice.board.service.Impl;
 
-import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.FileRepository;
@@ -39,18 +38,6 @@ public class FileServiceImpl implements FilesService {
             // 다중 파일 처리
             // multipartfile : files  files에서 더 꺼낼게 없을 때 까지 multipartfile에 담아줌
             for(MultipartFile multipartFile : files) {
-
-                final long maxRequestSize = 30 * 1024 * 1024;
-                final long maxFileSize = 15 * 1024 * 1024;
-
-                //request 용량 초과
-                if(multipartFile.getSize() >= maxRequestSize) {
-                    throw new CustomException.SizeLimitExceededException("파일 업로드 용량을 초과 했습니다.(MAX_REQUEST_SIZE)");
-                }
-//                if(multipartFile.getSize()[multipartFile] >= maxFileSize) {
-//                    throw new CustomException.FileSizeLimitExceededException("하나의 파일에 10MB이상 업로드 할 수 없습니다.(MAX_FILE_SIZE)");
-//                }
-
 
                 //파일명 소문자로 추출
                 String originFileName = multipartFile.getOriginalFilename().toLowerCase();

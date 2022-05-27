@@ -1,6 +1,7 @@
 package com.danakga.webservice.board.exception;
 
 import com.danakga.webservice.board.dto.response.ResErrorDto;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +20,7 @@ public class BoardExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CustomException.SizeLimitExceededException.class)
+    @ExceptionHandler(SizeLimitExceededException.class)
     public ResponseEntity<?> sizeLimitExceededException(CustomException.SizeLimitExceededException exception) {
         ResErrorDto response = new ResErrorDto(PAYLOAD_TOO_LARGE, exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.PAYLOAD_TOO_LARGE);
