@@ -1,6 +1,6 @@
 package com.danakga.webservice.board.service;
 
-import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
+import com.danakga.webservice.board.dto.request.ReqBoardDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -14,13 +14,13 @@ import java.util.List;
 public interface BoardService {
 
     //게시판 목록
-    List<ResBoardListDto> boardList(Pageable pageable, String board_type);
+    List<ResBoardListDto> boardList(Pageable pageable, String board_type, int page);
 
     //게시글 조회
     ResBoardPostDto getpost(Long bd_id, HttpServletRequest request, HttpServletResponse response);
 
     //게시글 작성
-    Long write(ReqBoardWriteDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
+    Long write(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
     Long edit(Long id, UserInfo userInfo);

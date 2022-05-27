@@ -1,7 +1,7 @@
 package com.danakga.webservice.board.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
+import com.danakga.webservice.board.dto.request.ReqBoardDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.service.BoardService;
@@ -28,26 +28,27 @@ public class BoardController {
 
     //게시판 목록,구분,페이징
     @GetMapping("/list/{type}")
-    public List<ResBoardListDto> list(Pageable pageable, @PathVariable("type") String board_type) {
-        return boardService.boardList(pageable, board_type);
+    public List<ResBoardListDto> list(Pageable pageable, @PathVariable("type") String board_type, int page) {
+        return boardService.boardList(pageable, board_type, page);
     }
 
     //게시글 조회
     @GetMapping("/post/{id}")
     public ResBoardPostDto getpost(@PathVariable("id") Long id,
                                    HttpServletRequest request,
-                                   HttpServletResponse response) {
+                                   HttpServletResponse response
+                                   ) {
         return boardService.getpost(id, request, response);
     }
 
     //게시글 작성
     @PostMapping(value = "/postwrite", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto write(@LoginUser UserInfo userInfo,
-                              @Valid @RequestPart(value="keys") ReqBoardWriteDto reqBoardWriteDto,
+                              @Valid @RequestPart(value="keys") ReqBoardDto reqBoardDto,
                               @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 작성 로직 실행
-        Long result = boardService.write(reqBoardWriteDto, userInfo, files);
+        Long result = boardService.write(reqBoardDto, userInfo, files);
 
         if(result.equals(-2L)) {
             return new ResResultDto(result, "게시글 등록 실패 했습니다(이미지 업로드 오류)");

@@ -1,6 +1,6 @@
 package com.danakga.webservice.board.service.Impl;
 
-import com.danakga.webservice.board.dto.request.ReqBoardWriteDto;
+import com.danakga.webservice.board.dto.request.ReqBoardDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.exception.CustomException;
@@ -38,11 +38,11 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 목록
     @Override
-    public List<ResBoardListDto> boardList(Pageable pageable, String board_type) {
+    public List<ResBoardListDto> boardList(Pageable pageable, String board_type, int page) {
 
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
-        pageable = PageRequest.of(0, 5, Sort.by("bdId").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("bdId").descending());
         List<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable).getContent();
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
@@ -141,7 +141,7 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 작성
     @Override
-    public Long write(ReqBoardWriteDto reqBoardWriteDto,
+    public Long write(ReqBoardDto reqBoardDto,
                       UserInfo userInfo, List<MultipartFile> files) {
 
         if(userRepository.findById(userInfo.getId()).isEmpty()){
@@ -152,10 +152,10 @@ public class BoardServiceImpl implements BoardService {
         if(CollectionUtils.isEmpty(files)) {
             boardRepository.save(
                     board = Board.builder()
-                            .bdType(reqBoardWriteDto.getBdType())
+                            .bdType(reqBoardDto.getBdType())
                             .bdWriter(recentUserInfo.getUserid())
-                            .bdTitle(reqBoardWriteDto.getBdTitle())
-                            .bdContent(reqBoardWriteDto.getBdContent())
+                            .bdTitle(reqBoardDto.getBdTitle())
+                            .bdContent(reqBoardDto.getBdContent())
                             .userInfo(recentUserInfo)
                             .build()
             );
@@ -172,10 +172,10 @@ public class BoardServiceImpl implements BoardService {
                     if(originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
                         boardRepository.save(
                                 board = Board.builder()
-                                        .bdType(reqBoardWriteDto.getBdType())
+                                        .bdType(reqBoardDto.getBdType())
                                         .bdWriter(recentUserInfo.getUserid())
-                                        .bdTitle(reqBoardWriteDto.getBdTitle())
-                                        .bdContent(reqBoardWriteDto.getBdContent())
+                                        .bdTitle(reqBoardDto.getBdTitle())
+                                        .bdContent(reqBoardDto.getBdContent())
                                         .userInfo(recentUserInfo)
                                         .build()
                         );
