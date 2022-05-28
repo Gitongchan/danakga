@@ -24,7 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -62,17 +65,12 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 조회
     @Override
-    public ResBoardPostDto getpost(Long id, HttpServletRequest request, HttpServletResponse response) {
+    public ResBoardPostDto getPost(Long id, HttpServletRequest request, HttpServletResponse response) {
 
-        Optional<Board> boardWrapper = boardRepository.findById(id);
-        
-        //id가 없는 값이 들어와서 boardWrapper가 비어있는 경우 Exception 처리 (@ResponseBody로 에러 코드, 에러 메시지 보냄)
-        if(boardWrapper.isEmpty()) {
-            throw new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다.");
-        }
+        Board boardWrapper = boardRepository.findById(id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
-        Board board = boardWrapper.get();
-        List<Board_Files> files = fileRepository.findByBoard(board);
+        List<Board_Files> files = fileRepository.findByBoard(boardWrapper);
 
         //조회수 증가, 쿠키로 중복 증가 방지
         //쿠키가 있으면 그 쿠키가 해당 게시글 쿠키인지 확인하고 아니라면 조회수 올리고 setvalue로 해당 게시글의 쿠키 값도 넣어줘야함
@@ -115,13 +113,13 @@ public class BoardServiceImpl implements BoardService {
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
         //개별 게시글 값 set
-            resBoardPostDto.setBdId(board.getBdId());
-            resBoardPostDto.setBdWriter(board.getBdWriter());
-            resBoardPostDto.setBdTitle(board.getBdTitle());
-            resBoardPostDto.setBdContent(board.getBdContent());
-            resBoardPostDto.setBdCreated(board.getBdCreated());
-            resBoardPostDto.setBdModified(board.getBdModified());
-            resBoardPostDto.setBdViews(board.getBdViews());
+            resBoardPostDto.setBdId(boardWrapper.getBdId());
+            resBoardPostDto.setBdWriter(boardWrapper.getBdWriter());
+            resBoardPostDto.setBdTitle(boardWrapper.getBdTitle());
+            resBoardPostDto.setBdContent(boardWrapper.getBdContent());
+            resBoardPostDto.setBdCreated(boardWrapper.getBdCreated());
+            resBoardPostDto.setBdModified(boardWrapper.getBdModified());
+            resBoardPostDto.setBdViews(boardWrapper.getBdViews());
 
         //file 정보 값 set
         //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
@@ -131,7 +129,7 @@ public class BoardServiceImpl implements BoardService {
         //for(Board_Files board_files : files) {} 으로도 가능
             files.forEach(entity -> {
                 Map<String, Object> filesmap = new HashMap<>();
-                filesmap.put("file_name",entity.getFSavename());
+                filesmap.put("file_name",entity.getFSaveName());
                 filesmap.put("file_path",entity.getFPath());
                 mapFiles.add(filesmap);
             });
@@ -142,7 +140,7 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 작성
     @Override
-    public Long write(ReqBoardDto reqBoardDto,
+    public Long postWrite(ReqBoardDto reqBoardDto,
                       UserInfo userInfo, List<MultipartFile> files) {
 
         if(userRepository.findById(userInfo.getId()).isEmpty()){
@@ -193,11 +191,26 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-//게시글 수정
-//    @Override
-//    public ResBoardUpdateDto edit(UserInfo userInfo, Board board) {
-//        return null;
-//    }
+    //게시글 수정
+    @Override
+    public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files) {
+        return null;
+    }
 
+    //게시글 삭제여부 변경
+    @Override
+    public Long postDelete(Long id, UserInfo userInfo) {
+
+        //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
+        if(boardRepository.findById(id).isPresent()) {
+
+            Board board = boardRepository.findById(id).get();
+
+            boardRepository.updateDeleted(id);
+
+            return board.getBdId();
+        }
+        return -1L;
+    }
 
 }

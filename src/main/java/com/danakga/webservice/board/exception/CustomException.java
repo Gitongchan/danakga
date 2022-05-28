@@ -12,21 +12,4 @@ public class CustomException{
          super(message);
      }
     }
-    
-    //maxRequestSize 값이 초과 한 경우
-    @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
-    public static class SizeLimitExceededException extends RuntimeException {
-        public SizeLimitExceededException(String message) {
-            super(message);
-        }
-    }
-    //maxFileSize 값이 초과 한 경우
-    @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
-    public static class FileSizeLimitExceededException extends RuntimeException {
-        public FileSizeLimitExceededException(String message) {
-            super(message);
-        }
-    }
-
-
 }

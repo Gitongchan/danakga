@@ -28,7 +28,7 @@ public class BoardController {
 
     //게시판 목록,구분,페이징
     @GetMapping("/list/{type}")
-    public List<ResBoardListDto> list(Pageable pageable, @PathVariable("type") String board_type, int page) {
+    public List<ResBoardListDto> boardList(Pageable pageable, @PathVariable("type") String board_type, int page) {
         return boardService.boardList(pageable, board_type, page);
     }
 
@@ -38,17 +38,17 @@ public class BoardController {
                                    HttpServletRequest request,
                                    HttpServletResponse response
                                    ) {
-        return boardService.getpost(id, request, response);
+        return boardService.getPost(id, request, response);
     }
 
     //게시글 작성
     @PostMapping(value = "/postwrite", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResResultDto write(@LoginUser UserInfo userInfo,
+    public ResResultDto postWrite(@LoginUser UserInfo userInfo,
                               @Valid @RequestPart(value="keys") ReqBoardDto reqBoardDto,
                               @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 작성 로직 실행
-        Long result = boardService.write(reqBoardDto, userInfo, files);
+        Long result = boardService.postWrite(reqBoardDto, userInfo, files);
 
         if(result.equals(-2L)) {
             return new ResResultDto(result, "게시글 등록 실패 했습니다(이미지 업로드 오류)");
@@ -60,9 +60,20 @@ public class BoardController {
     }
 
     //게시글 수정
-//    @PutMapping("/post/edit/{id}")
-//    public ResBoardUpdateDto edit(@PathVariable Long bd_id, @LoginUser UserInfo userInfo, Board board) {
-//        return boardService.edit(userInfo, board);
-//    }
+    @PutMapping(value = "/post/edit/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Long postEdit(@PathVariable(value = "id") Long id,
+                         @LoginUser UserInfo userInfo,
+                         @RequestPart(value = "keys") ReqBoardDto reqBoardDto,
+                         @RequestPart(value = "images", required = false) List<MultipartFile> files) {
+        return boardService.postEdit(id, userInfo, reqBoardDto, files);
+    }
 
+    @PutMapping("/post/delete/{id}")
+    public ResResultDto postDelete(@PathVariable(value = "id") Long id, @LoginUser UserInfo userInfo) {
+
+        Long result = boardService.postDelete(id, userInfo);
+
+        return result == -1L ?
+                new ResResultDto(result, "게시글 삭제 실패") : new ResResultDto(result, "게시글 삭제 성공");
+    }
 }
