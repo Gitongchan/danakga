@@ -23,8 +23,6 @@ public interface BoardService {
     Long write(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
-    Long edit(Long id, UserInfo userInfo);
-
-    Long delete(Long id, UserInfo userInfo);
+//    ResBoardUpdateDto edit(UserInfo userInfo, Board board);
 
 }

@@ -60,14 +60,9 @@ public class BoardController {
     }
 
     //게시글 수정
-    @PutMapping("/post/edit/{id}")
-    public Long edit(@PathVariable("id") Long id, @LoginUser UserInfo userInfo) {
-        return boardService.edit(id, userInfo);
-    }
-
-    @DeleteMapping("post/delete/{id}")
-    public Long delete(@PathVariable("id") Long id, @LoginUser UserInfo userInfo) {
-        return boardService.delete(id, userInfo);
-    }
+//    @PutMapping("/post/edit/{id}")
+//    public ResBoardUpdateDto edit(@PathVariable Long bd_id, @LoginUser UserInfo userInfo, Board board) {
+//        return boardService.edit(userInfo, board);
+//    }
 
 }
