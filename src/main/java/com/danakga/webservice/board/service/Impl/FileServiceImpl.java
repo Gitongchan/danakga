@@ -59,7 +59,7 @@ public class FileServiceImpl implements FilesService {
 
                  fileRepository.save(
                         Board_Files.builder()
-                                .fSavename(saveFileName)
+                                .fSaveName(saveFileName)
                                 .fOrigin(originFileName)
                                 .fPath(filePath)
                                 .board(board)

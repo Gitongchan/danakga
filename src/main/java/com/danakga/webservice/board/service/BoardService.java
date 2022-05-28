@@ -17,12 +17,14 @@ public interface BoardService {
     List<ResBoardListDto> boardList(Pageable pageable, String board_type, int page);
 
     //게시글 조회
-    ResBoardPostDto getpost(Long bd_id, HttpServletRequest request, HttpServletResponse response);
+    ResBoardPostDto getPost(Long bd_id, HttpServletRequest request, HttpServletResponse response);
 
     //게시글 작성
-    Long write(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
+    Long boardWrite(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
-//    ResBoardUpdateDto edit(UserInfo userInfo, Board board);
+    Long postEdit(Long id, UserInfo userInfo);
+
+    Long postDelete(Long id, UserInfo userInfo);
 
 }

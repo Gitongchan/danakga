@@ -28,17 +28,16 @@ public class BoardController {
 
     //게시판 목록,구분,페이징
     @GetMapping("/list/{type}")
-    public List<ResBoardListDto> list(Pageable pageable, @PathVariable("type") String board_type, int page) {
+    public List<ResBoardListDto> boardList(Pageable pageable, @PathVariable("type") String board_type, int page) {
         return boardService.boardList(pageable, board_type, page);
     }
 
     //게시글 조회
     @GetMapping("/post/{id}")
-    public ResBoardPostDto getpost(@PathVariable("id") Long id,
-                                   HttpServletRequest request,
+    public ResBoardPostDto getPost(@PathVariable("id") Long id, HttpServletRequest request,
                                    HttpServletResponse response
                                    ) {
-        return boardService.getpost(id, request, response);
+        return boardService.getPost(id, request, response);
     }
 
     //게시글 작성
@@ -48,7 +47,7 @@ public class BoardController {
                               @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 작성 로직 실행
-        Long result = boardService.write(reqBoardDto, userInfo, files);
+        Long result = boardService.boardWrite(reqBoardDto, userInfo, files);
 
         if(result.equals(-2L)) {
             return new ResResultDto(result, "게시글 등록 실패 했습니다(이미지 업로드 오류)");
@@ -60,9 +59,14 @@ public class BoardController {
     }
 
     //게시글 수정
-//    @PutMapping("/post/edit/{id}")
-//    public ResBoardUpdateDto edit(@PathVariable Long bd_id, @LoginUser UserInfo userInfo, Board board) {
-//        return boardService.edit(userInfo, board);
-//    }
+    @PutMapping("/post/edit/{id}")
+    public Long edit(@PathVariable("id") Long id, @LoginUser UserInfo userInfo) {
+        return boardService.postEdit(id, userInfo);
+    }
+
+    @DeleteMapping("post/delete/{id}")
+    public Long delete(@PathVariable("id") Long id, @LoginUser UserInfo userInfo) {
+        return boardService.postDelete(id, userInfo);
+    }
 
 }

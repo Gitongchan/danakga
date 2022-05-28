@@ -49,7 +49,7 @@ public class BoardServiceImpl implements BoardService {
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
-        boards.forEach(entity -> {
+        boardList.forEach(entity -> {
             ResBoardListDto listDto = new ResBoardListDto();
                 listDto.setBdId(entity.getBdId());
                 listDto.setBdTitle(entity.getBdTitle());
@@ -66,7 +66,7 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 조회
     @Override
-    public ResBoardPostDto getpost(Long id, HttpServletRequest request, HttpServletResponse response) {
+    public ResBoardPostDto getPost(Long id, HttpServletRequest request, HttpServletResponse response) {
 
         Optional<Board> boardWrapper = boardRepository.findById(id);
         
@@ -92,20 +92,19 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
-        //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 id가 없다면 조회수 증가
-        //그리고 해당 게시글 id에 대한 쿠키를 다시 담아서 보냄
+        //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 현재 게시글의 id가 없다면 조회수 증가
+        //그리고 현제 게시글 id를 쿠키에 다시 담아서 보냄
+        //쿠키가 없다면 새로 생성 후 조회 수 증가
         if(oldCookie != null) {
             if(!oldCookie.getValue().contains("[" + id.toString() + "]")) {
                 boardRepository.updateView(id);
                 oldCookie.setValue(oldCookie.getValue() + "[" + id + "]");
-                oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60);
                 response.addCookie(oldCookie);
             }
         } else {
-            boardRepository.updateView(id);
             Cookie postCookie = new Cookie("postView", "[" + id + "]");
-            postCookie.setPath("/");
+            boardRepository.updateView(id);
             //쿠키 사용시간 1시간 설정
             postCookie.setMaxAge(60 * 60);
             System.out.println("쿠키 이름 : " + postCookie.getValue());
@@ -134,10 +133,10 @@ public class BoardServiceImpl implements BoardService {
         //Map에 담긴 값을 Dto에 선언했던 Lise<Map<?,?>>에 담아줌
         //for(Board_Files board_files : files) {} 으로도 가능
             files.forEach(entity -> {
-                Map<String, Object> filesmap = new HashMap<>();
-                filesmap.put("file_name",entity.getFSavename());
-                filesmap.put("file_path",entity.getFPath());
-                mapFiles.add(filesmap);
+                Map<String, Object> filesMap = new HashMap<>();
+                filesMap.put("file_name",entity.getFSaveName());
+                filesMap.put("file_path",entity.getFPath());
+                mapFiles.add(filesMap);
             });
         resBoardPostDto.setFiles(mapFiles);
 
@@ -146,7 +145,7 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 작성
     @Override
-    public Long write(ReqBoardDto reqBoardDto,
+    public Long boardWrite(ReqBoardDto reqBoardDto,
                       UserInfo userInfo, List<MultipartFile> files) {
 
         if(userRepository.findById(userInfo.getId()).isEmpty()){
@@ -197,11 +196,17 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-//게시글 수정
-//    @Override
-//    public ResBoardUpdateDto edit(UserInfo userInfo, Board board) {
-//        return null;
-//    }
+    //게시글 수정
+    @Override
+    public Long postEdit(Long id,UserInfo userInfo) {
+        return null;
+    }
+
+    //게시글 삭제
+    @Override
+    public Long postDelete(Long id, UserInfo userInfo) {
+        return null;
+    }
 
 
 }
