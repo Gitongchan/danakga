@@ -1,5 +1,4 @@
 {{>pages/header}}
-<div class="container mt-3">
     <h2 style="text-align: center">게시판 목록</h2>
 
     <div class="input-group mb-3">
@@ -9,56 +8,29 @@
     </div>
 
 
-    <table class="table">
+    <table class="table table-striped table-hover">
         <thead>
         <tr>
             <th>번호</th>
             <th>글제목</th>
-            <th>글쓴이</th>
+            <th>작성자</th>
             <th>시간</th>
             <th>조회수</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-            <td>1</td>
-            <td>아</td>
-            <td>이게</td>
-            <td>2022-05-03-14-19</td>
-            <td>20</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>맞나</td>
-            <td>진짜</td>
-            <td>2022-05-03-14-19</td>
-            <td>22</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>황정민</td>
-            <td>행복한ㄷ</td>
-            <td>2022-05-03-14-19</td>
-            <td>20</td>
-        </tr>
+        <tbody id="boardlist">
         </tbody>
     </table>
-</div>
 
 
-
-<div class="container">
-    <ul class="pagination" style="justify-content: center;">
-        <li class="page-item"><a class="page-link" href="#"><</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item active"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">></a></li>
+<div class="text-center">
+    <ul class="pagination">
     </ul>
 </div>
 
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
+<script src="/js/boardlist.js"></script>
 
 {{>pages/footer2}}

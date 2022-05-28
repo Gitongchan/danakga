@@ -38,4 +38,10 @@ public class PageController {
     @GetMapping("/boardedit")
     public String boardEdition(){return "pages/boardedit";}
 
+    @GetMapping("/blog")
+    public String blog(){return "pages/blog-single";}
+
+    @GetMapping("/boardlist")
+    public String boardlist(){return "pages/boardlist";}
+
 }

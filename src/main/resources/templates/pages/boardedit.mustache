@@ -1,19 +1,28 @@
 {{>pages/header}}
 <div class="container">
-    <form id="boardform" enctype="multipart/form-data">
-        <div class="col-sm-12">
+    <form class="row" id="boardform" enctype="multipart/form-data">
+        <div class="col-sm-2">
             <div class="form-group">
-                <label for="board_Title">제목</label>
+                <label for="type"></label>
+                <select class="form-select" id="type" aria-label="select value">
+                    <option value="자유게시판" selected>자유</option>
+                    <option value="문의게시판">문의</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <div class="form-group">
+                <label for="board_Title"></label>
                 <input class="form-control" name="bdTitle" type="text" id="board_Title" placeholder="제목을 입력해주세요" required />
             </div>
         </div>
         <div id="col-sm-12">
-            <label for="editor">글 작성</label>
+            <label for="editor"></label>
             <textarea name="boardinfo" id="editor" ></textarea>
         </div>
-        <div>
-            <input type="file" name="file" id="file" required multiple/>
-        </div>
+        <input type="file" class="real-upload" multiple>
+        <div class="upload"></div>
+        <ul class="image-preview"></ul>
         <div class="align-center">
             <div class="button">
                 <button class="btn" id="submit">글 등록</button>
@@ -29,7 +38,9 @@
     let editor;
 
     ClassicEditor
-            .create( document.querySelector( '#editor' ) )
+            .create( document.querySelector( '#editor' ), {
+                toolbar: [ 'bold', 'italic', 'link', 'undo', 'redo', 'numberedList', 'bulletedList' ]
+            })
             .then( newEditor => {
                 editor = newEditor;
             } )
@@ -46,17 +57,21 @@
         //텍스트 에디터에서 값 가져옴
         const editorData = editor.getData();
         console.log(editorData);
+        const formData = new FormData();
 
-        const file = document.getElementById('file');
+        let input = document.querySelector('input[type="file"]')
         const boarddata = {
-            bdType:"자유게시판",
+            bdType: document.getElementById('type').value,
             bdTitle: document.getElementById('board_Title').value,
             bdViews: 0,
             bdContent : editorData
         }
 
-        const formData = new FormData();
-        formData.append("images", file);
+        console.log(input.files);
+
+        for(let i=0;i <=input.files.length; i++){
+            formData.append('images', input.files[i]);
+        }
         formData.append(
                 "keys",
                 new Blob([JSON.stringify(boarddata)], { type: "application/json" })
