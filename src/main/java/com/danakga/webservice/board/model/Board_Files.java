@@ -20,7 +20,7 @@ public class Board_Files {
     private String fOrigin;
 
     @Column(name="f_savename")
-    private String fSavename;
+    private String fSaveName;
 
     @Column(name="f_path")
     private String fPath;
@@ -30,10 +30,10 @@ public class Board_Files {
     private Board board;
 
     @Builder
-    public Board_Files(Long fId, String fOrigin, String fSavename, String fPath, Board board) {
+    public Board_Files(Long fId, String fOrigin, String fSaveName, String fPath, Board board) {
         this.fId = fId;
         this.fOrigin = fOrigin;
-        this.fSavename = fSavename;
+        this.fSaveName = fSaveName;
         this.fPath = fPath;
         this.board = board;
     }
