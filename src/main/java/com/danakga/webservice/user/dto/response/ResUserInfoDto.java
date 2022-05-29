@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.dto.response;
 
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.user.model.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class ResUserInfoDto {
     private String email;
     private String name;
     private String phone;
-    private String role;
+    private UserRole role;
     private String userAdrNum;
     private String userStreetAdr;
     private String userLotAdr;

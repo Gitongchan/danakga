@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.dto.request;
 
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.user.model.UserRole;
 import lombok.*;
 import org.apache.tomcat.jni.Local;
 
@@ -39,7 +40,7 @@ public class UserInfoDto {
     private String email;
 
     //권한 ( user,manager,admin)
-    private String role;
+    private UserRole role;
 
     //회원 우편번호
     private String userAdrNum;
