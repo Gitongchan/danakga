@@ -21,9 +21,9 @@ public class CompanyController {
 
     //사업자 탈퇴
     @PutMapping("/deleted")
-    public ResResultDto companyDeleted(@LoginUser UserInfo userInfo, @RequestBody CompanyUserInfoDto companyUserInfoDto){
+    public ResResultDto companyDeleted(@LoginUser UserInfo userInfo){
 
-        Long result = companyService.companyDeleted(userInfo,companyUserInfoDto);
+        Long result = companyService.companyDeleted(userInfo);
         return result == -1L ?
                 new ResResultDto(result,"사업자 탈퇴 실패.") : new ResResultDto(result,"사업자 탈퇴 성공.");
     }

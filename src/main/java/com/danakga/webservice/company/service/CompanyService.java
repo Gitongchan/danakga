@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.User;
 
 public interface CompanyService {
     //사업자탈퇴
-    Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto);
+    Long companyDeleted(UserInfo userInfo);
 
     //업체명 체크
     Integer companyNameCheck(String companyName);
