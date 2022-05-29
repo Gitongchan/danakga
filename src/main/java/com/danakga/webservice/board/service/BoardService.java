@@ -25,6 +25,7 @@ public interface BoardService {
     //게시글 수정
     Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files);
 
+    //게시글 삭제 여부 변경
     Long postDelete(Long id, UserInfo userInfo);
 
 }

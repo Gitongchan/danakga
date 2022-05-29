@@ -61,11 +61,20 @@ public class BoardController {
 
     //게시글 수정
     @PutMapping(value = "/post/edit/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Long postEdit(@PathVariable(value = "id") Long id,
+    public ResResultDto postEdit(@PathVariable(value = "id") Long id,
                          @LoginUser UserInfo userInfo,
                          @RequestPart(value = "keys") ReqBoardDto reqBoardDto,
                          @RequestPart(value = "images", required = false) List<MultipartFile> files) {
-        return boardService.postEdit(id, userInfo, reqBoardDto, files);
+
+        Long result = boardService.postEdit(id, userInfo, reqBoardDto, files);
+        
+        if(result.equals(-2L)) {
+            return new ResResultDto(result, "게시글 수정에 실패 했습니다(이미지 업로드 오류)");
+        } else if(result.equals(-1L)) {
+            return new ResResultDto(result, "게시글 수정에 실패 했습니다");
+        } else {
+            return new ResResultDto(result, "게시글을 수정 했습니다.");
+        }
     }
 
     @PutMapping("/post/delete/{id}")

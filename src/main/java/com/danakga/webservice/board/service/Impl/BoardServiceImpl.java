@@ -18,12 +18,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -159,8 +161,7 @@ public class BoardServiceImpl implements BoardService {
                             .build()
             );
             return board.getBdId();
-        }
-        else if(!CollectionUtils.isEmpty(files)) {
+        } else if(!CollectionUtils.isEmpty(files)) {
 
             for(MultipartFile multipartFile : files) {
 
@@ -181,7 +182,6 @@ public class BoardServiceImpl implements BoardService {
                         if(!filesService.saveFileUpload(files, board).equals(1L)) {
                             return -2L;
                         }
-
                         return board.getBdId();
                     }
                 }
@@ -191,13 +191,91 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
+
     //게시글 수정
+    @Transactional
     @Override
     public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files) {
-        return null;
+
+        if(userRepository.findById(userInfo.getId()).isEmpty()){
+            return -1L;
+        }
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+
+        if(boardRepository.findById(id).isEmpty()) {
+            return -1L;
+        }
+        Board board = boardRepository.findById(id).get();
+        List<Board_Files> boardFiles = fileRepository.findByBoard(board);
+
+        //제목, 내용만 있는 게시글 수정
+        if(CollectionUtils.isEmpty(files)) {
+                boardRepository.save(
+                        board = Board.builder()
+                                .bdId(id)
+                                .bdType(reqBoardDto.getBdType())
+                                .bdWriter(recentUserInfo.getUserid())
+                                .bdTitle(reqBoardDto.getBdTitle())
+                                .bdContent(reqBoardDto.getBdContent())
+                                .bdDeleted(board.getBdDeleted())
+                                .bdCreated(board.getBdCreated())
+                                .userInfo(recentUserInfo)
+                                .build()
+                );
+                return board.getBdId();
+
+            } else if(!CollectionUtils.isEmpty(files)) {
+
+            //파일까지 있는 게시글 수정, 제목내용만 있는 게시글에 파일 추가 한 게시글 수정
+            //db와 files에 있는 사진을 삭제 후 다시 업로드 하는 방식
+            List<String> saveFileName = new ArrayList<>();
+
+            for(Board_Files board_Files : boardFiles) {
+                saveFileName.add(board_Files.getFSaveName());
+                System.out.println(saveFileName);
+            }
+
+            for(MultipartFile multipartFile : files) {
+
+                //확장자 체크를 위해 있어야 함
+                String originFileName = multipartFile.getOriginalFilename().toLowerCase();
+                
+                //파일 경로 + 파일명으로 파일 있는지 검사 후 삭제
+                for (String sFileName : saveFileName) {
+
+                    File file = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + sFileName);
+
+                    //폴더 내 파일 있는지 검사 후 파일 삭제(db, files)하고 재 업로드
+                    if (file.exists()) {
+                        System.out.println("파일 있음 = " + file);
+                        if (file.delete()) {
+                            fileRepository.deleteAllByBoard(board);
+                        } else {
+                            if(originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
+                                System.out.println("파일 없음 = " + file);
+                                boardRepository.save(
+                                        board = Board.builder()
+                                                .bdType(reqBoardDto.getBdType())
+                                                .bdWriter(recentUserInfo.getUserid())
+                                                .bdTitle(reqBoardDto.getBdTitle())
+                                                .bdContent(reqBoardDto.getBdContent())
+                                                .userInfo(recentUserInfo)
+                                                .build()
+                                );
+                                if(!filesService.saveFileUpload(files, board).equals(1L)) {
+                                    return -2L;
+                                }
+                                return board.getBdId();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return -1L;
     }
 
-    //게시글 삭제여부 변경
+    //게시글 삭제 여부 변경
     @Override
     public Long postDelete(Long id, UserInfo userInfo) {
 
@@ -206,6 +284,7 @@ public class BoardServiceImpl implements BoardService {
 
             Board board = boardRepository.findById(id).get();
 
+            //deleted 값 변경
             boardRepository.updateDeleted(id);
 
             return board.getBdId();
