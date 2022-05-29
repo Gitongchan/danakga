@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 public class CompanyServiceImpl implements CompanyService {
     @Autowired private final CompanyRepository companyRepository;
     @Autowired private final UserRepository userRepository;
-    @Autowired private final UserService userService;
 
     //업체명 중복 체크
     @Override
@@ -81,8 +80,9 @@ public class CompanyServiceImpl implements CompanyService {
     //사업자 정보 수정
     @Override
     public Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
-        if(companyRepository.findByUserInfo(userInfo).isPresent()){
-
+        if(companyRepository.findByUserInfo(userInfo).isEmpty()){
+            return -1L;
+        }
             CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
                     ()->CompanyInfo.builder().build()
             );
@@ -101,8 +101,6 @@ public class CompanyServiceImpl implements CompanyService {
                             .build()
             );
             return updateCompanyInfo.getCompanyId();
-        }
-        else return -1L;
     }
 
     //사업자 회사 정보 조회
@@ -140,7 +138,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .userLotAdr(comUserInfo.getUserLotAdr())
                             .userStreetAdr(comUserInfo.getUserStreetAdr())
                             .userDetailAdr(comUserInfo.getUserDetailAdr())
-                            .userEnabled(false)
+                            .userEnabled(comUserInfo.isUserEnabled())
                             .role(UserRole.ROLE_USER)
                             .build()
             );

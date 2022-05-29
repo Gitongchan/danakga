@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
         userInfoDto.setUserEnabled(false);//사용자 이용 중지
 
-        if(!userInfo.getRole().equals("ROLE_USER")) return -2L;
+        if(!userInfo.getRole().equals(UserRole.ROLE_USER)) return -2L;
 
         if (userRepository.findById(userInfo.getId()).isPresent()
                 && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
