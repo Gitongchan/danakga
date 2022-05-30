@@ -7,23 +7,13 @@ fetch(`/api/board/list/자유게시판?page=0`)
         for(let datalist in data){
             const item = data[datalist];
             const tr = document.createElement('tr');
-            const bdid = document.createElement('td');
-            const bdtitle = document.createElement('td');
-            const bdwriter = document.createElement('td');
-            const bddate = document.createElement('td');
-            const bdviews = document.createElement('td');
+            tr.innerHTML =
+                `<td>${item.bdId}</td>
+                 <td><a href="/blog?boardid=${item.bdId}">${item.bdTitle}</a></td>
+                 <td>${item.bdWriter}</td>
+                 <td>${item.bdCreated.split('.')[0]}</td>
+                 <td>${item.bdViews}</td>`
 
-            bdid.innerText = item.bdId;
-            bdtitle.innerText = item.bdTitle;
-            bdwriter.innerText = item.bdWriter;
-            bddate.innerText = item.bdCreated.split('.')[0];
-            bdviews.innerText = item.bdViews;
-
-            tr.appendChild(bdid);
-            tr.appendChild(bdtitle);
-            tr.appendChild(bdwriter);
-            tr.appendChild(bddate);
-            tr.appendChild(bdviews);
             tablelist.appendChild(tr);
         }
         // (function() {

@@ -77,7 +77,6 @@ function renderPagination(currentPage) {
                 id.addEventListener('click', function(e) {
                     e.preventDefault();
                     let item = e.target;
-                    console.log(item);
                     let id = item.id;
                     let selectedPage = item.innerText;
 
@@ -104,26 +103,16 @@ function onList(e){
         .then((res)=>res.json())
         .then((data)=>{
             tablelist.innerHTML="";
+            console.log(data);
             for(let datalist in data){
                 const item = data[datalist];
                 const tr = document.createElement('tr');
-                const bdid = document.createElement('td');
-                const bdtitle = document.createElement('td');
-                const bdwriter = document.createElement('td');
-                const bddate = document.createElement('td');
-                const bdviews = document.createElement('td');
-
-                bdid.innerText = item.bdId;
-                bdtitle.innerText = item.bdTitle;
-                bdwriter.innerText = item.bdWriter;
-                bddate.innerText = item.bdCreated.split('.')[0];
-                bdviews.innerText = item.bdViews;
-
-                tr.appendChild(bdid);
-                tr.appendChild(bdtitle);
-                tr.appendChild(bdwriter);
-                tr.appendChild(bddate);
-                tr.appendChild(bdviews);
+                tr.innerHTML =
+                    `<td>${item.bdId}</td>
+                     <td><a href="/blog?boardid=${item.bdId}">${item.bdTitle}</a></td>
+                     <td>${item.bdWriter}</td>
+                     <td>${item.bdCreated.split('.')[0]}</td>
+                     <td>${item.bdViews}</td>`
                 tablelist.appendChild(tr);
             }
         })

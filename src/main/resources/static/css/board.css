@@ -11,6 +11,12 @@
     justify-content: center;
     height: 100px;
 }
+
+#boardtable{
+    width: 100%;
+}
+
+
 /*li {*/
 /*     list-style: none;*/
 /* }*/
