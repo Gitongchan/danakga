@@ -1,6 +1,8 @@
 package com.danakga.webservice.product.dto.request;
 
 import com.danakga.webservice.company.model.CompanyInfo;
+import com.danakga.webservice.product.model.Product;
+import com.danakga.webservice.product.model.type.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,12 +21,7 @@ public class ProductDto {
     private CompanyInfo productCompanyId;
 
     //상품종류
-    //추후에 변경예정
-    private String productType;
-
-    //브랜드
-    //추후 변경예정
-    private String productBrand;
+    private ProductType productType;
 
     //상품상태
     private String productState;

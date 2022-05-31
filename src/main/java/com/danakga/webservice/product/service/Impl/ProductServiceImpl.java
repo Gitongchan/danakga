@@ -41,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.save(
                     Product.builder()
                             .productCompanyId(uploadCompany)
-                            .productBrand(productDto.getProductBrand())
                             .productContent(productDto.getProductContent())
                             .productName(productDto.getProductName())
                             .productPhoto(null)
@@ -68,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
                         Product product = productRepository.save(
                                 Product.builder()
                                         .productCompanyId(uploadCompany)
-                                        .productBrand(productDto.getProductBrand())
                                         .productContent(productDto.getProductContent())
                                         .productName(productDto.getProductName())
                                         .productPhoto(productDto.getProductPhoto())
