@@ -36,10 +36,6 @@ public class Product {
     @Column(name = "pd_brand")
     private String productBrand;
 
-    //상품상태(판매중,품절)
-    @Column(name = "pd_state")
-    private String productState;
-
     //상품명
     @Column(name = "pd_name")
     private String productName;
