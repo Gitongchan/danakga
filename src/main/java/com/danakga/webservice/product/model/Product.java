@@ -1,7 +1,6 @@
 package com.danakga.webservice.product.model;
 
 import com.danakga.webservice.company.model.CompanyInfo;
-import com.danakga.webservice.product.model.type.ProductType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,12 +27,14 @@ public class Product {
     @JoinColumn(name="pd_com_id")
     private CompanyInfo productCompanyId;
 
-    //상품종류
-    //변경예정
-    @ManyToOne
-    @JoinColumn(name = "pd_type")
-    private ProductType productType;
+    @Column(name = "pd_type")
+    private String productType;
 
+    @Column(name = "pd_sub_type")
+    private String productSubType;
+
+    @Column(name = "pd_brand")
+    private String productBrand;
 
     //상품상태(판매중,품절)
     @Column(name = "pd_state")
@@ -72,13 +73,16 @@ public class Product {
     private Integer productOrderCount;
 
     @Builder
-    public Product(Long productId, CompanyInfo productCompanyId, ProductType productType, String productBrand,
-                   String productState,String productName, String productPhoto, String productContent,
+    public Product(Long productId, CompanyInfo productCompanyId, String productType,
+                   String productSubType, String productBrand, String productState,
+                   String productName, String productPhoto, String productContent,
                    String productPrice, Integer productStock, LocalDateTime productUploadDate,
                    Integer productViewCount, Integer productOrderCount) {
         this.productId = productId;
         this.productCompanyId = productCompanyId;
         this.productType = productType;
+        this.productSubType = productSubType;
+        this.productBrand = productBrand;
         this.productState = productState;
         this.productName = productName;
         this.productPhoto = productPhoto;
