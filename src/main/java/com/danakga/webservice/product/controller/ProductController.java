@@ -2,10 +2,13 @@ package com.danakga.webservice.product.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.product.dto.request.ProductDto;
+import com.danakga.webservice.product.dto.request.ProductSearchDto;
+import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.product.service.ProductService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +22,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    //상품등록
     @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto productUpload(@LoginUser UserInfo userInfo,
                                       @RequestPart(value = "product") ProductDto productDto,
@@ -36,5 +40,12 @@ public class ProductController {
             return new ResResultDto(result,"상품등록 성공.");
         }
 
+    }
+    
+    //상품 리스트
+    @GetMapping("/list")
+    public List<ResProductListDto> productList(Pageable pageable,
+                                               @RequestBody ProductSearchDto productSearchDto, int page) {
+        return null;
     }
 }

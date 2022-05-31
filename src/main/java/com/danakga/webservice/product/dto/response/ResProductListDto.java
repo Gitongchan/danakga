@@ -1,22 +1,19 @@
-package com.danakga.webservice.product.dto.request;
+package com.danakga.webservice.product.dto.response;
 
 import com.danakga.webservice.company.model.CompanyInfo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.danakga.webservice.product.model.Product;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
-public class ProductDto {
+@NoArgsConstructor
+public class ResProductListDto {
 
     //상품번호, 상품아이디
     private Long productId;
-
-    //사업자 등록 번호
-    private CompanyInfo productCompanyId;
 
     //상품 종류
     private String productType;
@@ -29,19 +26,16 @@ public class ProductDto {
 
     //상품명
     private String productName;
-    
+
     //상품대표사진
     private String productPhoto;
-    
-    //상품내용
-    private String productContent;
-    
+
     //가격
     private String productPrice;
-    
+
     //재고
     private Integer productStock;
-    
+
     //상품등록일
     private LocalDateTime productUploadDate;
 
@@ -50,4 +44,9 @@ public class ProductDto {
 
     //누적구매수
     private Integer productOrderCount;
+
+    private int totalPage;
+
+    private long totalElement;
+
 }
