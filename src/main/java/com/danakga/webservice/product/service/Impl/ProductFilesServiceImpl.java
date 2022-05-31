@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,6 @@ public class ProductFilesServiceImpl implements ProductFilesService {
 
         //파일 저장 경로
         String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_files\\";
-        String thumbNailPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail\\";
 
         //파일 저장되는 폳더 없으면 생성
         if(!new File(savePath).exists()) {
@@ -44,6 +45,8 @@ public class ProductFilesServiceImpl implements ProductFilesService {
             }
         }
 
+        String thumbNailPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail\\";
+
         //파일 저장되는 폳더 없으면 생성
         if(!new File(thumbNailPath).exists()) {
             try{
@@ -52,44 +55,6 @@ public class ProductFilesServiceImpl implements ProductFilesService {
                 e2.getStackTrace();
             }
         }
-
-        MultipartFile thumbNailFile = files.get(0);
-
-            //파일명 소문자로 추출
-            String originThumbFileName = thumbNailFile.getOriginalFilename().toLowerCase();
-
-            //UUID로 파일명 중복되지 않게 유일한 식별자 + 확장자로 저장
-            UUID uuidThumb = UUID.randomUUID();
-            String saveThumbFileName = uuidThumb + "__" + originThumbFileName;
-
-            //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-            String thumbFilepath = thumbNailPath + "\\" + saveThumbFileName;
-
-            System.out.println(thumbFilepath);
-            try {
-                thumbNailFile.transferTo(new File(thumbFilepath));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //대표 사진 경로 추가를 위해 업데이트
-        productRepository.save(
-                Product.builder()
-                        .productId(product.getProductId())
-                        .productCompanyId(product.getProductCompanyId())
-                        .productBrand(product.getProductBrand())
-                        .productContent(product.getProductContent())
-                        .productName(product.getProductName())
-                        .productPhoto(thumbFilepath)
-                        .productPrice(product.getProductPrice())
-                        .productState(product.getProductState())
-                        .productStock(product.getProductStock())
-                        .productUploadDate(LocalDateTime.now())
-                        .productType(product.getProductType())
-                        .productOrderCount(product.getProductOrderCount())
-                        .productViewCount(product.getProductViewCount())
-                        .build()
-        );
-
 
         // 다중 파일 처리
         // multipartfile : files  files에서 더 꺼낼게 없을 때 까지 multipartfile에 담아줌
@@ -119,6 +84,25 @@ public class ProductFilesServiceImpl implements ProductFilesService {
                             .pf_savename(saveFileName)
                             .build()
             ).getPf_id();
+
+            //첫번째 파일이 들어오면 복사해서 썸네일 폴더에도 추가해준다.
+            //썸네일 폴더로 추가한 파일경로를 대표 이미지로 지정해준다.
+            if(multipartFile == files.get(0)){
+                String filePathThumb = thumbNailPath+"\\"+saveFileName;
+
+                File file = new File(filepath);   //product files 로 들어온 첫번째 이미지
+                File copyFile = new File(filePathThumb); //썸네일 폴더 경로에 복사해서 추가함
+
+                try {
+                    Files.copy(file.toPath(),copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                //대표 사진 경로 추가를 위해 업데이트
+                productRepository.updateProductMainPhoto(filePathThumb,product.getProductId());
+            }
+
 
         }
         return pf_id;

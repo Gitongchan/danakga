@@ -1,6 +1,5 @@
 package com.danakga.webservice.product.model;
 
-import com.danakga.webservice.board.model.Board;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +17,7 @@ public class ProductFiles {
     //상품 파일 아이디
     @Id
     @GeneratedValue
+    @Column(name="pf_id")
     private Long pf_id;
 
     //상품 아이디

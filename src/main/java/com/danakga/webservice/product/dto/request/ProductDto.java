@@ -18,12 +18,13 @@ public class ProductDto {
     //사업자 등록 번호
     private CompanyInfo productCompanyId;
 
-    //상품종류
-    //추후에 변경예정
+    //상품 종류
     private String productType;
 
-    //브랜드
-    //추후 변경예정
+    //상품 서브 종류
+    private String productSubType;
+
+    //상품 브랜드
     private String productBrand;
 
     //상품상태

@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProductService {
 
     Long productUpload(UserInfo userInfo, ProductDto productDto, List<MultipartFile> files);
+
 }

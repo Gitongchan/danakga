@@ -3,17 +3,14 @@ package com.danakga.webservice.user.service.Impl;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
-import com.danakga.webservice.company.service.CompanyService;
-import com.danakga.webservice.company.service.Impl.CompanyServiceImpl;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
-import com.danakga.webservice.user.dto.response.ResUserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,13 +43,13 @@ public class UserServiceImpl implements UserService {
         String rawPassword = userInfoDto.getPassword();
         userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
 
-        //임시로 권한 USER로 지정
-        userInfoDto.setRole("ROLE_USER");
-        userInfoDto.setUserEnabled(true);
+
+
 
         //중복 id,email 검증
         Integer idCheckResult = userIdCheck(userInfoDto.getUserid());
         Integer emailCheckResult = emailCheck(userInfoDto.getEmail());
+
         if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
             return -1L;
         }
@@ -63,12 +60,12 @@ public class UserServiceImpl implements UserService {
                         .name(userInfoDto.getName())
                         .phone(userInfoDto.getPhone())
                         .email(userInfoDto.getEmail())
-                        .role(userInfoDto.getRole())
+                        .role(UserRole.ROLE_USER)//임시로 권한 USER로 지정
                         .userAdrNum(userInfoDto.getUserAdrNum())
                         .userLotAdr(userInfoDto.getUserLotAdr())
                         .userStreetAdr(userInfoDto.getUserStreetAdr())
                         .userDetailAdr(userInfoDto.getUserDetailAdr())
-                        .userEnabled(userInfoDto.isUserEnabled())
+                        .userEnabled(true)
                         .build()
         ).getId();
     }
@@ -136,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
         userInfoDto.setUserEnabled(false);//사용자 이용 중지
 
-        if(!userInfo.getRole().equals("ROLE_USER")) return -2L;
+        if(!userInfo.getRole().equals(UserRole.ROLE_USER)) return -2L;
 
         if (userRepository.findById(userInfo.getId()).isPresent()
                 && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
@@ -183,16 +180,11 @@ public class UserServiceImpl implements UserService {
         if(companyRepository.findByUserInfo(userInfo).isPresent()){
             return -1L;//가입된 유저 정보 있으면 -1L
         }
-        if(companyRepository.findByUserInfo(userInfo).isPresent()){
-            return -2L; //이미 등록된 사업자 일 때
-        }
 
         if(userRepository.findById(userInfo.getId()).isPresent()){
 
             UserInfo registerUserInfo = userRepository.findById(userInfo.getId()).get();
 
-            userInfoDto.setRole("ROLE_MANAGER"); // 권한 MANAGER로 변경
-            companyInfoDto.setCompanyEnabled(true); // 사업자 서비스 이용 가능
 
             userRepository.save(
                     UserInfo.builder()
@@ -202,7 +194,7 @@ public class UserServiceImpl implements UserService {
                             .name(registerUserInfo.getName())
                             .phone(registerUserInfo.getPhone())
                             .email(registerUserInfo.getEmail())
-                            .role(userInfoDto.getRole())
+                            .role(UserRole.ROLE_MANAGER)
                             .userAdrNum(registerUserInfo.getUserAdrNum())
                             .userStreetAdr(registerUserInfo.getUserStreetAdr())
                             .userLotAdr(registerUserInfo.getUserLotAdr())
@@ -221,7 +213,7 @@ public class UserServiceImpl implements UserService {
                             .companyStreetAdr(companyInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
                             .companyBanknum(companyInfoDto.getCompanyBanknum())
-                            .companyEnabled(companyInfoDto.isCompanyEnabled())
+                            .companyEnabled(true)
                             .build()
             );            return registerUserInfo.getId();
 
@@ -248,10 +240,6 @@ public class UserServiceImpl implements UserService {
 
 
         if (!restoreComUserInfo.isCompanyEnabled()) {
-            userInfoDto.setRole("ROLE_MANAGER");
-            companyInfoDto.setCompanyEnabled(true);
-            companyInfoDto.setCompanyDeletedDate(null);
-
             userRepository.save(
                     UserInfo.builder()
                             .id(restoreUserInfo.getId())
@@ -260,7 +248,7 @@ public class UserServiceImpl implements UserService {
                             .name(restoreUserInfo.getName())
                             .phone(restoreUserInfo.getPhone())
                             .email(restoreUserInfo.getEmail())
-                            .role(userInfoDto.getRole())
+                            .role(UserRole.ROLE_MANAGER)
                             .userAdrNum(restoreUserInfo.getUserAdrNum())
                             .userStreetAdr(restoreUserInfo.getUserStreetAdr())
                             .userLotAdr(restoreUserInfo.getUserLotAdr())
@@ -279,8 +267,8 @@ public class UserServiceImpl implements UserService {
                             .companyStreetAdr(restoreComUserInfo.getCompanyStreetAdr())
                             .companyDetailAdr(restoreComUserInfo.getCompanyDetailAdr())
                             .companyBanknum(restoreComUserInfo.getCompanyBanknum())
-                            .companyEnabled(companyInfoDto.isCompanyEnabled())
-                            .companyDeltedDate(companyInfoDto.getCompanyDeletedDate())
+                            .companyEnabled(true)
+                            .companyDeltedDate(null)
                             .build()
             );
             return restoreUserInfo.getId();
