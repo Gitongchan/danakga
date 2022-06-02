@@ -28,24 +28,25 @@ public class BoardController {
 
     //게시판 목록,구분,페이징
     @GetMapping("/list/{type}")
-    public List<ResBoardListDto> boardList(Pageable pageable, @PathVariable("type") String board_type, int page) {
+    public List<ResBoardListDto> boardList(Pageable pageable,
+                                           @PathVariable("type")
+                                           String board_type, int page) {
         return boardService.boardList(pageable, board_type, page);
     }
 
     //게시글 조회
     @GetMapping("/post/{id}")
     public ResBoardPostDto getpost(@PathVariable("id") Long id,
-                                   HttpServletRequest request,
-                                   HttpServletResponse response
+                                   HttpServletRequest request, HttpServletResponse response
                                    ) {
         return boardService.getPost(id, request, response);
     }
 
     //게시글 작성
-    @PostMapping(value = "/postwrite", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/post/write", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto postWrite(@LoginUser UserInfo userInfo,
-                              @Valid @RequestPart(value="keys") ReqBoardDto reqBoardDto,
-                              @RequestPart(value = "images", required = false) List<MultipartFile> files) {
+                                  @Valid @RequestPart(value="keys") ReqBoardDto reqBoardDto,
+                                  @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 작성 로직 실행
         Long result = boardService.postWrite(reqBoardDto, userInfo, files);
@@ -62,10 +63,11 @@ public class BoardController {
     //게시글 수정
     @PutMapping(value = "/post/edit/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto postEdit(@PathVariable(value = "id") Long id,
-                         @LoginUser UserInfo userInfo,
-                         @RequestPart(value = "keys") ReqBoardDto reqBoardDto,
-                         @RequestPart(value = "images", required = false) List<MultipartFile> files) {
+                                 @LoginUser UserInfo userInfo,
+                                 @RequestPart(value = "keys") ReqBoardDto reqBoardDto,
+                                 @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
+        //게시글 수정 로직 실행
         Long result = boardService.postEdit(id, userInfo, reqBoardDto, files);
         
         if(result.equals(-2L)) {
@@ -78,8 +80,10 @@ public class BoardController {
     }
 
     @PutMapping("/post/delete/{id}")
-    public ResResultDto postDelete(@PathVariable(value = "id") Long id, @LoginUser UserInfo userInfo) {
+    public ResResultDto postDelete(@PathVariable(value = "id") Long id,
+                                   @LoginUser UserInfo userInfo) {
 
+        //게시글 삭제 여부 변경 로직 실행
         Long result = boardService.postDelete(id, userInfo);
 
         return result == -1L ?

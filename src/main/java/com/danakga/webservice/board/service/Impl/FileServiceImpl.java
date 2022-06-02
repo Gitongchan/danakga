@@ -24,7 +24,7 @@ public class FileServiceImpl implements FilesService {
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
         //파일 저장 경로
-        String savepath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\";
+        String savepath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
 
         //파일 저장되는 폳더 없으면 생성
         if (!new File(savepath).exists()) {
@@ -56,9 +56,9 @@ public class FileServiceImpl implements FilesService {
 
             fileRepository.save(
                     Board_Files.builder()
-                            .fSaveName(saveFileName)
-                            .fOrigin(originFileName)
-                            .fPath(filepath)
+                            .fileSaveName(saveFileName)
+                            .fileOrigin(originFileName)
+                            .fileOrigin(filepath)
                             .board(board)
                             .build()
             );

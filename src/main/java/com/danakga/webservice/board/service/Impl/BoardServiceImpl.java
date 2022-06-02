@@ -35,10 +35,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired private final BoardRepository boardRepository;
-    @Autowired private final FileRepository fileRepository;
-    @Autowired private final FilesService filesService;
-    @Autowired private final UserRepository userRepository;
+    @Autowired
+    private final BoardRepository boardRepository;
+    @Autowired
+    private final FileRepository fileRepository;
+    @Autowired
+    private final FilesService filesService;
+    @Autowired
+    private final UserRepository userRepository;
     private Board board;
 
     //게시판 목록
@@ -54,13 +58,13 @@ public class BoardServiceImpl implements BoardService {
 
         boards.forEach(entity -> {
             ResBoardListDto listDto = new ResBoardListDto();
-                listDto.setBdId(entity.getBdId());
-                listDto.setBdTitle(entity.getBdTitle());
-                listDto.setBdWriter(entity.getBdWriter());
-                listDto.setBdCreated(entity.getBdCreated());
-                listDto.setBdViews(entity.getBdViews());
-                listDto.setBdDeleted(entity.getBdDeleted());
-                boardListDto.add(listDto);
+            listDto.setBdId(entity.getBdId());
+            listDto.setBdTitle(entity.getBdTitle());
+            listDto.setBdWriter(entity.getBdWriter());
+            listDto.setBdCreated(entity.getBdCreated());
+            listDto.setBdViews(entity.getBdViews());
+            listDto.setBdDeleted(entity.getBdDeleted());
+            boardListDto.add(listDto);
         });
         return boardListDto;
     }
@@ -90,8 +94,8 @@ public class BoardServiceImpl implements BoardService {
 
         //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 id가 없다면 조회수 증가
         //그리고 해당 게시글 id에 대한 쿠키를 다시 담아서 보냄
-        if(oldCookie != null) {
-            if(!oldCookie.getValue().contains("[" + id.toString() + "]")) {
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + id.toString() + "]")) {
                 boardRepository.updateView(id);
                 oldCookie.setValue(oldCookie.getValue() + "[" + id + "]");
                 oldCookie.setPath("/");
@@ -109,19 +113,18 @@ public class BoardServiceImpl implements BoardService {
         }
 
 
-
         //Map을 List에 넣어서 여러개를 받을 수 있게 함
         List<Map<String, Object>> mapFiles = new ArrayList<>();
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
         //개별 게시글 값 set
-            resBoardPostDto.setBdId(boardWrapper.getBdId());
-            resBoardPostDto.setBdWriter(boardWrapper.getBdWriter());
-            resBoardPostDto.setBdTitle(boardWrapper.getBdTitle());
-            resBoardPostDto.setBdContent(boardWrapper.getBdContent());
-            resBoardPostDto.setBdCreated(boardWrapper.getBdCreated());
-            resBoardPostDto.setBdModified(boardWrapper.getBdModified());
-            resBoardPostDto.setBdViews(boardWrapper.getBdViews());
+        resBoardPostDto.setBdId(boardWrapper.getBdId());
+        resBoardPostDto.setBdWriter(boardWrapper.getBdWriter());
+        resBoardPostDto.setBdTitle(boardWrapper.getBdTitle());
+        resBoardPostDto.setBdContent(boardWrapper.getBdContent());
+        resBoardPostDto.setBdCreated(boardWrapper.getBdCreated());
+        resBoardPostDto.setBdModified(boardWrapper.getBdModified());
+        resBoardPostDto.setBdViews(boardWrapper.getBdViews());
 
         //file 정보 값 set
         //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
@@ -129,12 +132,12 @@ public class BoardServiceImpl implements BoardService {
         //Map.put() == List.add() 와 같은 기능
         //Map에 담긴 값을 Dto에 선언했던 Lise<Map<?,?>>에 담아줌
         //for(Board_Files board_files : files) {} 으로도 가능
-            files.forEach(entity -> {
-                Map<String, Object> filesmap = new HashMap<>();
-                filesmap.put("file_name",entity.getFSaveName());
-                filesmap.put("file_path",entity.getFPath());
-                mapFiles.add(filesmap);
-            });
+        files.forEach(entity -> {
+            Map<String, Object> filesmap = new HashMap<>();
+            filesmap.put("file_name", entity.getFileSaveName());
+            filesmap.put("file_path", entity.getFilePath());
+            mapFiles.add(filesmap);
+        });
         resBoardPostDto.setFiles(mapFiles);
 
         return resBoardPostDto;
@@ -143,14 +146,14 @@ public class BoardServiceImpl implements BoardService {
     //게시글 작성
     @Override
     public Long postWrite(ReqBoardDto reqBoardDto,
-                      UserInfo userInfo, List<MultipartFile> files) {
+                          UserInfo userInfo, List<MultipartFile> files) {
 
-        if(userRepository.findById(userInfo.getId()).isEmpty()){
+        if (userRepository.findById(userInfo.getId()).isEmpty()) {
             return -1L;
         }
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
-        if(CollectionUtils.isEmpty(files)) {
+        if (CollectionUtils.isEmpty(files)) {
             boardRepository.save(
                     board = Board.builder()
                             .bdType(reqBoardDto.getBdType())
@@ -161,35 +164,30 @@ public class BoardServiceImpl implements BoardService {
                             .build()
             );
             return board.getBdId();
-        } else if(!CollectionUtils.isEmpty(files)) {
-
-            for(MultipartFile multipartFile : files) {
+        } else
+            for (MultipartFile multipartFile : files) {
 
                 String originFileName = multipartFile.getOriginalFilename().toLowerCase();
 
                 //List에 값이 있으면 saveFileUpload 실행
-                if (!CollectionUtils.isEmpty(files)) {
-                    if(originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
-                        boardRepository.save(
-                                board = Board.builder()
-                                        .bdType(reqBoardDto.getBdType())
-                                        .bdWriter(recentUserInfo.getUserid())
-                                        .bdTitle(reqBoardDto.getBdTitle())
-                                        .bdContent(reqBoardDto.getBdContent())
-                                        .userInfo(recentUserInfo)
-                                        .build()
-                        );
-                        if(!filesService.saveFileUpload(files, board).equals(1L)) {
-                            return -2L;
-                        }
-                        return board.getBdId();
+                if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
+                    boardRepository.save(
+                            board = Board.builder()
+                                    .bdType(reqBoardDto.getBdType())
+                                    .bdWriter(recentUserInfo.getUserid())
+                                    .bdTitle(reqBoardDto.getBdTitle())
+                                    .bdContent(reqBoardDto.getBdContent())
+                                    .userInfo(recentUserInfo)
+                                    .build()
+                    );
+                    if (!filesService.saveFileUpload(files, board).equals(1L)) {
+                        return -2L;
                     }
+                    return board.getBdId();
                 }
             }
-        }
         return -1L;
     }
-
 
 
     //게시글 수정
@@ -197,90 +195,62 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files) {
 
-        if(userRepository.findById(userInfo.getId()).isEmpty()){
+        if (userRepository.findById(userInfo.getId()).isEmpty()) {
             return -1L;
         }
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
-        if(boardRepository.findById(id).isEmpty()) {
+        if (boardRepository.findById(id).isEmpty()) {
             return -1L;
         }
         Board board = boardRepository.findById(id).get();
         List<Board_Files> boardFiles = fileRepository.findByBoard(board);
 
-        //제목, 내용만 있는 게시글 수정
-        if(CollectionUtils.isEmpty(files)) {
-                boardRepository.save(
-                        board = Board.builder()
-                                .bdId(id)
-                                .bdType(reqBoardDto.getBdType())
-                                .bdWriter(recentUserInfo.getUserid())
-                                .bdTitle(reqBoardDto.getBdTitle())
-                                .bdContent(reqBoardDto.getBdContent())
-                                .bdDeleted(board.getBdDeleted())
-                                .bdCreated(board.getBdCreated())
-                                .userInfo(recentUserInfo)
-                                .build()
-                );
-                return board.getBdId();
+        //db에서 불러온 파일 저장하기 위한 List
+        List<String> saveFileName = new ArrayList<>();
 
-            } else if(!CollectionUtils.isEmpty(files)) {
+        for (Board_Files board_Files : boardFiles) {
+            saveFileName.add(board_Files.getFileSaveName());
+            System.out.println(saveFileName);
+        }
 
-            //파일까지 있는 게시글 수정, 제목내용만 있는 게시글에 파일 추가 한 게시글 수정
-            //db와 files에 있는 사진을 삭제 후 다시 업로드 하는 방식
-            List<String> saveFileName = new ArrayList<>();
+        //파일 없이 제목과 내용만 수정
+        if (CollectionUtils.isEmpty(files)) {
+            boardRepository.save(
+                    board = Board.builder()
+                            .bdId(id)
+                            .bdType(reqBoardDto.getBdType())
+                            .bdWriter(recentUserInfo.getUserid())
+                            .bdTitle(reqBoardDto.getBdTitle())
+                            .bdContent(reqBoardDto.getBdContent())
+                            .bdDeleted(board.getBdDeleted())
+                            .bdCreated(board.getBdCreated())
+                            .userInfo(recentUserInfo)
+                            .build()
+            );
+            return board.getBdId();
+        }
 
-            for(Board_Files board_Files : boardFiles) {
-                saveFileName.add(board_Files.getFSaveName());
-                System.out.println(saveFileName);
-            }
+        //파일과 같이 제목, 내용을 수정
+        //폴더 안에 files 에 담겨온 파일이 없으면 삭제, db 명과 같은지 확인 하고 삭제 or 추가
+        if (!CollectionUtils.isEmpty(files)) {
+            for (MultipartFile multipartFile : files) {
 
-            for(MultipartFile multipartFile : files) {
+                String originFileName = multipartFile.getName();
+                File folderFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files" + saveFileName);
 
-                //확장자 체크를 위해 있어야 함
-                String originFileName = multipartFile.getOriginalFilename().toLowerCase();
-                
-                //파일 경로 + 파일명으로 파일 있는지 검사 후 삭제
-                for (String sFileName : saveFileName) {
-
-                    File file = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + sFileName);
-
-                    //폴더 내 파일 있는지 검사 후 파일 삭제(db, files)하고 재 업로드
-                    if (file.exists()) {
-                        System.out.println("파일 있음 = " + file);
-                        if (file.delete()) {
-                            fileRepository.deleteAllByBoard(board);
-                        } else {
-                            if(originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
-                                System.out.println("파일 없음 = " + file);
-                                boardRepository.save(
-                                        board = Board.builder()
-                                                .bdType(reqBoardDto.getBdType())
-                                                .bdWriter(recentUserInfo.getUserid())
-                                                .bdTitle(reqBoardDto.getBdTitle())
-                                                .bdContent(reqBoardDto.getBdContent())
-                                                .userInfo(recentUserInfo)
-                                                .build()
-                                );
-                                if(!filesService.saveFileUpload(files, board).equals(1L)) {
-                                    return -2L;
-                                }
-                                return board.getBdId();
-                            }
-                        }
-                    }
-                }
             }
         }
         return -1L;
     }
 
     //게시글 삭제 여부 변경
+    @Transactional
     @Override
     public Long postDelete(Long id, UserInfo userInfo) {
 
         //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
-        if(boardRepository.findById(id).isPresent()) {
+        if (boardRepository.findById(id).isPresent()) {
 
             Board board = boardRepository.findById(id).get();
 

@@ -14,27 +14,27 @@ public class Board_Files {
 
     @Id @GeneratedValue
     @Column(name = "f_id")
-    private Long fId;
+    private Long fileId;
 
     @Column(name="f_origin")
-    private String fOrigin;
+    private String fileOrigin;
 
     @Column(name="f_savename")
-    private String fSaveName;
+    private String fileSaveName;
 
     @Column(name="f_path")
-    private String fPath;
+    private String filePath;
 
     @ManyToOne
     @JoinColumn(name = "bd_id")
     private Board board;
 
     @Builder
-    public Board_Files(Long fId, String fOrigin, String fSaveName, String fPath, Board board) {
-        this.fId = fId;
-        this.fOrigin = fOrigin;
-        this.fSaveName = fSaveName;
-        this.fPath = fPath;
+    public Board_Files(Long fileId, String fileOrigin, String fileSaveName, String filePath, Board board) {
+        this.fileId = fileId;
+        this.fileOrigin = fileOrigin;
+        this.fileSaveName = fileSaveName;
+        this.filePath = filePath;
         this.board = board;
     }
 
