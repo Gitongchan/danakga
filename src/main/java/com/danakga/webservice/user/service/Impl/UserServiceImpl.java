@@ -130,12 +130,9 @@ public class UserServiceImpl implements UserService {
     //회원 탈퇴
     @Override
     @Transactional
-    public Long userDeleted(UserInfo userInfo, UserInfoDto userInfoDto) {
+    public Long userDeleted(UserInfo userInfo, String password) {
+
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
-        userInfoDto.setUserEnabled(false);//사용자 이용 중지
-
-        if(!userInfo.getRole().equals(UserRole.ROLE_USER)) return -2L;
 
         if (userRepository.findById(userInfo.getId()).isEmpty()) {
             return -1L;
@@ -143,9 +140,9 @@ public class UserServiceImpl implements UserService {
 
         UserInfo DeleteUser = userRepository.findById(userInfo.getId()).get();
 
-        if(!bCryptPasswordEncoder.matches(userInfoDto.getPassword(),DeleteUser.getPassword())){
-           return -1L;
-        }
+        if(!DeleteUser.getRole().equals(UserRole.ROLE_USER)) return -2L;
+
+        if(bCryptPasswordEncoder.matches(password,DeleteUser.getPassword())) {
             userRepository.save(
                     UserInfo.builder()
                             .id(DeleteUser.getId()) //로그인 유저 키값을 받아옴
@@ -160,10 +157,12 @@ public class UserServiceImpl implements UserService {
                             .userLotAdr(DeleteUser.getUserLotAdr())
                             .userDetailAdr(DeleteUser.getUserDetailAdr())
                             .userDeletedDate(LocalDateTime.now()) //현재시간
-                            .userEnabled(userInfoDto.isUserEnabled())
+                            .userEnabled(false)//사용자 이용 중지
                             .build()
             );
             return userInfo.getId();
+        }
+        return -3L;
         }
 
     //회원 정보 조회
@@ -225,10 +224,11 @@ public class UserServiceImpl implements UserService {
         return -1L;
     }
 
-    //탈퇴한 회원 복구
+    //탈퇴한 사업자 복구
     @Override
-    public Long companyRestore(UserInfo userInfo, UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto) {
+    public Long companyRestore(UserInfo userInfo,String password) {
 
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
         if (userRepository.findById(userInfo.getId()).isEmpty()) {
             return -1L; //사용자 정보 없음
@@ -236,14 +236,17 @@ public class UserServiceImpl implements UserService {
 
         UserInfo restoreUserInfo = userRepository.findById(userInfo.getId()).get();
 
-        if (companyRepository.findByUserInfo(restoreUserInfo).isEmpty()) {
-            return -1L; //로그인된 사용자가 사업자 등록이 안되어있음
+        if (companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo,false).isEmpty()) {
+            return -1L; //로그인된 사용자가 사업자 등록이 안되어있거나,이용중지된 사업자가 아님
         }
 
-        CompanyInfo restoreComUserInfo = companyRepository.findByUserInfo(restoreUserInfo).get();
+        if(!bCryptPasswordEncoder.matches(password,restoreUserInfo.getPassword())) {
+            return -2L; //비밀번호 확인 실패시
+        }
+
+        CompanyInfo restoreComUserInfo = companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo,false).get();
 
 
-        if (!restoreComUserInfo.isCompanyEnabled()) {
             userRepository.save(
                     UserInfo.builder()
                             .id(restoreUserInfo.getId())
@@ -276,9 +279,6 @@ public class UserServiceImpl implements UserService {
                             .build()
             );
             return restoreUserInfo.getId();
-
-        }
-        return -1L; //이미 사업자 이용중임
     }
 
     @Override

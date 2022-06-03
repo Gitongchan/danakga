@@ -22,7 +22,7 @@ public interface UserService extends UserDetailsService {
     Integer emailCheck(String email);
     
     //회원 탈퇴
-    Long userDeleted(UserInfo userInfo,UserInfoDto userInfoDto);
+    Long userDeleted(UserInfo userInfo,String password);
 
     //회원 정보 조회
     UserInfo userInfoCheck(UserInfo userInfo);
@@ -31,7 +31,7 @@ public interface UserService extends UserDetailsService {
     Long companyRegister(UserInfo userInfo,UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto);
 
     //사업자 복구
-    Long companyRestore(UserInfo userInfo,UserInfoDto userInfoDto,CompanyInfoDto companyInfoDto);
+    Long companyRestore(UserInfo userInfo,String password);
 
     //아이디 찾기
     String useridFind(UserInfoDto userInfoDto);
