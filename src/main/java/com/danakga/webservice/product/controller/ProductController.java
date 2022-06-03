@@ -3,6 +3,7 @@ package com.danakga.webservice.product.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
+import com.danakga.webservice.product.dto.response.ResProductDto;
 import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.product.service.ProductService;
 import com.danakga.webservice.user.model.UserInfo;
@@ -47,5 +48,11 @@ public class ProductController {
     public List<ResProductListDto> productList(Pageable pageable,
                                                @RequestPart(value = "productSearchDto") ProductSearchDto productSearchDto, int page) {
         return productService.productList(pageable,productSearchDto,page);
+    }
+
+    //상품 조회
+    @GetMapping("/item/{id}")
+    public ResProductDto product(){
+        return null;
     }
 }
