@@ -39,4 +39,9 @@ public class PageController {
         return "pages/mypage";
     }
 
+    @GetMapping("/user/signout")
+    public String signout(){
+        return "pages/userSignout";
+    }
+
 }

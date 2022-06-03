@@ -32,3 +32,26 @@
     color:#0167f3;
 }
 
+.mypage_signout{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signout_box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px;
+    width: 400px;
+    height: 400px;
+    border: black 1px solid;
+    border-radius: 15px;
+}
+
+#signout_form{
+    margin-bottom: 20px;
+}
+

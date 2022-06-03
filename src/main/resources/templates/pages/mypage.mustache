@@ -40,17 +40,18 @@
                     <span id="userPhone"></span> <!-- 아이디 값 불러오기 -->
                 </div>
                 <hr>
+                <input type="hidden" id="password">
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="reg-pass">현재 비밀번호*</label>
-                            <input class="form-control" name="password" type="password" id="reg-pass" oninput="buttoncheck()" placeholder="현재 비밀번호" required />
+                            <label for="my_pw">현재 비밀번호*</label>
+                            <input class="form-control" name="password" type="password" id="my_pw"  placeholder="현재 비밀번호" required />
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="reg-pass">변경 비밀번호*</label>
-                            <input class="form-control" name="password" type="password" id="reg-pass" oninput="buttoncheck()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
+                            <label for="change_pw">변경 비밀번호*</label>
+                            <input class="form-control" name="password" type="password" id="change_pw" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -61,7 +62,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="reg-pass-confirm">변경 비밀번호 확인*</label>
-                            <input class="form-control" type="password" id="reg-pass-confirm" onkeyup="regeisterCheck.PW()" oninput="buttoncheck()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
+                            <input class="form-control" type="password" id="change_pw_confirm" onkeyup="chagnePwCheck()"  placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
                         </div>
                     </div>
                     <div class="col-sm-12">
@@ -69,6 +70,7 @@
                             <span class="pw_confirmcheck" id="pw_confirmcheck"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
                         </div>
                     </div>
+                    <button id="test">버튼이야</button>
                 </div>
 
                 <hr>
