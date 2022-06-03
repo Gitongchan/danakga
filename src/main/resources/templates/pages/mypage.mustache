@@ -1,73 +1,115 @@
 {{>pages/header}}
 
-<style>
-    /* 줄 바꿈 태그 길이 설정*/
-    hr {
-        width: 100%
-    }
-
-    label {
-        font-weight: bold;
-    }
-</style>
-
-
 <!-- Cotainer는 그렇게 양쪽 여백을 주게 되어있고  fluid 뭐시기는 여백 없음-->
 <div class="container">
     <div class="row">
         <section class="mypage_sidebar">
             {{>pages/mypageNAV}}
-            <article>
-            <h3>회원정보 수정</h3>
-            <hr>
-            <label class="col-sm-2 control-label">아이디*</label>
-            <span>wjdgus54321</span> <!-- 아이디 값 불러오기 -->
-            <!--P는 블록 태그이고 span은 인라인 태그에요!-->
-            <!-- <p class="col-sm-2">wjdgus43993</p>-->
+            <article class="mypage_article">
+                <h3>회원정보 수정</h3>
+                <hr>
+                <label class="col-sm-2 control-label">아이디</label>
+                <span id="userId"></span> <!-- 아이디 값 불러오기 -->
+                <!--P는 블록 태그이고 span은 인라인 태그에요!-->
+                <!-- <p class="col-sm-2">wjdgus43993</p>-->
 
-            <hr>
-            <form class="was-validated">
-                <div class="mb-3 mt-3">
-                    <label for="uname" class="col-sm-2 control-label">이메일 주소*</label>
-                    <input type="text" class="form-control col-10" id="uname" placeholder="abcd@example.com"
-                           name="uname"
-                           required>
-                    <div class="col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
-                        <button id="emailbtn" class="btn btn-primary">메일 인증</button>
-                        <br>
+                <hr>
+                <form class="was-validated">
+                    <div class="mb-3 mt-3">
+                        <label for="uname" class="col-sm-2 control-label">이메일 주소*</label>
+                        <input type="text" class="form-control col-10" id="userEmail" placeholder="abcd@xeample.com"
+                               name="uname"
+                               required>
+                        <div class="col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
+                            <button id="emailbtn" class="btn btn-primary">메일 인증</button>
+                            <br>
+                        </div>
+                        <div style="color: #bd081c; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게
+                            입력해주세요
+                        </div>
                     </div>
-                    <div style="color: #bd081c; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게
-                        입력해주세요
+                </form>
+                <hr>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">이름</label>
+                    <span id="userName"></span> <!-- 아이디 값 불러오기 -->
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">전화번호</label>
+                    <span id="userPhone"></span> <!-- 아이디 값 불러오기 -->
+                </div>
+                <hr>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="reg-pass">현재 비밀번호*</label>
+                            <input class="form-control" name="password" type="password" id="reg-pass" oninput="buttoncheck()" placeholder="현재 비밀번호" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="reg-pass">변경 비밀번호*</label>
+                            <input class="form-control" name="password" type="password" id="reg-pass" oninput="buttoncheck()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <span class="pw_check" id="pw_check"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="reg-pass-confirm">변경 비밀번호 확인*</label>
+                            <input class="form-control" type="password" id="reg-pass-confirm" onkeyup="regeisterCheck.PW()" oninput="buttoncheck()" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <span class="pw_confirmcheck" id="pw_confirmcheck"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
+                        </div>
                     </div>
                 </div>
-            </form>
-            <hr>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">이름*</label>
-                <span style="width:100px">박정현</span> <!-- 아이디 값 불러오기 -->
-                <a href="#" class="col-8 col-md-6 col-sm-8" style=" color:#696969;">개명하셨다면? 이름 변경 &gt;</a>
-            </div>
-            <hr>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">비밀번호*</label>
-                <a href="#" class="col-sm-10 col-md-8 col-12" style="color:#696969;">비밀번호 변경 ∨</a>
-            </div>
-            <hr>
-            <div class="form-group">
-                <label style="vertical-align:top;" class="col-sm-2 control-label">배송지 정보</label>
-                <textarea style="resize:none; border:1px solid black; border-radius: 30px; width: auto; height: auto;"
-                          rows="15" cols="135" name="contents"></textarea>
-            </div>
 
+                <hr>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="sample4_postcode">우편번호</label>
+                        <input type="text" class="form-control col-sm-8 col-8" id="sample4_postcode" placeholder="우편번호"
+                               readonly required>
+                        <div class="button">
+                            <button class="btn" id="PostCode">우편번호 찾기</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="sample4_roadAddress">도로명주소</label>
+                        <input type="text" class="form-control" id="sample4_roadAddress" placeholder="도로명주소" readonly
+                               required><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="sample4_jibunAddress">지번주소</label>
+                        <input type="text" class="form-control" id="sample4_jibunAddress" placeholder="지번주소" readonly
+                               required>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <span id="guide" style="color:#999;display:none"></span>
+                        <label for="sample4_detailAddress">상세주소*</label>
+                        <input type="text" class="form-control" id="sample4_detailAddress" placeholder="상세주소">
+                        <!--                                    <input type="text" class="form-control" id="sample4_extraAddress" placeholder="참고항목">-->
+                    </div>
+                </div>
 
-            <div class="col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
+                <div class="button" id="changeOK">
+                    <button type="button" class="btn">변경 완료</button>
+                </div>
+
+                <!--""-->
                 <br>
-                <button type="button" class="btn btn-success">변경 완료</button>
-            </div>
-
-            <!--""-->
-            <br>
-            <br>
+                <br>
             </article>
         </section>
     </div>
@@ -76,5 +118,7 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
-
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/js/addressFind.js"></script>
+<script src="/js/myPageUser.js"></script>
 {{>pages/footer2}}

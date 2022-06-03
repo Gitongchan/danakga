@@ -3,6 +3,9 @@
     margin: 30px 30px;
 }
 
+.mypage_article{
+    width:100%
+}
 .mypage_list{
     width: 150px;
     height: 500px;
