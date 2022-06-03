@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.service;
 
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
+import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -12,7 +13,7 @@ public interface UserService extends UserDetailsService {
     Long join(UserInfoDto userInfoDto);
 
     //회원정보 수정
-    Long update(UserInfo userInfo , UserInfoDto userInfoDto);
+    Long update(UserInfo userInfo , UpdateUserInfoDto updateUserInfoDto);
 
     //아이디 중복 체크
     Integer userIdCheck(String userid);
@@ -21,7 +22,7 @@ public interface UserService extends UserDetailsService {
     Integer emailCheck(String email);
     
     //회원 탈퇴
-    Long userDeleted(UserInfo userInfo,UserInfoDto userInfoDto);
+    Long userDeleted(UserInfo userInfo,String password);
 
     //회원 정보 조회
     UserInfo userInfoCheck(UserInfo userInfo);
@@ -30,7 +31,7 @@ public interface UserService extends UserDetailsService {
     Long companyRegister(UserInfo userInfo,UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto);
 
     //사업자 복구
-    Long companyRestore(UserInfo userInfo,UserInfoDto userInfoDto,CompanyInfoDto companyInfoDto);
+    Long companyRestore(UserInfo userInfo,String password);
 
     //아이디 찾기
     String useridFind(UserInfoDto userInfoDto);
