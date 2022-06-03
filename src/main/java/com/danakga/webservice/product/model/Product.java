@@ -70,7 +70,7 @@ public class Product {
 
     @Builder
     public Product(Long productId, CompanyInfo productCompanyId, String productType,
-                   String productSubType, String productBrand, String productState,
+                   String productSubType, String productBrand,
                    String productName, String productPhoto, String productContent,
                    String productPrice, Integer productStock, LocalDateTime productUploadDate,
                    Integer productViewCount, Integer productOrderCount) {
@@ -79,7 +79,6 @@ public class Product {
         this.productType = productType;
         this.productSubType = productSubType;
         this.productBrand = productBrand;
-        this.productState = productState;
         this.productName = productName;
         this.productPhoto = productPhoto;
         this.productContent = productContent;

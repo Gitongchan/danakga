@@ -45,7 +45,7 @@ public class ProductController {
     //상품 리스트
     @GetMapping("/list")
     public List<ResProductListDto> productList(Pageable pageable,
-                                               @RequestBody ProductSearchDto productSearchDto, int page) {
-        return null;
+                                               @RequestPart(value = "productSearchDto") ProductSearchDto productSearchDto, int page) {
+        return productService.productList(pageable,productSearchDto,page);
     }
 }
