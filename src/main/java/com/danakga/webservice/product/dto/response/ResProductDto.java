@@ -1,15 +1,21 @@
 package com.danakga.webservice.product.dto.response;
 
-import com.danakga.webservice.company.model.CompanyInfo;
-import com.danakga.webservice.product.model.Product;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResProductListDto {
+public class ResProductDto {
+
+    //등록한 회사명
+    private String companyName;
+
+    //상품등록자 아이디
+    private String companyUserId;
 
     //상품번호, 상품아이디
     private Long productId;
@@ -44,8 +50,6 @@ public class ResProductListDto {
     //누적구매수
     private Integer productOrderCount;
 
-    private int totalPage;
-
-    private long totalElement;
-
+    //파일
+    private List<Map<String,Object>> files;
 }
