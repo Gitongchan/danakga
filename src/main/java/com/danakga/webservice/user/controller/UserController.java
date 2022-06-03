@@ -3,6 +3,7 @@ package com.danakga.webservice.user.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
+import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
 import com.danakga.webservice.util.responseDto.ResResultDto;
@@ -32,27 +33,37 @@ public class UserController{
 
     //회원정보 수정
     @PutMapping("")
-    public ResResultDto update(@LoginUser UserInfo userInfo, @Valid @RequestBody UserInfoDto userInfoDto){
+    public ResResultDto update(@LoginUser UserInfo userInfo, @Valid @RequestBody UpdateUserInfoDto updateUserInfoDto){
 
         System.out.println("userInfo = " + userInfo.getName());
-        System.out.println("userInfoDto = " + userInfoDto.getName());
-        Long result = userService.update(userInfo,userInfoDto);
-        return result == -1L ?
-                new ResResultDto(result,"회원정보 변경 실패.") : new ResResultDto(result,"회원정보 변경 성공.");
+        System.out.println("updateUserInfoDto = " + updateUserInfoDto.getName());
+        Long result = userService.update(userInfo,updateUserInfoDto);
+        if(result == -2L){
+            return new ResResultDto(result,"회원정보 변경 실패, 비밀번호 확인 오류");
+        }
+        else if(result == -1L){
+            return new ResResultDto(result,"회원정보 변경 실패.");
+        }
+        else{
+           return new ResResultDto(result,"회원정보 변경 성공.");
+        }
     }
 
     //회원 탈퇴
     @PutMapping("/user_deleted")
-    public ResResultDto userDeleted(@LoginUser UserInfo userInfo, @RequestBody UserInfoDto userInfoDto){
-        Long result = userService.userDeleted(userInfo,userInfoDto);
+    public ResResultDto userDeleted(@LoginUser UserInfo userInfo, @RequestParam("password") String password){
+        Long result = userService.userDeleted(userInfo,password);
 
         if(result.equals(-1L)){
-            return new ResResultDto(result,"회원 탈퇴 실패");
+            return new ResResultDto(result,"회원 탈퇴 실패.");
         }
         else if(result.equals(-2L)){
-            return new ResResultDto(result,"일반회원만 탈퇴할 수 있습니다");
+            return new ResResultDto(result,"일반회원만 탈퇴할 수 있습니다.");
         }
-        else return new ResResultDto(result,"회원 탈퇴 성공");
+        else if(result.equals(-3L)) {
+            return new ResResultDto(result, "회원 탈퇴 실패,비밀번호 입력 오류.");
+        }
+        else return new ResResultDto(result,"회원 탈퇴 성공했습니다.");
 
     }
 
@@ -75,18 +86,27 @@ public class UserController{
             return new ResResultDto(result,"사업자 등록 실패, 이미 사업자로 등록되었습니다.");
         }
         else{
-            return new ResResultDto(result,"사업자 등록 성공.");
+            return new ResResultDto(result,"사업자 등록 성공했습니다.");
         }
 
     }
 
     //탈퇴한 사업자 복구
-    @PutMapping("/companyinfo_restore")
-    public ResResultDto companyRestore(@LoginUser UserInfo userInfo ,UserInfoDto userInfoDto,CompanyInfoDto companyInfoDto){
+    @PutMapping("/companyInfo_restore")
+    public ResResultDto companyRestore(@LoginUser UserInfo userInfo ,@RequestParam("password") String password){
 
-        Long result = userService.companyRestore(userInfo,userInfoDto,companyInfoDto);
-        return result == -1L ?
-                new ResResultDto(result,"사업자 정보 복구 실패.") : new ResResultDto(result,"사업자 정보 복구 성공.");
+        Long result = userService.companyRestore(userInfo,password);
+
+        if(result == -1L) {
+            return new ResResultDto(result,"사업자 복구 실패.");
+        }
+        else if(result == -2L) {
+            return new ResResultDto(result,"사업자 복구 실패,비밀번호 입력 오류.");
+        }
+        else{
+            return new ResResultDto(result,"사업자 복구 성공했습니다.");
+        }
+
     }
 
 
