@@ -3,6 +3,7 @@ package com.danakga.webservice.user.service.Impl;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
+import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -42,9 +43,6 @@ public class UserServiceImpl implements UserService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String rawPassword = userInfoDto.getPassword();
         userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
-
-
-
 
         //중복 id,email 검증
         Integer idCheckResult = userIdCheck(userInfoDto.getUserid());
@@ -92,38 +90,42 @@ public class UserServiceImpl implements UserService {
     //회원 정보 수정
     @Transactional
     @Override
-    public Long update(UserInfo userInfo, UserInfoDto userInfoDto) {
+    public Long update(UserInfo userInfo, UpdateUserInfoDto updateUserInfoDto) {
         //로그인 사용자 검증 이후 동작함
-        if (userRepository.findById(userInfo.getId()).isPresent()) {
+        if(userRepository.findById(userInfo.getId()).isEmpty()) {
+            return -1L;
+        }
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-            UserInfo modifyUser = userRepository.findById(userInfo.getId()).get();
+        UserInfo modifyUser = userRepository.findById(userInfo.getId()).get();
 
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            String rawPassword = userInfoDto.getPassword();
-            userInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
+        String rawCheckPassword = updateUserInfoDto.getCheckPassword();
+
+        if(bCryptPasswordEncoder.matches(rawCheckPassword,modifyUser.getPassword())){
+
+            String rawPassword = updateUserInfoDto.getPassword();
+            updateUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
 
             userRepository.save(
                     UserInfo.builder()
                             .id(modifyUser.getId()) //로그인 유저 키값을 받아옴
                             .userid(modifyUser.getUserid()) //그대로 유지
-                            .password(userInfoDto.getPassword())
-                            .name(userInfoDto.getName())
-                            .phone(userInfoDto.getPhone())
-                            .email(userInfoDto.getEmail())
+                            .password(updateUserInfoDto.getPassword())
+                            .name(updateUserInfoDto.getName())
+                            .phone(updateUserInfoDto.getPhone())
+                            .email(modifyUser.getEmail())
                             .role(modifyUser.getRole())
-                            .userAdrNum(userInfoDto.getUserAdrNum())
-                            .userLotAdr(userInfoDto.getUserLotAdr())
-                            .userStreetAdr(userInfoDto.getUserStreetAdr())
-                            .userDetailAdr(userInfoDto.getUserDetailAdr())
+                            .userAdrNum(updateUserInfoDto.getUserAdrNum())
+                            .userLotAdr(updateUserInfoDto.getUserLotAdr())
+                            .userStreetAdr(updateUserInfoDto.getUserStreetAdr())
+                            .userDetailAdr(updateUserInfoDto.getUserDetailAdr())
                             .userEnabled(modifyUser.isUserEnabled())
                             .build()
             );
             return userInfo.getId();
         }
-        return -1L;
-    }
-
-    
+        return -2L;
+        }
 
     //회원 탈퇴
     @Override
@@ -135,11 +137,15 @@ public class UserServiceImpl implements UserService {
 
         if(!userInfo.getRole().equals(UserRole.ROLE_USER)) return -2L;
 
-        if (userRepository.findById(userInfo.getId()).isPresent()
-                && bCryptPasswordEncoder.matches(userInfoDto.getPassword(),userInfo.getPassword())) {
+        if (userRepository.findById(userInfo.getId()).isEmpty()) {
+            return -1L;
+        }
 
-            UserInfo DeleteUser = userRepository.findById(userInfo.getId()).get();
+        UserInfo DeleteUser = userRepository.findById(userInfo.getId()).get();
 
+        if(!bCryptPasswordEncoder.matches(userInfoDto.getPassword(),DeleteUser.getPassword())){
+           return -1L;
+        }
             userRepository.save(
                     UserInfo.builder()
                             .id(DeleteUser.getId()) //로그인 유저 키값을 받아옴
@@ -159,8 +165,6 @@ public class UserServiceImpl implements UserService {
             );
             return userInfo.getId();
         }
-        return -1L;
-    }
 
     //회원 정보 조회
     @Override
