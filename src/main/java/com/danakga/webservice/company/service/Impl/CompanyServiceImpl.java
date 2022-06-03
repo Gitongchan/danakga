@@ -114,7 +114,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     //사업자탈퇴
     @Override
-    public Long companyDeleted(UserInfo userInfo) {
+    public Long companyDeleted(UserInfo userInfo,String password) {
+
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
         if(userRepository.findById(userInfo.getId()).isEmpty()){
             return -1L;
@@ -123,6 +125,10 @@ public class CompanyServiceImpl implements CompanyService {
 
         if(!comUserInfo.getRole().equals(UserRole.ROLE_MANAGER)){
             return -1L; //사업자가 아니면
+        }
+
+        if(!bCryptPasswordEncoder.matches(password,comUserInfo.getPassword())) {
+            return -2L; //비밀번호 확인 실패시
         }
 
             userRepository.save(
