@@ -31,9 +31,6 @@ public class ResProductDto {
     //상품명
     private String productName;
 
-    //상품대표사진
-    private String productPhoto;
-
     //가격
     private String productPrice;
 
@@ -59,7 +56,6 @@ public class ResProductDto {
         this.productSubType = product.getProductSubType();
         this.productBrand = product.getProductBrand();
         this.productName = product.getProductName();
-        this.productPhoto = product.getProductPhoto();
         this.productPrice = product.getProductPrice();
         this.productStock = product.getProductStock();
         this.productUploadDate = product.getProductUploadDate();
