@@ -28,14 +28,14 @@ public class Board {
     @Column(name = "bd_writer")
     private String bdWriter;
 
-    @Column(name = "bd_title", nullable = false)
+    @Column(name = "bd_title")
     private String bdTitle;
 
-    @Column(name = "bd_content", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "bd_content", columnDefinition = "TEXT")
     private String bdContent;
 
     //String Y = 게시글 삭제, N = 보여줌
-    @Column(name = "bd_deleted", nullable = false)
+    @Column(name = "bd_deleted")
     private String bdDeleted;
 
     //한명의 유저는 여러 게시글 작성 가능 board(many), user(one)

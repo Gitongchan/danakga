@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     //게시글 아이디 조회
-    Optional<Board> findById(Long id);
+    Optional<Board> findByBdId(Long id);
 
     //게시판 목록 페이징
     Page<Board> findAllByBdDeletedAndBdType(String deleted, String type, Pageable pageable);
@@ -23,5 +23,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Transactional
     @Modifying
     @Query("update Board b set b.bdViews = b.bdViews + 1 where b.bdId = :id")
-    int updateView(@Param("id") Long id);
+    void updateView(@Param("id") Long id);
+
+    //게시글 삭제 여부 변경
+    @Transactional
+    @Modifying
+    @Query("update Board b set b.bdDeleted = 'Y' where b.bdId = :id")
+    void updateDeleted(@Param("id") Long id);
 }
