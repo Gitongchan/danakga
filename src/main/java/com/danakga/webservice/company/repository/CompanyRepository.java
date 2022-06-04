@@ -14,4 +14,5 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Integer> {
 
     Optional<CompanyInfo> findByUserInfoAndCompanyEnabled(UserInfo userInfo,boolean enabled);
 
+    Optional<CompanyInfo> findByCompanyId(Long companyId);
 }
