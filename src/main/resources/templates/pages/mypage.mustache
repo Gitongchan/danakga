@@ -10,69 +10,58 @@
                 <hr>
                 <label class="col-sm-2 control-label">아이디</label>
                 <span id="userId"></span> <!-- 아이디 값 불러오기 -->
-                <!--P는 블록 태그이고 span은 인라인 태그에요!-->
-                <!-- <p class="col-sm-2">wjdgus43993</p>-->
-
                 <hr>
-                <form class="was-validated">
-                    <div class="mb-3 mt-3">
-                        <label for="uname" class="col-sm-2 control-label">이메일 주소*</label>
-                        <input type="text" class="form-control col-10" id="userEmail" placeholder="abcd@xeample.com"
-                               name="uname"
-                               required>
-                        <div class="col-md-2 col-sm-10 col-4" style="float: none; margin: 0 auto;">
-                            <button id="emailbtn" class="btn btn-primary">메일 인증</button>
-                            <br>
-                        </div>
-                        <div style="color: #bd081c; font-size: medium; text-align: center">-아이디/비밀번호 찾기에 필요한 정보이므로 정확하게
-                            입력해주세요
-                        </div>
+                <label class="col-sm-2 control-label">이메일</label>
+                <span id="userEmail"></span>
+                <hr>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="userName">이름*</label>
+                        <input class="form-control" name="name" type="text" id="userName" minlength="1"
+                               maxlength="4" placeholder="한글만 입력하세요!"/>
                     </div>
-                </form>
-                <hr>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">이름</label>
-                    <span id="userName"></span> <!-- 아이디 값 불러오기 -->
                 </div>
                 <hr>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">전화번호</label>
-                    <span id="userPhone"></span> <!-- 아이디 값 불러오기 -->
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="userPhone">전화번호*</label>
+                        <input class="form-control" name="phone" type="text" id="userPhone" minlength="10"
+                               maxlength="11" placeholder="(-빼고)전화번호를 입력해주세요."/>
+                    </div>
                 </div>
                 <hr>
                 <input type="hidden" id="password">
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="my_pw">현재 비밀번호*</label>
-                            <input class="form-control" name="password" type="password" id="my_pw"  placeholder="현재 비밀번호" required />
-                        </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="my_pw">현재 비밀번호*</label>
+                        <input class="form-control" name="password" type="password" id="my_pw" placeholder="현재 비밀번호"
+                               required/>
                     </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="change_pw">변경 비밀번호*</label>
-                            <input class="form-control" name="password" type="password" id="change_pw" placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <span class="pw_check" id="pw_check"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="reg-pass-confirm">변경 비밀번호 확인*</label>
-                            <input class="form-control" type="password" id="change_pw_confirm" onkeyup="chagnePwCheck()"  placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required />
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <span class="pw_confirmcheck" id="pw_confirmcheck"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
-                        </div>
-                    </div>
-                    <button id="test">버튼이야</button>
                 </div>
-
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="change_pw">변경 비밀번호*</label>
+                        <input class="form-control" name="password" type="password" id="change_pw"
+                               placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required/>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <span class="pw_check" id="pw_check"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="reg-pass-confirm">변경 비밀번호 확인*</label>
+                        <input class="form-control" type="password" id="change_pw_confirm" onkeyup="chagnePwCheck()"
+                               placeholder="숫자, 영문, 특수문자 포함 최소8자 이상" required/>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <span class="pw_confirmcheck" id="pw_confirmcheck"></span> <!-- 이곳에 ajax 유효성 검사한 결과 보여주기-->
+                    </div>
+                </div>
                 <hr>
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -108,10 +97,6 @@
                 <div class="button" id="changeOK">
                     <button type="button" class="btn">변경 완료</button>
                 </div>
-
-                <!--""-->
-                <br>
-                <br>
             </article>
         </section>
     </div>

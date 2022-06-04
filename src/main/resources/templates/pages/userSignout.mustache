@@ -11,14 +11,14 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="my_pw">비밀번호*</label>
-                                    <input class="form-control" name="password" type="password" id="my_pw"  placeholder="현재 비밀번호" required />
+                                    <label for="signout_pw">비밀번호*</label>
+                                    <input class="form-control" name="password" type="password" id="signout_pw"  placeholder="비밀번호를 입력하세요!"/>
                                 </div>
                             </div>
                         </div>
                     </form>
                     <div class="button">
-                        <button class="btn">탈퇴하기</button>
+                        <button class="btn" id="signout_btn">탈퇴하기</button>
                     </div>
                 </div>
             </article>
@@ -29,4 +29,5 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
+<script src="/js/signOut.js"></script>
 {{>pages/footer2}}

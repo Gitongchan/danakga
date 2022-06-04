@@ -26,9 +26,9 @@ post_btn.addEventListener('click',sample4_execDaumPostcode);
         console.log(data);
         if(res.status === 200){
             id.innerText = data.userid;
-            name.innerText = data.name;
-            phone.innerText = data.phone;
-            email.value = data.email;
+            name.value = data.name;
+            phone.value = data.phone;
+            email.innerText = data.email;
             password.value = data.password;
             postCode.value = data.userAdrNum;
             roadNum.value = data.userStreetAdr;
@@ -52,10 +52,10 @@ changeOK.addEventListener('click',function(e) {
 
     const userData = {
         userid: id.innerText,
-        name: name.innerText,
+        name: name.value,
         password: isBool ? changePwConfirm.value : password.value,
-        phone: phone.innerText,
-        email: email.value,
+        phone: phone.value,
+        email: email.innerText,
         userAdrNum: postCode.value,
         userLotAdr: jibun.value,
         userStreetAdr: roadNum.value,
@@ -76,9 +76,6 @@ changeOK.addEventListener('click',function(e) {
 
 })
 
-document.getElementById('test').addEventListener('click',function (){
-    console.log("이거맞냐?",password.value === changePw.value);
-})
 
 function chagnePwCheck() {
     <!-- 두번째 비밀번호 input에  입력시 비밀번호 두 개가 맞는지 확인하는 함수-->
