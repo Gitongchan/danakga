@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -27,32 +29,26 @@ public class ProductController {
     @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto productUpload(@LoginUser UserInfo userInfo,
                                       @RequestPart(value = "product") ProductDto productDto,
-                                      @RequestPart(value = "images", required = false) List<MultipartFile> files){
+                                      @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
-        Long result = productService.productUpload(userInfo,productDto,files);
-        
-        if(result.equals(-1L)){
-            return new ResResultDto(result,"상품등록 실패.");
-        } 
-        else if(result.equals(-2L)){
-            return new ResResultDto(result,"상품등록 실패, 이미지 파일 업로드 실패");
-        }
-        else{
-            return new ResResultDto(result,"상품등록 성공.");
+        Long result = productService.productUpload(userInfo, productDto, files);
+
+        if (result.equals(-1L)) {
+            return new ResResultDto(result, "상품등록 실패.");
+        } else if (result.equals(-2L)) {
+            return new ResResultDto(result, "상품등록 실패, 이미지 파일 업로드 실패");
+        } else {
+            return new ResResultDto(result, "상품등록 성공.");
         }
 
     }
-    
+
     //상품 리스트
     @GetMapping("/list")
     public List<ResProductListDto> productList(Pageable pageable,
                                                @RequestPart(value = "productSearchDto") ProductSearchDto productSearchDto, int page) {
-        return productService.productList(pageable,productSearchDto,page);
+        return productService.productList(pageable, productSearchDto, page);
     }
 
-    //상품 조회
-    @GetMapping("/item/{id}")
-    public ResProductDto product(){
-        return null;
-    }
+
 }

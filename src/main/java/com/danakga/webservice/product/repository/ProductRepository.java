@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product,Integer> {
     //대표 이미지 변경을 위해서 사용
@@ -20,4 +24,12 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
             String productType, String productSubType, String productBrand,
             String productName, Integer productStock, Pageable pageable
     );
+
+    Optional<Product> findByProductId(Long productId);
+
+    //조회수 증가
+    @Transactional
+    @Modifying
+    @Query("update Product p set p.productViewCount = p.productViewCount + 1 where p.productId =:productId")
+    void updateProductView(@Param("productId") Long productId);
 }

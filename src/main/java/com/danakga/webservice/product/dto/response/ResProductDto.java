@@ -1,5 +1,7 @@
 package com.danakga.webservice.product.dto.response;
 
+import com.danakga.webservice.company.model.CompanyInfo;
+import com.danakga.webservice.product.model.Product;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,9 +15,6 @@ public class ResProductDto {
 
     //등록한 회사명
     private String companyName;
-
-    //상품등록자 아이디
-    private String companyUserId;
 
     //상품번호, 상품아이디
     private Long productId;
@@ -52,4 +51,19 @@ public class ResProductDto {
 
     //파일
     private List<Map<String,Object>> files;
+
+    public ResProductDto(Product product, CompanyInfo companyInfo) {
+        this.companyName = companyInfo.getCompanyName();
+        this.productId = product.getProductId();
+        this.productType = product.getProductType();
+        this.productSubType = product.getProductSubType();
+        this.productBrand = product.getProductBrand();
+        this.productName = product.getProductName();
+        this.productPhoto = product.getProductPhoto();
+        this.productPrice = product.getProductPrice();
+        this.productStock = product.getProductStock();
+        this.productUploadDate = product.getProductUploadDate();
+        this.productViewCount = product.getProductViewCount();
+        this.productOrderCount = product.getProductOrderCount();
+    }
 }
