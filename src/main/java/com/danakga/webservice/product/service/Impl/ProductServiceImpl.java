@@ -64,8 +64,8 @@ public class ProductServiceImpl implements ProductService {
                             .productType(productDto.getProductType())
                             .productSubType(productDto.getProductSubType())
                             .productBrand(productDto.getProductBrand())
-                            .productOrderCount(productDto.getProductOrderCount())
-                            .productViewCount(productDto.getProductViewCount())
+                            .productOrderCount(0)
+                            .productViewCount(0)
                             .build()
             ).getProductId();
         }
@@ -91,8 +91,8 @@ public class ProductServiceImpl implements ProductService {
                                         .productType(productDto.getProductType())
                                         .productSubType(productDto.getProductSubType())
                                         .productBrand(productDto.getProductBrand())
-                                        .productOrderCount(productDto.getProductOrderCount())
-                                        .productViewCount(productDto.getProductViewCount())
+                                        .productOrderCount(0)
+                                        .productViewCount(0)
                                         .build()
                         );
 
