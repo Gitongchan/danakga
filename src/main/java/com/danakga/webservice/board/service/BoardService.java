@@ -20,11 +20,12 @@ public interface BoardService {
     ResBoardPostDto getPost(Long bd_id, HttpServletRequest request, HttpServletResponse response);
 
     //게시글 작성
-    Long boardWrite(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
+    Long postWrite(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
-    Long postEdit(Long id, UserInfo userInfo);
+    Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files);
 
+    //게시글 삭제 여부 변경
     Long postDelete(Long id, UserInfo userInfo);
 
 }
