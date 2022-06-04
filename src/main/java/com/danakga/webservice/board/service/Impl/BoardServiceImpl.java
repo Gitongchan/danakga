@@ -224,7 +224,7 @@ public class BoardServiceImpl implements BoardService {
 
         //List에 담긴 저장 파일명을 가지고 files 패키지와 db에서 삭제
         for (String sFileName : saveFileName) {
-            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + sFileName);
+            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files" + sFileName);
             if(deleteFile.delete()) {
                 fileRepository.deleteByBoardAndFileSaveName(board, sFileName);
             }
