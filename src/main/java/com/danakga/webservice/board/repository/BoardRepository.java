@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     //게시글 아이디 조회
-    Optional<Board> findById(Long id);
+    Optional<Board> findByBdId(Long id);
 
     //게시판 목록 페이징
     Page<Board> findAllByBdDeletedAndBdType(String deleted, String type, Pageable pageable);

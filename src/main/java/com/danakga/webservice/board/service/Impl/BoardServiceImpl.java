@@ -73,7 +73,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResBoardPostDto getPost(Long id, HttpServletRequest request, HttpServletResponse response) {
 
-        Board boardWrapper = boardRepository.findById(id)
+        Board boardWrapper = boardRepository.findByBdId(id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
         List<Board_Files> files = fileRepository.findByBoard(boardWrapper);
@@ -144,6 +144,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     //게시글 작성
+    @Transactional
     @Override
     public Long postWrite(ReqBoardDto reqBoardDto,
                           UserInfo userInfo, List<MultipartFile> files) {
@@ -194,27 +195,43 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files) {
+        
+        //파일 먼저 삭제하고 CollectionUtil로 파일 유무 확인 후 없으면 board만 수정, 있으면 file도 다시 업로드
+        //웹페이지에서 x눌러서 지운 파일은 어차피 값이 들어오지 않기 때문에 삭제 후 업로드 되지 않음(들어온 파일만 업로드)
 
+        //유저 db 최신화
         if (userRepository.findById(userInfo.getId()).isEmpty()) {
             return -1L;
         }
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
-        if (boardRepository.findById(id).isEmpty()) {
+        //게시판 db 최신화
+        if (boardRepository.findByBdId(id).isEmpty()) {
             return -1L;
         }
-        Board board = boardRepository.findById(id).get();
+        
+        Board board = boardRepository.findByBdId(id).get();
         List<Board_Files> boardFiles = fileRepository.findByBoard(board);
 
-        //db에서 불러온 파일 저장하기 위한 List
+        //db값 담아주기 위한 List
         List<String> saveFileName = new ArrayList<>();
 
+        //db에서 가져온 저장된 파일명 List에 넣어줌
         for (Board_Files board_Files : boardFiles) {
             saveFileName.add(board_Files.getFileSaveName());
             System.out.println(saveFileName);
         }
 
-        //파일 없이 제목과 내용만 수정
+        //List에 담긴 저장 파일명을 가지고 files 패키지와 db에서 삭제
+        for (String sFileName : saveFileName) {
+            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + sFileName);
+            if(deleteFile.delete()) {
+                fileRepository.deleteByBoardAndFileSaveName(board, sFileName);
+            }
+        }
+
+        //파일 없이 제목, 게시글만 들어오면 그대로 수정
+        //else 파일 같이 들어오면 게시글 수정 후 파일 업로드
         if (CollectionUtils.isEmpty(files)) {
             boardRepository.save(
                     board = Board.builder()
@@ -229,16 +246,33 @@ public class BoardServiceImpl implements BoardService {
                             .build()
             );
             return board.getBdId();
-        }
 
-        //파일과 같이 제목, 내용을 수정
-        //폴더 안에 files 에 담겨온 파일이 없으면 삭제, db 명과 같은지 확인 하고 삭제 or 추가
-        if (!CollectionUtils.isEmpty(files)) {
+        } else if (!CollectionUtils.isEmpty(files)) {
+
             for (MultipartFile multipartFile : files) {
 
-                String originFileName = multipartFile.getName();
-                File folderFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files" + saveFileName);
+                //확장자 체크 위해서 게시글 원본 이름 가져옴
+                String originFileName = multipartFile.getOriginalFilename().toLowerCase();
 
+                //파일 경로 + 파일명으로 파일 있는지 검사 후 삭제
+                if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
+                    boardRepository.save(
+                            board = Board.builder()
+                                    .bdId(id)
+                                    .bdType(reqBoardDto.getBdType())
+                                    .bdWriter(recentUserInfo.getUserid())
+                                    .bdTitle(reqBoardDto.getBdTitle())
+                                    .bdContent(reqBoardDto.getBdContent())
+                                    .bdCreated(board.getBdCreated())
+                                    .bdDeleted(board.getBdDeleted())
+                                    .userInfo(recentUserInfo)
+                                    .build()
+                    );
+                    if (!filesService.saveFileUpload(files, board).equals(1L)) {
+                        return -2L;
+                    }
+                    return board.getBdId();
+                }
             }
         }
         return -1L;
@@ -250,9 +284,9 @@ public class BoardServiceImpl implements BoardService {
     public Long postDelete(Long id, UserInfo userInfo) {
 
         //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
-        if (boardRepository.findById(id).isPresent()) {
+        if (boardRepository.findByBdId(id).isPresent()) {
 
-            Board board = boardRepository.findById(id).get();
+            Board board = boardRepository.findByBdId(id).get();
 
             //deleted 값 변경
             boardRepository.updateDeleted(id);

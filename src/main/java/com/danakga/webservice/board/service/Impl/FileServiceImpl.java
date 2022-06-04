@@ -24,12 +24,12 @@ public class FileServiceImpl implements FilesService {
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
         //파일 저장 경로
-        String savepath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
 
         //파일 저장되는 폳더 없으면 생성
-        if (!new File(savepath).exists()) {
+        if (!new File(savePath).exists()) {
             try {
-                new File(savepath).mkdir();
+                new File(savePath).mkdir();
             } catch (Exception e2) {
                 e2.getStackTrace();
             }
@@ -47,9 +47,9 @@ public class FileServiceImpl implements FilesService {
             String saveFileName = uuid + "__" + originFileName;
 
             //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-            String filepath = savepath + "\\" + saveFileName;
+            String filePath = savePath + "\\" + saveFileName;
             try {
-                multipartFile.transferTo(new File(filepath));
+                multipartFile.transferTo(new File(filePath));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -58,7 +58,7 @@ public class FileServiceImpl implements FilesService {
                     Board_Files.builder()
                             .fileSaveName(saveFileName)
                             .fileOrigin(originFileName)
-                            .fileOrigin(filepath)
+                            .filePath(filePath)
                             .board(board)
                             .build()
             );
