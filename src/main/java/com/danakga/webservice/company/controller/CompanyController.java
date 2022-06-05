@@ -21,11 +21,18 @@ public class CompanyController {
 
     //사업자 탈퇴
     @PutMapping("/deleted")
-    public ResResultDto companyDeleted(@LoginUser UserInfo userInfo, @RequestBody CompanyUserInfoDto companyUserInfoDto){
+    public ResResultDto companyDeleted(@LoginUser UserInfo userInfo,@RequestParam("password") String password){
 
-        Long result = companyService.companyDeleted(userInfo,companyUserInfoDto);
-        return result == -1L ?
-                new ResResultDto(result,"사업자 탈퇴 실패.") : new ResResultDto(result,"사업자 탈퇴 성공.");
+        Long result = companyService.companyDeleted(userInfo,password);
+        if(result == -2L){
+            return new ResResultDto(result,"사업자 탈퇴 실패, 비밀번호 확인 오류");
+        }
+        else if(result == -1L){
+            return new ResResultDto(result,"사업자 탈퇴 실패.");
+        }
+        else{
+            return new ResResultDto(result,"사업자 탈퇴 성공.");
+        }
     }
     
     //사업자 정보 수정

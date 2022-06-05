@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .defaultSuccessUrl("/index") // 로그인 성공 후 리다이렉트 주소
                 .and()
                     .logout() // 8
-                    .logoutUrl("/user/logout")
+                    .logoutUrl("/api/user/logout")
                     .logoutSuccessUrl("/index") // 로그아웃 성공시 리다이렉트 주소
                     .invalidateHttpSession(true) // 세션 날리기
         ;

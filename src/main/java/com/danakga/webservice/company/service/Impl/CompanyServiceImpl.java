@@ -6,6 +6,7 @@ import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,6 @@ import java.time.LocalDateTime;
 public class CompanyServiceImpl implements CompanyService {
     @Autowired private final CompanyRepository companyRepository;
     @Autowired private final UserRepository userRepository;
-    @Autowired private final UserService userService;
 
     //업체명 중복 체크
     @Override
@@ -41,11 +41,6 @@ public class CompanyServiceImpl implements CompanyService {
         String rawPassword = companyUserInfoDto.getPassword();
         companyUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
 
-        //가입시 자동 설정
-        companyUserInfoDto.setRole("ROLE_MANAGER");
-        companyUserInfoDto.setCompanyEnabled(true);
-        companyUserInfoDto.setUserEnabled(true);
-
             System.out.println("실행됨");
             UserInfo singUpUserInfo =
                     userRepository.save(
@@ -55,12 +50,12 @@ public class CompanyServiceImpl implements CompanyService {
                                     .name(companyUserInfoDto.getName())
                                     .phone(companyUserInfoDto.getPhone())
                                     .email(companyUserInfoDto.getEmail())
-                                    .role(companyUserInfoDto.getRole())
+                                    .role(UserRole.ROLE_MANAGER)//가입시 자동 설정
                                     .userAdrNum(companyUserInfoDto.getUserAdrNum())
                                     .userStreetAdr(companyUserInfoDto.getUserStreetAdr())
                                     .userLotAdr(companyUserInfoDto.getUserLotAdr())
                                     .userDetailAdr(companyUserInfoDto.getUserDetailAdr())
-                                    .userEnabled(companyUserInfoDto.isUserEnabled())
+                                    .userEnabled(true)//가입시 자동 설정
                                     .build()
                     );
 
@@ -75,7 +70,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyStreetAdr(companyUserInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
                             .companyBanknum(companyUserInfoDto.getCompanyBanknum())
-                            .companyEnabled(companyUserInfoDto.isCompanyEnabled())
+                            .companyEnabled(true)
                             .build()
             );
             return singUpUserInfo.getId();
@@ -85,8 +80,9 @@ public class CompanyServiceImpl implements CompanyService {
     //사업자 정보 수정
     @Override
     public Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
-        if(companyRepository.findByUserInfo(userInfo).isPresent()){
-
+        if(companyRepository.findByUserInfo(userInfo).isEmpty()){
+            return -1L;
+        }
             CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
                     ()->CompanyInfo.builder().build()
             );
@@ -105,8 +101,6 @@ public class CompanyServiceImpl implements CompanyService {
                             .build()
             );
             return updateCompanyInfo.getCompanyId();
-        }
-        else return -1L;
     }
 
     //사업자 회사 정보 조회
@@ -120,14 +114,22 @@ public class CompanyServiceImpl implements CompanyService {
 
     //사업자탈퇴
     @Override
-    public Long companyDeleted(UserInfo userInfo, CompanyUserInfoDto companyUserInfoDto) {
+    public Long companyDeleted(UserInfo userInfo,String password) {
 
-        if(userRepository.findById(userInfo.getId()).isPresent() && userInfo.getRole().equals("ROLE_MANAGER")) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-            UserInfo comUserInfo = userRepository.findById(userInfo.getId()).get();
+        if(userRepository.findById(userInfo.getId()).isEmpty()){
+            return -1L;
+        }
+        UserInfo comUserInfo = userRepository.findById(userInfo.getId()).get();
 
-            companyUserInfoDto.setCompanyEnabled(false);
-            companyUserInfoDto.setRole("ROLE_USER");
+        if(!comUserInfo.getRole().equals(UserRole.ROLE_MANAGER)){
+            return -1L; //사업자가 아니면
+        }
+
+        if(!bCryptPasswordEncoder.matches(password,comUserInfo.getPassword())) {
+            return -2L; //비밀번호 확인 실패시
+        }
 
             userRepository.save(
                     UserInfo.builder()
@@ -143,17 +145,17 @@ public class CompanyServiceImpl implements CompanyService {
                             .userStreetAdr(comUserInfo.getUserStreetAdr())
                             .userDetailAdr(comUserInfo.getUserDetailAdr())
                             .userEnabled(comUserInfo.isUserEnabled())
-                            .role(companyUserInfoDto.getRole())
+                            .role(UserRole.ROLE_USER)
                             .build()
             );
 
-            CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
+            CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(comUserInfo).orElseGet(
                     ()->CompanyInfo.builder().build()
             );
             companyRepository.save(
                     CompanyInfo.builder()
                             .companyId(deleteCompanyInfo.getCompanyId())
-                            .userInfo(userInfo)
+                            .userInfo(comUserInfo)
                             .companyName(deleteCompanyInfo.getCompanyName())
                             .companyNum(deleteCompanyInfo.getCompanyNum())
                             .companyAdrNum(deleteCompanyInfo.getCompanyAdrNum())
@@ -161,13 +163,11 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyStreetAdr(deleteCompanyInfo.getCompanyStreetAdr())
                             .companyDetailAdr(deleteCompanyInfo.getCompanyDetailAdr())
                             .companyBanknum(deleteCompanyInfo.getCompanyBanknum())
-                            .companyEnabled(companyUserInfoDto.isCompanyEnabled())
+                            .companyEnabled(false)
                             .companyDeltedDate(LocalDateTime.now())
                             .build()
 
             );
-            return userInfo.getId();
-        }
-        return -1L;
+            return comUserInfo.getId();
     }
 }

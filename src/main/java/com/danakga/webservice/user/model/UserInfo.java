@@ -5,16 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -43,8 +40,9 @@ public class UserInfo implements UserDetails {
     private String email;
     
     //권한
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "u_role")
-    private String role;
+    private UserRole role;
 
     //회원 우편번호 
     @Column(name = "u_adr_num")
@@ -76,7 +74,7 @@ public class UserInfo implements UserDetails {
 
     @Builder
     public UserInfo(Long id, String userid, String password, String name, String phone, String email,
-                    String role, String userAdrNum, String userLotAdr,String userStreetAdr, String userDetailAdr,
+                    UserRole role, String userAdrNum, String userLotAdr,String userStreetAdr, String userDetailAdr,
                     boolean userEnabled,LocalDateTime userDeletedDate) {
         this.id = id;
         this.userid = userid;
@@ -98,8 +96,8 @@ public class UserInfo implements UserDetails {
     // 단, 클래스 자료형은 GrantedAuthority를 구현해야함
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> roles = new HashSet<>();
-        for (String role : role.split(",")) {
+        List<GrantedAuthority> roles = new ArrayList<>();
+        for (String role : role.toString().split(",")) {
             roles.add(new SimpleGrantedAuthority(role));
         }
         return roles;

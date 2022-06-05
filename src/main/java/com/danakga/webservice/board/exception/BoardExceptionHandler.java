@@ -1,6 +1,6 @@
 package com.danakga.webservice.board.exception;
 
-import com.danakga.webservice.board.dto.response.ResErrorDto;
+import com.danakga.webservice.util.responseDto.ResErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

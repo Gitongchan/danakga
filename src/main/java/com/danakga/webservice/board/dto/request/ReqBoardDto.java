@@ -1,6 +1,9 @@
 package com.danakga.webservice.board.dto.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
@@ -16,4 +19,5 @@ public class ReqBoardDto {
     private String bdTitle;
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
     private String bdContent;
+
 }

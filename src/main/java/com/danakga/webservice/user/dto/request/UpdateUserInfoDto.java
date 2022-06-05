@@ -1,9 +1,9 @@
 package com.danakga.webservice.user.dto.request;
 
-import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
-import lombok.*;
-import org.apache.tomcat.jni.Local;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoDto {
+public class UpdateUserInfoDto {
+
+    //현재 비밀번호체크
+    private String checkPassword;
+    
     //일반사용자 Dto
-
     private Long id;
-
-    @NotBlank(message = "아이디는 필수 입력 값입니다.")
-    private String userid;
 
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*\\W)(?=\\S+$).{6,12}",
@@ -34,13 +34,6 @@ public class UserInfoDto {
     @NotBlank(message = "핸드폰번호는 필수 입력 값입니다.")
     @Pattern(regexp = "^[0-9]+$", message = "핸드폰번호는 숫자만 허용합니다.")
     private String phone;
-
-    @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    @Email(message = "이메일 형식에 맞지 않습니다")
-    private String email;
-
-    //권한 ( user,manager,admin)
-    private UserRole role;
 
     //회원 우편번호
     private String userAdrNum;

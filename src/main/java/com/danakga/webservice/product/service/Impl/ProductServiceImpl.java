@@ -1,30 +1,44 @@
 package com.danakga.webservice.product.service.Impl;
 
-import com.danakga.webservice.board.model.Board;
+import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.product.dto.request.ProductDto;
+import com.danakga.webservice.product.dto.request.ProductSearchDto;
+import com.danakga.webservice.product.dto.response.ResProductDto;
+import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.model.ProductFiles;
+import com.danakga.webservice.product.repository.ProductFilesRepository;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.product.service.ProductFilesService;
 import com.danakga.webservice.product.service.ProductService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
-import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
+    private final ProductFilesRepository productFilesRepository;
     private final ProductRepository productRepository;
     private final ProductFilesService productFilesService;
     
@@ -41,15 +55,15 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.save(
                     Product.builder()
                             .productCompanyId(uploadCompany)
-                            .productBrand(productDto.getProductBrand())
                             .productContent(productDto.getProductContent())
                             .productName(productDto.getProductName())
                             .productPhoto(null)
                             .productPrice(productDto.getProductPrice())
-                            .productState(productDto.getProductState())
                             .productStock(productDto.getProductStock())
                             .productUploadDate(LocalDateTime.now())
                             .productType(productDto.getProductType())
+                            .productSubType(productDto.getProductSubType())
+                            .productBrand(productDto.getProductBrand())
                             .productOrderCount(productDto.getProductOrderCount())
                             .productViewCount(productDto.getProductViewCount())
                             .build()
@@ -68,15 +82,15 @@ public class ProductServiceImpl implements ProductService {
                         Product product = productRepository.save(
                                 Product.builder()
                                         .productCompanyId(uploadCompany)
-                                        .productBrand(productDto.getProductBrand())
                                         .productContent(productDto.getProductContent())
                                         .productName(productDto.getProductName())
-                                        .productPhoto(productDto.getProductPhoto())
+                                        .productPhoto(null)
                                         .productPrice(productDto.getProductPrice())
-                                        .productState(productDto.getProductState())
                                         .productStock(productDto.getProductStock())
                                         .productUploadDate(LocalDateTime.now())
                                         .productType(productDto.getProductType())
+                                        .productSubType(productDto.getProductSubType())
+                                        .productBrand(productDto.getProductBrand())
                                         .productOrderCount(productDto.getProductOrderCount())
                                         .productViewCount(productDto.getProductViewCount())
                                         .build()
@@ -94,6 +108,108 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return -1L; //상품업로드 실패시 -1L반환
+    }
+
+    //상품 리스트
+    @Override
+    public List<ResProductListDto> productList(Pageable pageable, ProductSearchDto productSearchDto, int page) {
+
+        pageable = PageRequest.of(page, 10, Sort.by("productId").descending());
+
+        Page<Product> productPage = productRepository.findByProductTypeLikeAndProductSubTypeLikeAndProductBrandLikeAndProductNameLikeAndProductStockGreaterThanEqual(
+                productSearchDto.getProductType(),productSearchDto.getProductSubType(),productSearchDto.getProductBrand(),
+                productSearchDto.getProductName(),productSearchDto.getProductStock(),pageable
+        );
+        List<Product> productList = productPage.getContent();
+
+        List<ResProductListDto> productListDto = new ArrayList<>();
+
+        productList.forEach(entity->{
+            ResProductListDto listDto = new ResProductListDto();
+            listDto.setProductId(entity.getProductId());
+            listDto.setProductBrand(entity.getProductBrand());
+            listDto.setProductType(entity.getProductType());
+            listDto.setProductSubType(entity.getProductSubType());
+            listDto.setProductName(entity.getProductName());
+            listDto.setProductPhoto(entity.getProductPhoto());
+            listDto.setProductPrice(entity.getProductPrice());
+            listDto.setProductStock(entity.getProductStock());
+            listDto.setProductViewCount(entity.getProductViewCount());
+            listDto.setProductOrderCount(entity.getProductOrderCount());
+            listDto.setProductUploadDate(entity.getProductUploadDate());
+            listDto.setTotalPage(productPage.getTotalPages());
+            listDto.setTotalElement(productPage.getTotalElements());
+            productListDto.add(listDto);
+        });
+        return productListDto;
+    }
+
+    //개별 상품 조회
+    @Override
+    public ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response) {
+
+        if (productRepository.findByProductId(productId).isEmpty()){
+            return null;
+        }
+
+
+        Product productInfo = productRepository.findByProductId(productId).get();   //상품정보
+        List<ProductFiles> files = productFilesRepository.findByProduct(productInfo);  //상품의 파일정보
+        
+        Long companyId = productInfo.getProductCompanyId().getCompanyId();
+
+        if(companyRepository.findByCompanyId(companyId).isEmpty()){
+            return null; //등록한 회사 정보가 없음
+        }
+        CompanyInfo companyInfo = companyRepository.findByCompanyId(companyId).get(); //상품을 등록한 회사정보
+
+        //조회수 증가, 쿠키로 중복 증가 방지
+        //쿠키가 있으면 그 쿠키가 해당 게시글 쿠키인지 확인하고 아니라면 조회수 올리고 setvalue로 해당 게시글의 쿠키 값도 넣어줘야함
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+
+        //기존에 쿠키를 가지고 있다면 해당 쿠키를 oldCookie에 담아줌
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("postView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+
+        //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 현재 게시글의 id가 없다면 조회수 증가
+        //그리고 현제 게시글 id를 쿠키에 다시 담아서 보냄
+        //쿠키가 없다면 새로 생성 후 조회 수 증가
+        if(oldCookie != null) {
+            if(!oldCookie.getValue().contains("[" + productId.toString() + "]")) {
+                productRepository.updateProductView(productId);
+                oldCookie.setValue(oldCookie.getValue() + "[" + productId + "]");
+                oldCookie.setMaxAge(60 * 60);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            Cookie postCookie = new Cookie("postView", "[" + productId + "]");
+            productRepository.updateProductView(productId);
+            //쿠키 사용시간 1시간 설정
+            postCookie.setMaxAge(60 * 60);
+            System.out.println("쿠키 이름 : " + postCookie.getValue());
+            response.addCookie(postCookie);
+        }
+
+        List<Map<String, Object>> mapFiles = new ArrayList<>();
+        ResProductDto resProductDto = new ResProductDto(productInfo,companyInfo);
+
+        files.forEach(entity->{
+            Map<String, Object> filesMap = new HashMap<>();
+            filesMap.put("file_name",entity.getPf_savename());
+            filesMap.put("file_path",entity.getPf_path());
+            mapFiles.add(filesMap);
+            }
+        );
+
+        resProductDto.setFiles(mapFiles);
+
+        return resProductDto;
     }
 }
 

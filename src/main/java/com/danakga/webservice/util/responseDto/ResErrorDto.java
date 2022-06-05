@@ -1,4 +1,4 @@
-package com.danakga.webservice.board.dto.response;
+package com.danakga.webservice.util.responseDto;
 
 import lombok.Getter;
 import lombok.Setter;
