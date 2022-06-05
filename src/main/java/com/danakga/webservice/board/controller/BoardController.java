@@ -2,45 +2,24 @@ package com.danakga.webservice.board.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardDto;
-import com.danakga.webservice.board.dto.response.ResBoardListDto;
-import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/api/user")
 public class BoardController {
 
     @Autowired private final BoardService boardService;
-
-    //게시판 목록,구분,페이징
-    @GetMapping("/list/{type}")
-    public List<ResBoardListDto> boardList(Pageable pageable,
-                                           @PathVariable("type")
-                                           String board_type, int page) {
-        return boardService.boardList(pageable, board_type, page);
-    }
-
-    //게시글 조회
-    @GetMapping("/post/{id}")
-    public ResBoardPostDto getpost(@PathVariable("id") Long id,
-                                   HttpServletRequest request, HttpServletResponse response
-                                   ) {
-        return boardService.getPost(id, request, response);
-    }
 
     //게시글 작성
     @PostMapping(value = "/post/write", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -58,6 +37,7 @@ public class BoardController {
         } else {
             return new ResResultDto(result, "게시글을 작성 했습니다.");
         }
+
     }
 
     //게시글 수정
@@ -77,6 +57,7 @@ public class BoardController {
         } else {
             return new ResResultDto(result, "게시글을 수정 했습니다.");
         }
+
     }
 
     @PutMapping("/post/delete/{id}")
@@ -89,4 +70,5 @@ public class BoardController {
         return result == -1L ?
                 new ResResultDto(result, "게시글 삭제 실패") : new ResResultDto(result, "게시글 삭제 성공");
     }
+
 }
