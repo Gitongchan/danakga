@@ -46,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductFilesService productFilesService;
     
     //상품등록
+    @Transactional
     @Override
     public Long productUpload(UserInfo userInfo, ProductDto productDto, List<MultipartFile> files) {
         if(userRepository.findById(userInfo.getId()).isEmpty()) return -1L;
@@ -60,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
                             .productCompanyId(uploadCompany)
                             .productContent(productDto.getProductContent())
                             .productName(productDto.getProductName())
-                            .productPhoto(null)
+                            .productPhoto("0")
                             .productPrice(productDto.getProductPrice())
                             .productStock(productDto.getProductStock())
                             .productUploadDate(LocalDateTime.now())
@@ -87,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
                                         .productCompanyId(uploadCompany)
                                         .productContent(productDto.getProductContent())
                                         .productName(productDto.getProductName())
-                                        .productPhoto(null)
+                                        .productPhoto("0")
                                         .productPrice(productDto.getProductPrice())
                                         .productStock(productDto.getProductStock())
                                         .productUploadDate(LocalDateTime.now())
@@ -220,42 +221,102 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, List<MultipartFile> files) {
 
-        if(userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()){
+        if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
             return -1L;
         }
 
-        if(productRepository.findByProductId(productId).isEmpty()){
+        if (productRepository.findByProductId(productId).isEmpty()) {
             return -1L;
         }
 
-        UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(),UserRole.ROLE_MANAGER).get();
+
+        UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
 
         Product productInfo = productRepository.findByProductId(productId).get();
 
         List<ProductFiles> productFilesList = productFilesRepository.findByProduct(productInfo);
 
+        if (companyRepository.findByUserInfo(productUserInfo).isEmpty()) {
+            return -1L;
+        }
+
+        CompanyInfo companyInfo = companyRepository.findByUserInfo(productUserInfo).get();
+
+
         //db값 담아주기 위한 List
         List<String> saveFilePath = new ArrayList<>();
 
-        for(ProductFiles productFiles : productFilesList){
+        for (ProductFiles productFiles : productFilesList) {
             saveFilePath.add(productFiles.getPfPath());
         }
-        
+
         //db에서 파일 정보 제거 + 폴더에서 파일 제거
-        for (String filePath: saveFilePath) {
+        for (String filePath : saveFilePath) {
             File deleteFile = new File(filePath);
-            if(deleteFile.delete()){
-                productFilesRepository.deleteByProductAndPfPath(productInfo,filePath);
+            if (deleteFile.delete()) {
+                productFilesRepository.deleteByProductAndPfPath(productInfo, filePath);
             }
         }
 
         File deleteThumbNailFile = new File(productInfo.getProductPhoto());
-        if(deleteThumbNailFile.delete()){
+        if (deleteThumbNailFile.delete()) {
             productRepository.deleteProductPhoto(productInfo.getProductId());
         }
 
-        return null;
-    }
+        if (CollectionUtils.isEmpty(files)) {
+            productRepository.save(
+                    Product.builder()
+                            .productId(productId)
+                            .productCompanyId(companyInfo)
+                            .productContent(productDto.getProductContent())
+                            .productName(productDto.getProductName())
+                            .productPhoto(productInfo.getProductPhoto())
+                            .productPrice(productDto.getProductPrice())
+                            .productStock(productDto.getProductStock())
+                            .productUploadDate(productInfo.getProductUploadDate())
+                            .productType(productDto.getProductType())
+                            .productSubType(productDto.getProductSubType())
+                            .productBrand(productDto.getProductBrand())
+                            .productOrderCount(productInfo.getProductOrderCount())
+                            .productViewCount(productInfo.getProductViewCount())
+                            .build()
+            );
+        } else if (!CollectionUtils.isEmpty(files)) {
 
+            for (MultipartFile multipartFile : files) {
+                //확장자 체크 위해서 게시글 원본 이름 가져옴
+                String originFileName = multipartFile.getOriginalFilename().toLowerCase();
+                if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
+
+                    Product product = productRepository.save(
+                            Product.builder()
+                                    .productId(productId)
+                                    .productCompanyId(companyInfo)
+                                    .productContent(productDto.getProductContent())
+                                    .productName(productDto.getProductName())
+                                    .productPhoto(productInfo.getProductPhoto())
+                                    .productPrice(productDto.getProductPrice())
+                                    .productStock(productDto.getProductStock())
+                                    .productUploadDate(productInfo.getProductUploadDate())
+                                    .productType(productDto.getProductType())
+                                    .productSubType(productDto.getProductSubType())
+                                    .productBrand(productDto.getProductBrand())
+                                    .productOrderCount(productInfo.getProductOrderCount())
+                                    .productViewCount(productInfo.getProductViewCount())
+                                    .build()
+                    );
+
+                    Long result = productFilesService.uploadFile(files, product);
+
+                    if (result.equals(-1L)) {
+                        return -2L; //파일업로드 실패하면 -2L반환
+                    }
+                    return product.getProductId();
+                }
+            }
+        }
+        return -100L;
+
+    }
 }
 

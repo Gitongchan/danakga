@@ -36,7 +36,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     //대표이미지 null로 변경
     @Transactional
     @Modifying
-    @Query("update Product p set p.productPhoto = null where p.productId = :productId")
+    @Query("update Product p set p.productPhoto = 0 where p.productId = :productId")
     void deleteProductPhoto(@Param("productId") Long productId);
 
 }
