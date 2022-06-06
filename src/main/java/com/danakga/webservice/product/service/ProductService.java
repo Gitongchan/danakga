@@ -28,4 +28,7 @@ public interface ProductService {
     
     //상품 수정
     Long productUpdate(UserInfo userInfo,Long productId,ProductDto productDto,List<MultipartFile> files);
+
+    //상품 삭제
+    Long productDelete(UserInfo userInfo,Long productId);
 }

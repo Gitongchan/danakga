@@ -224,16 +224,13 @@ public class ProductServiceImpl implements ProductService {
         if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
             return -1L;
         }
-
         if (productRepository.findByProductId(productId).isEmpty()) {
             return -1L;
         }
 
 
         UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
-
         Product productInfo = productRepository.findByProductId(productId).get();
-
         List<ProductFiles> productFilesList = productFilesRepository.findByProduct(productInfo);
 
         if (companyRepository.findByUserInfo(productUserInfo).isEmpty()) {
@@ -281,6 +278,7 @@ public class ProductServiceImpl implements ProductService {
                             .productViewCount(productInfo.getProductViewCount())
                             .build()
             );
+            return productId;
         } else if (!CollectionUtils.isEmpty(files)) {
 
             for (MultipartFile multipartFile : files) {
@@ -311,12 +309,66 @@ public class ProductServiceImpl implements ProductService {
                     if (result.equals(-1L)) {
                         return -2L; //파일업로드 실패하면 -2L반환
                     }
-                    return product.getProductId();
+                    return productId;
                 }
             }
         }
-        return -100L;
-
+        return -1L;
     }
+
+    //상품삭제
+    @Transactional
+    @Override
+    public Long productDelete(UserInfo userInfo, Long productId) {
+
+        //유저 정보 + 매니저인지 검증
+        if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
+            return -1L;
+        }
+        UserInfo productDeleteUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
+
+        //상품을 등록한 회사 정보 검증
+       if(companyRepository.findByUserInfo(productDeleteUserInfo).isEmpty()){
+            return -1L;
+       }
+       CompanyInfo productDeleteCompanyInfo =companyRepository.findByUserInfo(productDeleteUserInfo).get();
+
+       //상품번호와 등록환 회사정보 일치하는지 검증
+       if(productRepository.findByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo).isEmpty()){
+           return -1L;
+       }
+       Product deleteProduct = productRepository.findByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo).get();
+
+        // 등록된 사진이 있다면 지워줌
+        List<ProductFiles> productFilesList = productFilesRepository.findByProduct(deleteProduct);
+        if(!productFilesList.isEmpty()){
+            //db값 담아주기 위한 List
+            List<String> saveFilePath = new ArrayList<>();
+
+            for (ProductFiles productFiles : productFilesList) {
+                saveFilePath.add(productFiles.getPfPath());
+            }
+
+            //db에서 파일 정보 제거 + 폴더에서 파일 제거
+            for (String filePath : saveFilePath) {
+                File deleteFile = new File(filePath);
+                if (deleteFile.delete()) {
+                    productFilesRepository.deleteByProductAndPfPath(deleteProduct, filePath);
+                }
+            }
+
+            File deleteThumbNailFile = new File(deleteProduct.getProductPhoto());
+            if (deleteThumbNailFile.delete()) {
+                System.out.println("썸네일 삭제 완료");
+            }
+        }
+        
+        //상품을 지워줌
+        productRepository.deleteByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo);
+
+
+        return deleteProduct.getProductId();
+    }
+
 }
 

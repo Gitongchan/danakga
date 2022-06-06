@@ -55,8 +55,17 @@ public class ProductController {
                                       @RequestPart(value = "keys") ProductDto productDto,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files){
         Long result = productService.productUpdate(userInfo,productId,productDto,files);
-        return new ResResultDto(result , "실행됨");
+        return result == -1L ?
+                new ResResultDto(result,"상품 수정 실패.") : new ResResultDto(result,"상품 수정 성공.");
     }
 
+    //상품 삭제
+    @DeleteMapping("/delete/{item}")
+    public ResResultDto productDelete(@LoginUser UserInfo userInfo ,@PathVariable("item") Long productId){
+        Long result = productService.productDelete(userInfo,productId);
+
+        return result == -1L ?
+                new ResResultDto(result,"상품 삭제 실패.") : new ResResultDto(result,"상품 삭제 성공.");
+    }
 
 }

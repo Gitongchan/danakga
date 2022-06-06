@@ -11,6 +11,9 @@ public interface ProductFilesRepository extends JpaRepository<ProductFiles,Integ
 
     void deleteByProductAndPfPath(Product product,String pfPath);
 
+    void deleteAllByProduct(Product product);
+
+
 
 
 }
