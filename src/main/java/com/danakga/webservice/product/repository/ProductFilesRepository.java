@@ -8,4 +8,9 @@ import java.util.List;
 
 public interface ProductFilesRepository extends JpaRepository<ProductFiles,Integer> {
     List<ProductFiles> findByProduct(Product product);
+
+    void deleteByProductAndPfPath(Product product,String pfPath);
+
+
+
 }

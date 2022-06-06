@@ -18,7 +18,7 @@ public class ProductFiles {
     @Id
     @GeneratedValue
     @Column(name="pf_id")
-    private Long pf_id;
+    private Long pfId;
 
     //상품 아이디
     @ManyToOne
@@ -27,22 +27,22 @@ public class ProductFiles {
 
     //상품 원본 파일명
     @Column(name="pf_origin")
-    private String pf_origin;
+    private String pfOrigin;
 
     //저장되는 파일명
     @Column(name="pf_savename")
-    private String pf_savename;
+    private String pfSaveName;
 
     //상품 파일 경로
     @Column(name="pf_path")
-    private String pf_path;
+    private String pfPath;
 
     @Builder
-    public ProductFiles(Long pf_id, Product product, String pf_origin, String pf_savename, String pf_path) {
-        this.pf_id = pf_id;
+    public ProductFiles(Long pfId, Product product, String pfOrigin, String pfSaveName, String pfPath) {
+        this.pfId = pfId;
         this.product = product;
-        this.pf_origin = pf_origin;
-        this.pf_savename = pf_savename;
-        this.pf_path = pf_path;
+        this.pfOrigin = pfOrigin;
+        this.pfSaveName = pfSaveName;
+        this.pfPath = pfPath;
     }
 }

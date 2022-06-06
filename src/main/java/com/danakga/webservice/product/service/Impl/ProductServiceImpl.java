@@ -14,6 +14,7 @@ import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.product.service.ProductFilesService;
 import com.danakga.webservice.product.service.ProductService;
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,12 +22,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -201,8 +204,8 @@ public class ProductServiceImpl implements ProductService {
 
         files.forEach(entity->{
             Map<String, Object> filesMap = new HashMap<>();
-            filesMap.put("file_name",entity.getPf_savename());
-            filesMap.put("file_path",entity.getPf_path());
+            filesMap.put("file_name",entity.getPfSaveName());
+            filesMap.put("file_path",entity.getPfPath());
             mapFiles.add(filesMap);
             }
         );
@@ -211,5 +214,48 @@ public class ProductServiceImpl implements ProductService {
 
         return resProductDto;
     }
+
+    //상품 수정
+    @Transactional
+    @Override
+    public Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, List<MultipartFile> files) {
+
+        if(userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()){
+            return -1L;
+        }
+
+        if(productRepository.findByProductId(productId).isEmpty()){
+            return -1L;
+        }
+
+        UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(),UserRole.ROLE_MANAGER).get();
+
+        Product productInfo = productRepository.findByProductId(productId).get();
+
+        List<ProductFiles> productFilesList = productFilesRepository.findByProduct(productInfo);
+
+        //db값 담아주기 위한 List
+        List<String> saveFilePath = new ArrayList<>();
+
+        for(ProductFiles productFiles : productFilesList){
+            saveFilePath.add(productFiles.getPfPath());
+        }
+        
+        //db에서 파일 정보 제거 + 폴더에서 파일 제거
+        for (String filePath: saveFilePath) {
+            File deleteFile = new File(filePath);
+            if(deleteFile.delete()){
+                productFilesRepository.deleteByProductAndPfPath(productInfo,filePath);
+            }
+        }
+
+        File deleteThumbNailFile = new File(productInfo.getProductPhoto());
+        if(deleteThumbNailFile.delete()){
+            productRepository.deleteProductPhoto(productInfo.getProductId());
+        }
+
+        return null;
+    }
+
 }
 
