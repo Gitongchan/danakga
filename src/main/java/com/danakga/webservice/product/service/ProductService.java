@@ -31,4 +31,8 @@ public interface ProductService {
 
     //상품 삭제
     Long productDelete(UserInfo userInfo,Long productId);
+
+    //수정 삭제 버튼 확인
+    Long updateDeleteButton(UserInfo userInfo,Long productId);
+
 }

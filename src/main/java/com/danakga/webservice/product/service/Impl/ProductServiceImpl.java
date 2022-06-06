@@ -221,16 +221,28 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, List<MultipartFile> files) {
 
+
+
         if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
             return -1L;
         }
-        if (productRepository.findByProductId(productId).isEmpty()) {
+        UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
+
+        //로그인한 유저의 회사 정보 검증
+        if(companyRepository.findByUserInfo(productUserInfo).isEmpty()){
             return -1L;
         }
+        CompanyInfo CompanyInfo =companyRepository.findByUserInfo(productUserInfo).get();
 
 
-        UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
-        Product productInfo = productRepository.findByProductId(productId).get();
+        //상품번호와 등록환 회사정보 일치하는지 검증
+        if(productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).isEmpty()){
+            return -1L;
+        }
+        Product productInfo = productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).get();
+
+        /*------ 검증 끝 ------*/
+
         List<ProductFiles> productFilesList = productFilesRepository.findByProduct(productInfo);
 
         if (companyRepository.findByUserInfo(productUserInfo).isEmpty()) {
@@ -368,6 +380,31 @@ public class ProductServiceImpl implements ProductService {
 
 
         return deleteProduct.getProductId();
+    }
+
+    //수정 삭제 버튼 확인
+    @Override
+    public Long updateDeleteButton(UserInfo userInfo, Long productId) {
+        //유저 정보 + 매니저인지 검증
+        if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
+            return -1L;
+        }
+        UserInfo btnUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
+
+        //로그인한 유저의 회사 정보 검증
+        if(companyRepository.findByUserInfo(btnUserInfo).isEmpty()){
+            return -1L;
+        }
+        CompanyInfo CompanyInfo =companyRepository.findByUserInfo(btnUserInfo).get();
+
+        //상품번호와 등록환 회사정보 일치하는지 검증
+        if(productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).isEmpty()){
+            return -1L;
+        }
+        Product productInfo = productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).get();
+
+
+        return productInfo.getProductId();
     }
 
 }
