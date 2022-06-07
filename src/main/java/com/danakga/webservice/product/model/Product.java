@@ -36,10 +36,6 @@ public class Product {
     @Column(name = "pd_brand")
     private String productBrand;
 
-    //상품상태(판매중,품절)
-    @Column(name = "pd_state")
-    private String productState;
-
     //상품명
     @Column(name = "pd_name")
     private String productName;
@@ -74,7 +70,7 @@ public class Product {
 
     @Builder
     public Product(Long productId, CompanyInfo productCompanyId, String productType,
-                   String productSubType, String productBrand, String productState,
+                   String productSubType, String productBrand,
                    String productName, String productPhoto, String productContent,
                    String productPrice, Integer productStock, LocalDateTime productUploadDate,
                    Integer productViewCount, Integer productOrderCount) {
@@ -83,7 +79,6 @@ public class Product {
         this.productType = productType;
         this.productSubType = productSubType;
         this.productBrand = productBrand;
-        this.productState = productState;
         this.productName = productName;
         this.productPhoto = productPhoto;
         this.productContent = productContent;
