@@ -17,7 +17,7 @@ fetch(`/api/board/post/${urlParams}`)
 
     for(let i =0; i< data.files.length; i++){
         let img = document.createElement('img');
-        img.src= data.files[i].file_path;
+        img.src= `/images/${data.files[i].file_name}`;
         console.log(data.files[i].file_path);
         content.appendChild(img);
     }

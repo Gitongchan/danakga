@@ -24,3 +24,4 @@ fetch(`/api/board/list/자유게시판?page=0`)
         //     pagenation.innerHTML += '<li class="page-item"><a class="page-link" href="#">></a></li>';
         // })();
     })
+.catch((err)=> console.log(err));
