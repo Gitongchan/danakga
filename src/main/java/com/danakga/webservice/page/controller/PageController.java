@@ -39,6 +39,11 @@ public class PageController {
         return "pages/mypage";
     }
 
+    @GetMapping("/mypageEdit")
+    public String mypageEdit(){
+        return "pages/mypageEdit";
+    }
+
     @GetMapping("/user/signout")
     public String signout(){
         return "pages/userSignout";
