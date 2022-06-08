@@ -1,5 +1,6 @@
 package com.danakga.webservice.product.repository;
 
+import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.product.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +28,21 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     Optional<Product> findByProductId(Long productId);
 
+    Optional<Product> findByProductIdAndProductCompanyId(Long productId,CompanyInfo companyInfo);
+
     //조회수 증가
     @Transactional
     @Modifying
     @Query("update Product p set p.productViewCount = p.productViewCount + 1 where p.productId =:productId")
     void updateProductView(@Param("productId") Long productId);
+
+    //대표이미지 null로 변경
+    @Transactional
+    @Modifying
+    @Query("update Product p set p.productPhoto = 0 where p.productId = :productId")
+    void deleteProductPhoto(@Param("productId") Long productId);
+
+    @Transactional
+    void deleteByProductIdAndProductCompanyId(Long productId, CompanyInfo companyInfo);
+
 }

@@ -34,7 +34,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
         Long pf_id = null;
 
         //파일 저장 경로
-        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_files\\";
+        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_files";
 
         //파일 저장되는 폳더 없으면 생성
         if(!new File(savePath).exists()) {
@@ -45,7 +45,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
             }
         }
 
-        String thumbNailPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail\\";
+        String thumbNailPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail";
 
         //파일 저장되는 폳더 없으면 생성
         if(!new File(thumbNailPath).exists()) {
@@ -79,11 +79,11 @@ public class ProductFilesServiceImpl implements ProductFilesService {
             pf_id = productFilesRepository.save(
                     ProductFiles.builder()
                             .product(product)
-                            .pf_origin(originFileName)
-                            .pf_path(filepath)
-                            .pf_savename(saveFileName)
+                            .pfOrigin(originFileName)
+                            .pfPath(filepath)
+                            .pfSaveName(saveFileName)
                             .build()
-            ).getPf_id();
+            ).getPfId();
 
             //첫번째 파일이 들어오면 복사해서 썸네일 폴더에도 추가해준다.
             //썸네일 폴더로 추가한 파일경로를 대표 이미지로 지정해준다.
