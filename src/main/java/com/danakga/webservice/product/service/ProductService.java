@@ -25,4 +25,14 @@ public interface ProductService {
 
     //개별 상품 조회
     ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response);
+    
+    //상품 수정
+    Long productUpdate(UserInfo userInfo,Long productId,ProductDto productDto,List<MultipartFile> files);
+
+    //상품 삭제
+    Long productDelete(UserInfo userInfo,Long productId);
+
+    //수정 삭제 버튼 확인
+    Long updateDeleteButton(UserInfo userInfo,Long productId);
+
 }

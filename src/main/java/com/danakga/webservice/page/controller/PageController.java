@@ -44,4 +44,14 @@ public class PageController {
     @GetMapping("/boardlist")
     public String boardlist(){return "pages/boardlist";}
 
+    @GetMapping("/mypageEdit")
+    public String mypageEdit(){
+        return "pages/mypageEdit";
+    }
+
+    @GetMapping("/user/signout")
+    public String signout(){
+        return "pages/userSignout";
+    }
+
 }
