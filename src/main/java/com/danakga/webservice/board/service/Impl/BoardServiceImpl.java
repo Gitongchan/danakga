@@ -14,6 +14,7 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,7 +53,8 @@ public class BoardServiceImpl implements BoardService {
         //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
         pageable = PageRequest.of(page, 10, Sort.by("bdId").descending());
-        List<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable).getContent();
+        Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable);
+        List<Board> boardList = boards.getContent();
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
@@ -64,6 +66,8 @@ public class BoardServiceImpl implements BoardService {
             listDto.setBdCreated(entity.getBdCreated());
             listDto.setBdViews(entity.getBdViews());
             listDto.setBdDeleted(entity.getBdDeleted());
+            listDto.setTotalElement(boards.getTotalElements());
+            listDto.setTotalPage(boards.getTotalPages());
             boardListDto.add(listDto);
         });
         return boardListDto;
@@ -218,13 +222,13 @@ public class BoardServiceImpl implements BoardService {
 
         //db에서 가져온 저장된 파일명 List에 넣어줌
         for (Board_Files board_Files : boardFiles) {
-            saveFileName.add(board_Files.getFileSaveName());
+            saveFileName.add(board_Files.getFilePath());
             System.out.println(saveFileName);
         }
 
         //List에 담긴 저장 파일명을 가지고 files 패키지와 db에서 삭제
         for (String sFileName : saveFileName) {
-            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files" + sFileName);
+            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + sFileName);
             if(deleteFile.delete()) {
                 fileRepository.deleteByBoardAndFileSaveName(board, sFileName);
             }

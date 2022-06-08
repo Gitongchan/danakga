@@ -25,7 +25,6 @@ public class FileServiceImpl implements FilesService {
 
         //파일 저장 경로
         String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
-        System.out.println(savePath);
 
         //파일 저장되는 폳더 없으면 생성
         if (!new File(savePath).exists()) {
@@ -49,6 +48,11 @@ public class FileServiceImpl implements FilesService {
 
             //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
             String filePath = savePath + "\\" + saveFileName;
+            
+            //DB에 저장되는 경로
+            String dbFilePath = "files\\" + saveFileName;
+            
+            //multipartfile.transferTo 사용하여 파일경로에 파일명으로 저장
             try {
                 multipartFile.transferTo(new File(filePath));
             } catch (IOException e) {
@@ -59,7 +63,7 @@ public class FileServiceImpl implements FilesService {
                     Board_Files.builder()
                             .fileSaveName(saveFileName)
                             .fileOrigin(originFileName)
-                            .filePath(filePath)
+                            .filePath(dbFilePath)
                             .board(board)
                             .build()
             );
