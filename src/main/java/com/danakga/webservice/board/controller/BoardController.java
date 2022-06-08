@@ -6,7 +6,6 @@ import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class BoardController {
 
-    @Autowired private final BoardService boardService;
+    private final BoardService boardService;
 
     //게시글 작성
     @PostMapping(value = "/post/write", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})

@@ -13,7 +13,6 @@ import com.danakga.webservice.board.service.FilesService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,13 +35,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
     private final BoardRepository boardRepository;
-    @Autowired
     private final FileRepository fileRepository;
-    @Autowired
     private final FilesService filesService;
-    @Autowired
     private final UserRepository userRepository;
     private Board board;
 
