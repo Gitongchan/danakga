@@ -33,7 +33,10 @@ public class OrdersDto {
     private LocalDateTime ordersFinishedDate;
 
     //주문 수량
-    private int orderQuantity;
+    private int ordersQuantity;
+
+    //주문 금액
+    private int ordersPrice;
 
     //운송장 번호
     private String ordersTrackingNum;

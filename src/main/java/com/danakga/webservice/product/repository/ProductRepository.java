@@ -43,6 +43,11 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     void deleteProductPhoto(@Param("productId") Long productId);
 
     @Transactional
+    @Modifying
     void deleteByProductIdAndProductCompanyId(Long productId, CompanyInfo companyInfo);
 
+    @Transactional
+    @Modifying
+    @Query("update Product p set p.productStock = p.productStock - :ordersQuantity where p.productId = :productId")
+    void updateProductStock(@Param("ordersQuantity") int ordersQuantity,@Param("productId") Long productId);
 }

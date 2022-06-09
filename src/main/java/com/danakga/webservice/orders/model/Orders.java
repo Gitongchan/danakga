@@ -2,6 +2,7 @@ package com.danakga.webservice.orders.model;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -44,13 +45,32 @@ public class Orders {
     @Column(name="orders_finished_date")
     private LocalDateTime ordersFinishedDate;
 
+    //주문 금액
+    @Column(name = "orders_price")
+    private int ordersPrice;
+
     //주문 수량
     @Column(name="orders_quantity")
-    private int orderQuantity;
+    private int ordersQuantity;
 
     //운송장 번호
     @Column(name="orders_traking_num")
     private String ordersTrackingNum;
+
+    @Builder
+    public Orders(Long ordersId, UserInfo userInfo, Product product, OrderStatus orderStatus,
+                  LocalDateTime ordersDate, LocalDateTime ordersFinishedDate, int ordersPrice,int ordersQuantity,
+                  String ordersTrackingNum) {
+        this.ordersId = ordersId;
+        this.userInfo = userInfo;
+        this.product = product;
+        this.orderStatus = orderStatus;
+        this.ordersDate = ordersDate;
+        this.ordersFinishedDate = ordersFinishedDate;
+        this.ordersPrice = ordersPrice;
+        this.ordersQuantity = ordersQuantity;
+        this.ordersTrackingNum = ordersTrackingNum;
+    }
 }
 
 
