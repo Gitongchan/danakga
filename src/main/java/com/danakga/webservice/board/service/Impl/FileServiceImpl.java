@@ -23,7 +23,7 @@ public class FileServiceImpl implements FilesService {
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
         //파일 저장 경로
-        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files";
 
         //파일 저장되는 폳더 없으면 생성
         if (!new File(savePath).exists()) {

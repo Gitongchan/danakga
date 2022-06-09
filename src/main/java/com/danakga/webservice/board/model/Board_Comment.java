@@ -41,11 +41,11 @@ public class Board_Comment {
     private Board board;
 
     @Builder
-    public Board_Comment(Long cmId, String cmComment, String cmDefault, LocalDateTime cmCreated, LocalDateTime cmModified,
+    public Board_Comment(Long cmId, String cmComment, String cmDeleted, LocalDateTime cmCreated, LocalDateTime cmModified,
                          UserInfo userInfo, Board board) {
         this.cmId = cmId;
         this.cmComment = cmComment;
-        this.cmDeleted = cmDefault;
+        this.cmDeleted = cmDeleted;
         this.cmCreated = cmCreated;
         this.cmModified = cmModified;
         this.userInfo = userInfo;

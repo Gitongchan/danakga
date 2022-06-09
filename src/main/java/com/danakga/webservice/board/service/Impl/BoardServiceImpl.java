@@ -53,7 +53,7 @@ public class BoardServiceImpl implements BoardService {
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
-        boards.forEach(entity -> {
+        boardList.forEach(entity -> {
             ResBoardListDto listDto = new ResBoardListDto();
             listDto.setBdId(entity.getBdId());
             listDto.setBdTitle(entity.getBdTitle());
@@ -126,11 +126,6 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBdViews(boardWrapper.getBdViews());
 
         //file 정보 값 set
-        //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
-        //그래서 map 생성자도 반복문 안으로 넣어줘서 List<Map>에 한번 담고 다시 생성돼서 돌아가는 식
-        //Map.put() == List.add() 와 같은 기능
-        //Map에 담긴 값을 Dto에 선언했던 Lise<Map<?,?>>에 담아줌
-        //for(Board_Files board_files : files) {} 으로도 가능
         files.forEach(entity -> {
             Map<String, Object> filesmap = new HashMap<>();
             filesmap.put("file_name", entity.getFileSaveName());
