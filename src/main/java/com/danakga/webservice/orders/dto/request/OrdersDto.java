@@ -24,7 +24,7 @@ public class OrdersDto {
     private Product product;
 
     //주문 상태
-    private OrderStatus orderStatus;
+    private String orderStatus;
 
     //주문 날짜
     private LocalDateTime ordersDate;

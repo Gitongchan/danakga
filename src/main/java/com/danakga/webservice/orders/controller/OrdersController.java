@@ -20,6 +20,7 @@ public class OrdersController {
     public ResResultDto ordersSave(@LoginUser UserInfo userInfo, @PathVariable("productId") Long productId
             ,@RequestBody OrdersDto ordersDto){
         Long result = ordersService.ordersSave(userInfo,productId,ordersDto);
-        return new ResResultDto(result,"주문 성공");
+        return result == -1L ? 
+                new ResResultDto(result,"재고가 부족합니다.") : new ResResultDto(result,"성공적으로 주문되었습니다.");
     }
 }

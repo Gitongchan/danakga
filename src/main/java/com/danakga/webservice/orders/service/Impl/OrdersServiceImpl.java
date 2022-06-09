@@ -1,6 +1,5 @@
 package com.danakga.webservice.orders.service.Impl;
 
-import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.model.OrderStatus;
@@ -37,7 +36,7 @@ public class OrdersServiceImpl implements OrdersService {
                 Orders.builder()
                         .userInfo(ordersUserInfo)
                         .product(ordersProduct)
-                        .orderStatus(OrderStatus.READY)
+                        .orderStatus(OrderStatus.READY.getStatus())
                         .ordersDate(LocalDateTime.now())
                         .ordersFinishedDate(null) //배송완료시에 입력됨
                         .ordersPrice(ordersDto.getOrdersPrice())
@@ -47,7 +46,12 @@ public class OrdersServiceImpl implements OrdersService {
         );
 
         //제품 수량 변경
-        productRepository.updateProductStock(ordersDto.getOrdersQuantity(),ordersProduct.getProductId());
+        if(ordersProduct.getProductStock() < ordersDto.getOrdersQuantity()){
+            return -1L; // 재고 부족
+        }else{
+            productRepository.updateProductStock(ordersDto.getOrdersQuantity(),ordersProduct.getProductId());
+        }
+
 
         return orders.getOrdersId();
     }

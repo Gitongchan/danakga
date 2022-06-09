@@ -33,9 +33,8 @@ public class Orders {
     private Product product;
     
     //주문 상태
-    @Enumerated(value = EnumType.STRING)
     @Column(name="orders_status")
-    private OrderStatus orderStatus;
+    private String orderStatus;
     
     //주문 날짜
     @Column(name="orders_date")
@@ -58,7 +57,7 @@ public class Orders {
     private String ordersTrackingNum;
 
     @Builder
-    public Orders(Long ordersId, UserInfo userInfo, Product product, OrderStatus orderStatus,
+    public Orders(Long ordersId, UserInfo userInfo, Product product, String orderStatus,
                   LocalDateTime ordersDate, LocalDateTime ordersFinishedDate, int ordersPrice,int ordersQuantity,
                   String ordersTrackingNum) {
         this.ordersId = ordersId;
