@@ -58,7 +58,7 @@ public class BoardServiceImpl implements BoardService {
 
         List<ResBoardListDto> boardListDto = new ArrayList<>();
 
-        boards.forEach(entity -> {
+        boardList.forEach(entity -> {
             ResBoardListDto listDto = new ResBoardListDto();
             listDto.setBdId(entity.getBdId());
             listDto.setBdTitle(entity.getBdTitle());
