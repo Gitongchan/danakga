@@ -12,7 +12,6 @@ const left_span = document.createElement('span');
 const right_a = document.createElement('a');
 const right_span = document.createElement('span');
 
-//
 const stick = document.createElement('span');
 stick.innerText = '|';
 
