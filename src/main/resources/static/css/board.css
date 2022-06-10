@@ -1,0 +1,45 @@
+.ck-content{
+    height: 300px;
+}
+
+.pagination {
+    display: flex;
+}
+
+.text-center{
+    display: flex;
+    justify-content: center;
+    height: 100px;
+}
+
+#boardtable{
+    width: 100%;
+}
+
+
+/*li {*/
+/*     list-style: none;*/
+/* }*/
+
+/*img {*/
+/*    width: 200px;*/
+/*    height: 200px;*/
+/*}*/
+
+/*.real-upload {*/
+/*    display: none;*/
+/*}*/
+
+/*.upload {*/
+/*    width: 100%;*/
+/*    height: 50px;*/
+/*    background-color: antiquewhite;*/
+/*}*/
+
+/*.image-preview {*/
+/*    width: 1300px;*/
+/*    height: 200px;*/
+/*    background-color: aquamarine;*/
+/*    display: flex;*/
+/*    gap: 20px;*/
+/*}*/

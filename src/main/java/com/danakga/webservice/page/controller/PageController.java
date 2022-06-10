@@ -39,14 +39,13 @@ public class PageController {
         return "pages/mypage";
     }
 
-    @GetMapping("/mypageEdit")
-    public String mypageEdit(){
-        return "pages/mypageEdit";
-    }
+    @GetMapping("/boardedit")
+    public String boardEdition(){return "pages/boardedit";}
 
-    @GetMapping("/user/signout")
-    public String signout(){
-        return "pages/userSignout";
-    }
+    @GetMapping("/blog")
+    public String blog(){return "pages/blog-single";}
+
+    @GetMapping("/boardlist")
+    public String boardlist(){return "pages/boardlist";}
 
 }
