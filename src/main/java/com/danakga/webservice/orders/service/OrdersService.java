@@ -5,6 +5,7 @@ import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrdersService {
@@ -13,6 +14,7 @@ public interface OrdersService {
     Long ordersSave(UserInfo userInfo, Long productId, OrdersDto ordersDto);
     
     //주문내역
-    List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page);
+    List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page,
+                                      LocalDateTime startTime,LocalDateTime endTime);
     
 }

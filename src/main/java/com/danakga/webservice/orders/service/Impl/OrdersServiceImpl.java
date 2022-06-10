@@ -12,12 +12,14 @@ import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -62,12 +64,33 @@ public class OrdersServiceImpl implements OrdersService {
 
     //주문 내역
     @Override
-    public List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page) {
+    public List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startTime,LocalDateTime endTime) {
         UserInfo ordersUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
         pageable = PageRequest.of(page, 10, Sort.by("ordersId").descending());
-        return null;
+
+        Page<Orders> ordersPage = ordersRepository.ordersList(userInfo,pageable,startTime,endTime);
+        List<Orders> ordersList = ordersPage.getContent();
+
+        List<ResOrdersListDto> ordersListDto = new ArrayList<>();
+
+        ordersList.forEach(entity->{
+                ResOrdersListDto listDto = new ResOrdersListDto();
+                listDto.setOrdersId(entity.getOrdersId());
+                listDto.setOrdersDate(entity.getOrdersDate());
+                listDto.setCompanyName(entity.getProduct().getProductCompanyId().getCompanyName());
+                listDto.setProductBrand(entity.getProduct().getProductBrand());
+                listDto.setProductName(entity.getProduct().getProductName());
+                listDto.setOrdersQuantity(entity.getOrdersQuantity());
+                listDto.setOrdersFinishedDate(entity.getOrdersFinishedDate());
+                listDto.setOrderStatus(entity.getOrderStatus());
+                listDto.setTotalPage(ordersPage.getTotalPages());
+                listDto.setTotalElement(ordersPage.getTotalElements());
+                ordersListDto.add(listDto);
+                }
+        );
+        return ordersListDto;
     }
 
 
