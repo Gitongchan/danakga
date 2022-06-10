@@ -44,12 +44,6 @@ fetch(`/api/board/post/${urlParams}`)
 
     });
 
-    // const delBtn = document.querySelectorAll('.img-btn-delete.btn-danger');
-    // for(const btn of delBtn){
-    //     btn.addEventListener('click',(e)=>{
-    //         console.log(e);
-    //     })
-    // }
 
 // {
 //     deletefiles : [

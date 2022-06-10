@@ -51,6 +51,11 @@
     display: flex;
 }
 
+#image-preview{
+    overflow: scroll;
+    display: flex;
+}
+
 .blog-single p{
     font-size: 14px;
     margin: 5px 0;
@@ -82,5 +87,5 @@
     background-color: aquamarine;
     display: flex;
     gap: 20px;
-    overflow: hidden;
+    overflow: scroll;
 }
