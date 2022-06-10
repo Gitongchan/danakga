@@ -20,10 +20,16 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     void updateProductMainPhoto(@Param("productMainPhoto") String productPhoto,@Param("productId") Long productId);
 
     //상품 리스트 검색
+    @Query("Select p from Product p where p.productType like :productType " +
+            "and p.productSubType like :productSubType " +
+            "and p.productBrand like :productBrand " +
+            "and p.productName like :productName " +
+            "and p.productStock >= :productStock")
     Page<Product>
-    findByProductTypeLikeAndProductSubTypeLikeAndProductBrandLikeAndProductNameLikeAndProductStockGreaterThanEqual(
-            String productType, String productSubType, String productBrand,
-            String productName, Integer productStock, Pageable pageable
+    searchProductList(
+            @Param("productType") String productType, @Param("productSubType") String productSubType
+            ,@Param("productBrand") String productBrand,
+            @Param("productName") String productName, @Param("productStock") Integer productStock, Pageable pageable
     );
 
     Optional<Product> findByProductId(Long productId);

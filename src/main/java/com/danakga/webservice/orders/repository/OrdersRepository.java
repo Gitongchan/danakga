@@ -13,9 +13,9 @@ import java.util.Optional;
 public interface OrdersRepository extends JpaRepository<Orders,Integer>{
     Optional<Orders> findByUserInfo(UserInfo userinfo);
 
-    @Query(
+   /* @Query(
             value = "select o from Orders o join fetch o.product where o.userInfo = :userInfo",
             countQuery = "select count(o) from Orders o  join fetch o.product where o.userInfo = :userInfo"
     )
-    Page<Orders> findAllByUserInfoAndJoinFetch(@Param("userInfo") UserInfo userInfo, Pageable pageable);
+    Page<Orders> findAllByUserInfoAndJoinFetch(@Param("userInfo") UserInfo userInfo, Pageable pageable);*/
 }

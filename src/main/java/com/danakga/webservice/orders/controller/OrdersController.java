@@ -26,9 +26,9 @@ public class OrdersController {
                 new ResResultDto(result,"재고가 부족합니다.") : new ResResultDto(result,"성공적으로 주문되었습니다.");
     }
     
-    //주문내역
+  /*  //주문내역
     @GetMapping("api/user/orders/list")
     public List<ResOrdersListDto> myOrdersList(@LoginUser UserInfo userInfo,Pageable pageable, int page){
         return null;
-    }
+    }*/
 }
