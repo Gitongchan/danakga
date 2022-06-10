@@ -1,6 +1,7 @@
 package com.danakga.webservice.board.service;
 
 import com.danakga.webservice.board.dto.request.ReqBoardDto;
+import com.danakga.webservice.board.dto.request.ReqDeletedFileDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -23,7 +24,7 @@ public interface BoardService {
     Long postWrite(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
-    Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files);
+    Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files);
 
     //게시글 삭제 여부 변경
     Long postDelete(Long id, UserInfo userInfo);

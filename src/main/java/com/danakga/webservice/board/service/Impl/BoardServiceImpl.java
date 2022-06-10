@@ -1,6 +1,7 @@
 package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqBoardDto;
+import com.danakga.webservice.board.dto.request.ReqDeletedFileDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.exception.CustomException;
@@ -188,7 +189,7 @@ public class BoardServiceImpl implements BoardService {
     //게시글 수정
     @Transactional
     @Override
-    public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files) {
+    public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
         
         //파일 먼저 삭제하고 CollectionUtil로 파일 유무 확인 후 없으면 board만 수정, 있으면 file도 다시 업로드
         //웹페이지에서 x눌러서 지운 파일은 어차피 값이 들어오지 않기 때문에 삭제 후 업로드 되지 않음(들어온 파일만 업로드)
@@ -209,20 +210,28 @@ public class BoardServiceImpl implements BoardService {
 
         //db값 담아주기 위한 List
         List<String> saveFileName = new ArrayList<>();
+        List<String> deleteFileName = reqDeletedFileDto.getDeletedFiles();
 
         //db에서 가져온 저장된 파일명 List에 넣어줌
-        for (Board_Files board_Files : boardFiles) {
-            saveFileName.add(board_Files.getFilePath());
-            System.out.println(saveFileName);
+//        for (Board_Files board_Files : boardFiles) {
+//            saveFileName.add(board_Files.getFileSaveName());
+//            System.out.println(saveFileName);
+//        }
+
+        for(String dFileName : deleteFileName) {
+            File deletedFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + dFileName);
+            if(deletedFile.delete()) {
+                fileRepository.deleteByBoardAndFileSaveName(board, dFileName);
+            }
         }
 
         //List에 담긴 저장 파일명을 가지고 files 패키지와 db에서 삭제
-        for (String sFileName : saveFileName) {
-            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + sFileName);
-            if(deleteFile.delete()) {
-                fileRepository.deleteByBoardAndFileSaveName(board, sFileName);
-            }
-        }
+//        for (String sFileName : saveFileName) {
+//            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + sFileName);
+//            if(deleteFile.delete()) {
+//                fileRepository.deleteByBoardAndFileSaveName(board, sFileName);
+//            }
+//        }
 
         //파일 없이 제목, 게시글만 들어오면 그대로 수정
         //else 파일 같이 들어오면 게시글 수정 후 파일 업로드

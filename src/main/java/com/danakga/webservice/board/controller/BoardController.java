@@ -2,6 +2,7 @@ package com.danakga.webservice.board.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.request.ReqBoardDto;
+import com.danakga.webservice.board.dto.request.ReqDeletedFileDto;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
@@ -44,10 +45,11 @@ public class BoardController {
     public ResResultDto postEdit(@PathVariable(value = "id") Long id,
                                  @LoginUser UserInfo userInfo,
                                  @RequestPart(value = "keys") ReqBoardDto reqBoardDto,
+                                 @RequestPart(value = "deletedFiles") ReqDeletedFileDto reqDeletedFileDto,
                                  @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 수정 로직 실행
-        Long result = boardService.postEdit(id, userInfo, reqBoardDto, files);
+        Long result = boardService.postEdit(id, userInfo, reqBoardDto, reqDeletedFileDto, files);
         
         if(result.equals(-2L)) {
             return new ResResultDto(result, "게시글 수정에 실패 했습니다(이미지 업로드 오류)");
