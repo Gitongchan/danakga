@@ -3,6 +3,9 @@ const content = document.getElementById('post-inner');
 const content_img = document.getElementById('post-img');
 const userid = document.getElementById('userID');
 const span = document.createElement('span');
+const delFiles = {
+    deletedFiles  : []
+};
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -28,7 +31,7 @@ fetch(`/api/board/post/${urlParams}`)
             img.src= data.files[i].file_path;
 
             deleteButton.addEventListener('click',(e)=>{
-                console.log(e.target.offsetParent.id);
+                delFiles.deletedFiles.push({"value":e.target.offsetParent.id});
             })
 
             divImg.appendChild(img);
@@ -49,7 +52,6 @@ fetch(`/api/board/post/${urlParams}`)
 //     deletefiles : [
 //         {
 //             "1": "value",
-//             "2": "vlaue"
 //         }
 //     ]
 // }
