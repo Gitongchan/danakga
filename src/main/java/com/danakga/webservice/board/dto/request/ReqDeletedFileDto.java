@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqDeletedFileDto {
-     private List<String> deletedFiles;
+     private List<Map<String, Object>> deletedFiles;
 }

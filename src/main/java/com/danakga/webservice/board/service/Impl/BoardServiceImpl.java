@@ -204,34 +204,31 @@ public class BoardServiceImpl implements BoardService {
         if (boardRepository.findByBdId(id).isEmpty()) {
             return -1L;
         }
-        
+
         Board board = boardRepository.findByBdId(id).get();
         List<Board_Files> boardFiles = fileRepository.findByBoard(board);
 
-        //db값 담아주기 위한 List
-        List<String> saveFileName = new ArrayList<>();
-        List<String> deleteFileName = reqDeletedFileDto.getDeletedFiles();
 
-        //db에서 가져온 저장된 파일명 List에 넣어줌
-//        for (Board_Files board_Files : boardFiles) {
-//            saveFileName.add(board_Files.getFileSaveName());
-//            System.out.println(saveFileName);
-//        }
+        if(reqDeletedFileDto != null) {
+            //삭제 파일명을 담아주기 위한 List
+            List<String> fileNameList = new ArrayList<>();
+            //dto에서 삭제 파일명을 담아주는 List, Map
+            List<Map<String, Object>> fileNameMap = reqDeletedFileDto.getDeletedFiles();
 
-        for(String dFileName : deleteFileName) {
-            File deletedFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + dFileName);
-            if(deletedFile.delete()) {
-                fileRepository.deleteByBoardAndFileSaveName(board, dFileName);
+            //List<Map> 값을 1씩 증가시켜서 List<String>에 담아줌
+            for(int i = 0; i < fileNameMap.size(); i++) {
+                fileNameList.add(fileNameMap.get(i).get("value").toString());
             }
+
+            //List<String>값을 반복문으로 파일명 빼서 삭제
+            for(String deleteFile : fileNameList) {
+                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + deleteFile);
+                if(deletedFiles.delete()){}
+                fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
+            }
+
         }
 
-        //List에 담긴 저장 파일명을 가지고 files 패키지와 db에서 삭제
-//        for (String sFileName : saveFileName) {
-//            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + sFileName);
-//            if(deleteFile.delete()) {
-//                fileRepository.deleteByBoardAndFileSaveName(board, sFileName);
-//            }
-//        }
 
         //파일 없이 제목, 게시글만 들어오면 그대로 수정
         //else 파일 같이 들어오면 게시글 수정 후 파일 업로드

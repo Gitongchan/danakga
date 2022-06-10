@@ -45,7 +45,7 @@ public class BoardController {
     public ResResultDto postEdit(@PathVariable(value = "id") Long id,
                                  @LoginUser UserInfo userInfo,
                                  @RequestPart(value = "keys") ReqBoardDto reqBoardDto,
-                                 @RequestPart(value = "deletedFiles") ReqDeletedFileDto reqDeletedFileDto,
+                                 @RequestPart(value = "deletedFiles", required = false) ReqDeletedFileDto reqDeletedFileDto,
                                  @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 수정 로직 실행
