@@ -2,6 +2,7 @@ package com.danakga.webservice.orders.service.Impl;
 
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
+import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
 import com.danakga.webservice.orders.model.OrderStatus;
 import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.orders.repository.OrdersRepository;
@@ -11,9 +12,13 @@ import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -52,7 +57,18 @@ public class OrdersServiceImpl implements OrdersService {
             productRepository.updateProductStock(ordersDto.getOrdersQuantity(),ordersProduct.getProductId());
         }
 
-
         return orders.getOrdersId();
     }
+
+    //주문 내역
+    @Override
+    public List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page) {
+        UserInfo ordersUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
+        );
+        pageable = PageRequest.of(page, 10, Sort.by("ordersId").descending());
+        return null;
+    }
+
+
 }

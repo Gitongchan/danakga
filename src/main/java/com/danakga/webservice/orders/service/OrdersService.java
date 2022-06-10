@@ -1,11 +1,18 @@
 package com.danakga.webservice.orders.service;
 
-import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
-import com.danakga.webservice.product.model.Product;
+import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
 import com.danakga.webservice.user.model.UserInfo;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface OrdersService {
+
+    //주문하기
     Long ordersSave(UserInfo userInfo, Long productId, OrdersDto ordersDto);
+    
+    //주문내역
+    List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page);
+    
 }
