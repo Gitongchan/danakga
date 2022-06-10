@@ -50,7 +50,7 @@ public class FileServiceImpl implements FilesService {
             String filePath = savePath + "\\" + saveFileName;
             
             //DB에 저장되는 경로
-            String dbFilePath = "files\\" + saveFileName;
+            String dbFilePath = "..\\files\\" + saveFileName;
             
             //multipartfile.transferTo 사용하여 파일경로에 파일명으로 저장
             try {

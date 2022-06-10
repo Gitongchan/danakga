@@ -35,22 +35,26 @@ public class PageController {
         return "pages/mypage";
     }
 
-    @GetMapping("/boardedit")
-    public String boardEdition(){return "pages/boardedit";}
 
-    @GetMapping("/blog")
-    public String blog(){return "pages/blog-single";}
-
-    @GetMapping("/boardlist")
+    @GetMapping("/board") //조회
     public String boardlist(){return "pages/boardlist";}
 
+    @GetMapping("/board/post") //작성
+    public String boardEdition(){return "pages/boardPost";}
+
+    @GetMapping("/board/info") //게시글 상세조회
+    public String boardInfo(){return "pages/boardInfo";}
+
+    @GetMapping("/board/edit") //게시글 수정
+    public String boardEdit(){return "pages/boardEdit";}
+
     @GetMapping("/mypageEdit")
-    public String mypageEdit(){
+    public String myPageEdit(){
         return "pages/mypageEdit";
     }
 
     @GetMapping("/user/signout")
-    public String signout(){
+    public String signOut(){
         return "pages/userSignout";
     }
 

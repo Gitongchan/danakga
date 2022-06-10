@@ -42,7 +42,7 @@ const logout_btn = document.createElement('button');
             logout_btn.innerText = '로그아웃';
 
             logout_form.method = 'POST';
-            logout_form.action = '/user/logout';
+            logout_form.action = '/api/user/logout';
             logout_form.appendChild(hidden_token);
             logout_form.appendChild(logout_btn);
 

@@ -9,7 +9,7 @@ fetch(`/api/board/list/자유게시판?page=0`)
             const tr = document.createElement('tr');
             tr.innerHTML =
                 `<td>${item.bdId}</td>
-                 <td><a href="/blog?boardid=${item.bdId}">${item.bdTitle}</a></td>
+                 <td><a href="/board/info?boardid=${item.bdId}?bdwriter=${item.bdWriter}">${item.bdTitle}</a></td>
                  <td>${item.bdWriter}</td>
                  <td>${item.bdCreated.split('.')[0]}</td>
                  <td>${item.bdViews}</td>`
