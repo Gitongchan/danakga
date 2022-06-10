@@ -5,7 +5,6 @@ import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.FilesService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,13 +17,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileServiceImpl implements FilesService {
 
-    @Autowired private final FileRepository fileRepository;
+     private final FileRepository fileRepository;
 
     @Override
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
         //파일 저장 경로
-        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files";
 
         //파일 저장되는 폳더 없으면 생성
         if (!new File(savePath).exists()) {

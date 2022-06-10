@@ -69,6 +69,8 @@ public class ProductFilesServiceImpl implements ProductFilesService {
 
             //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
             String filepath = savePath + "\\" + saveFileName;
+            String dbFilePath = "product_files" + "\\" + saveFileName;
+
             System.out.println(filepath);
             try {
                 multipartFile.transferTo(new File(filepath));
@@ -80,7 +82,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
                     ProductFiles.builder()
                             .product(product)
                             .pfOrigin(originFileName)
-                            .pfPath(filepath)
+                            .pfPath(dbFilePath)
                             .pfSaveName(saveFileName)
                             .build()
             ).getPfId();
@@ -89,6 +91,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
             //썸네일 폴더로 추가한 파일경로를 대표 이미지로 지정해준다.
             if(multipartFile == files.get(0)){
                 String filePathThumb = thumbNailPath+"\\"+saveFileName;
+                String dbFilePathThumb = "product_thumbNail" + "\\" + saveFileName;
 
                 File file = new File(filepath);   //product files 로 들어온 첫번째 이미지
                 File copyFile = new File(filePathThumb); //썸네일 폴더 경로에 복사해서 추가함
@@ -100,7 +103,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
                 }
                 
                 //대표 사진 경로 추가를 위해 업데이트
-                productRepository.updateProductMainPhoto(filePathThumb,product.getProductId());
+                productRepository.updateProductMainPhoto(dbFilePathThumb,product.getProductId());
             }
 
 

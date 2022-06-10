@@ -1,6 +1,7 @@
 package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqBoardDto;
+import com.danakga.webservice.board.dto.request.ReqDeletedFileDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.exception.CustomException;
@@ -13,7 +14,6 @@ import com.danakga.webservice.board.service.FilesService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,13 +36,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
     private final BoardRepository boardRepository;
-    @Autowired
     private final FileRepository fileRepository;
-    @Autowired
     private final FilesService filesService;
-    @Autowired
     private final UserRepository userRepository;
     private Board board;
 
@@ -131,11 +127,6 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBdViews(boardWrapper.getBdViews());
 
         //file 정보 값 set
-        //Map의 put은 키값마다 1개씩만 담기기 때문에 map 생성자를 밖으로 빼면 가장 마지막으로 들어온 값만 저장됨 (결국 1개만 저장)
-        //그래서 map 생성자도 반복문 안으로 넣어줘서 List<Map>에 한번 담고 다시 생성돼서 돌아가는 식
-        //Map.put() == List.add() 와 같은 기능
-        //Map에 담긴 값을 Dto에 선언했던 Lise<Map<?,?>>에 담아줌
-        //for(Board_Files board_files : files) {} 으로도 가능
         files.forEach(entity -> {
             Map<String, Object> filesmap = new HashMap<>();
             filesmap.put("file_name", entity.getFileSaveName());
@@ -198,7 +189,7 @@ public class BoardServiceImpl implements BoardService {
     //게시글 수정
     @Transactional
     @Override
-    public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, List<MultipartFile> files) {
+    public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
         
         //파일 먼저 삭제하고 CollectionUtil로 파일 유무 확인 후 없으면 board만 수정, 있으면 file도 다시 업로드
         //웹페이지에서 x눌러서 지운 파일은 어차피 값이 들어오지 않기 때문에 삭제 후 업로드 되지 않음(들어온 파일만 업로드)
@@ -213,26 +204,31 @@ public class BoardServiceImpl implements BoardService {
         if (boardRepository.findByBdId(id).isEmpty()) {
             return -1L;
         }
-        
+
         Board board = boardRepository.findByBdId(id).get();
         List<Board_Files> boardFiles = fileRepository.findByBoard(board);
 
-        //db값 담아주기 위한 List
-        List<String> saveFileName = new ArrayList<>();
 
-        //db에서 가져온 저장된 파일명 List에 넣어줌
-        for (Board_Files board_Files : boardFiles) {
-            saveFileName.add(board_Files.getFilePath());
-            System.out.println(saveFileName);
-        }
+        if(reqDeletedFileDto != null) {
+            //삭제 파일명을 담아주기 위한 List
+            List<String> fileNameList = new ArrayList<>();
+            //dto에서 삭제 파일명을 담아주는 List, Map
+            List<Map<String, Object>> fileNameMap = reqDeletedFileDto.getDeletedFiles();
 
-        //List에 담긴 저장 파일명을 가지고 files 패키지와 db에서 삭제
-        for (String sFileName : saveFileName) {
-            File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + sFileName);
-            if(deleteFile.delete()) {
-                fileRepository.deleteByBoardAndFileSaveName(board, sFileName);
+            //List<Map> 값을 1씩 증가시켜서 List<String>에 담아줌
+            for(int i = 0; i < fileNameMap.size(); i++) {
+                fileNameList.add(fileNameMap.get(i).get("value").toString());
             }
+
+            //List<String>값을 반복문으로 파일명 빼서 삭제
+            for(String deleteFile : fileNameList) {
+                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + deleteFile);
+                if(deletedFiles.delete()){}
+                fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
+            }
+
         }
+
 
         //파일 없이 제목, 게시글만 들어오면 그대로 수정
         //else 파일 같이 들어오면 게시글 수정 후 파일 업로드
