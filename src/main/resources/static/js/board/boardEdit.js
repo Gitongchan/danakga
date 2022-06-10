@@ -31,7 +31,9 @@ fetch(`/api/board/post/${urlParams}`)
             img.src= data.files[i].file_path;
 
             deleteButton.addEventListener('click',(e)=>{
+                console.log(e);
                 delFiles.deletedFiles.push({"value":e.target.offsetParent.id});
+                e.target.parentElement.remove();
             })
 
             divImg.appendChild(img);
