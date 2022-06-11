@@ -36,12 +36,12 @@ public class Board_Comment {
     private LocalDateTime cmModified;
 
     @ManyToOne
-    @JoinColumn(name = "u_id")
-    private UserInfo userInfo;
-
-    @ManyToOne
     @JoinColumn(name = "bd_id")
     private Board board;
+
+    @ManyToOne
+    @JoinColumn(name = "u_id")
+    private UserInfo userInfo;
 
     //삭제 여부를 insert시 N 값으로 자동 입력
     @PrePersist

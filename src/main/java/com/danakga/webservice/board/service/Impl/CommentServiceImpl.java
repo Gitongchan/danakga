@@ -1,6 +1,8 @@
 package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqCommentDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
+import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Comment;
 import com.danakga.webservice.board.repository.BoardRepository;
@@ -9,7 +11,16 @@ import com.danakga.webservice.board.service.CommentService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +30,38 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private Board_Comment board_Comment;
+
+    //댓글 조회
+    @Override
+    public ResCommentListDto commentList(Long id, Pageable pageable, int page) {
+
+        final String deleted = "N";
+
+        Board board = boardRepository.findByBdId(id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
+
+        //cm_id desc 정렬
+        pageable = PageRequest.of(page, 10, Sort.by("cmId").descending());
+        Page<Board_Comment> board_comments = commentRepository.findAllByBoardAndCmDeleted(board, deleted, pageable);
+
+        List<Board_Comment> commentList = board_comments.getContent();
+
+        List<Map<String, Object>> mapComments = new ArrayList<>();
+
+        ResCommentListDto resCommentListDto = new ResCommentListDto();
+
+        commentList.forEach(entity -> {
+            Map<String, Object> commentsMap = new HashMap<>();
+            commentsMap.put("comment_content", entity.getCmComment());
+            commentsMap.put("comment_writer", entity.getCmWriter());
+            commentsMap.put("comment_created", entity.getCmCreated());
+            commentsMap.put("comment_modify", entity.getCmModified());
+            mapComments.add(commentsMap);
+        });
+        resCommentListDto.setComments(mapComments);
+
+        return resCommentListDto;
+    }
 
     //댓글 작성
     @Override
@@ -45,5 +88,7 @@ public class CommentServiceImpl implements CommentService {
         }
         return -1L;
     }
+
+
 }
 

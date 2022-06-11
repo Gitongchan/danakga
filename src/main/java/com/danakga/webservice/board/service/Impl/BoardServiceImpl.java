@@ -6,10 +6,8 @@ import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
-import com.danakga.webservice.board.model.Board_Comment;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardRepository;
-import com.danakga.webservice.board.repository.CommentRepository;
 import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.board.service.FilesService;
@@ -39,7 +37,6 @@ import java.util.Map;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
-    private final CommentRepository commentRepository;
     private final FileRepository fileRepository;
     private final FilesService filesService;
     private final UserRepository userRepository;
@@ -83,9 +80,6 @@ public class BoardServiceImpl implements BoardService {
         //게시글의 파일 조회
         List<Board_Files> files = fileRepository.findByBoard(boardWrapper);
 
-        //게시글 댓글 조회
-        List<Board_Comment> board_comment = commentRepository.findByBoard(boardWrapper);
-
         //조회수 증가, 쿠키로 중복 증가 방지
         //쿠키가 있으면 그 쿠키가 해당 게시글 쿠키인지 확인하고 아니라면 조회수 올리고 setvalue로 해당 게시글의 쿠키 값도 넣어줘야함
         Cookie oldCookie = null;
@@ -121,8 +115,6 @@ public class BoardServiceImpl implements BoardService {
 
         //파일 List<Map>
         List<Map<String, Object>> mapFiles = new ArrayList<>();
-        //댓글 List<Map>
-        List<Map<String, Object>> mapComments = new ArrayList<>();
 
         //값 담아줄 Dto 객체 생성
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
@@ -136,16 +128,6 @@ public class BoardServiceImpl implements BoardService {
         resBoardPostDto.setBdModified(boardWrapper.getBdModified());
         resBoardPostDto.setBdViews(boardWrapper.getBdViews());
 
-        //comment 값 set
-        board_comment.forEach(entity -> {
-            Map<String, Object> commentsMap = new HashMap<>();
-            commentsMap.put("comment_content", entity.getCmComment());
-            commentsMap.put("comment_writer", entity.getCmWriter());
-            commentsMap.put("comment_created", entity.getCmCreated());
-            commentsMap.put("comment_modify", entity.getCmModified());
-            mapComments.add(commentsMap);
-        });
-
         //file 정보 값 set
         files.forEach(entity -> {
             Map<String, Object> filesMap = new HashMap<>();
@@ -156,7 +138,6 @@ public class BoardServiceImpl implements BoardService {
         
         //각 파일, 댓글 List<Map>에 set
         resBoardPostDto.setFiles(mapFiles);
-        resBoardPostDto.setComments(mapComments);
 
         return resBoardPostDto;
     }

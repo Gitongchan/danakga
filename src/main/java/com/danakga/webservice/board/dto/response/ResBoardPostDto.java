@@ -26,6 +26,5 @@ public class ResBoardPostDto {
 
     //파일 정보
     private List<Map<String,Object>> files;
-    //댓글 정보
-    private List<Map<String,Object>> comments;
+
 }
