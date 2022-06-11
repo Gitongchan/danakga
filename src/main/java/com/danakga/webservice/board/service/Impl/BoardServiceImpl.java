@@ -122,7 +122,7 @@ public class BoardServiceImpl implements BoardService {
         //값 담아줄 Dto 객체 생성
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
-        //게시글 값 (Map이나 List<Map>으로 보내지는게 깔끔하게 보내짐)
+        //게시글 값 (게시글은 단일 값이기 때문에 List 까지 씌울 필요는 없음)
         Map<String, Object> postMap = new HashMap<>();
 
         postMap.put("bd_id", boardWrapper.getBdId());
