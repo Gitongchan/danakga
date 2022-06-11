@@ -30,9 +30,14 @@ public class PageController {
         return "pages/mainfunction";
     }
 
-    @GetMapping("/mypage")
-    public String mypage(){
-        return "pages/mypage";
+    @GetMapping("/user/mypage")
+    public String mypageUser(){
+        return "pages/mypageUser";
+    }
+
+    @GetMapping("/admin/mypage")
+    public String mypageAdmin(){
+        return "pages/mypageAdmin";
     }
 
 
@@ -56,6 +61,11 @@ public class PageController {
     @GetMapping("/user/signout")
     public String signOut(){
         return "pages/userSignout";
+    }
+
+    @GetMapping("/addproduct")
+    public String addProduct(){
+        return "pages/addProduct";
     }
 
 }
