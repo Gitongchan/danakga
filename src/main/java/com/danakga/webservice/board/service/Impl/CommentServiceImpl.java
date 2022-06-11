@@ -38,11 +38,11 @@ public class CommentServiceImpl implements CommentService {
         final String deleted = "N";
 
         Board board = boardRepository.findByBdId(id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글 찾을 수 없습니다."));
 
+        //bd_id와 deleted = N 값인 게시글만 페이징해서 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> board_comments = commentRepository.findAllByBoardAndCmDeleted(board, deleted, pageable);
-
         List<Board_Comment> commentList = board_comments.getContent();
 
         List<Map<String, Object>> mapComments = new ArrayList<>();
@@ -95,11 +95,11 @@ public class CommentServiceImpl implements CommentService {
     public Long commentEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
 
         //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
-        if (boardRepository.findById(bd_id).isPresent()) {
+        if (boardRepository.findByBdId(bd_id).isPresent()) {
 
             if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-                Board recentBoard = boardRepository.findById(bd_id).get();
+                Board recentBoard = boardRepository.findByBdId(bd_id).get();
 
                 UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 

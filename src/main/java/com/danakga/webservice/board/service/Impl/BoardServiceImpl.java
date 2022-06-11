@@ -232,9 +232,11 @@ public class BoardServiceImpl implements BoardService {
 
             //List<String>값을 반복문으로 파일명 빼서 삭제
             for(String deleteFile : fileNameList) {
-                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + deleteFile);
-                if(deletedFiles.delete()){}
-                fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
+                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + deleteFile);
+                if(deletedFiles.delete()){
+                    fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
+                }
+
             }
 
         }
