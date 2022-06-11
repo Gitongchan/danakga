@@ -85,6 +85,7 @@ public class OrdersServiceImpl implements OrdersService {
                 listDto.setOrdersQuantity(entity.getOrdersQuantity());
                 listDto.setOrdersFinishedDate(entity.getOrdersFinishedDate());
                 listDto.setOrderStatus(entity.getOrderStatus());
+                listDto.setOrdersTrackingNum(entity.getOrdersTrackingNum());
                 listDto.setTotalPage(ordersPage.getTotalPages());
                 listDto.setTotalElement(ordersPage.getTotalElements());
                 ordersListDto.add(listDto);
