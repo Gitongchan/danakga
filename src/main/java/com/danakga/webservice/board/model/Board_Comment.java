@@ -26,6 +26,9 @@ public class Board_Comment {
     @Column(name = "cm_deleted")
     private String cmDeleted;
 
+    @Column(name = "cm_writer")
+    private String cmWriter;
+
     @CreationTimestamp
     private LocalDateTime cmCreated;
 
@@ -40,12 +43,19 @@ public class Board_Comment {
     @JoinColumn(name = "bd_id")
     private Board board;
 
+    //삭제 여부를 insert시 N 값으로 자동 입력
+    @PrePersist
+    public void deleted() {
+        this.cmDeleted = "N";
+    }
+
     @Builder
-    public Board_Comment(Long cmId, String cmComment, String cmDeleted, LocalDateTime cmCreated, LocalDateTime cmModified,
+    public Board_Comment(Long cmId, String cmComment, String cmDeleted, String cmWriter,LocalDateTime cmCreated, LocalDateTime cmModified,
                          UserInfo userInfo, Board board) {
         this.cmId = cmId;
         this.cmComment = cmComment;
         this.cmDeleted = cmDeleted;
+        this.cmWriter = cmWriter;
         this.cmCreated = cmCreated;
         this.cmModified = cmModified;
         this.userInfo = userInfo;
