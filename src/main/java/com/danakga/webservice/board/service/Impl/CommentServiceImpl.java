@@ -123,6 +123,25 @@ public class CommentServiceImpl implements CommentService {
         return -1L;
     }
 
+    //댓글 삭제 여부 변경
+    @Override
+    public Long commentDelete(Long bd_id, Long cm_id, UserInfo userInfo) {
 
+        //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
+        if (boardRepository.findByBdId(bd_id).isPresent()) {
+            Board board = boardRepository.findByBdId(bd_id).get();
+
+            if(userRepository.findById(userInfo.getId()).isPresent()) {
+
+                Board_Comment board_Comment = commentRepository.findByBoardAndCmId(board, cm_id);
+
+                //deleted 값 변경
+                commentRepository.updateDeleted(cm_id);
+
+                return board_Comment.getCmId();
+            }
+        }
+        return -1L;
+    }
 }
 
