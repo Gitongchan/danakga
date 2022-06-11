@@ -13,38 +13,37 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private Board_Comment board_Comment;
 
     //댓글 작성
     @Override
     public Long commentWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long id) {
 
-        //회원, 게시글 정보를 가장 최신의 db 값으로 받아옴
-        if(userRepository.findById(userInfo.getId()).isPresent()) {
+        //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
+        if (boardRepository.findById(id).isPresent()) {
+            if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-            UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+                Board recentBoard = boardRepository.findById(id).get();
 
-            if (boardRepository.findById(id).isEmpty()) {
-                return -1L;
+                UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+
+                commentRepository.save(
+                        board_Comment = Board_Comment.builder()
+                                .cmComment(reqCommentDto.getCmContent())
+                                .cmWriter(recentUserInfo.getUserid())
+                                .board(recentBoard)
+                                .userInfo(recentUserInfo)
+                                .build()
+                );
+                return board_Comment.getCmId();
             }
-            Board recentBoard = boardRepository.findById(id).get();
-
-            Board_Comment board_Comment;
-
-            commentRepository.save(
-                    board_Comment = Board_Comment.builder()
-                            .cmComment(reqCommentDto.getCmContent())
-                            .cmWriter(recentUserInfo.getUserid())
-                            .board(recentBoard)
-                            .userInfo(recentUserInfo)
-                            .build()
-            );
-            return board_Comment.getCmId();
         }
         return -1L;
     }
 }
+

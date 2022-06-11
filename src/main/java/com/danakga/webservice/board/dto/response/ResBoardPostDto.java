@@ -15,6 +15,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class ResBoardPostDto {
 
+    //게시글 정보 
     private Long bdId;
     private String bdWriter;
     private String bdTitle;
@@ -22,5 +23,9 @@ public class ResBoardPostDto {
     private LocalDateTime bdModified;
     private LocalDateTime bdCreated;
     private int bdViews;
+
+    //파일 정보
     private List<Map<String,Object>> files;
+    //댓글 정보
+    private List<Map<String,Object>> comments;
 }

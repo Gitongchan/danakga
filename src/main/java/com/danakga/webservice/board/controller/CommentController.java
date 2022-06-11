@@ -17,7 +17,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    //댓글 작성
+    //댓글 작성 (게시글 id, 댓글 내용 받기)
     @PostMapping("/comment/write/{id}")
     public ResResultDto commentWrite(@LoginUser UserInfo userInfo,
                                      @Valid @RequestBody ReqCommentDto reqCommentDto,
