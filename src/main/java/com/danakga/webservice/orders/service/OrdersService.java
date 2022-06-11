@@ -26,5 +26,7 @@ public interface OrdersService {
     //판매내역 상태 업데이트
     Long updateSalesStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);
 
+    //판매내역 상태 업데이트
+    Long updateOrdersStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);
     
 }

@@ -14,7 +14,7 @@ public class StatusDto {
     //운송장 번호
     private String ordersTrackingNum;
 
-    //주문 상태
-    private String ordersStatus;
+    //변경하고 싶은 상태
+    private String changeOrdersStatus;
 
 }

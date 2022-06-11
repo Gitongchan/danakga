@@ -41,7 +41,7 @@ public class OrdersController {
     }
     
     //판매내역
-    @GetMapping("api/user/sales/list")
+    @GetMapping("api/manager/sales/list")
     public List<ResSalesListDto> mySalesList(@LoginUser UserInfo userInfo, Pageable pageable, int page,
                                               @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
                                               @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime){
@@ -49,10 +49,18 @@ public class OrdersController {
         return ordersService.salesList(userInfo,pageable,page,startTime,endTime);
     }
     
-    //판매내역 업데이트
-    @PutMapping("api/user/sales/updateStatus/{item}")
+    //사업자 - 판매내역 업데이트
+    @PutMapping("api/manager/sales/updateStatus/{item}")
     public ResResultDto updateSalesStatus(@LoginUser UserInfo userInfo, @PathVariable("item") Long ordersId,@RequestBody StatusDto statusDto){
         Long result = ordersService.updateSalesStatus(userInfo,ordersId,statusDto);
         return new ResResultDto(result,"상태변경을 성공했습니다.");
     }
+    
+    //일반사용자(구매자) - 주문내역 업데이트
+    @PutMapping("api/user/orders/updateStatus/{item}")
+    public ResResultDto updateOrdersStatus(@LoginUser UserInfo userInfo, @PathVariable("item") Long ordersId,@RequestBody StatusDto statusDto){
+        Long result = ordersService.updateOrdersStatus(userInfo,ordersId,statusDto);
+        return new ResResultDto(result,"상태변경을 성공했습니다.");
+    }
+
 }

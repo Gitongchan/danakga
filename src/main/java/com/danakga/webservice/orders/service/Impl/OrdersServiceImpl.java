@@ -142,7 +142,7 @@ public class OrdersServiceImpl implements OrdersService {
 
     }
 
-    // 판매자의 판매 내역 상태 업데이트
+    //사업자 - 판매 내역 상태 업데이트
     @Transactional
     @Override
     public Long updateSalesStatus(UserInfo userInfo, Long ordersId, StatusDto statusDto) {
@@ -152,26 +152,61 @@ public class OrdersServiceImpl implements OrdersService {
         CompanyInfo updateSalesCompanyInfo = companyRepository.findByUserInfo(updateSalesUserInfo).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("사용자의 회사정보를 찾을 수 없습니다.")
         );
-        String inputStatus = statusDto.getOrdersStatus();
+        Orders orders = ordersRepository.findByOrdersId(ordersId).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("판매내역을 찾을 수 없습니다.")
+        );
+        String inputStatus = orders.getOrdersStatus();
         String trackingNum = statusDto.getOrdersTrackingNum();
         String status = null;
 
         if (inputStatus.equals(OrdersStatus.READY.getStatus()) && trackingNum != null) {
             status = OrdersStatus.START.getStatus(); //배송시작은 운송장 번호 입력하기
-            ordersRepository.updateOrdersTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
+            ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
         } else if (inputStatus.equals(OrdersStatus.CANCEL.getStatus()) || inputStatus.equals(OrdersStatus.RETURN.getStatus())) {
-            status = OrdersStatus.REFUND.getStatus();
+            status = OrdersStatus.REFUND.getStatus(); //환불
         } else if (inputStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
-            status = OrdersStatus.REDELIVERY.getStatus();
+            status = OrdersStatus.REDELIVERY.getStatus(); //반품배송
+            ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
         } else if (inputStatus.equals(OrdersStatus.START.getStatus())) {
             status = OrdersStatus.FINISH.getStatus(); //배송완료 처리할때는 주문완료 날짜 입력하기
-            ordersRepository.updateOrdersFinishedDate(LocalDateTime.now(),updateSalesCompanyInfo.getCompanyId(),ordersId);
-        } else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())) {
-            status = OrdersStatus.CONFIRM.getStatus();
+            ordersRepository.updateSalesFinishedDate(LocalDateTime.now(),updateSalesCompanyInfo.getCompanyId(),ordersId);
+        }else if(inputStatus.equals(OrdersStatus.REDELIVERY.getStatus())){
+            status = OrdersStatus.FINISH.getStatus();
         }
 
 
-        ordersRepository.updateOrdersStatus(status,updateSalesCompanyInfo.getCompanyId(),ordersId);
+        ordersRepository.updateSalesStatus(status,updateSalesCompanyInfo.getCompanyId(),orders.getOrdersId());
+
+        return ordersId;
+    }
+
+    //일반사용자(구매자) - 주문내역 업데이트
+    @Transactional
+    @Override
+    public Long updateOrdersStatus(UserInfo userInfo, Long ordersId, StatusDto statusDto) {
+        UserInfo updateSalesUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
+        );
+        Orders orders = ordersRepository.findByOrdersId(ordersId).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("판매내역을 찾을 수 없습니다.")
+        );
+        String inputStatus = orders.getOrdersStatus();
+        String changetStatus = statusDto.getChangeOrdersStatus();
+        String status = null;
+
+        if(inputStatus.equals(OrdersStatus.READY.getStatus())){
+            status = OrdersStatus.CANCEL.getStatus();
+        }
+        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changetStatus.equals(OrdersStatus.CONFIRM.getStatus())) {
+            status = OrdersStatus.CONFIRM.getStatus(); //구매확정
+        }
+        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changetStatus.equals(OrdersStatus.RETURN.getStatus())) {
+            status = OrdersStatus.RETURN.getStatus(); //반품신청
+        }
+        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changetStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
+            status = OrdersStatus.EXCHANGE.getStatus(); //교환신청
+        }
+        ordersRepository.updateOrdersStatus(updateSalesUserInfo,status,orders.getOrdersId());
 
         return ordersId;
     }
