@@ -162,20 +162,22 @@ public class OrdersServiceImpl implements OrdersService {
         if (inputStatus.equals(OrdersStatus.READY.getStatus()) && trackingNum != null) {
             status = OrdersStatus.START.getStatus(); //배송시작은 운송장 번호 입력하기
             ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
-        } else if (inputStatus.equals(OrdersStatus.CANCEL.getStatus()) || inputStatus.equals(OrdersStatus.RETURN.getStatus())) {
+        }else if (inputStatus.equals(OrdersStatus.CANCEL.getStatus()) || inputStatus.equals(OrdersStatus.RETURN.getStatus())) {
             status = OrdersStatus.REFUND.getStatus(); //환불
-        } else if (inputStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
+        }else if (inputStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
             status = OrdersStatus.REDELIVERY.getStatus(); //반품배송
             ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
-        } else if (inputStatus.equals(OrdersStatus.START.getStatus())) {
+        }else if (inputStatus.equals(OrdersStatus.START.getStatus())) {
             status = OrdersStatus.FINISH.getStatus(); //배송완료 처리할때는 주문완료 날짜 입력하기
             ordersRepository.updateSalesFinishedDate(LocalDateTime.now(),updateSalesCompanyInfo.getCompanyId(),ordersId);
         }else if(inputStatus.equals(OrdersStatus.REDELIVERY.getStatus())){
             status = OrdersStatus.FINISH.getStatus();
+        }else{
+            return -1L;
         }
-
-
         ordersRepository.updateSalesStatus(status,updateSalesCompanyInfo.getCompanyId(),orders.getOrdersId());
+
+
 
         return ordersId;
     }
@@ -205,6 +207,8 @@ public class OrdersServiceImpl implements OrdersService {
         }
         else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changetStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
             status = OrdersStatus.EXCHANGE.getStatus(); //교환신청
+        }else {
+            return -1L;
         }
         ordersRepository.updateOrdersStatus(updateSalesUserInfo,status,orders.getOrdersId());
 
