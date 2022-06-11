@@ -4,6 +4,14 @@ function getImageFiles(e) {
     const imagePreview = document.querySelector('#image-preview');
     const docFrag = new DocumentFragment();
 
+
+    console.log(imagePreview);
+    console.log(e);
+    console.log(files);
+    while(imagePreview.hasChildNodes()){
+        imagePreview.removeChild(imagePreview.firstChild);
+    }
+
     if ([...files].length >= 7) {
         alert('이미지는 최대 6개 까지 업로드가 가능합니다.');
         return;
