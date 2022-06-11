@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,8 +25,8 @@ public class BoardPermitAllController {
 
     //게시판 목록
     @GetMapping("/list/{type}")
-    public List<ResBoardListDto> boardList(Pageable pageable,
-                                           @PathVariable("type")
+    public ResBoardListDto boardList(Pageable pageable,
+                                     @PathVariable("type")
                                            String board_type, int page) {
         return boardService.boardList(pageable, board_type, page);
     }

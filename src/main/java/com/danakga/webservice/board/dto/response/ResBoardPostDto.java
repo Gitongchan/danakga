@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +13,9 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResBoardPostDto {
-
-    //게시글 정보 
-    private Long bdId;
-    private String bdWriter;
-    private String bdTitle;
-    private String bdContent;
-    private LocalDateTime bdModified;
-    private LocalDateTime bdCreated;
-    private int bdViews;
+    
+    //게시글 정보
+    private List<Map<String, Object>> post;
 
     //파일 정보
     private List<Map<String,Object>> files;

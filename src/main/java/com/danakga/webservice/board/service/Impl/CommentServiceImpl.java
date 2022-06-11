@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
         //cm_id desc 정렬
-        pageable = PageRequest.of(page, 10, Sort.by("cmId").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> board_comments = commentRepository.findAllByBoardAndCmDeleted(board, deleted, pageable);
 
         List<Board_Comment> commentList = board_comments.getContent();
@@ -52,10 +52,11 @@ public class CommentServiceImpl implements CommentService {
 
         commentList.forEach(entity -> {
             Map<String, Object> commentsMap = new HashMap<>();
-            commentsMap.put("comment_content", entity.getCmComment());
-            commentsMap.put("comment_writer", entity.getCmWriter());
-            commentsMap.put("comment_created", entity.getCmCreated());
-            commentsMap.put("comment_modify", entity.getCmModified());
+            commentsMap.put("cm_id", entity.getCmId());
+            commentsMap.put("cm_content", entity.getCmComment());
+            commentsMap.put("cm_writer", entity.getCmWriter());
+            commentsMap.put("cm_created", entity.getCmCreated());
+            commentsMap.put("cm_modify", entity.getCmModified());
             mapComments.add(commentsMap);
         });
         resCommentListDto.setComments(mapComments);

@@ -44,29 +44,32 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 목록
     @Override
-    public List<ResBoardListDto> boardList(Pageable pageable, String board_type, int page) {
+    public ResBoardListDto boardList(Pageable pageable, String board_type, int page) {
 
-        //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
-        pageable = PageRequest.of(page, 10, Sort.by("bdId").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable);
         List<Board> boardList = boards.getContent();
 
-        List<ResBoardListDto> boardListDto = new ArrayList<>();
+        List<Map<String, Object>> mapPosts = new ArrayList<>();
+
+        ResBoardListDto resBoardListDto = new ResBoardListDto();
 
         boardList.forEach(entity -> {
-            ResBoardListDto listDto = new ResBoardListDto();
-            listDto.setBdId(entity.getBdId());
-            listDto.setBdTitle(entity.getBdTitle());
-            listDto.setBdWriter(entity.getBdWriter());
-            listDto.setBdCreated(entity.getBdCreated());
-            listDto.setBdViews(entity.getBdViews());
-            listDto.setBdDeleted(entity.getBdDeleted());
-            listDto.setTotalElement(boards.getTotalElements());
-            listDto.setTotalPage(boards.getTotalPages());
-            boardListDto.add(listDto);
+            Map<String, Object> postMap = new HashMap<>();
+            postMap.put("bd_id", entity.getBdId());
+            postMap.put("bd_title", entity.getBdTitle());
+            postMap.put("bd_writer", entity.getBdWriter());
+            postMap.put("bd_created", entity.getBdCreated());
+            postMap.put("bd_views", entity.getBdViews());
+            postMap.put("bd_deleted", entity.getBdDeleted());
+            postMap.put("totalElment", boards.getTotalElements());
+            postMap.put("totalPage", boards.getTotalPages());
+            mapPosts.add(postMap);
         });
-        return boardListDto;
+        resBoardListDto.setLists(mapPosts);
+
+        return resBoardListDto;
     }
 
     //게시글 조회
@@ -113,22 +116,26 @@ public class BoardServiceImpl implements BoardService {
             response.addCookie(postCookie);
         }
 
-        //파일 List<Map>
+        //파일, 게시글 정보 담을 List
         List<Map<String, Object>> mapFiles = new ArrayList<>();
+        List<Map<String, Object>> mapPosts = new ArrayList<>();
 
         //값 담아줄 Dto 객체 생성
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
-        //개별 게시글 값 set
-        resBoardPostDto.setBdId(boardWrapper.getBdId());
-        resBoardPostDto.setBdWriter(boardWrapper.getBdWriter());
-        resBoardPostDto.setBdTitle(boardWrapper.getBdTitle());
-        resBoardPostDto.setBdContent(boardWrapper.getBdContent());
-        resBoardPostDto.setBdCreated(boardWrapper.getBdCreated());
-        resBoardPostDto.setBdModified(boardWrapper.getBdModified());
-        resBoardPostDto.setBdViews(boardWrapper.getBdViews());
+        Map<String, Object> postMap = new HashMap<>();
 
-        //file 정보 값 set
+        //게시글 값
+        postMap.put("bd_id", boardWrapper.getBdId());
+        postMap.put("bd_writer", boardWrapper.getBdWriter());
+        postMap.put("bd_title", boardWrapper.getBdTitle());
+        postMap.put("bd_content", boardWrapper.getBdContent());
+        postMap.put("bd_created", boardWrapper.getBdCreated());
+        postMap.put("bd_modified", boardWrapper.getBdModified());
+        postMap.put("bd_views", boardWrapper.getBdViews());
+        mapPosts.add(postMap);
+
+        //file 정보 값
         files.forEach(entity -> {
             Map<String, Object> filesMap = new HashMap<>();
             filesMap.put("file_name", entity.getFileSaveName());
@@ -138,6 +145,7 @@ public class BoardServiceImpl implements BoardService {
         
         //각 파일, 댓글 List<Map>에 set
         resBoardPostDto.setFiles(mapFiles);
+        resBoardPostDto.setPost(mapPosts);
 
         return resBoardPostDto;
     }

@@ -14,5 +14,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class ResCommentListDto {
 
+    //댓글 정보
     private List<Map<String, Object>> comments;
 }
