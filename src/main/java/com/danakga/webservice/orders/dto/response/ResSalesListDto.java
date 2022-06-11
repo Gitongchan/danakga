@@ -13,13 +13,16 @@ public class ResSalesListDto {
     //주문번호
     private Long ordersId;
 
+    //주문 고객 아이디
+    private String userId;
+
     //주문 고객명
     private String userName;
 
     //주문 고객 핸드폰 번호
     private String userPhone;
 
-    //주문 고객 도로명 주소
+    //주문 고객 우편번호
     private String userAdrNum;
 
     //주문 고객 도로명 주소

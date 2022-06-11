@@ -3,6 +3,7 @@ package com.danakga.webservice.orders.controller;
         import com.danakga.webservice.annotation.LoginUser;
         import com.danakga.webservice.orders.dto.request.OrdersDto;
         import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
+        import com.danakga.webservice.orders.dto.response.ResSalesListDto;
         import com.danakga.webservice.orders.service.OrdersService;
         import com.danakga.webservice.user.model.UserInfo;
         import com.danakga.webservice.util.responseDto.ResResultDto;
@@ -36,5 +37,14 @@ public class OrdersController {
                                                @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime){
 
         return ordersService.ordersList(userInfo,pageable,page,startTime,endTime);
+    }
+    
+    //판매내역
+    @GetMapping("api/user/sales/list")
+    public List<ResSalesListDto> mySalesList(@LoginUser UserInfo userInfo, Pageable pageable, int page,
+                                              @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+                                              @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime){
+
+        return ordersService.salesList(userInfo,pageable,page,startTime,endTime);
     }
 }

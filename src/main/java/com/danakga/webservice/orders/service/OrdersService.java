@@ -2,6 +2,7 @@ package com.danakga.webservice.orders.service;
 
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
+import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Pageable;
 
@@ -16,5 +17,9 @@ public interface OrdersService {
     //주문내역
     List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page,
                                       LocalDateTime startTime,LocalDateTime endTime);
+
+    //판매내역
+    List<ResSalesListDto> salesList(UserInfo userInfo,Pageable pageable,int page,
+                                    LocalDateTime startTime, LocalDateTime endTime);
     
 }

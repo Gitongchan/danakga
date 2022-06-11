@@ -1,8 +1,11 @@
 package com.danakga.webservice.orders.service.Impl;
 
+import com.danakga.webservice.company.model.CompanyInfo;
+import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
+import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.orders.model.OrderStatus;
 import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.orders.repository.OrdersRepository;
@@ -28,6 +31,7 @@ public class OrdersServiceImpl implements OrdersService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrdersRepository ordersRepository;
+    private final CompanyRepository companyRepository;
 
     //상품 주문 등록
     @Override
@@ -70,7 +74,7 @@ public class OrdersServiceImpl implements OrdersService {
         );
         pageable = PageRequest.of(page, 10, Sort.by("ordersId").descending());
 
-        Page<Orders> ordersPage = ordersRepository.ordersList(userInfo,pageable,startTime,endTime);
+        Page<Orders> ordersPage = ordersRepository.ordersList(ordersUserInfo,pageable,startTime,endTime);
         List<Orders> ordersList = ordersPage.getContent();
 
         List<ResOrdersListDto> ordersListDto = new ArrayList<>();
@@ -92,6 +96,48 @@ public class OrdersServiceImpl implements OrdersService {
                 }
         );
         return ordersListDto;
+    }
+
+    //판매내역
+    @Override
+    public List<ResSalesListDto> salesList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startTime, LocalDateTime endTime) {
+        UserInfo salesUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
+        );
+        CompanyInfo salesCompanyInfo = companyRepository.findByUserInfo(salesUserInfo).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사용자의 회사정보를 찾을 수 없습니다.")
+        );
+        pageable = PageRequest.of(page, 10, Sort.by("ordersId").descending());
+        Page<Orders> salesPage = ordersRepository.salesList(salesCompanyInfo.getCompanyId(),pageable,startTime,endTime);
+        List<Orders> salesList = salesPage.getContent();
+
+        List<ResSalesListDto> salesListDto = new ArrayList<>();
+        salesList.forEach(entity->{
+            ResSalesListDto listDto = new ResSalesListDto();
+                    listDto.setOrdersId(entity.getOrdersId());
+                    //고객정보
+                    listDto.setUserId(entity.getUserInfo().getUserid());
+                    listDto.setUserName(entity.getUserInfo().getName());
+                    listDto.setUserPhone(entity.getUserInfo().getPhone());
+                    listDto.setUserAdrNum(entity.getUserInfo().getUserAdrNum());
+                    listDto.setUserStreetAdr(entity.getUserInfo().getUserStreetAdr());
+                    listDto.setUserLotAdr(entity.getUserInfo().getUserLotAdr());
+                    listDto.setUserDetailAdr(entity.getUserInfo().getUserDetailAdr());
+                    //상품정보
+                    listDto.setProductBrand(entity.getProduct().getProductBrand());
+                    listDto.setProductName(entity.getProduct().getProductName());
+                    listDto.setOrdersQuantity(entity.getOrdersQuantity());
+                    listDto.setOrdersDate(entity.getOrdersDate());
+                    listDto.setOrderStatus(entity.getOrderStatus());
+                    listDto.setOrdersFinishedDate(entity.getOrdersFinishedDate());
+                    listDto.setOrdersTrackingNum(entity.getOrdersTrackingNum());
+                    listDto.setTotalPage(salesPage.getTotalPages());
+                    listDto.setTotalElement(salesPage.getTotalElements());
+                    salesListDto.add(listDto);
+                }
+        );
+        return salesListDto;
+
     }
 
 
