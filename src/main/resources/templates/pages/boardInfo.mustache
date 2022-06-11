@@ -30,23 +30,8 @@
                     <div class="post-details">
                         <div class="main-content-head">
                             <div class="meta-information">
-                                <div class="row">
-                                    <div class="col-lg-2 col-sm-4">
-                                        <div class="form-group">
-                                            <label for="type"></label>
-                                            <select class="form-select" id="type" aria-label="select value">
-                                                <option value="자유게시판" selected>자유</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-10 col-sm-8">
-                                        <div class="form-group">
-                                            <label for="board_Title"></label>
-                                            <input class="form-control" name="bdTitle" type="text" id="post-title"
-                                                   placeholder="제목을 입력해주세요" required/>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h3 class="post-title" id="post-title">
+                                </h3>
                                 <!-- End Meta Info -->
                                 <ul class="meta-info">
                                     <li>
@@ -56,25 +41,8 @@
                                 <!-- End Meta Info -->
                             </div>
                             <div class="detail-inner" id="post-inner">
-                                <label for="editor"></label>
-                                <textarea name="boardinfo" id="editor"></textarea>
                             </div>
-                            <h3>업로드 된 파일</h3>
                             <div class="detail-inner" id="post-img">
-                            </div>
-<!--                            <input type="file" class="real-upload" multiple>-->
-<!--                            <div style="display: flex">-->
-<!--                            <div class="upload"></div>-->
-<!--                            <ul class="image-preview"></ul>-->
-<!--                            </div>-->
-                            <h3>업로드 할 파일</h3>
-                            <input type="file" id="file-input" multiple />
-                            <div id="image-preview" class="detail-inner">
-                            </div>
-                            <div class="align-center">
-                                <div class="button">
-                                    <button class="btn" id="submit">수정하기</button>
-                                </div>
                             </div>
                         </div>
                         <!-- Comments -->
@@ -145,25 +113,25 @@
                                     <div class="col-lg-6 col-12">
                                         <div class="form-box form-group">
                                             <input type="text" name="name" class="form-control form-control-custom"
-                                                   placeholder="Website URL"/>
+                                                   placeholder="Website URL" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="form-box form-group">
                                             <input type="text" name="email" class="form-control form-control-custom"
-                                                   placeholder="Your Name"/>
+                                                   placeholder="Your Name" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="form-box form-group">
                                             <input type="email" name="email"
-                                                   class="form-control form-control-custom" placeholder="Your Email"/>
+                                                   class="form-control form-control-custom" placeholder="Your Email" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="form-box form-group">
                                             <input type="text" name="name" class="form-control form-control-custom"
-                                                   placeholder="Phone Number"/>
+                                                   placeholder="Phone Number" />
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -191,81 +159,6 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
-<script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
-<script src="/js/board/boardEdit.js"></script>
-<script src="/js/board/boardFilePreview.js"></script>
-
-<script>
-    let editor;
-
-    ClassicEditor.create(document.querySelector('#editor'), {
-        toolbar: ['bold', 'italic', 'link', 'undo', 'redo', 'numberedList', 'bulletedList']
-    })
-            .then(newEditor => {
-                editor = newEditor;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-    // Assuming there is a <button id="submit">Submit</button> in your application.
-    document.querySelector('#submit').addEventListener('click', (e) => {
-        e.preventDefault();
-        //토큰 값
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
-        const token = document.querySelector('meta[name="_csrf"]').content;
-        //텍스트 에디터에서 값 가져옴
-        const editorData = editor.getData();
-        console.log(editorData);
-        const formData = new FormData();
-
-        let input = document.querySelector('input[type="file"]')
-        const boarddata = {
-            bdType: document.getElementById('type').value,
-            bdTitle: document.getElementById('post-title').value,
-            bdViews: 0,
-            bdContent: editorData
-        }
-
-        console.log(input.files);
-
-        for (let i = 0; i <= input.files.length; i++) {
-            formData.append('images', input.files[i]);
-        }
-        formData.append(
-                "keys",
-                new Blob([JSON.stringify(boarddata)], {type: "application/json"})
-        );
-        formData.append(
-                "deletedFiles",
-                new Blob([JSON.stringify(delFiles)], {type:"application/json"})
-        );
-
-        // data.files.forEach((file) => formData.append("files", file));
-
-        fetch(`/api/user/post/edit/${urlParams}`, {
-            method: "PUT",
-            headers: {
-                'header': header,
-                'processData': false,
-                'contentType': false,
-                'X-CSRF-Token': token
-            },
-            body: formData
-        })
-                .then(res => {
-                    if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
-                        alert("수정완료");
-                    } else { // 실패를 알리는 HTTP 상태 코드면
-                        console.error(res.statusText);
-                        console.error(res);
-                    }
-                })
-                .then(data => console.log(data))
-                .catch(error => console.log(error))
-        // ...
-    });
-
-</script>
+<script src="/js/board/boardinfo.js"></script>
 
 {{>pages/footer2}}

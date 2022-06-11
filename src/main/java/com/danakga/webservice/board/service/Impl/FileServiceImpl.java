@@ -23,7 +23,7 @@ public class FileServiceImpl implements FilesService {
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
         //파일 저장 경로
-        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files";
+        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
 
         //파일 저장되는 폳더 없으면 생성
         if (!new File(savePath).exists()) {
@@ -49,8 +49,8 @@ public class FileServiceImpl implements FilesService {
             String filePath = savePath + "\\" + saveFileName;
             
             //DB에 저장되는 경로
-            String dbFilePath = "js\\board\\files\\" + saveFileName;
-
+            String dbFilePath = "..\\files\\" + saveFileName;
+            
             //multipartfile.transferTo 사용하여 파일경로에 파일명으로 저장
             try {
                 multipartFile.transferTo(new File(filePath));
