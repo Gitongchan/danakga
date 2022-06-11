@@ -44,38 +44,43 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 목록
     @Override
-    public List<ResBoardListDto> boardList(Pageable pageable, String board_type, int page) {
+    public ResBoardListDto boardList(Pageable pageable, String board_type, int page) {
 
-        //deleted 컬럼에 N값인 컬럼만 모두 List에 담아줌
         final String deleted = "N";
-        pageable = PageRequest.of(page, 10, Sort.by("bdId").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable);
         List<Board> boardList = boards.getContent();
 
-        List<ResBoardListDto> boardListDto = new ArrayList<>();
+        List<Map<String, Object>> mapPosts = new ArrayList<>();
+
+        ResBoardListDto resBoardListDto = new ResBoardListDto();
 
         boardList.forEach(entity -> {
-            ResBoardListDto listDto = new ResBoardListDto();
-            listDto.setBdId(entity.getBdId());
-            listDto.setBdTitle(entity.getBdTitle());
-            listDto.setBdWriter(entity.getBdWriter());
-            listDto.setBdCreated(entity.getBdCreated());
-            listDto.setBdViews(entity.getBdViews());
-            listDto.setBdDeleted(entity.getBdDeleted());
-            listDto.setTotalElement(boards.getTotalElements());
-            listDto.setTotalPage(boards.getTotalPages());
-            boardListDto.add(listDto);
+            Map<String, Object> postMap = new HashMap<>();
+            postMap.put("bd_id", entity.getBdId());
+            postMap.put("bd_title", entity.getBdTitle());
+            postMap.put("bd_writer", entity.getBdWriter());
+            postMap.put("bd_created", entity.getBdCreated());
+            postMap.put("bd_views", entity.getBdViews());
+            postMap.put("bd_deleted", entity.getBdDeleted());
+            postMap.put("totalElment", boards.getTotalElements());
+            postMap.put("totalPage", boards.getTotalPages());
+            mapPosts.add(postMap);
         });
-        return boardListDto;
+        resBoardListDto.setLists(mapPosts);
+
+        return resBoardListDto;
     }
 
     //게시글 조회
     @Override
     public ResBoardPostDto getPost(Long id, HttpServletRequest request, HttpServletResponse response) {
 
+        //게시글 존재 여부 확인
         Board boardWrapper = boardRepository.findByBdId(id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
+        //게시글의 파일 조회
         List<Board_Files> files = fileRepository.findByBoard(boardWrapper);
 
         //조회수 증가, 쿠키로 중복 증가 방지
@@ -108,32 +113,37 @@ public class BoardServiceImpl implements BoardService {
             postCookie.setPath("/");
             //쿠키 사용시간 1시간 설정
             postCookie.setMaxAge(60 * 60);
-            System.out.println("쿠키 이름 : " + postCookie.getValue());
             response.addCookie(postCookie);
         }
 
-
-        //Map을 List에 넣어서 여러개를 받을 수 있게 함
+        //파일, 게시글 정보 담을 List
         List<Map<String, Object>> mapFiles = new ArrayList<>();
+
+        //값 담아줄 Dto 객체 생성
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
-        //개별 게시글 값 set
-        resBoardPostDto.setBdId(boardWrapper.getBdId());
-        resBoardPostDto.setBdWriter(boardWrapper.getBdWriter());
-        resBoardPostDto.setBdTitle(boardWrapper.getBdTitle());
-        resBoardPostDto.setBdContent(boardWrapper.getBdContent());
-        resBoardPostDto.setBdCreated(boardWrapper.getBdCreated());
-        resBoardPostDto.setBdModified(boardWrapper.getBdModified());
-        resBoardPostDto.setBdViews(boardWrapper.getBdViews());
+        //게시글 값 (게시글은 단일 값이기 때문에 List 까지 씌울 필요는 없음)
+        Map<String, Object> postMap = new HashMap<>();
 
-        //file 정보 값 set
+        postMap.put("bd_id", boardWrapper.getBdId());
+        postMap.put("bd_writer", boardWrapper.getBdWriter());
+        postMap.put("bd_title", boardWrapper.getBdTitle());
+        postMap.put("bd_content", boardWrapper.getBdContent());
+        postMap.put("bd_created", boardWrapper.getBdCreated());
+        postMap.put("bd_modified", boardWrapper.getBdModified());
+        postMap.put("bd_views", boardWrapper.getBdViews());
+
+        //file 정보 값
         files.forEach(entity -> {
-            Map<String, Object> filesmap = new HashMap<>();
-            filesmap.put("file_name", entity.getFileSaveName());
-            filesmap.put("file_path", entity.getFilePath());
-            mapFiles.add(filesmap);
+            Map<String, Object> filesMap = new HashMap<>();
+            filesMap.put("file_name", entity.getFileSaveName());
+            filesMap.put("file_path", entity.getFilePath());
+            mapFiles.add(filesMap);
         });
+        
+        //각 파일, 댓글 List<Map>에 set
         resBoardPostDto.setFiles(mapFiles);
+        resBoardPostDto.setPost(postMap);
 
         return resBoardPostDto;
     }
@@ -222,9 +232,11 @@ public class BoardServiceImpl implements BoardService {
 
             //List<String>값을 반복문으로 파일명 빼서 삭제
             for(String deleteFile : fileNameList) {
-                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\js\\board\\files\\" + deleteFile);
-                if(deletedFiles.delete()){}
-                fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
+                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + deleteFile);
+                if(deletedFiles.delete()){
+                    fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
+                }
+
             }
 
         }
