@@ -2,6 +2,7 @@ package com.danakga.webservice.orders.controller;
 
         import com.danakga.webservice.annotation.LoginUser;
         import com.danakga.webservice.orders.dto.request.OrdersDto;
+        import com.danakga.webservice.orders.dto.request.StatusDto;
         import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
         import com.danakga.webservice.orders.dto.response.ResSalesListDto;
         import com.danakga.webservice.orders.service.OrdersService;
@@ -46,5 +47,12 @@ public class OrdersController {
                                               @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime){
 
         return ordersService.salesList(userInfo,pageable,page,startTime,endTime);
+    }
+    
+    //판매내역 업데이트
+    @PutMapping("api/user/sales/updateStatus/{item}")
+    public ResResultDto updateSalesStatus(@LoginUser UserInfo userInfo, @PathVariable("item") Long ordersId,@RequestBody StatusDto statusDto){
+        Long result = ordersService.updateSalesStatus(userInfo,ordersId,statusDto);
+        return new ResResultDto(result,"상태변경을 성공했습니다.");
     }
 }

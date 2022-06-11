@@ -1,13 +1,11 @@
 package com.danakga.webservice.orders.dto.request;
 
-import com.danakga.webservice.orders.model.OrderStatus;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -24,7 +22,7 @@ public class OrdersDto {
     private Product product;
 
     //주문 상태
-    private String orderStatus;
+    private String ordersStatus;
 
     //주문 날짜
     private LocalDateTime ordersDate;
@@ -40,4 +38,6 @@ public class OrdersDto {
 
     //운송장 번호
     private String ordersTrackingNum;
+
 }
+

@@ -1,6 +1,7 @@
 package com.danakga.webservice.orders.service;
 
 import com.danakga.webservice.orders.dto.request.OrdersDto;
+import com.danakga.webservice.orders.dto.request.StatusDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
 import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -21,5 +22,9 @@ public interface OrdersService {
     //판매내역
     List<ResSalesListDto> salesList(UserInfo userInfo,Pageable pageable,int page,
                                     LocalDateTime startTime, LocalDateTime endTime);
+
+    //판매내역 상태 업데이트
+    Long updateSalesStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);
+
     
 }

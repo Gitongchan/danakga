@@ -34,7 +34,7 @@ public class Orders {
     
     //주문 상태
     @Column(name="orders_status")
-    private String orderStatus;
+    private String ordersStatus;
     
     //주문 날짜
     @Column(name="orders_date")
@@ -57,13 +57,13 @@ public class Orders {
     private String ordersTrackingNum;
 
     @Builder
-    public Orders(Long ordersId, UserInfo userInfo, Product product, String orderStatus,
+    public Orders(Long ordersId, UserInfo userInfo, Product product, String ordersStatus,
                   LocalDateTime ordersDate, LocalDateTime ordersFinishedDate, int ordersPrice,int ordersQuantity,
                   String ordersTrackingNum) {
         this.ordersId = ordersId;
         this.userInfo = userInfo;
         this.product = product;
-        this.orderStatus = orderStatus;
+        this.ordersStatus = ordersStatus;
         this.ordersDate = ordersDate;
         this.ordersFinishedDate = ordersFinishedDate;
         this.ordersPrice = ordersPrice;

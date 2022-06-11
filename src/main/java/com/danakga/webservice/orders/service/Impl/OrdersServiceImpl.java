@@ -4,9 +4,10 @@ import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
+import com.danakga.webservice.orders.dto.request.StatusDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
 import com.danakga.webservice.orders.dto.response.ResSalesListDto;
-import com.danakga.webservice.orders.model.OrderStatus;
+import com.danakga.webservice.orders.model.OrdersStatus;
 import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.orders.repository.OrdersRepository;
 import com.danakga.webservice.orders.service.OrdersService;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class OrdersServiceImpl implements OrdersService {
                 Orders.builder()
                         .userInfo(ordersUserInfo)
                         .product(ordersProduct)
-                        .orderStatus(OrderStatus.READY.getStatus())
+                        .ordersStatus(OrdersStatus.READY.getStatus())
                         .ordersDate(LocalDateTime.now())
                         .ordersFinishedDate(null) //배송완료시에 입력됨
                         .ordersPrice(ordersDto.getOrdersPrice())
@@ -88,7 +90,7 @@ public class OrdersServiceImpl implements OrdersService {
                 listDto.setProductName(entity.getProduct().getProductName());
                 listDto.setOrdersQuantity(entity.getOrdersQuantity());
                 listDto.setOrdersFinishedDate(entity.getOrdersFinishedDate());
-                listDto.setOrderStatus(entity.getOrderStatus());
+                listDto.setOrderStatus(entity.getOrdersStatus());
                 listDto.setOrdersTrackingNum(entity.getOrdersTrackingNum());
                 listDto.setTotalPage(ordersPage.getTotalPages());
                 listDto.setTotalElement(ordersPage.getTotalElements());
@@ -128,7 +130,7 @@ public class OrdersServiceImpl implements OrdersService {
                     listDto.setProductName(entity.getProduct().getProductName());
                     listDto.setOrdersQuantity(entity.getOrdersQuantity());
                     listDto.setOrdersDate(entity.getOrdersDate());
-                    listDto.setOrderStatus(entity.getOrderStatus());
+                    listDto.setOrderStatus(entity.getOrdersStatus());
                     listDto.setOrdersFinishedDate(entity.getOrdersFinishedDate());
                     listDto.setOrdersTrackingNum(entity.getOrdersTrackingNum());
                     listDto.setTotalPage(salesPage.getTotalPages());
@@ -140,5 +142,38 @@ public class OrdersServiceImpl implements OrdersService {
 
     }
 
+    // 판매자의 판매 내역 상태 업데이트
+    @Transactional
+    @Override
+    public Long updateSalesStatus(UserInfo userInfo, Long ordersId, StatusDto statusDto) {
+        UserInfo updateSalesUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
+        );
+        CompanyInfo updateSalesCompanyInfo = companyRepository.findByUserInfo(updateSalesUserInfo).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사용자의 회사정보를 찾을 수 없습니다.")
+        );
+        String inputStatus = statusDto.getOrdersStatus();
+        String trackingNum = statusDto.getOrdersTrackingNum();
+        String status = null;
+
+        if (inputStatus.equals(OrdersStatus.READY.getStatus()) && trackingNum != null) {
+            status = OrdersStatus.START.getStatus(); //배송시작은 운송장 번호 입력하기
+            ordersRepository.updateOrdersTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
+        } else if (inputStatus.equals(OrdersStatus.CANCEL.getStatus()) || inputStatus.equals(OrdersStatus.RETURN.getStatus())) {
+            status = OrdersStatus.REFUND.getStatus();
+        } else if (inputStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
+            status = OrdersStatus.REDELIVERY.getStatus();
+        } else if (inputStatus.equals(OrdersStatus.START.getStatus())) {
+            status = OrdersStatus.FINISH.getStatus(); //배송완료 처리할때는 주문완료 날짜 입력하기
+            ordersRepository.updateOrdersFinishedDate(LocalDateTime.now(),updateSalesCompanyInfo.getCompanyId(),ordersId);
+        } else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())) {
+            status = OrdersStatus.CONFIRM.getStatus();
+        }
+
+
+        ordersRepository.updateOrdersStatus(status,updateSalesCompanyInfo.getCompanyId(),ordersId);
+
+        return ordersId;
+    }
 
 }
