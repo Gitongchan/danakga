@@ -21,7 +21,7 @@ public class Board_Comment {
     private Long cmId;
 
     @Column(name = "cm_comment")
-    private String cmComment;
+    private String cmContent;
 
     @Column(name = "cm_deleted")
     private String cmDeleted;
@@ -50,10 +50,10 @@ public class Board_Comment {
     }
 
     @Builder
-    public Board_Comment(Long cmId, String cmComment, String cmDeleted, String cmWriter,LocalDateTime cmCreated, LocalDateTime cmModified,
+    public Board_Comment(Long cmId, String cmContent, String cmDeleted, String cmWriter,LocalDateTime cmCreated, LocalDateTime cmModified,
                          UserInfo userInfo, Board board) {
         this.cmId = cmId;
-        this.cmComment = cmComment;
+        this.cmContent = cmContent;
         this.cmDeleted = cmDeleted;
         this.cmWriter = cmWriter;
         this.cmCreated = cmCreated;

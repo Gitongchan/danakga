@@ -40,7 +40,6 @@ public class CommentServiceImpl implements CommentService {
         Board board = boardRepository.findByBdId(id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
-        //cm_id desc 정렬
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> board_comments = commentRepository.findAllByBoardAndCmDeleted(board, deleted, pageable);
 
@@ -53,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
         commentList.forEach(entity -> {
             Map<String, Object> commentsMap = new HashMap<>();
             commentsMap.put("cm_id", entity.getCmId());
-            commentsMap.put("cm_content", entity.getCmComment());
+            commentsMap.put("cm_content", entity.getCmContent());
             commentsMap.put("cm_writer", entity.getCmWriter());
             commentsMap.put("cm_created", entity.getCmCreated());
             commentsMap.put("cm_modify", entity.getCmModified());
@@ -70,6 +69,7 @@ public class CommentServiceImpl implements CommentService {
 
         //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
         if (boardRepository.findById(id).isPresent()) {
+
             if (userRepository.findById(userInfo.getId()).isPresent()) {
 
                 Board recentBoard = boardRepository.findById(id).get();
@@ -77,11 +77,44 @@ public class CommentServiceImpl implements CommentService {
                 UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
                 commentRepository.save(
-                        board_Comment = Board_Comment.builder()
-                                .cmComment(reqCommentDto.getCmContent())
+                       board_Comment = Board_Comment.builder()
+                                .cmContent(reqCommentDto.getCmContent())
                                 .cmWriter(recentUserInfo.getUserid())
                                 .board(recentBoard)
                                 .userInfo(recentUserInfo)
+                                .build()
+                );
+                return board_Comment.getCmId();
+            }
+        }
+        return -1L;
+    }
+
+    //댓글 수정
+    @Override
+    public Long commentEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
+
+        //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
+        if (boardRepository.findById(bd_id).isPresent()) {
+
+            if (userRepository.findById(userInfo.getId()).isPresent()) {
+
+                Board recentBoard = boardRepository.findById(bd_id).get();
+
+                UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+
+                Board_Comment board_Comment = commentRepository.findByBoardAndCmId(recentBoard,cm_id);
+
+                commentRepository.save(
+                        Board_Comment.builder()
+                                .cmId(board_Comment.getCmId())
+                                .cmContent(reqCommentDto.getCmContent())
+                                .cmWriter(recentUserInfo.getUserid())
+                                .cmDeleted(board_Comment.getCmDeleted())
+                                .cmCreated(board_Comment.getCmCreated())
+                                .cmModified(board_Comment.getCmModified())
+                                .userInfo(recentUserInfo)
+                                .board(recentBoard)
                                 .build()
                 );
                 return board_Comment.getCmId();

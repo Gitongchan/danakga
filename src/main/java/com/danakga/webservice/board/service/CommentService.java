@@ -10,4 +10,6 @@ public interface CommentService {
     Long commentWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long id);
 
     ResCommentListDto commentList (Long id, Pageable pageable, int page);
+
+    Long commentEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto);
 }

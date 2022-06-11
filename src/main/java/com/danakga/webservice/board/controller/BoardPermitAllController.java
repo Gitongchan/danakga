@@ -38,7 +38,7 @@ public class BoardPermitAllController {
         return boardService.getPost(id, request, response);
     }
 
-    //댓글 조회(게시글 id 받기)
+    //댓글 조회
     @GetMapping("/post/comments/{id}")
     public ResCommentListDto commnetList(@PathVariable("id") Long id,
                                          Pageable pageable, int page) {

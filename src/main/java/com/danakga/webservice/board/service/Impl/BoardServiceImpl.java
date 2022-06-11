@@ -118,14 +118,13 @@ public class BoardServiceImpl implements BoardService {
 
         //파일, 게시글 정보 담을 List
         List<Map<String, Object>> mapFiles = new ArrayList<>();
-        List<Map<String, Object>> mapPosts = new ArrayList<>();
 
         //값 담아줄 Dto 객체 생성
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
+        //게시글 값 (Map이나 List<Map>으로 보내지는게 깔끔하게 보내짐)
         Map<String, Object> postMap = new HashMap<>();
 
-        //게시글 값
         postMap.put("bd_id", boardWrapper.getBdId());
         postMap.put("bd_writer", boardWrapper.getBdWriter());
         postMap.put("bd_title", boardWrapper.getBdTitle());
@@ -133,7 +132,6 @@ public class BoardServiceImpl implements BoardService {
         postMap.put("bd_created", boardWrapper.getBdCreated());
         postMap.put("bd_modified", boardWrapper.getBdModified());
         postMap.put("bd_views", boardWrapper.getBdViews());
-        mapPosts.add(postMap);
 
         //file 정보 값
         files.forEach(entity -> {
@@ -145,7 +143,7 @@ public class BoardServiceImpl implements BoardService {
         
         //각 파일, 댓글 List<Map>에 set
         resBoardPostDto.setFiles(mapFiles);
-        resBoardPostDto.setPost(mapPosts);
+        resBoardPostDto.setPost(postMap);
 
         return resBoardPostDto;
     }
