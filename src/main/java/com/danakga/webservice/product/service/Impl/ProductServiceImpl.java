@@ -120,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
 
         pageable = PageRequest.of(page, 10, Sort.by("productId").descending());
 
-        Page<Product> productPage = productRepository.findByProductTypeLikeAndProductSubTypeLikeAndProductBrandLikeAndProductNameLikeAndProductStockGreaterThanEqual(
+        Page<Product> productPage = productRepository.searchProductList(
                 productSearchDto.getProductType(),productSearchDto.getProductSubType(),productSearchDto.getProductBrand(),
                 productSearchDto.getProductName(),productSearchDto.getProductStock(),pageable
         );
