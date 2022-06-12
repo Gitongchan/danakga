@@ -45,11 +45,14 @@ public class ProductController {
 
     //상품 수정
     @PutMapping(value = "/update/{item}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResResultDto productUpdate(@LoginUser UserInfo userInfo,@PathVariable("item") Long productId,
+    public ResResultDto productUpdate(@LoginUser UserInfo userInfo,
+                                      @PathVariable("item") Long productId,
                                       @RequestPart(value = "keys") ProductDto productDto,
-                                      @RequestPart(value = "deletedFiles",required = false) DeletedFileDto deletedFileDto,
+                                      @RequestPart(value = "deletedFileList",required = false) DeletedFileDto deletedFileDto,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files){
+
         Long result = productService.productUpdate(userInfo,productId,productDto,deletedFileDto,files);
+
         return result == -1L ?
                 new ResResultDto(result,"상품 수정 실패.") : new ResResultDto(result,"상품 수정 성공.");
     }

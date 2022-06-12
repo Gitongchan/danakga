@@ -51,12 +51,13 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public Long productUpload(UserInfo userInfo, ProductDto productDto, List<MultipartFile> files) {
-        if(userRepository.findById(userInfo.getId()).isEmpty()) return -1L;
-        UserInfo uploadUser = userRepository.findById(userInfo.getId()).get();
+        UserInfo uploadUser = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
 
-        if(companyRepository.findByUserInfo(uploadUser).isEmpty()) return -1L;
-        CompanyInfo uploadCompany = companyRepository.findByUserInfo(uploadUser).get();
-
+        CompanyInfo uploadCompany = companyRepository.findByUserInfo(uploadUser).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
+        );
         if(CollectionUtils.isEmpty(files)) {
             return productRepository.save(
                     Product.builder()
@@ -159,7 +160,7 @@ public class ProductServiceImpl implements ProductService {
         ) ;  //상품정보
 
         List<ProductFiles> files = productFilesRepository.findByProduct(productInfo);  //상품의 파일정보
-        
+
         Long companyId = productInfo.getProductCompanyId().getCompanyId();
 
         CompanyInfo companyInfo = companyRepository.findByCompanyId(companyId).orElseThrow(
@@ -235,29 +236,29 @@ public class ProductServiceImpl implements ProductService {
                 ()->new CustomException.ResourceNotFoundException("상품정보를 찾을 수 없습니다.")
         );
 
-        /*------ 검증 끝 ------*/
 
-        List<ProductFiles> productFilesList = productFilesRepository.findByProduct(productInfo);
 
-        //db값 담아주기 위한 List
-        List<String> saveFilePath = new ArrayList<>();
+        if(deletedFileDto != null){
+            //삭제 파일명을 담아주기 위한 List
+            List<String> deletedFileNameList = new ArrayList<>();
+            //dto에서 삭제 파일명을 담아주는 List, Map
+            List<Map<String, Object>> deletedFileNameMap = deletedFileDto.getDeletedFileList();
 
-        for (ProductFiles productFiles : productFilesList) {
-            saveFilePath.add(productFiles.getPfPath());
-        }
-
-        //db에서 파일 정보 제거 + 폴더에서 파일 제거
-        for (String filePath : saveFilePath) {
-            File deleteFile = new File(filePath);
-            if (deleteFile.delete()) {
-                productFilesRepository.deleteByProductAndPfPath(productInfo, filePath);
+            //List<Map> 값을 1씩 증가시켜서 List<String>에 담아줌
+            for (Map<String, Object> stringObjectMap : deletedFileNameMap) {
+                deletedFileNameList.add(stringObjectMap.get("value").toString());
             }
+
+            //List<String>값을 반복문으로 파일명 빼서 삭제
+            for(String deleteFile : deletedFileNameList) {
+                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_files\\" + deleteFile);
+                if(deletedFiles.delete()){
+                    productFilesRepository.deleteByProductAndPfSaveName(productInfo, deleteFile);
+                }
+            }
+
         }
 
-        File deleteThumbNailFile = new File(productInfo.getProductPhoto());
-        if (deleteThumbNailFile.delete()) {
-            productRepository.deleteProductPhoto(productInfo.getProductId());
-        }
 
         if (CollectionUtils.isEmpty(files)) {
             productRepository.save(
