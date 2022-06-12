@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -13,12 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ResBoardListDto {
 
-    private Long bdId;
-    private String bdWriter;
-    private String bdTitle;
-    private LocalDateTime bdCreated;
-    private int bdViews;
-    private String bdDeleted;
-    private int totalPage;
-    private long totalElement;
+    //게시글 목록
+    private List<Map<String,Object>> lists;
+
 }

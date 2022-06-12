@@ -12,12 +12,8 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResBoardPostDto {
-    
-    //게시글 정보
-    private Map<String, Object> post;
+public class ResCommentListDto {
 
-    //파일 정보
-    private List<Map<String,Object>> files;
-
+    //댓글 정보
+    private List<Map<String, Object>> comments;
 }
