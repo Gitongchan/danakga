@@ -193,19 +193,19 @@ public class OrdersServiceImpl implements OrdersService {
                 ()->new CustomException.ResourceNotFoundException("판매내역을 찾을 수 없습니다.")
         );
         String inputStatus = orders.getOrdersStatus();
-        String changetStatus = statusDto.getChangeOrdersStatus();
+        String changeStatus = statusDto.getChangeOrdersStatus();
         String status = null;
 
         if(inputStatus.equals(OrdersStatus.READY.getStatus())){
             status = OrdersStatus.CANCEL.getStatus();
         }
-        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changetStatus.equals(OrdersStatus.CONFIRM.getStatus())) {
+        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changeStatus.equals(OrdersStatus.CONFIRM.getStatus())) {
             status = OrdersStatus.CONFIRM.getStatus(); //구매확정
         }
-        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changetStatus.equals(OrdersStatus.RETURN.getStatus())) {
+        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changeStatus.equals(OrdersStatus.RETURN.getStatus())) {
             status = OrdersStatus.RETURN.getStatus(); //반품신청
         }
-        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changetStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
+        else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changeStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
             status = OrdersStatus.EXCHANGE.getStatus(); //교환신청
         }else {
             return -1L;
