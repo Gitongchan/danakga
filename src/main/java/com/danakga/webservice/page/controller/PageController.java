@@ -35,9 +35,9 @@ public class PageController {
         return "pages/mypageUser";
     }
 
-    @GetMapping("/admin/mypage")
+    @GetMapping("/manager/mypage")
     public String mypageAdmin(){
-        return "pages/mypageAdmin";
+        return "pages/mypageManager";
     }
 
 
@@ -53,9 +53,9 @@ public class PageController {
     @GetMapping("/board/edit") //게시글 수정
     public String boardEdit(){return "pages/boardEdit";}
 
-    @GetMapping("/mypageEdit")
+    @GetMapping("/user/edit")
     public String myPageEdit(){
-        return "pages/mypageEdit";
+        return "pages/mypageUserEdit";
     }
 
     @GetMapping("/user/signout")

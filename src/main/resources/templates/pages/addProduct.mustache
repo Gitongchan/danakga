@@ -2,9 +2,16 @@
 <div class="container">
     <div class="row">
         <section class="mypage_sidebar">
-            {{>pages/mypageAdminNAV}}
+            {{>pages/mypageManagerNAV}}
             <article class="product-article">
-                상품등록
+
+                <h3>업로드 할 파일</h3>
+                <input type="file" id="file-input" multiple />
+                <div id="image-preview" class="detail-inner">
+                </div>
+                <div class="button">
+                    <button class="btn" id="productBtn">등록하기</button>
+                </div>
             </article>
         </section>
     </div>
@@ -12,4 +19,67 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
+<script src="/js/board/boardFilePreview.js"></script>
+<script>
+    document.querySelector( '#productBtn' ).addEventListener( 'click', (e) => {
+        e.preventDefault();
+        //토큰 값
+        const header = document.querySelector('meta[name="_csrf_header"]').content;
+        const token = document.querySelector('meta[name="_csrf"]').content;
+
+        //폼 생성
+        const formData = new FormData();
+
+        //input file, 이미지에 대한 정보 가져옴
+        let input = document.querySelector('input[type="file"]')
+        const productData = {
+            productCompanyId:{
+                companyId: 1
+            },
+            productType:"낚시대",
+            productSubType:"맛난낚시대",
+            productBrand:"상품브랜드",
+            productName:"간지작살",
+            productContent:"이거쓰면 ㄹㅇ 히트입니다",
+            productPrice:"3000",
+            productStock:100,
+            productViewCount:0,
+            productOrderCount:0
+        }
+
+
+        console.log(input.files);
+
+        for(let i=0;i <=input.files.length; i++){
+            formData.append('images', input.files[i]);
+        }
+        formData.append(
+                "keys",
+                new Blob([JSON.stringify(productData)], { type: "application/json" })
+        );
+
+
+        fetch("/api/manager/product/upload", {
+            method: "POST",
+            headers: {
+                'header': header,
+                'processData': false,
+                'contentType':false,
+                'X-CSRF-Token': token
+            },
+            body: formData
+        })
+                .then(res => {
+                    if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
+                        alert("상품등록 완료");
+                    } else { // 실패를 알리는 HTTP 상태 코드면
+                        console.error(res.statusText);
+                        console.error(res);
+                    }
+                })
+                .then(data => console.log(data))
+                .catch(error => console.log(error))
+        // ...
+    } );
+</script>
 {{>pages/footer2}}
