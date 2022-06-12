@@ -1,6 +1,7 @@
 package com.danakga.webservice.product.service;
 
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
+import com.danakga.webservice.product.dto.request.DeletedFileDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 import com.danakga.webservice.product.dto.response.ResProductDto;
@@ -27,7 +28,7 @@ public interface ProductService {
     ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response);
     
     //상품 수정
-    Long productUpdate(UserInfo userInfo,Long productId,ProductDto productDto,List<MultipartFile> files);
+    Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, DeletedFileDto deletedFileDto, List<MultipartFile> files);
 
     //상품 삭제
     Long productDelete(UserInfo userInfo,Long productId);

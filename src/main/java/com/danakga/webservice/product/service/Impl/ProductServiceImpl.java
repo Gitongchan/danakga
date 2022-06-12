@@ -3,6 +3,8 @@ package com.danakga.webservice.product.service.Impl;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
+import com.danakga.webservice.exception.CustomException;
+import com.danakga.webservice.product.dto.request.DeletedFileDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 import com.danakga.webservice.product.dto.response.ResProductDto;
@@ -152,20 +154,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response) {
 
-        if (productRepository.findByProductId(productId).isEmpty()){
-            return null;
-        }
+        Product productInfo = productRepository.findByProductId(productId).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+        ) ;  //상품정보
 
-
-        Product productInfo = productRepository.findByProductId(productId).get();   //상품정보
         List<ProductFiles> files = productFilesRepository.findByProduct(productInfo);  //상품의 파일정보
         
         Long companyId = productInfo.getProductCompanyId().getCompanyId();
 
-        if(companyRepository.findByCompanyId(companyId).isEmpty()){
-            return null; //등록한 회사 정보가 없음
-        }
-        CompanyInfo companyInfo = companyRepository.findByCompanyId(companyId).get(); //상품을 등록한 회사정보
+        CompanyInfo companyInfo = companyRepository.findByCompanyId(companyId).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
+        ); //상품을 등록한 회사정보
 
         //조회수 증가, 쿠키로 중복 증가 방지
         //쿠키가 있으면 그 쿠키가 해당 게시글 쿠키인지 확인하고 아니라면 조회수 올리고 setvalue로 해당 게시글의 쿠키 값도 넣어줘야함
@@ -219,38 +218,26 @@ public class ProductServiceImpl implements ProductService {
     //상품 수정
     @Transactional
     @Override
-    public Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, List<MultipartFile> files) {
+    public Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, DeletedFileDto deletedFileDto, List<MultipartFile> files) {
 
 
-
-        if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
-            return -1L;
-        }
-        UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
+        UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
+        );
 
         //로그인한 유저의 회사 정보 검증
-        if(companyRepository.findByUserInfo(productUserInfo).isEmpty()){
-            return -1L;
-        }
-        CompanyInfo CompanyInfo =companyRepository.findByUserInfo(productUserInfo).get();
-
+        CompanyInfo companyInfo =companyRepository.findByUserInfo(productUserInfo).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사용자의 회사 정보를 찾을 수 없습니다.")
+        );
 
         //상품번호와 등록환 회사정보 일치하는지 검증
-        if(productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).isEmpty()){
-            return -1L;
-        }
-        Product productInfo = productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).get();
+        Product productInfo = productRepository.findByProductIdAndProductCompanyId(productId,companyInfo).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("상품정보를 찾을 수 없습니다.")
+        );
 
         /*------ 검증 끝 ------*/
 
         List<ProductFiles> productFilesList = productFilesRepository.findByProduct(productInfo);
-
-        if (companyRepository.findByUserInfo(productUserInfo).isEmpty()) {
-            return -1L;
-        }
-
-        CompanyInfo companyInfo = companyRepository.findByUserInfo(productUserInfo).get();
-
 
         //db값 담아주기 위한 List
         List<String> saveFilePath = new ArrayList<>();
@@ -333,23 +320,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long productDelete(UserInfo userInfo, Long productId) {
 
-        //유저 정보 + 매니저인지 검증
-        if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
-            return -1L;
-        }
-        UserInfo productDeleteUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
+        UserInfo productDeleteUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
 
         //상품을 등록한 회사 정보 검증
-       if(companyRepository.findByUserInfo(productDeleteUserInfo).isEmpty()){
-            return -1L;
-       }
-       CompanyInfo productDeleteCompanyInfo =companyRepository.findByUserInfo(productDeleteUserInfo).get();
+       CompanyInfo productDeleteCompanyInfo =companyRepository.findByUserInfo(productDeleteUserInfo).orElseThrow(
+               () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
+       );
 
        //상품번호와 등록환 회사정보 일치하는지 검증
-       if(productRepository.findByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo).isEmpty()){
-           return -1L;
-       }
-       Product deleteProduct = productRepository.findByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo).get();
+       Product deleteProduct = productRepository.findByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+        );
 
         // 등록된 사진이 있다면 지워줌
         List<ProductFiles> productFilesList = productFilesRepository.findByProduct(deleteProduct);
@@ -386,22 +369,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Long updateDeleteButton(UserInfo userInfo, Long productId) {
         //유저 정보 + 매니저인지 검증
-        if (userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).isEmpty()) {
-            return -1L;
-        }
-        UserInfo btnUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).get();
+        UserInfo btnUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
 
         //로그인한 유저의 회사 정보 검증
-        if(companyRepository.findByUserInfo(btnUserInfo).isEmpty()){
-            return -1L;
-        }
-        CompanyInfo CompanyInfo =companyRepository.findByUserInfo(btnUserInfo).get();
+        CompanyInfo CompanyInfo =companyRepository.findByUserInfo(btnUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
+        );
 
         //상품번호와 등록환 회사정보 일치하는지 검증
-        if(productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).isEmpty()){
-            return -1L;
-        }
-        Product productInfo = productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).get();
+        Product productInfo = productRepository.findByProductIdAndProductCompanyId(productId,CompanyInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+        );
 
 
         return productInfo.getProductId();

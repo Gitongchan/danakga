@@ -1,6 +1,7 @@
 package com.danakga.webservice.product.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.product.dto.request.DeletedFileDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 
@@ -42,19 +43,13 @@ public class ProductController {
 
     }
 
-    //상품 리스트
-    @GetMapping("/list")
-    public List<ResProductListDto> productList(Pageable pageable,
-                                               @RequestPart(value = "productSearchDto") ProductSearchDto productSearchDto, int page) {
-        return productService.productList(pageable, productSearchDto, page);
-    }
-
     //상품 수정
     @PutMapping(value = "/update/{item}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto productUpdate(@LoginUser UserInfo userInfo,@PathVariable("item") Long productId,
                                       @RequestPart(value = "keys") ProductDto productDto,
+                                      @RequestPart(value = "deletedFiles",required = false) DeletedFileDto deletedFileDto,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files){
-        Long result = productService.productUpdate(userInfo,productId,productDto,files);
+        Long result = productService.productUpdate(userInfo,productId,productDto,deletedFileDto,files);
         return result == -1L ?
                 new ResResultDto(result,"상품 수정 실패.") : new ResResultDto(result,"상품 수정 성공.");
     }
