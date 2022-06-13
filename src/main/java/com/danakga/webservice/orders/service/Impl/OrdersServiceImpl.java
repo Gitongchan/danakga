@@ -70,13 +70,13 @@ public class OrdersServiceImpl implements OrdersService {
 
     //주문 내역
     @Override
-    public List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startTime,LocalDateTime endTime) {
+    public List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startDate,LocalDateTime endDate) {
         UserInfo ordersUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
         pageable = PageRequest.of(page, 10, Sort.by("ordersId").descending());
 
-        Page<Orders> ordersPage = ordersRepository.ordersList(ordersUserInfo,pageable,startTime,endTime);
+        Page<Orders> ordersPage = ordersRepository.ordersList(ordersUserInfo,pageable,startDate,endDate);
         List<Orders> ordersList = ordersPage.getContent();
 
         List<ResOrdersListDto> ordersListDto = new ArrayList<>();
@@ -102,7 +102,7 @@ public class OrdersServiceImpl implements OrdersService {
 
     //판매내역
     @Override
-    public List<ResSalesListDto> salesList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<ResSalesListDto> salesList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startDate, LocalDateTime endDate) {
         UserInfo salesUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
         );
@@ -110,7 +110,7 @@ public class OrdersServiceImpl implements OrdersService {
                 ()->new CustomException.ResourceNotFoundException("사용자의 회사정보를 찾을 수 없습니다.")
         );
         pageable = PageRequest.of(page, 10, Sort.by("ordersId").descending());
-        Page<Orders> salesPage = ordersRepository.salesList(salesCompanyInfo.getCompanyId(),pageable,startTime,endTime);
+        Page<Orders> salesPage = ordersRepository.salesList(salesCompanyInfo.getCompanyId(),pageable,startDate,endDate);
         List<Orders> salesList = salesPage.getContent();
 
         List<ResSalesListDto> salesListDto = new ArrayList<>();
