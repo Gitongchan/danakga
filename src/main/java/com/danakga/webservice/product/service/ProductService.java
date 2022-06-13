@@ -18,7 +18,7 @@ import java.util.List;
 public interface ProductService {
     
     //상품 등록
-    Long productUpload(UserInfo userInfo, ProductDto productDto, List<MultipartFile> files);
+    Long productUpload(UserInfo userInfo, ProductDto productDto,MultipartFile thumb,List<MultipartFile> files);
 
     //상품 목록 조회
     List<ResProductListDto> productList(Pageable pageable,

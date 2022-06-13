@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
     //상품등록
     @Transactional
     @Override
-    public Long productUpload(UserInfo userInfo, ProductDto productDto, List<MultipartFile> files) {
+    public Long productUpload(UserInfo userInfo, ProductDto productDto,MultipartFile thumb,List<MultipartFile> files) {
         UserInfo uploadUser = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
         );
@@ -58,13 +58,53 @@ public class ProductServiceImpl implements ProductService {
         CompanyInfo uploadCompany = companyRepository.findByUserInfo(uploadUser).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
         );
-        if(CollectionUtils.isEmpty(files)) {
+
+        String thumbFilePath = null;
+        //썸네일 저장
+        if(!thumb.isEmpty()){
+            thumbFilePath = productFilesService.thumbFile(thumb);
+        }
+
+
+        if(!CollectionUtils.isEmpty(files)){
+            for(MultipartFile multipartFile : files) {
+
+                String originFileName = multipartFile.getOriginalFilename().toLowerCase();
+
+                //List에 값이 있으면 saveFileUpload 실행
+                if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
+
+                    Product product = productRepository.save(
+                            Product.builder()
+                                    .productCompanyId(uploadCompany)
+                                    .productContent(productDto.getProductContent())
+                                    .productName(productDto.getProductName())
+                                    .productPhoto(thumbFilePath)
+                                    .productPrice(productDto.getProductPrice())
+                                    .productStock(productDto.getProductStock())
+                                    .productUploadDate(LocalDateTime.now())
+                                    .productType(productDto.getProductType())
+                                    .productSubType(productDto.getProductSubType())
+                                    .productBrand(productDto.getProductBrand())
+                                    .productOrderCount(0)
+                                    .productViewCount(0)
+                                    .build()
+                    );
+
+                    if (productFilesService.uploadFile(files, product).equals(-1L)) {
+                        return -2L; //파일업로드 실패하면 -2L반환
+                    }
+                    return product.getProductId();
+                }
+            }
+        }
+        else if(CollectionUtils.isEmpty(files)){
             return productRepository.save(
                     Product.builder()
                             .productCompanyId(uploadCompany)
                             .productContent(productDto.getProductContent())
                             .productName(productDto.getProductName())
-                            .productPhoto("0")
+                            .productPhoto(thumbFilePath)
                             .productPrice(productDto.getProductPrice())
                             .productStock(productDto.getProductStock())
                             .productUploadDate(LocalDateTime.now())
@@ -75,44 +115,6 @@ public class ProductServiceImpl implements ProductService {
                             .productViewCount(0)
                             .build()
             ).getProductId();
-        }
-        else if(!CollectionUtils.isEmpty(files)) {
-
-            for(MultipartFile multipartFile : files) {
-
-                String originFileName = multipartFile.getOriginalFilename().toLowerCase();
-
-                //List에 값이 있으면 saveFileUpload 실행
-                if (!CollectionUtils.isEmpty(files)) {
-                    if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
-
-                        Product product = productRepository.save(
-                                Product.builder()
-                                        .productCompanyId(uploadCompany)
-                                        .productContent(productDto.getProductContent())
-                                        .productName(productDto.getProductName())
-                                        .productPhoto("0")
-                                        .productPrice(productDto.getProductPrice())
-                                        .productStock(productDto.getProductStock())
-                                        .productUploadDate(LocalDateTime.now())
-                                        .productType(productDto.getProductType())
-                                        .productSubType(productDto.getProductSubType())
-                                        .productBrand(productDto.getProductBrand())
-                                        .productOrderCount(0)
-                                        .productViewCount(0)
-                                        .build()
-                        );
-
-                        Long result = productFilesService.uploadFile(files, product);
-
-                        if(result.equals(-1L)){
-                            return -2L; //파일업로드 실패하면 -2L반환
-                        }
-
-                        return product.getProductId();
-                    }
-                }
-            }
         }
         return -1L; //상품업로드 실패시 -1L반환
     }
