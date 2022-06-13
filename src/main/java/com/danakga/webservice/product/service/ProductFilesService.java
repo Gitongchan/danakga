@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ProductFilesService {
     Long uploadFile(List<MultipartFile> files, Product product);
+
+    String thumbFile(MultipartFile thumb);
 }

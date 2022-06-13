@@ -1,6 +1,8 @@
 package com.danakga.webservice.product.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.product.dto.request.DeletedFileDto;
+import com.danakga.webservice.product.dto.request.MyProductSearchDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 
@@ -11,10 +13,15 @@ import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -28,33 +35,40 @@ public class ProductController {
     @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto productUpload(@LoginUser UserInfo userInfo,
                                       @RequestPart(value = "keys") ProductDto productDto,
+                                      @RequestPart(value = "thumb",required = false) MultipartFile thumb,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
-        Long result = productService.productUpload(userInfo, productDto, files);
+        if(thumb.isEmpty()){
+            return new ResResultDto(-2L, "상품등록 실패, 대표사진을 등록해주세요.");
+        }
+
+        Long result = productService.productUpload(userInfo, productDto, thumb,files);
 
         if (result.equals(-1L)) {
             return new ResResultDto(result, "상품등록 실패.");
-        } else if (result.equals(-2L)) {
-            return new ResResultDto(result, "상품등록 실패, 이미지 파일 업로드 실패");
         } else {
             return new ResResultDto(result, "상품등록 성공.");
         }
 
     }
 
-    //상품 리스트
-    @GetMapping("/list")
-    public List<ResProductListDto> productList(Pageable pageable,
-                                               @RequestPart(value = "productSearchDto") ProductSearchDto productSearchDto, int page) {
-        return productService.productList(pageable, productSearchDto, page);
-    }
-
     //상품 수정
     @PutMapping(value = "/update/{item}",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResResultDto productUpdate(@LoginUser UserInfo userInfo,@PathVariable("item") Long productId,
+    public ResResultDto productUpdate(@LoginUser UserInfo userInfo,
+                                      @PathVariable("item") Long productId,
                                       @RequestPart(value = "keys") ProductDto productDto,
+                                      @RequestPart(value = "deletedThumb") String deletedThumb,
+                                      @RequestPart(value = "thumbFile") MultipartFile thumb,
+                                      @RequestPart(value = "deletedFileList",required = false) DeletedFileDto deletedFileDto,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files){
-        Long result = productService.productUpdate(userInfo,productId,productDto,files);
+
+        //대표사진을 삭제만 하는건 불가능하다.
+        if(deletedThumb != null && thumb == null){
+            return new ResResultDto(-1L,"상품 대표사진을 등록해주세요.");
+        }
+
+        Long result = productService.productUpdate(userInfo,productId,productDto,deletedThumb,thumb,deletedFileDto,files);
+
         return result == -1L ?
                 new ResResultDto(result,"상품 수정 실패.") : new ResResultDto(result,"상품 수정 성공.");
     }
@@ -76,5 +90,14 @@ public class ProductController {
                 new ResResultDto(result,"버튼 비활성화.") : new ResResultDto(result,"버튼 활성화.");
     }
 
+    //내가 등록한 상품 리스트
+    @GetMapping("/list")
+    public List<ResProductListDto> myProductList(@LoginUser UserInfo userInfo, Pageable pageable,
+                                                 @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                                                 @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+                                                 @RequestPart(value = "productSearchDto") MyProductSearchDto myProductSearchDto, int page) {
+
+        return productService.myProductList(userInfo,startDate,endDate,pageable,myProductSearchDto,page);
+    }
 
 }
