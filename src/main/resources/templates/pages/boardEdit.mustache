@@ -192,6 +192,9 @@
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
 <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+<script src="/js/board/boardEdit.js"></script>
+<script src="/js/board/boardFilePreview.js"></script>
+
 <script>
     let editor;
 
@@ -219,7 +222,7 @@
         let input = document.querySelector('input[type="file"]')
         const boarddata = {
             bdType: document.getElementById('type').value,
-            bdTitle: document.getElementById('board_Title').value,
+            bdTitle: document.getElementById('post-title').value,
             bdViews: 0,
             bdContent: editorData
         }
@@ -233,11 +236,15 @@
                 "keys",
                 new Blob([JSON.stringify(boarddata)], {type: "application/json"})
         );
+        formData.append(
+                "deletedFiles",
+                new Blob([JSON.stringify(delFiles)], {type:"application/json"})
+        );
 
         // data.files.forEach((file) => formData.append("files", file));
 
-        fetch("/api/user/post/write", {
-            method: "POST",
+        fetch(`/api/user/post/edit/${urlParams}`, {
+            method: "PUT",
             headers: {
                 'header': header,
                 'processData': false,
@@ -248,7 +255,7 @@
         })
                 .then(res => {
                     if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
-                        alert("글작성완료");
+                        alert("수정완료");
                     } else { // 실패를 알리는 HTTP 상태 코드면
                         console.error(res.statusText);
                         console.error(res);
@@ -260,7 +267,5 @@
     });
 
 </script>
-<script src="/js/board/boardEdit.js"></script>
-<script src="/js/board/boardFilePreview.js"></script>
 
 {{>pages/footer2}}

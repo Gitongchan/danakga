@@ -30,9 +30,14 @@ public class PageController {
         return "pages/mainfunction";
     }
 
-    @GetMapping("/mypage")
-    public String mypage(){
-        return "pages/mypage";
+    @GetMapping("/user/mypage")
+    public String mypageUser(){
+        return "pages/mypageUser";
+    }
+
+    @GetMapping("/manager/mypage")
+    public String mypageAdmin(){
+        return "pages/mypageManager";
     }
 
 
@@ -48,14 +53,19 @@ public class PageController {
     @GetMapping("/board/edit") //게시글 수정
     public String boardEdit(){return "pages/boardEdit";}
 
-    @GetMapping("/mypageEdit")
+    @GetMapping("/user/edit")
     public String myPageEdit(){
-        return "pages/mypageEdit";
+        return "pages/mypageUserEdit";
     }
 
     @GetMapping("/user/signout")
     public String signOut(){
         return "pages/userSignout";
+    }
+
+    @GetMapping("/addproduct")
+    public String addProduct(){
+        return "pages/addProduct";
     }
 
 }
