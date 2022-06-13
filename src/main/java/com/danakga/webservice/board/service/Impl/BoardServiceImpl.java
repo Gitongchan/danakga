@@ -4,13 +4,13 @@ import com.danakga.webservice.board.dto.request.ReqBoardDto;
 import com.danakga.webservice.board.dto.request.ReqDeletedFileDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
-import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.board.service.FilesService;
+import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,6 @@ public class BoardServiceImpl implements BoardService {
     private final FileRepository fileRepository;
     private final FilesService filesService;
     private final UserRepository userRepository;
-    private Board board;
 
     //게시판 목록
     @Override
@@ -159,6 +158,8 @@ public class BoardServiceImpl implements BoardService {
         }
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
+        Board board;
+
         if (CollectionUtils.isEmpty(files)) {
             boardRepository.save(
                     board = Board.builder()
@@ -216,8 +217,6 @@ public class BoardServiceImpl implements BoardService {
         }
 
         Board board = boardRepository.findByBdId(id).get();
-        List<Board_Files> boardFiles = fileRepository.findByBoard(board);
-
 
         if(reqDeletedFileDto != null) {
             //삭제 파일명을 담아주기 위한 List
@@ -226,8 +225,8 @@ public class BoardServiceImpl implements BoardService {
             List<Map<String, Object>> fileNameMap = reqDeletedFileDto.getDeletedFiles();
 
             //List<Map> 값을 1씩 증가시켜서 List<String>에 담아줌
-            for(int i = 0; i < fileNameMap.size(); i++) {
-                fileNameList.add(fileNameMap.get(i).get("value").toString());
+            for (Map<String, Object> valueMap : fileNameMap) {
+                fileNameList.add(valueMap.get("value").toString());
             }
 
             //List<String>값을 반복문으로 파일명 빼서 삭제

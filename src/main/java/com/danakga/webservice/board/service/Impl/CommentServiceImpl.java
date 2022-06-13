@@ -2,12 +2,12 @@ package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqCommentDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
-import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Comment;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.CommentRepository;
 import com.danakga.webservice.board.service.CommentService;
+import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-    private Board_Comment board_Comment;
 
     //댓글 조회
     @Override
@@ -75,6 +74,8 @@ public class CommentServiceImpl implements CommentService {
                 Board recentBoard = boardRepository.findById(id).get();
 
                 UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+
+                Board_Comment board_Comment;
 
                 commentRepository.save(
                        board_Comment = Board_Comment.builder()
