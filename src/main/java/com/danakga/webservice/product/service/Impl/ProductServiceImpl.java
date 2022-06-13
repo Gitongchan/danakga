@@ -4,6 +4,7 @@ import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.product.dto.request.DeletedFileDto;
+import com.danakga.webservice.product.dto.request.MyProductSearchDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 import com.danakga.webservice.product.dto.response.ResProductDto;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -151,6 +153,7 @@ public class ProductServiceImpl implements ProductService {
         });
         return productListDto;
     }
+
 
     //개별 상품 조회
     @Override
@@ -396,6 +399,47 @@ public class ProductServiceImpl implements ProductService {
 
         return productInfo.getProductId();
     }
+
+    //내가 등록한 상품 리스트
+    @Override
+    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable, MyProductSearchDto myProductSearchDto, int page) {
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보가 없습니다.")
+        );
+        CompanyInfo companyInfo = companyRepository.findByUserInfo(checkUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("등록된 회사 정보가 없습니다.")
+        );
+
+        pageable = PageRequest.of(page, 10, Sort.by("productId").descending());
+
+        Page<Product> productPage = productRepository.searchMyProductList(
+                myProductSearchDto.getProductName(),myProductSearchDto.getProductStock(),
+                startDate,endDate,companyInfo,pageable
+        );
+        List<Product> productList = productPage.getContent();
+
+        List<ResProductListDto> productListDto = new ArrayList<>();
+
+        productList.forEach(entity->{
+            ResProductListDto listDto = new ResProductListDto();
+            listDto.setProductId(entity.getProductId());
+            listDto.setProductBrand(entity.getProductBrand());
+            listDto.setProductType(entity.getProductType());
+            listDto.setProductSubType(entity.getProductSubType());
+            listDto.setProductName(entity.getProductName());
+            listDto.setProductPhoto(entity.getProductPhoto());
+            listDto.setProductPrice(entity.getProductPrice());
+            listDto.setProductStock(entity.getProductStock());
+            listDto.setProductViewCount(entity.getProductViewCount());
+            listDto.setProductOrderCount(entity.getProductOrderCount());
+            listDto.setProductUploadDate(entity.getProductUploadDate());
+            listDto.setTotalPage(productPage.getTotalPages());
+            listDto.setTotalElement(productPage.getTotalElements());
+            productListDto.add(listDto);
+        });
+        return productListDto;
+    }
+
 
 }
 

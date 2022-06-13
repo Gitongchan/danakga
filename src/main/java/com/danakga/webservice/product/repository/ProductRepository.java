@@ -33,6 +33,20 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
             @Param("productName") String productName, @Param("productStock") Integer productStock, Pageable pageable
     );
 
+    //내가 등록한 상품 리스트 검색
+    @Query("Select p from Product p where p.productName like :productName " +
+            "and p.productStock >= :productStock " +
+            "and p.productUploadDate between :startDate and :endDate " +
+            "and p.productCompanyId = :company")
+    Page<Product>
+    searchMyProductList(
+            @Param("productName") String productName, @Param("productStock") Integer productStock,
+            @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate,
+            @Param("company")CompanyInfo companyInfo,
+            Pageable pageable
+    );
+
+
     Optional<Product> findByProductId(Long productId);
 
     Optional<Product> findByProductIdAndProductCompanyId(Long productId,CompanyInfo companyInfo);
@@ -43,11 +57,6 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Query("update Product p set p.productViewCount = p.productViewCount + 1 where p.productId =:productId")
     void updateProductView(@Param("productId") Long productId);
 
-    //대표이미지 null로 변경
-    @Transactional
-    @Modifying
-    @Query("update Product p set p.productPhoto = 0 where p.productId = :productId")
-    void deleteProductPhoto(@Param("productId") Long productId);
 
     @Transactional
     @Modifying

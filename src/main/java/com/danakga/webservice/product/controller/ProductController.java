@@ -2,6 +2,7 @@ package com.danakga.webservice.product.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.product.dto.request.DeletedFileDto;
+import com.danakga.webservice.product.dto.request.MyProductSearchDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 
@@ -12,12 +13,15 @@ import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -86,5 +90,14 @@ public class ProductController {
                 new ResResultDto(result,"버튼 비활성화.") : new ResResultDto(result,"버튼 활성화.");
     }
 
+    //내가 등록한 상품 리스트
+    @GetMapping("/list")
+    public List<ResProductListDto> myProductList(@LoginUser UserInfo userInfo, Pageable pageable,
+                                                 @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                                                 @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+                                                 @RequestPart(value = "productSearchDto") MyProductSearchDto myProductSearchDto, int page) {
+
+        return productService.myProductList(userInfo,startDate,endDate,pageable,myProductSearchDto,page);
+    }
 
 }
