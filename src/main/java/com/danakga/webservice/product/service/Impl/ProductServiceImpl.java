@@ -1,6 +1,5 @@
 package com.danakga.webservice.product.service.Impl;
 
-import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
@@ -221,7 +220,8 @@ public class ProductServiceImpl implements ProductService {
     //상품 수정
     @Transactional
     @Override
-    public Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, DeletedFileDto deletedFileDto, List<MultipartFile> files) {
+    public Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto,String deletedThumb,
+                              MultipartFile thumb,DeletedFileDto deletedFileDto, List<MultipartFile> files) {
 
 
         UserInfo productUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).orElseThrow(
@@ -233,12 +233,19 @@ public class ProductServiceImpl implements ProductService {
                 ()->new CustomException.ResourceNotFoundException("사용자의 회사 정보를 찾을 수 없습니다.")
         );
 
+        //썸네일이 삭제되었을때
+        if(deletedThumb != null && thumb != null){
+            File deletedThumbFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail\\" + deletedThumb);
+            if(deletedThumbFile.delete()){
+                String updateThumb = productFilesService.thumbFile(thumb);
+                productRepository.updateProductMainPhoto(updateThumb,productId);
+            }
+        }
+
         //상품번호와 등록환 회사정보 일치하는지 검증
         Product productInfo = productRepository.findByProductIdAndProductCompanyId(productId,companyInfo).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("상품정보를 찾을 수 없습니다.")
         );
-
-
 
         if(deletedFileDto != null){
             //삭제 파일명을 담아주기 위한 List

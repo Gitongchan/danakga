@@ -28,7 +28,7 @@ public interface ProductService {
     ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response);
     
     //상품 수정
-    Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto, DeletedFileDto deletedFileDto, List<MultipartFile> files);
+    Long productUpdate(UserInfo userInfo, Long productId, ProductDto productDto,String deletedThumb,MultipartFile thumb, DeletedFileDto deletedFileDto, List<MultipartFile> files);
 
     //상품 삭제
     Long productDelete(UserInfo userInfo,Long productId);

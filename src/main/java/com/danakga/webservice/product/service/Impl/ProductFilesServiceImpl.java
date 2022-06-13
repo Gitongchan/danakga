@@ -26,7 +26,6 @@ import java.util.UUID;
 public class ProductFilesServiceImpl implements ProductFilesService {
 
     private final ProductFilesRepository productFilesRepository;
-    private final ProductRepository productRepository;
 
     @Override
     @Transactional

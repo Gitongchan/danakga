@@ -16,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -29,15 +31,17 @@ public class ProductController {
     @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResResultDto productUpload(@LoginUser UserInfo userInfo,
                                       @RequestPart(value = "keys") ProductDto productDto,
-                                      @RequestPart(value = "thumb") MultipartFile thumb,
+                                      @RequestPart(value = "thumb",required = false) MultipartFile thumb,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
-        Long result = productService.productUpload(userInfo, productDto,thumb,files);
+        if(thumb.isEmpty()){
+            return new ResResultDto(-2L, "상품등록 실패, 대표사진을 등록해주세요.");
+        }
+
+        Long result = productService.productUpload(userInfo, productDto, thumb,files);
 
         if (result.equals(-1L)) {
             return new ResResultDto(result, "상품등록 실패.");
-        } else if (result.equals(-2L)) {
-            return new ResResultDto(result, "상품등록 실패, 이미지 파일 업로드 실패");
         } else {
             return new ResResultDto(result, "상품등록 성공.");
         }
@@ -49,10 +53,17 @@ public class ProductController {
     public ResResultDto productUpdate(@LoginUser UserInfo userInfo,
                                       @PathVariable("item") Long productId,
                                       @RequestPart(value = "keys") ProductDto productDto,
+                                      @RequestPart(value = "deletedThumb") String deletedThumb,
+                                      @RequestPart(value = "thumbFile") MultipartFile thumb,
                                       @RequestPart(value = "deletedFileList",required = false) DeletedFileDto deletedFileDto,
                                       @RequestPart(value = "images", required = false) List<MultipartFile> files){
 
-        Long result = productService.productUpdate(userInfo,productId,productDto,deletedFileDto,files);
+        //대표사진을 삭제만 하는건 불가능하다.
+        if(deletedThumb != null && thumb == null){
+            return new ResResultDto(-1L,"상품 대표사진을 등록해주세요.");
+        }
+
+        Long result = productService.productUpdate(userInfo,productId,productDto,deletedThumb,thumb,deletedFileDto,files);
 
         return result == -1L ?
                 new ResResultDto(result,"상품 수정 실패.") : new ResResultDto(result,"상품 수정 성공.");
