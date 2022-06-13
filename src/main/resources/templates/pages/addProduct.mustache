@@ -1,27 +1,46 @@
-{{>pages/header}}
+{{>pages/header1}}
+<link rel="stylesheet" href="/css/mypageManager.css">
+{{>pages/header2}}
+
 <div class="container">
     <div class="row">
         <section class="mypage_sidebar">
             {{>pages/mypageManagerNAV}}
             <article class="product-article">
-
-                <h3>업로드 할 파일</h3>
-                <input type="file" id="file-input" multiple />
-                <div id="image-preview" class="detail-inner">
+                <div class="product-thumbnale">
+                    <div>
+                        <h6>썸네일</h6>
+                        <input type="file" id="thumb-file"/>
+                        <div id="thumb-preview" class="detail-inner">
+                        </div>
+                        <div>
+                            <h6>업로드 할 파일</h6>
+                            <input type="file" id="file-input" multiple/>
+                            <div id="image-preview" class="detail-inner">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="button">
-                    <button class="btn" id="productBtn">등록하기</button>
+                <div class="product-inputinfo">
+
                 </div>
             </article>
         </section>
+
+
+        <div class="button">
+            <button class="btn" id="productBtn">등록하기</button>
+        </div>
     </div>
 </div>
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
 <script src="/js/board/boardFilePreview.js"></script>
+<script src="/js/product/thumbnalePreview.js"></script>
+
 <script>
-    document.querySelector( '#productBtn' ).addEventListener( 'click', (e) => {
+    document.querySelector('#productBtn').addEventListener('click', (e) => {
         e.preventDefault();
         //토큰 값
         const header = document.querySelector('meta[name="_csrf_header"]').content;
@@ -31,32 +50,35 @@
         const formData = new FormData();
 
         //input file, 이미지에 대한 정보 가져옴
-        let input = document.querySelector('input[type="file"]')
+        let thumb = document.querySelector('.thumb-file');
+        let input = document.querySelector('.file-input')
         const productData = {
-            productCompanyId:{
+            productCompanyId: {
                 companyId: 1
             },
-            productType:"낚시대",
-            productSubType:"맛난낚시대",
-            productBrand:"상품브랜드",
-            productName:"간지작살",
-            productContent:"이거쓰면 ㄹㅇ 히트입니다",
-            productPrice:"3000",
-            productStock:100,
-            productViewCount:0,
-            productOrderCount:0
+            productType: "낚시대",
+            productSubType: "맛난낚시대",
+            productBrand: "상품브랜드",
+            productName: "간지작살",
+            productContent: "이거쓰면 ㄹㅇ 히트입니다",
+            productPrice: "3000",
+            productStock: 100,
+            productViewCount: 0,
+            productOrderCount: 0
         }
 
 
         console.log(input.files);
 
-        for(let i=0;i <=input.files.length; i++){
+        for (let i = 0; i <= input.files.length; i++) {
             formData.append('images', input.files[i]);
         }
         formData.append(
                 "keys",
-                new Blob([JSON.stringify(productData)], { type: "application/json" })
+                new Blob([JSON.stringify(productData)], {type: "application/json"})
         );
+
+        formData.append('thumb', thumb.files)
 
 
         fetch("/api/manager/product/upload", {
@@ -64,7 +86,7 @@
             headers: {
                 'header': header,
                 'processData': false,
-                'contentType':false,
+                'contentType': false,
                 'X-CSRF-Token': token
             },
             body: formData
@@ -80,6 +102,6 @@
                 .then(data => console.log(data))
                 .catch(error => console.log(error))
         // ...
-    } );
+    });
 </script>
 {{>pages/footer2}}

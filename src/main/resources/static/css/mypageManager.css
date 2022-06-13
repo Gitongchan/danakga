@@ -1,0 +1,17 @@
+.product-article {
+    display: flex;
+    width: 100%;
+    background: lightslategrey;
+
+}
+
+.product-thumbnale {
+    width:30%;
+    background: #3b5998;
+
+}
+
+.product-inputinfo{
+    width: 70%;
+    background: darkgrey;
+}
