@@ -4,7 +4,6 @@ import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.product.dto.request.DeletedFileDto;
-import com.danakga.webservice.product.dto.request.MyProductSearchDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 import com.danakga.webservice.product.dto.response.ResProductDto;
@@ -23,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -402,7 +400,8 @@ public class ProductServiceImpl implements ProductService {
 
     //내가 등록한 상품 리스트
     @Override
-    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable, MyProductSearchDto myProductSearchDto, int page) {
+    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
+                                                 String productName,Integer productStock, int page) {
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보가 없습니다.")
         );
@@ -413,7 +412,7 @@ public class ProductServiceImpl implements ProductService {
         pageable = PageRequest.of(page, 10, Sort.by("productId").descending());
 
         Page<Product> productPage = productRepository.searchMyProductList(
-                myProductSearchDto.getProductName(),myProductSearchDto.getProductStock(),
+                productName,productStock,
                 startDate,endDate,companyInfo,pageable
         );
         List<Product> productList = productPage.getContent();

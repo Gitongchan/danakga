@@ -2,12 +2,12 @@ package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.dto.request.ReqCommentDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
-import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Comment;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.CommentRepository;
 import com.danakga.webservice.board.service.CommentService;
+import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,26 +29,32 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-    private Board_Comment board_Comment;
 
     //댓글 조회
     @Override
     public ResCommentListDto commentList(Long id, Pageable pageable, int page) {
 
+        //삭제여부가 "N"의 값만 가져오기 위한 변수
         final String deleted = "N";
 
+        //해당 bdid값이 없다면 exception 값 전달
         Board board = boardRepository.findByBdId(id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글 찾을 수 없습니다."));
 
-        //bd_id와 deleted = N 값인 게시글만 페이징해서 조회
+        //bd_id, deleted = N 값인 댓글만 페이징해서 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> board_comments = commentRepository.findAllByBoardAndCmDeleted(board, deleted, pageable);
+        
+        //paging한 baord_comments를 .getContent()하여 리스트로 변환하여 담아줌
         List<Board_Comment> commentList = board_comments.getContent();
 
+        //Dto에 값을 담아주기 위한 List<Map>
         List<Map<String, Object>> mapComments = new ArrayList<>();
 
+        //return해줄 Dto 객체 생성
         ResCommentListDto resCommentListDto = new ResCommentListDto();
 
+        //List 값을 반복문으로 Map에 담아줌
         commentList.forEach(entity -> {
             Map<String, Object> commentsMap = new HashMap<>();
             commentsMap.put("cm_id", entity.getCmId());
@@ -58,6 +64,8 @@ public class CommentServiceImpl implements CommentService {
             commentsMap.put("cm_modify", entity.getCmModified());
             mapComments.add(commentsMap);
         });
+
+        //Dto 값 set
         resCommentListDto.setComments(mapComments);
 
         return resCommentListDto;
@@ -75,6 +83,8 @@ public class CommentServiceImpl implements CommentService {
                 Board recentBoard = boardRepository.findById(id).get();
 
                 UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+
+                Board_Comment board_Comment;
 
                 commentRepository.save(
                        board_Comment = Board_Comment.builder()
@@ -129,6 +139,7 @@ public class CommentServiceImpl implements CommentService {
 
         //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
         if (boardRepository.findByBdId(bd_id).isPresent()) {
+
             Board board = boardRepository.findByBdId(bd_id).get();
 
             if(userRepository.findById(userInfo.getId()).isPresent()) {

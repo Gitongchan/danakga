@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface FilesService {
 
+    //파일 저장
     Long saveFileUpload(List<MultipartFile> files, Board board);
 }

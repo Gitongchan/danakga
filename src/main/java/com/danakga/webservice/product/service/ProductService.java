@@ -1,9 +1,7 @@
 package com.danakga.webservice.product.service;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.product.dto.request.DeletedFileDto;
-import com.danakga.webservice.product.dto.request.MyProductSearchDto;
 import com.danakga.webservice.product.dto.request.ProductDto;
 import com.danakga.webservice.product.dto.request.ProductSearchDto;
 import com.danakga.webservice.product.dto.response.ResProductDto;
@@ -31,7 +29,8 @@ public interface ProductService {
     List<ResProductListDto> myProductList(@LoginUser UserInfo userInfo,
                                           LocalDateTime startDate, LocalDateTime endDate,
                                           Pageable pageable,
-                                          @RequestBody MyProductSearchDto myProductSearchDto, int page);
+                                          String productName,
+                                          Integer productStock, int page);
 
     //개별 상품 조회
     ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response);
