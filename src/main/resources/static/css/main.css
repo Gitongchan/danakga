@@ -131,9 +131,10 @@ video {
   vertical-align: middle;
 }
 
-img {
-  max-width: 100%;
-}
+/*img {*/
+/*  max-width: 100%;*/
+/*}*/
+
 
 h1,
 h2,

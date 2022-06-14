@@ -14,6 +14,8 @@ function getImageFile(e) {
 
     if ([...files].length >= 7) {
         alert('이미지는 최대 6개 까지 업로드가 가능합니다.');
+        e.target.type="text";
+        e.target.type="file";
         return;
     }
 
@@ -29,7 +31,7 @@ function getImageFile(e) {
             uploadFiles.push(file);
             const reader = new FileReader();
             reader.onload = (e) => {
-                const preview = createElement(e, file);
+                const preview = createElementP(e, file);
                 imagePreview.appendChild(preview);
             };
             reader.readAsDataURL(file);
@@ -37,7 +39,7 @@ function getImageFile(e) {
     });
 }
 
-function createElement(e, file) {
+function createElementP(e, file) {
     const li = document.createElement('li');
     const img = document.createElement('img');
     const button = document.createElement('button');
@@ -60,15 +62,15 @@ function createElement(e, file) {
         const removeTargetId = e.target.dataset.index;
         const removeTarget = document.getElementById(removeTargetId);
         const files = document.querySelector('#thumb-file').files;
-        const dataTranster = new DataTransfer();
+        const dataTranster1 = new DataTransfer();
 
         Array.from(files)
             .filter(file => file.lastModified != removeTargetId)
             .forEach(file => {
-                dataTranster.items.add(file);
+                dataTranster1.items.add(file);
             });
 
-        document.querySelector('#thumb-file').files = dataTranster.files;
+        document.querySelector('#thumb-file').files = dataTranster1.files;
 
         removeTarget.remove();
     })
@@ -80,11 +82,11 @@ function createElement(e, file) {
 }
 
 
-const thandler = {
+const tHandler = {
     init() {
         const fileInput = document.querySelector('#thumb-file');
         fileInput.addEventListener('change', getImageFile)
     }
 }
 
-thandler.init()
+tHandler.init()

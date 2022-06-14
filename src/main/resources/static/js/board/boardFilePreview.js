@@ -14,6 +14,8 @@ function getImageFiles(e) {
 
     if ([...files].length >= 7) {
         alert('이미지는 최대 6개 까지 업로드가 가능합니다.');
+        e.target.type="text";
+        e.target.type="file";
         return;
     }
 

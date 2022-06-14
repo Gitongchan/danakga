@@ -1,4 +1,6 @@
 {{>pages/header1}}
+<link rel="stylesheet" href="/css/product.css">
+<link rel="stylesheet" href="/css/mypageUser.css">
 <link rel="stylesheet" href="/css/mypageManager.css">
 {{>pages/header2}}
 
@@ -7,68 +9,147 @@
         <section class="mypage_sidebar">
             {{>pages/mypageManagerNAV}}
             <article class="product-article">
-                <div class="product-thumbnale">
-                    <div>
+                <div class="product-img">
+                    <div class="product-thumbnale mb-3">
                         <h6>썸네일</h6>
-                        <input type="file" id="thumb-file"/>
                         <div id="thumb-preview" class="detail-inner">
                         </div>
-                        <div>
-                            <h6>업로드 할 파일</h6>
-                            <input type="file" id="file-input" multiple/>
-                            <div id="image-preview" class="detail-inner">
-                            </div>
+                        <input type="file" id="thumb-file"/>
+                    </div>
+                    <div class="product-photos">
+                        <h6>업로드 할 파일</h6>
+                        <div id="image-preview" class="detail-inner">
                         </div>
+                        <input type="file" id="file-input" multiple/>
                     </div>
                 </div>
-                <div class="product-inputinfo">
 
+                <div class="product-inputinfo">
+                    <div class="col-sm-12 mb-10">
+                        <div class="form-group input-group">
+                            <label for="main-type" class="m-auto">상품종류</label>
+                            <select class="form-select" id="main-type" aria-label="select main-type">
+                                <option value="낚시대">낚시대</option>
+                                <option value="릴">릴</option>
+                                <option value="라인">라인</option>
+                                <option value="밑밥">밑밥</option>
+                                <option value="루어">루어</option>
+                                <option value="의류">의류</option>
+                            </select>
+                            <label for="sub-type" class="m-auto">세부종류</label>
+                            <select class="form-select" id="sub-type" aria-label="select sub-type">
+                                <option value="바다">바다</option>
+                                <option value="민물">민물</option>
+                                <option value="루어">루어</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb-10">
+                        <div class="form-group input-group">
+                            <label for="brand-type" class="m-auto">브랜드</label>
+                            <select class="form-select" id="brand-type" aria-label="select brand-type">
+                                <option value="" selected>설정안함</option>
+                                <option value="블랙이소">블랙이소</option>
+                                <option value="털보네">털보네</option>
+                                <option value="갓프레임">갓프레임</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb-10">
+                        <div class="form-group input-group">
+                            <label for="productName" class="m-auto">상품명</label>
+                            <input class="form-control" type="text" id="productName">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb-10">
+                        <div class="form-group">
+                            <label for="editor" class="mb-1">상품내용</label>
+                            <textarea name="boardinfo" id="editor"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb-10">
+                        <div class="form-group input-group">
+                            <label for="productPrice" class="m-auto">가격</label>
+                            <input class="form-control" type="text" id="productPrice">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb-10">
+                        <div class="form-group input-group">
+                            <label for="productStock" class="m-auto">재고</label>
+                            <input class="form-control" type="text" id="productStock">
+                        </div>
+                    </div>
+
+
+                    <div class="button text-center">
+                        <button class="btn" id="productBtn">등록하기</button>
+                    </div>
                 </div>
             </article>
         </section>
 
 
-        <div class="button">
-            <button class="btn" id="productBtn">등록하기</button>
-        </div>
     </div>
 </div>
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
-<script src="/js/board/boardFilePreview.js"></script>
-<script src="/js/product/thumbnalePreview.js"></script>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+<script src="/js/product/thumbnalePreview.js"></script>
+<script src="/js/board/boardFilePreview.js"></script>
 <script>
+    let editor;
+
+    ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: ['bold', 'italic', 'link', 'undo', 'redo', 'numberedList', 'bulletedList']
+            })
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+
     document.querySelector('#productBtn').addEventListener('click', (e) => {
         e.preventDefault();
         //토큰 값
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const token = document.querySelector('meta[name="_csrf"]').content;
 
+        const mainType = document.getElementById('main-type');
+        const subType = document.getElementById('sub-type');
+        const brandType = document.getElementById('brand-type');
+
+        //상품 정보 텍스트 가져오기
+        const editorData = editor.getData();
         //폼 생성
         const formData = new FormData();
 
         //input file, 이미지에 대한 정보 가져옴
-        let thumb = document.querySelector('.thumb-file');
-        let input = document.querySelector('.file-input')
+        let thumb = document.querySelector('#thumb-file');
+        let input = document.querySelector('#file-input');
+
         const productData = {
             productCompanyId: {
-                companyId: 1
+                companyId: document.getElementById('checkCompanyId').value
             },
-            productType: "낚시대",
-            productSubType: "맛난낚시대",
-            productBrand: "상품브랜드",
-            productName: "간지작살",
-            productContent: "이거쓰면 ㄹㅇ 히트입니다",
-            productPrice: "3000",
-            productStock: 100,
+            productType: mainType.options[mainType.selectedIndex].value,
+            productSubType: subType.options[subType.selectedIndex].value,
+            productBrand: brandType.options[brandType.selectedIndex].value,
+            productName: document.getElementById('productName').value,
+            productContent: editorData,
+            productPrice: document.getElementById('productPrice').value,
+            productStock: document.getElementById('productStock').value,
             productViewCount: 0,
             productOrderCount: 0
         }
 
-
-        console.log(input.files);
+        console.log(thumb);
+        console.log(input);
+        console.log(productData);
 
         for (let i = 0; i <= input.files.length; i++) {
             formData.append('images', input.files[i]);
@@ -78,7 +159,7 @@
                 new Blob([JSON.stringify(productData)], {type: "application/json"})
         );
 
-        formData.append('thumb', thumb.files)
+        formData.append('thumb', thumb.files[0])
 
 
         fetch("/api/manager/product/upload", {

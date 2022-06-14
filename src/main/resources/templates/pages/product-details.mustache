@@ -1,5 +1,5 @@
-    {{>pages/header}}
-
+    {{>pages/header1}}
+    {{>pages/header2}}
     <!-- Start Breadcrumbs -->
     <div class="breadcrumbs">
         <div class="container">
@@ -44,13 +44,16 @@
                     </div>
                     <div class="col-lg-6 col-md-12 col-12">
                         <div class="product-info">
-                            <h2 class="title">GoPro Karma Camera Drone</h2>
-                            <p class="category"><i class="lni lni-tag"></i> Drones:<a href="javascript:void(0)">Action
-                                    cameras</a></p>
-                            <h3 class="price">$850<span>$945</span></h3>
-                            <p class="info-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                tempor incididunt
-                                ut labore et dolore magna aliqua.</p>
+                            <h2 class="title" id="p-title">GoPro Karma Camera Drone</h2>
+                            <p class="category"><i class="lni lni-tag"></i> 회사명:
+                                <a href="javascript:void(0)">
+                                    <span id="p-company"></span>
+                                </a>
+                            </p>
+                            <h3 class="price" id="p-price"></h3>
+                            <p id="product-main"></p>
+                            <p id="product-sub"></p>
+                            <p id="product-brand"></p>
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-12">
                                     <div class="form-group color-option">
@@ -124,19 +127,8 @@
                     <div class="row">
                         <div class="col-lg-6 col-12">
                             <div class="info-body custom-responsive-margin">
-                                <h4>Details</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                                    irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.</p>
-                                <h4>Features</h4>
-                                <ul class="features">
-                                    <li>Capture 4K30 Video and 12MP Photos</li>
-                                    <li>Game-Style Controller with Touchscreen</li>
-                                    <li>View Live Camera Feed</li>
-                                    <li>Full Control of HERO6 Black</li>
-                                    <li>Use App for Dedicated Camera Operation</li>
-                                </ul>
+                                <h4>상품설명</h4>
+                                <div id="product-info"></div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-12">
@@ -346,5 +338,5 @@
     {{>pages/footer1}}
     <!--  이곳에 페이지 별 js 로드시키기-->
     <!--  예시 : <script src="/js/dummydata.js"></script> -->
-
+    <script src="/js/product/productInfo.js"></script>
     {{>pages/footer2}}

@@ -19,16 +19,22 @@ const logout_form = document.createElement('form');
 const hidden_token = document.createElement('input');
 const logout_btn = document.createElement('button');
 
+const checkID = document.getElementById('checkUserId');
+const checkCompany = document.getElementById('checkCompanyId');
 (async function() {
     try {
         const res = await fetch('/api/user')
         const data = await res.json();
 
         if(res.status === 200){
-                const mRes = await fetch('/api/manager');
-                if(mRes.status === 200){
-                    span_id.innerText = `${data.userid}님! 안녕하세요!`;
+            checkID.value = data.id;
 
+            const mRes = await fetch('/api/manager');
+                if(mRes.status === 200){
+                    const mData = await mRes.json();
+                    console.log(mData);
+                    span_id.innerText = `${data.userid}님! 안녕하세요!`;
+                    checkCompany.value = mData.companyId;
                     left_a.href = '/manager/mypage';
                     left_span.innerText = '내 정보';
                     left_a.appendChild(left_span);

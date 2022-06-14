@@ -1,17 +1,16 @@
-.product-article {
-    display: flex;
+.product-list{
     width: 100%;
-    background: lightslategrey;
-
-}
-
-.product-thumbnale {
-    width:30%;
     background: #3b5998;
-
 }
 
-.product-inputinfo{
-    width: 70%;
-    background: darkgrey;
+.product-item{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    padding:5px 5px;
+}
+
+.product-item div{
+    width:80px;
+    text-align: center;
 }

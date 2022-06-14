@@ -45,6 +45,15 @@ public class PageController {
         return "pages/mypageManagerInfo";
     }
 
+    @GetMapping("/manager/myproductlist")
+    public String productList(){
+        return "pages/myProductList";
+    }
+
+    @GetMapping("/product/info")
+    public String productInfo(){
+        return "pages/product-details";
+    }
 
     @GetMapping("/board") //조회
     public String boardlist(){return "pages/boardlist";}
