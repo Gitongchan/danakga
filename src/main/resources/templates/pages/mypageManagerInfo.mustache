@@ -1,5 +1,5 @@
-{{>pages/header1}}
-{{>pages/header2}}
+{{>pages/header}}
+
 <!-- Cotainer는 그렇게 양쪽 여백을 주게 되어있고  fluid 뭐시기는 여백 없음-->
 <div class="container">
     <div class="row">
@@ -7,24 +7,14 @@
             {{>pages/mypageManagerNAV}}
             <article class="mypage_article">
                 <div>
-                    <h3>회원정보 수정</h3>
-                    <div class="button">
-                        <button class="btn" id="changeBtn">수정</button>
+                    <h3>회사정보</h3>
+                </div>
+                <div class="col-sm-12 cn_name">
+                    <div class="form-group">
+                        <label for="reg-companyName">회사명</label>
+                        <input class="form-control" name="companyName" type="text" id="reg-companyName" readonly/>
                     </div>
                 </div>
-                <hr>
-                <span class="col-sm-2 control-label">아이디</span>
-                <span id="userId"></span> <!-- 아이디 값 불러오기 -->
-                <hr>
-                <span class="col-sm-2 control-label">이메일</span>
-                <span id="userEmail"></span>
-                <hr>
-                <span class="col-sm-2 control-label">이름</span>
-                <span id="userName"></span>
-                <hr>
-                <span class="col-sm-2 control-label">전화번호</span>
-                <span id="userPhone"></span>
-                <hr>
                 <div class="col-sm-12">
                     <div class="form-group">
                         <label for="sample4_postcode">우편번호</label>
@@ -36,8 +26,10 @@
                     <div class="form-group">
                         <label for="sample4_roadAddress">도로명주소</label>
                         <input type="text" class="form-control" id="sample4_roadAddress" placeholder="도로명주소" readonly
-                        ><br>
+                        >
                     </div>
+                </div>
+                <div class="col-sm-12">
                     <div class="form-group">
                         <label for="sample4_jibunAddress">지번주소</label>
                         <input type="text" class="form-control" id="sample4_jibunAddress" placeholder="지번주소" readonly>
@@ -59,5 +51,5 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
-<script src="/js/user/myPageUser.js"></script>
+<script src="/js/company/myPageManager.js"></script>
 {{>pages/footer2}}
