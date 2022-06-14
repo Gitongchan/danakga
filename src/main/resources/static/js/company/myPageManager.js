@@ -16,10 +16,6 @@ const btn = document.getElementById('changeBtn');
 
         console.log(data);
         if(res.status === 200){
-            id.innerText = data.userid;
-            name.innerText = data.name;
-            phone.innerText = data.phone;
-            email.innerText = data.email;
             try{
                 const res = await fetch('/api/manager')
                 const data = await res.json();

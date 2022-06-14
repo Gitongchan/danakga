@@ -36,8 +36,13 @@ public class PageController {
     }
 
     @GetMapping("/manager/mypage")
-    public String mypageAdmin(){
+    public String mypageManager(){
         return "pages/mypageManager";
+    }
+
+    @GetMapping("/manager/companyinfo")
+    public String mypageCompany(){
+        return "pages/mypageManagerInfo";
     }
 
 
