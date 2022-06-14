@@ -12,5 +12,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqDeletedFileDto {
+     
+     //삭제 할 파일명
      private List<Map<String, Object>> deletedFiles;
 }

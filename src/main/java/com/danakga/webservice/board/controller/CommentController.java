@@ -29,7 +29,7 @@ public class CommentController {
     }
 
     // 댓글 수정 (게시글 id, 수정 댓글 id 받기)
-    // 댓글 아이디 받아오는 이유는 bd_id 로만 하면 동일한 bd_id로 작성된 댓글이 다 수정될 것 같음
+    // 댓글의 id값도 받아서 정확히 해당 댓글만 수정
     @PutMapping("/comment/edit/{bd_id}/{cm_id}")
     public ResResultDto commentEdit(@LoginUser UserInfo userInfo,
                                     @PathVariable("bd_id") Long bd_id,
@@ -42,7 +42,7 @@ public class CommentController {
     }
 
     // 댓글 삭제 여부 변경 (게시글 id, 수정 댓글 id 받기)
-    // 마찬가지로 bd_id, cm_id 두개로 하나의 데이터만 삭제 여부 변경
+    // 마찬가지로 댓글 id 받아서 해당 댓글만 삭제
     @PutMapping("/comment/delete/{bd_id}/{cm_id}")
     public ResResultDto commentDelete(@PathVariable(value = "bd_id") Long bd_id,
                                       @PathVariable(value = "cm_id") Long cm_id,

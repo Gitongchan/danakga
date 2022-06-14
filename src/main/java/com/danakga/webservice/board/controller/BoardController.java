@@ -61,11 +61,12 @@ public class BoardController {
 
     }
 
+    //게시글 삭제
     @PutMapping("/post/delete/{id}")
     public ResResultDto postDelete(@PathVariable(value = "id") Long id,
                                    @LoginUser UserInfo userInfo) {
 
-        //게시글 삭제 여부 변경 로직 실행
+        //게시글 삭제 로직 실행
         Long result = boardService.postDelete(id, userInfo);
 
         return result == -1L ?
