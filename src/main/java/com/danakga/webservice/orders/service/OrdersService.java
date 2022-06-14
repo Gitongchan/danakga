@@ -17,11 +17,11 @@ public interface OrdersService {
     
     //주문내역
     List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page,
-                                      LocalDateTime startTime,LocalDateTime endTime);
+                                      LocalDateTime startDate,LocalDateTime endDate);
 
     //판매내역
     List<ResSalesListDto> salesList(UserInfo userInfo,Pageable pageable,int page,
-                                    LocalDateTime startTime, LocalDateTime endTime);
+                                    LocalDateTime startDate, LocalDateTime endDate);
 
     //판매내역 상태 업데이트
     Long updateSalesStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);

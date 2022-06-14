@@ -14,7 +14,6 @@ package com.danakga.webservice.orders.controller;
         import org.springframework.web.bind.annotation.*;
 
         import java.time.LocalDateTime;
-        import java.time.format.DateTimeFormatter;
         import java.util.List;
 
 @RestController
@@ -34,10 +33,10 @@ public class OrdersController {
     //주문내역
     @GetMapping("api/user/orders/list")
     public List<ResOrdersListDto> myOrdersList(@LoginUser UserInfo userInfo, Pageable pageable, int page,
-                                               @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
-                                               @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime){
+                                               @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                                               @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate){
 
-        return ordersService.ordersList(userInfo,pageable,page,startTime,endTime);
+        return ordersService.ordersList(userInfo,pageable,page,startDate,endDate);
     }
     
     //판매내역
