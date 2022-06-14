@@ -39,6 +39,10 @@ function getParameterByName(name) {
 }
 
 const urlID = getParameterByName('productId');
+const comID = getParameterByName("comId");
+
+console.log(urlID);
+console.log(comID);
 
 (async function getProduct() {
     const res = await fetch(`/api/product/item/${urlID}`);
@@ -52,6 +56,8 @@ const urlID = getParameterByName('productId');
         pSubtype.innerText = data.productSubType;
         pBrand.innerText = data.productBrand;
         pPrice.innerText = data.productPrice + "원";
+        pContent.innerHTML = data.productContent;
+
     }
 })();
 
