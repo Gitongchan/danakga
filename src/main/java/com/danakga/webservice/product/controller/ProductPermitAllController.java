@@ -21,7 +21,15 @@ public class ProductPermitAllController {
     //상품 리스트
     @GetMapping("/list")
     public List<ResProductListDto> productList(Pageable pageable,
-                                               @RequestPart(value = "productSearchDto") ProductSearchDto productSearchDto, int page) {
+                                               @RequestParam String productType,
+                                               @RequestParam String productSubType,
+                                               @RequestParam String productBrand,
+                                               @RequestParam String productName,
+                                               @RequestParam Integer productStock,
+                                               int page) {
+        ProductSearchDto productSearchDto = new ProductSearchDto(
+                productType,productSubType,productBrand,productName,productStock
+        );
         return productService.productList(pageable, productSearchDto, page);
     }
     //상품 조회
