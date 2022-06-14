@@ -13,6 +13,9 @@ import java.util.Map;
 @NoArgsConstructor
 public class ResProductDto {
 
+    //회사아이디
+    private Long companyId;
+
     //등록한 회사명
     private String companyName;
 
@@ -34,6 +37,9 @@ public class ResProductDto {
     //가격
     private String productPrice;
 
+    //상품내용
+    private String productContent;
+
     //재고
     private Integer productStock;
 
@@ -50,6 +56,7 @@ public class ResProductDto {
     private List<Map<String,Object>> files;
 
     public ResProductDto(Product product, CompanyInfo companyInfo) {
+        this.companyId = companyInfo.getCompanyId();
         this.companyName = companyInfo.getCompanyName();
         this.productId = product.getProductId();
         this.productType = product.getProductType();
@@ -57,6 +64,7 @@ public class ResProductDto {
         this.productBrand = product.getProductBrand();
         this.productName = product.getProductName();
         this.productPrice = product.getProductPrice();
+        this.productContent = product.getProductContent();
         this.productStock = product.getProductStock();
         this.productUploadDate = product.getProductUploadDate();
         this.productViewCount = product.getProductViewCount();
