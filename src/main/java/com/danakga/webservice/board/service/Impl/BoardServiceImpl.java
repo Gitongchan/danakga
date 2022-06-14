@@ -4,13 +4,13 @@ import com.danakga.webservice.board.dto.request.ReqBoardDto;
 import com.danakga.webservice.board.dto.request.ReqDeletedFileDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
-import com.danakga.webservice.board.exception.CustomException;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.board.service.FilesService;
+import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,15 +40,16 @@ public class BoardServiceImpl implements BoardService {
     private final FileRepository fileRepository;
     private final FilesService filesService;
     private final UserRepository userRepository;
-    private Board board;
 
     //게시판 목록
     @Override
     public ResBoardListDto boardList(Pageable pageable, String board_type, int page) {
 
         final String deleted = "N";
+
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable);
+
         List<Board> boardList = boards.getContent();
 
         List<Map<String, Object>> mapPosts = new ArrayList<>();
@@ -159,6 +160,10 @@ public class BoardServiceImpl implements BoardService {
         }
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
+        Board board;
+
+        //들어온 파일이 없다면 게시글만 작성
+        //파일이 있다면 게시글 작성 후 파일 업로드
         if (CollectionUtils.isEmpty(files)) {
             boardRepository.save(
                     board = Board.builder()
@@ -200,9 +205,6 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
-        
-        //파일 먼저 삭제하고 CollectionUtil로 파일 유무 확인 후 없으면 board만 수정, 있으면 file도 다시 업로드
-        //웹페이지에서 x눌러서 지운 파일은 어차피 값이 들어오지 않기 때문에 삭제 후 업로드 되지 않음(들어온 파일만 업로드)
 
         //유저 db 최신화
         if (userRepository.findById(userInfo.getId()).isEmpty()) {
@@ -216,9 +218,9 @@ public class BoardServiceImpl implements BoardService {
         }
 
         Board board = boardRepository.findByBdId(id).get();
-        List<Board_Files> boardFiles = fileRepository.findByBoard(board);
-
-
+        
+        //삭제된 파일이 있는경우 해당 파일의 저장된 파일이름을 받아서 삭제 후 
+        //새로 업로드 할 파일이 있다면 글 수정 후 파일 업로드, 업로드 할 파일이 없다면 글만 수정
         if(reqDeletedFileDto != null) {
             //삭제 파일명을 담아주기 위한 List
             List<String> fileNameList = new ArrayList<>();
@@ -226,8 +228,8 @@ public class BoardServiceImpl implements BoardService {
             List<Map<String, Object>> fileNameMap = reqDeletedFileDto.getDeletedFiles();
 
             //List<Map> 값을 1씩 증가시켜서 List<String>에 담아줌
-            for(int i = 0; i < fileNameMap.size(); i++) {
-                fileNameList.add(fileNameMap.get(i).get("value").toString());
+            for (Map<String, Object> valueMap : fileNameMap) {
+                fileNameList.add(valueMap.get("value").toString());
             }
 
             //List<String>값을 반복문으로 파일명 빼서 삭제

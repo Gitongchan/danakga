@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class UtilExceptionHandler extends ResponseEntityExceptionHandler {
 
+    //에러 코드 변수
     public static int PAYLOAD_TOO_LARGE = 413;
 
     //request 업로드 용량 초과

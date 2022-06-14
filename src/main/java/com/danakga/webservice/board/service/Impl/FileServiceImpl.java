@@ -19,6 +19,7 @@ public class FileServiceImpl implements FilesService {
 
      private final FileRepository fileRepository;
 
+     //파일 저장
     @Override
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
@@ -51,7 +52,7 @@ public class FileServiceImpl implements FilesService {
             //DB에 저장되는 경로
             String dbFilePath = "..\\files\\" + saveFileName;
             
-            //multipartfile.transferTo 사용하여 파일경로에 파일명으로 저장
+            //.transferTo 사용하여 파일경로에 파일명으로 저장
             try {
                 multipartFile.transferTo(new File(filePath));
             } catch (IOException e) {
