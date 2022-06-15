@@ -44,4 +44,7 @@ public interface ProductService {
     //수정 삭제 버튼 확인
     Long updateDeleteButton(UserInfo userInfo,Long productId);
 
+    //메인 페이지 리스트
+    List<ResProductListDto> productMainPageList(Pageable pageable, ProductSearchDto productSearchDto, int page,String sort);
+
 }
