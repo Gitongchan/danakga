@@ -152,6 +152,40 @@ public class ProductServiceImpl implements ProductService {
         return productListDto;
     }
 
+    //상품 리스트 - 메인페이지
+    @Override
+    public List<ResProductListDto> productMainPageList(Pageable pageable, ProductSearchDto productSearchDto, int page,String sort) {
+
+        pageable = PageRequest.of(page, 6, Sort.by(sort).descending());
+
+        Page<Product> productPage = productRepository.searchProductList(
+                productSearchDto.getProductType(),productSearchDto.getProductSubType(),productSearchDto.getProductBrand(),
+                productSearchDto.getProductName(),productSearchDto.getProductStock(),pageable
+        );
+        List<Product> productList = productPage.getContent();
+
+        List<ResProductListDto> productListDto = new ArrayList<>();
+
+        productList.forEach(entity->{
+            ResProductListDto listDto = new ResProductListDto();
+            listDto.setProductId(entity.getProductId());
+            listDto.setProductBrand(entity.getProductBrand());
+            listDto.setProductType(entity.getProductType());
+            listDto.setProductSubType(entity.getProductSubType());
+            listDto.setProductName(entity.getProductName());
+            listDto.setProductPhoto(entity.getProductPhoto());
+            listDto.setProductPrice(entity.getProductPrice());
+            listDto.setProductStock(entity.getProductStock());
+            listDto.setProductViewCount(entity.getProductViewCount());
+            listDto.setProductOrderCount(entity.getProductOrderCount());
+            listDto.setProductUploadDate(entity.getProductUploadDate());
+            listDto.setTotalPage(productPage.getTotalPages());
+            listDto.setTotalElement(productPage.getTotalElements());
+            productListDto.add(listDto);
+        });
+        return productListDto;
+    }
+
 
     //개별 상품 조회
     @Override
