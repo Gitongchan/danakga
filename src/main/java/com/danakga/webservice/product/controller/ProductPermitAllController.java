@@ -32,6 +32,18 @@ public class ProductPermitAllController {
         );
         return productService.productList(pageable, productSearchDto, page);
     }
+
+    //메인페이지 상품 리스트
+    @GetMapping("/main-page/list/{sort}")
+    public List<ResProductListDto> productMainPageList(Pageable pageable,
+                                                       @PathVariable("sort") String sort,
+                                                       int page){
+        ProductSearchDto productSearchDto = new ProductSearchDto(
+                "%","%","%","%",1
+        );
+        return productService.productMainPageList(pageable,productSearchDto,page,sort);
+    }
+
     //상품 조회
     @GetMapping("/item/{id}")
     public ResProductDto productInfo(@PathVariable("id") Long id, HttpServletRequest request,
