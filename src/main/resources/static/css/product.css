@@ -74,6 +74,6 @@
     min-height: 300px;
 }
 
-img{
-
+.item-details .product-images img{
+    height: 100%;
 }

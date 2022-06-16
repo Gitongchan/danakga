@@ -25,8 +25,8 @@ const checkCompany = document.getElementById('checkCompanyId');
 (async function() {
     try {
         const res = await fetch('/api/user')
-        const data = await res.json();
         if(res.status === 200){
+            const data = await res.json();
             checkID.value = data.id;
             const mRes = await fetch('/api/manager');
                 if(mRes.status === 200){

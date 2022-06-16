@@ -1,35 +1,14 @@
-// {
-//     "companyName":"간지작살",
-//     "productId":1,
-//     "productType":"낚시대",
-//     "productSubType":"바다",
-//     "productBrand":"털보네",
-//     "productName":"강력한 낚시대",
-//     "productPrice":"30000",
-//     "productStock":100,
-//     "productUploadDate":"2022-06-14T16:45:31.462871",
-//     "productViewCount":0,
-//     "productOrderCount":0,
-//     "files":[{
-//         "file_path": "product_files\\e7a32787-a68b-4a90-aef6-b49f32dfd9e6__2021-11-19 (1).png",
-//         "file_name": "e7a32787-a68b-4a90-aef6-b49f32dfd9e6__2021-11-19 (1).png"
-//     }, {
-//         "file_path": "product_files\\08b2f6e2-358e-4232-b49a-5eceb7e2546a__2021-11-19.png",
-//         "file_name": "08b2f6e2-358e-4232-b49a-5eceb7e2546a__2021-11-19.png"
-//     }, {
-//         "file_path": "product_files\\a61686b8-f67b-4b0b-92a0-429e3b7f6a75__kakaotalk_20220604_174439165.jpg",
-//         "file_name": "a61686b8-f67b-4b0b-92a0-429e3b7f6a75__kakaotalk_20220604_174439165.jpg"
-//     }]
-// }
-
 const pName = document.getElementById('p-title');
 const pCompany = document.getElementById('p-company');
 const pPrice = document.getElementById('p-price');
-const pMaintype = document.getElementById('product-main');
-const pSubtype = document.getElementById('product-sub');
-const pBrand = document.getElementById('product-brand');
+const pBrand = document.getElementById('brand-type-text');
+const pMaintype = document.getElementById('main-type-text');
+const pSubtype = document.getElementById('sub-type-text');
 const pContent = document.getElementById('product-info');
+const thumbPhoto = document.querySelector('.main-img');
+const pImgs = document.querySelector('.images');
 
+const editBtnAfter = document.querySelector('.product-info');
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -39,25 +18,50 @@ function getParameterByName(name) {
 }
 
 const urlID = getParameterByName('productId');
-const comID = getParameterByName("comId");
 
 console.log(urlID);
 console.log(comID);
 
-(async function getProduct() {
-    const res = await fetch(`/api/product/item/${urlID}`);
-    const data = await res.json();
-    console.log(data);
+(async ()=> {
+        const res = await fetch(`/api/product/item/${urlID}`);
+        const data = await res.json();
+        console.log(data);
 
-    if(res.status===200){
-        pName.innerText = data.productName;
-        pCompany.innerText = data.companyName;
-        pMaintype.innerText = data.productType;
-        pSubtype.innerText = data.productSubType;
-        pBrand.innerText = data.productBrand;
-        pPrice.innerText = data.productPrice + "원";
-        pContent.innerHTML = data.productContent;
+        if(res.status===200){
+            const cRes = await fetch(`/api/manager`);
+            if(cRes.status === 200){
+                const cData = await cRes.json();
+                if(data.companyId === cData.companyId){
+                    alert("아이디비교도 성공")
+                    const editDiv = document.createElement("div");
+                    editDiv.className = "button mt-5 align-right";
+                    editDiv.innerHTML =
+                        `
+                         <button class="btn">수정</button>
+                        `
+                    editBtnAfter.insertAdjacentElement("afterend",editDiv);
+                }
+            }
+            thumbPhoto.innerHTML =
+                `
+            <img src="${data.productPhoto}" id="current" alt="#">
+            `
 
-    }
-})();
+            for(let i =0; i< data.files.length; i++){
+                const pImg = document.createElement('img');
+                pImg.classList.add('img');
+                pImg.src= data.files[i].file_path;
+                pImgs.appendChild(pImg);
+            }
+            pName.innerText = data.productName;
+            pCompany.innerText = data.companyName;
+            pMaintype.innerText = "메인종류 : " + data.productType;
+            pSubtype.innerText = "세부종류 : " + data.productSubType;
+            pBrand.innerText = "브랜드 : " + data.productBrand;
+            pPrice.innerText = data.productPrice + "원";
+            pContent.innerHTML = data.productContent;
+
+        }
+    })();
+
 

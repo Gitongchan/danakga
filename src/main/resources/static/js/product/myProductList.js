@@ -22,7 +22,7 @@ document.getElementById('product-listBtn').addEventListener('click',async functi
                         <div class="price">${item.productPrice}</div>
                         <div class="stock">${item.productStock}</div>
                         <div class="imageYN">${item.productPhoto===""?"N":"Y"}</div>
-                        <div class="info"><a href="/product/info?productId=${item.productId}&comId=${checkCompany.value}">상세정보</a></div>
+                        <div class="info"><a href="/product/info?productId=${item.productId}">상세정보</a></div>
                 `
 
                 list.appendChild(div);
