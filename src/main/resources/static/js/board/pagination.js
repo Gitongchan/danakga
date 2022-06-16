@@ -4,7 +4,7 @@
 // 다음 버튼 : 화면에 그려진 마지막 페이지 + 1
 const pagenation = document.querySelector('.text-center .pagination');
 (function() {
-    renderPagination(1);
+    renderPagination(0);
 })();
 
 function renderPagination(currentPage) {
@@ -12,7 +12,7 @@ function renderPagination(currentPage) {
         .then((res)=>res.json())
         .then((data)=>{
             //총 페이지 수
-            const total = Math.ceil(data[0].totalElement/10);
+            const total = Math.ceil(data.lists[0].totalElement/10);
             //화면에 보여질 페이지 그룹
             const group = Math.ceil(currentPage/10);
             
@@ -103,16 +103,16 @@ function onList(e){
         .then((res)=>res.json())
         .then((data)=>{
             tablelist.innerHTML="";
-            console.log(data);
-            for(let datalist in data){
-                const item = data[datalist];
+            for(let i=0; i<data.lists.length; i++){
+                console.log(data.lists[i]);
                 const tr = document.createElement('tr');
                 tr.innerHTML =
-                    `<td>${item.bdId}</td>
-                     <td><a href="/blog?boardid=${item.bdId}">${item.bdTitle}</a></td>
-                     <td>${item.bdWriter}</td>
-                     <td>${item.bdCreated.split('.')[0]}</td>
-                     <td>${item.bdViews}</td>`
+                    `<td>${data.lists[i].bd_id}</td>
+                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
+                 <td>${data.lists[i].bd_writer}</td>
+                 <td>${data.lists[i].bd_created.split('.')[0]}</td>
+                 <td>${data.lists[i].bd_views}</td>`
+
                 tablelist.appendChild(tr);
             }
         })

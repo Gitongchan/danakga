@@ -1,6 +1,3 @@
-// api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
-const header = document.querySelector('meta[name="_csrf_header"]').content;
-const token = document.querySelector('meta[name="_csrf"]').content;
 
 const title = document.getElementById('post-title');
 const content = document.getElementById('post-inner');
@@ -48,9 +45,9 @@ const urlWriter = getParameterByName('bdwriter');
                         }
 
                         userid.after(btnWrap);
-                        content.innerHTML += data.bdContent;
-                        title.innerText = data.bdTitle;
-                        span.innerText= data.bdWriter;
+                        content.innerHTML += data.post.bd_content;
+                        title.innerText = data.post.bd_title;
+                        span.innerText= data.post.bd_writer;
                         userid.appendChild(span);
                     });
             }
@@ -69,6 +66,10 @@ editBtn.addEventListener('click',()=>{
 })
 
 deleteBtn.addEventListener('click',()=>{
+    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    const token = document.querySelector('meta[name="_csrf"]').content;
+
     if(confirm('게시글을 삭제하시겠습니까?')) {
         fetch(`/api/user/post/delete/${urlParams}`,{
             method : "PUT",
@@ -102,9 +103,9 @@ const check = () => {
                 divImg.appendChild(deleteButton);
                 content_img.appendChild(divImg);
             }
-            content.innerHTML += data.bdContent;
-            title.innerText = data.bdTitle;
-            span.innerText= data.bdWriter;
+            content.innerHTML += data.post.bd_content;
+            title.innerText = data.post.bd_title;
+            span.innerText= data.post.bd_writer;
             userid.appendChild(span);
         });
 }
