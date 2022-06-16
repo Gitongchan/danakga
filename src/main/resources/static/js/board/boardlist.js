@@ -3,16 +3,15 @@ const tablelist = document.getElementById("boardlist");
 fetch(`/api/board/list/자유게시판?page=0`)
     .then((res)=>res.json())
     .then((data)=>{
-        console.log(data);
-        for(let datalist in data){
-            const item = data[datalist];
+        for(let i=0; i<data.lists.length; i++){
+            console.log(data.lists[i]);
             const tr = document.createElement('tr');
             tr.innerHTML =
-                `<td>${item.bdId}</td>
-                 <td><a href="/board/info?boardid=${item.bdId}?bdwriter=${item.bdWriter}">${item.bdTitle}</a></td>
-                 <td>${item.bdWriter}</td>
-                 <td>${item.bdCreated.split('.')[0]}</td>
-                 <td>${item.bdViews}</td>`
+                `<td>${data.lists[i].bd_id}</td>
+                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
+                 <td>${data.lists[i].bd_writer}</td>
+                 <td>${data.lists[i].bd_created.split('.')[0]}</td>
+                 <td>${data.lists[i].bd_views}</td>`
 
             tablelist.appendChild(tr);
         }

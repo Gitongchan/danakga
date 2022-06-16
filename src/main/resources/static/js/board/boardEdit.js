@@ -42,9 +42,9 @@ fetch(`/api/board/post/${urlParams}`)
         }
 
 
-        editor.setData(data.bdContent);
-        title.value = data.bdTitle;
-        span.innerText= data.bdWriter;
+        editor.setData(data.post.bd_content);
+        title.value = data.post.bd_title;
+        span.innerText= data.post.bd_writer;
         userid.appendChild(span);
 
     });

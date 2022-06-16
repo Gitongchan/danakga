@@ -64,7 +64,7 @@ public class BoardServiceImpl implements BoardService {
             postMap.put("bd_created", entity.getBdCreated());
             postMap.put("bd_views", entity.getBdViews());
             postMap.put("bd_deleted", entity.getBdDeleted());
-            postMap.put("totalElment", boards.getTotalElements());
+            postMap.put("totalElement", boards.getTotalElements());
             postMap.put("totalPage", boards.getTotalPages());
             mapPosts.add(postMap);
         });
