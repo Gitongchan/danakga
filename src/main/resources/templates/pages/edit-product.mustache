@@ -1,4 +1,6 @@
 {{>pages/header1}}
+
+<link rel="stylesheet" href="/css/board.css">
 <link rel="stylesheet" href="/css/product.css">
 <link rel="stylesheet" href="/css/mypageUser.css">
 <link rel="stylesheet" href="/css/mypageManager.css">
@@ -17,6 +19,9 @@
                         <input type="file" id="thumb-file"/>
                     </div>
                     <div class="product-photos">
+                        <h6>업로드 된 파일</h6>
+                        <div id="current-image-preview" class="detail-inner">
+                        </div>
                         <h6>업로드 할 파일</h6>
                         <div id="image-preview" class="detail-inner">
                         </div>
@@ -82,7 +87,7 @@
 
 
                     <div class="button text-center">
-                        <button class="btn" id="productBtn">등록하기</button>
+                        <button class="btn" id="productBtn">수정하기</button>
                     </div>
                 </div>
             </article>
@@ -96,8 +101,10 @@
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
 
 <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
-<script src="/js/product/addthumbnalePreview.js"></script>
+<script src="/js/product/editThumbnalePreview.js"></script>
 <script src="/js/board/boardFilePreview.js"></script>
+<script src="/js/product/productEdit.js"></script>
+<script src="/js/product/productCurrentFiles.js"></script>
 <script>
     let editor;
 
@@ -159,11 +166,19 @@
                 new Blob([JSON.stringify(productData)], {type: "application/json"})
         );
 
-        formData.append('thumb', thumb.files[0])
+        formData.append(
+                "deletedFileList",
+                new Blob([JSON.stringify(delFiles)], {type:"application/json"})
+        );
 
 
-        fetch("/api/manager/product/upload", {
-            method: "POST",
+        formData.append('thumbFile', thumb.files[0]);
+
+        formData.append("deletedThumb",delThumbFile.deletedThumFile[0].value);
+
+
+        fetch(`/api/manager/product/update/${urlID}`, {
+            method: "PUT",
             headers: {
                 'header': header,
                 'processData': false,
@@ -174,7 +189,7 @@
         })
                 .then(res => {
                     if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
-                        alert("상품등록 완료");
+                        alert("상품수정 완료");
                     } else { // 실패를 알리는 HTTP 상태 코드면
                         console.error(res.statusText);
                         console.error(res);

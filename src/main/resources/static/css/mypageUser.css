@@ -1,13 +1,14 @@
 .mypage_sidebar{
     display: flex;
     margin: 30px 30px;
+    padding: 20px 20px;
 }
 
 .mypage_article{
     width:100%
 }
 .mypage_list{
-    width: 150px;
+    width: 120px;
     height: 500px;
     border: #8a8a8a 1px solid;
     border-radius: 15px;

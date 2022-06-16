@@ -1,12 +1,14 @@
-{{>pages/header}}
+{{>pages/header1}}
+<link rel="stylesheet" href="/css/board.css">
+{{>pages/header2}}
 <div class="container">
     <form class="row" id="boardform" enctype="multipart/form-data">
         <div class="col-sm-2">
             <div class="form-group">
                 <label for="type"></label>
                 <select class="form-select" id="type" aria-label="select value">
-                    <option value="자유게시판" selected>자유</option>
-                    <option value="문의게시판">문의</option>
+                    <option value="자유" selected>자유</option>
+                    <option value="문의">문의</option>
                 </select>
             </div>
         </div>
@@ -58,10 +60,11 @@
         //텍스트 에디터에서 값 가져옴
         const editorData = editor.getData();
         const formData = new FormData();
+        const bType = document.getElementById('type');
 
         let input = document.querySelector('input[type="file"]')
         const boardData = {
-            bdType: document.getElementById('type').value,
+            bdType: bType.options[bType.selectedIndex].value,
             bdTitle: document.getElementById('board_Title').value,
             bdViews: 0,
             bdContent : editorData

@@ -22,6 +22,9 @@ public class ResProductDto {
     //상품번호, 상품아이디
     private Long productId;
 
+    //상품 대표이미지
+    private String productPhoto;
+
     //상품 종류
     private String productType;
 
@@ -59,6 +62,7 @@ public class ResProductDto {
         this.companyId = companyInfo.getCompanyId();
         this.companyName = companyInfo.getCompanyName();
         this.productId = product.getProductId();
+        this.productPhoto = product.getProductPhoto();
         this.productType = product.getProductType();
         this.productSubType = product.getProductSubType();
         this.productBrand = product.getProductBrand();

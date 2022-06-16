@@ -1,0 +1,31 @@
+{{>pages/header1}}
+<link rel="stylesheet" href="/css/product.css">
+<link rel="stylesheet" href="/css/mypageUser.css">
+<link rel="stylesheet" href="/css/mypageManager.css">
+{{>pages/header2}}
+
+<div class="container">
+    <div class="row">
+        <section class="mypage_sidebar">
+            {{>pages/mypageManagerNAV}}
+            <article class="product-list">
+                <div class="product-list-header">
+                    <div class="align-right">
+                        <button class="btn" id="product-listBtn">조회</button>
+                    </div>
+                </div>
+                <div class="product-list-container">
+                </div>
+            </article>
+
+        </section>
+
+
+
+    </div>
+</div>
+{{>pages/footer1}}
+<!--  이곳에 페이지 별 js 로드시키기-->
+<!--  예시 : <script src="/js/dummydata.js"></script> -->
+<script src="/js/product/myProductList.js"></script>
+{{>pages/footer2}}

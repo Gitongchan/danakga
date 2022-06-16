@@ -1,30 +1,12 @@
-<!DOCTYPE html>
-<html class="no-js" lang="zxx">
-
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>다 낚아</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta id="_csrf" name="_csrf" content="{{_csrf.token}}"/>
-    <meta id="_csrf_header" name="_csrf_header" content="{{_csrf.headerName}}"/>
-    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.svg" />
-
-    <!-- ========================= CSS here ========================= -->
+ <!-- ========================= CSS here ========================= -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
     <link rel="stylesheet" href="/css/tiny-slider.css" />
     <link rel="stylesheet" href="/css/glightbox.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/validation.css"/>
-    <link rel="stylesheet" href="/css/mypageUser.css">
-    <link rel="stylesheet" href="/css/mypageAdmin.css">
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/board.css">
+    <link rel="stylesheet" href="/css/index.css" />
 
-
-</head>
+ </head>
 
 <body>
 <!--[if lte IE 9]>
@@ -34,7 +16,8 @@
     your experience and security.
 </p>
 <![endif]-->
-
+<input type="hidden" id="checkUserId"/>
+<input type="hidden" id="checkCompanyId"/>
 <!-- Preloader -->
 <div class="preloader">
     <div class="preloader-inner">
@@ -188,7 +171,7 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="contact.html" aria-label="Toggle navigation">Contact Us</a>
+                                    <a href="/board" aria-label="Toggle navigation">커뮤니티</a>
                                 </li>
                             </ul>
                         </div> <!-- navbar collapse -->

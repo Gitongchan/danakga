@@ -45,7 +45,7 @@ public class PermitAllController {
     //email체크
     @GetMapping("/email_check")
     public ResDupliCheckDto emailCheck(@RequestParam("email") String email){
-        return new ResDupliCheckDto(userService.userIdCheck(email));
+        return new ResDupliCheckDto(userService.emailCheck(email));
     }
 
     //id찾기
