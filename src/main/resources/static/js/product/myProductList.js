@@ -3,7 +3,7 @@
 const list = document.querySelector('.product-list-container');
 
 document.getElementById('product-listBtn').addEventListener('click',async function () {
-    const res = await fetch('/api/manager/product/list?startDate=2022-05-01T01:30&endDate=2022-06-14T17:30&productName=%25&productStock=1&page=0')
+    const res = await fetch('/api/manager/product/list?startDate=2022-05-01T01:30&endDate=2100-06-14T17:30&productName=%25&productStock=1&page=0')
     const data = await res.json();
     console.log(data);
 

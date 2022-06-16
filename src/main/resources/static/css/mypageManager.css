@@ -1,6 +1,5 @@
 .product-list{
     width: 100%;
-    background: #3b5998;
 }
 
 .product-item{
@@ -18,5 +17,4 @@
 
 .product-list-header{
     height: 35px;
-    background: #51585e;
 }

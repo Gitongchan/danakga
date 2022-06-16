@@ -4,12 +4,12 @@ function getImageFile(e) {
     const imagePreview = document.querySelector('#thumb-preview');
     const docFrag = new DocumentFragment();
 
-
     console.log(imagePreview);
     console.log(e);
     console.log(files);
     while(imagePreview.hasChildNodes()){
         imagePreview.removeChild(imagePreview.firstChild);
+
     }
 
     if ([...files].length >= 7) {

@@ -22,7 +22,7 @@ public class OrdersController {
     private final OrdersService ordersService;
 
     //주문하기
-    @PostMapping("api/user/orders/{productId}")
+    @PostMapping("/api/user/orders/{productId}")
     public ResResultDto ordersSave(@LoginUser UserInfo userInfo, @PathVariable("productId") Long productId
             ,@RequestBody OrdersDto ordersDto){
         Long result = ordersService.ordersSave(userInfo,productId,ordersDto);

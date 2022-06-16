@@ -156,7 +156,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ResProductListDto> productMainPageList(Pageable pageable, ProductSearchDto productSearchDto, int page,String sort) {
 
-        pageable = PageRequest.of(page, 6, Sort.by(sort).descending());
+        pageable = PageRequest.of(page, 8, Sort.by(sort).descending());
 
         Page<Product> productPage = productRepository.searchProductList(
                 productSearchDto.getProductType(),productSearchDto.getProductSubType(),productSearchDto.getProductBrand(),

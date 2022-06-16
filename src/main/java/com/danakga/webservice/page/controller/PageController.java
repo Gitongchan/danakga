@@ -55,6 +55,11 @@ public class PageController {
         return "pages/product-details";
     }
 
+    @GetMapping("/product/edit")
+    public String productEdit(){
+        return "pages/edit-product";
+    }
+
     @GetMapping("/board") //조회
     public String boardlist(){return "pages/boardlist";}
 

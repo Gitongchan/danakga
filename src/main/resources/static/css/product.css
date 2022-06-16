@@ -5,8 +5,6 @@
 
 .product-img {
     width:235px;
-    background: #3b5998;
-    height: 506px;
     margin-right: 10px;
     overflow: hidden;
 }
@@ -16,10 +14,13 @@
 }
 
 #thumb-preview{
+    border: 1px solid grey;
     height:150px;
 }
 #image-preview{
-    height: 240px;
+    padding-top: 5px;
+    border: 1px solid grey;
+    height: 150px;
 }
 
 .current-img{
@@ -27,7 +28,6 @@
     width:130px;
     height:130px;
     margin-right: 15px;
-    background: #0dcaf0;
     box-shadow : 5px 5px 10px -5px;
 }
 
@@ -76,4 +76,10 @@
 
 .item-details .product-images img{
     height: 100%;
+}
+
+#current-image-preview{
+    height: 130px;
+    overflow: scroll;
+    display: flex;
 }
