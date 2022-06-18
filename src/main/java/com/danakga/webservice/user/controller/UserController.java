@@ -11,7 +11,6 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.service.UserService;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +21,8 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/user")
 public class UserController{
-    @Autowired private final UserService userService;
-    @Autowired private final CompanyService companyService;
+    private final UserService userService;
+    private final CompanyService companyService;
 
     /**              마이페이지 기능               **/
     //회원정보 조회

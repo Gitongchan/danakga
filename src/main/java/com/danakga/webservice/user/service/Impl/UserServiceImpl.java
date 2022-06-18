@@ -15,7 +15,6 @@ import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,11 +35,9 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
-
-    @Autowired private final UserRepository userRepository;
-    @Autowired private final CompanyRepository companyRepository;
-
-    private final BoardRepository boardRepository;
+     private final UserRepository userRepository;
+     private final CompanyRepository companyRepository;
+     private final BoardRepository boardRepository;
 
 
     @Override

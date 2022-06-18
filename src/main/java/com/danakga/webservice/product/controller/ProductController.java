@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/manager/product")
 public class ProductController {
-    @Autowired private final ProductService productService;
+    private final ProductService productService;
 
     //상품등록
     @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})

@@ -6,7 +6,6 @@ import com.danakga.webservice.user.dto.response.ResUserIdDto;
 import com.danakga.webservice.user.service.UserService;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class PermitAllController {
 
-    @Autowired
     private final UserService userService;
 
     //토큰발행

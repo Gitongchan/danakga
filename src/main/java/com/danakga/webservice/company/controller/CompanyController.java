@@ -3,13 +3,10 @@ package com.danakga.webservice.company.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.company.dto.reponse.ResCompanyInfoDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
-import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/manager")
 public class CompanyController {
 
-    @Autowired private final CompanyService companyService;
+    private final CompanyService companyService;
 
     //사업자 탈퇴
     @PutMapping("/deleted")
