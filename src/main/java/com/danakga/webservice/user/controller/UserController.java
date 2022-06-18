@@ -109,11 +109,9 @@ public class UserController{
 
     }
 
-/*
-======================================================= 작성한 게시글, 댓글 확인 작업 (진모) =======================================================
- */
+    /**               작성한 게시글, 댓글 확인 작업 (진모)               **/
 
-    //작성한 게시글 확인
+    //작성한 게시글 목록
     @GetMapping("/myPostList/{type}")
     public ResBoardListDto myPostList(@LoginUser UserInfo userInfo,
                                       @PathVariable("type") String boardType,
@@ -123,9 +121,14 @@ public class UserController{
         return userService.myPostList(userInfo, boardType, pageable, page);
     }
     
-    //작성한 댓글 확인
-    @GetMapping("myCommentList")
-    public ResBoardListDto myCommentList(@LoginUser UserInfo userInfo) {
-        return null;
+    //작성한 댓글의 게시글 목록 조회
+    //테이블 3개 조인 후 게시판 종류까지 맞춰서 가져와야 함
+    @GetMapping("myCommentList/{type}")
+    public ResBoardListDto myCommentList(@LoginUser UserInfo userInfo,
+                                         @PathVariable("type") String boardType,
+                                         Pageable pageable,
+                                         int page) {
+
+        return userService.myCommentList(userInfo, boardType, pageable, page);
     }
 }

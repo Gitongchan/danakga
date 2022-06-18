@@ -333,4 +333,10 @@ public class UserServiceImpl implements UserService {
 
         return resBoardListDto;
     }
+
+    //작성한 댓글의 게시글 목록 조회
+    @Override
+    public ResBoardListDto myCommentList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+        return null;
+    }
 }

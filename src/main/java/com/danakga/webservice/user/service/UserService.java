@@ -38,4 +38,6 @@ public interface UserService extends UserDetailsService {
 
     ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page);
 
+    ResBoardListDto myCommentList(UserInfo userInfo, String boardType, Pageable pageable, int page);
+
 }
