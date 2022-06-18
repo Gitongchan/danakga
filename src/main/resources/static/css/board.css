@@ -3,13 +3,18 @@
 }
 
 .pagination {
-    display: flex;
+    display: flex !important;
 }
 
 .text-center{
     display: flex;
     justify-content: center;
     height: 100px;
+}
+
+#board-wrap{
+    height: 500px;
+    margin-bottom: 20px;
 }
 
 #boardtable{
