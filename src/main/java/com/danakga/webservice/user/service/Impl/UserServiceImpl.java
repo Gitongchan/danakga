@@ -1,8 +1,12 @@
 package com.danakga.webservice.user.service.Impl;
 
+import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.model.Board;
+import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
+import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
@@ -12,6 +16,10 @@ import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -27,6 +39,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired private final UserRepository userRepository;
     @Autowired private final CompanyRepository companyRepository;
+
+    private final BoardRepository boardRepository;
 
 
     @Override
@@ -288,5 +302,38 @@ public class UserServiceImpl implements UserService {
             return findUserInfo.getUserid();
         }
         return null;
+    }
+
+    //작성한 게시글 조회
+    @Override
+    public ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+
+            UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                    .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+
+            pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+            Page<Board> boards = boardRepository.findAllByUserInfoAndBdType(recentUserInfo, boardType, pageable);
+
+            List<Board> myPost = boards.getContent();
+
+            ResBoardListDto resBoardListDto = new ResBoardListDto();
+
+            List<Map<String, Object>> postList = new ArrayList<>();
+
+            myPost.forEach(entity -> {
+                Map<String, Object> mapPost = new HashMap<>();
+                mapPost.put("bd_id", entity.getBdId());
+                mapPost.put("bd_title", entity.getBdTitle());
+                mapPost.put("bd_writer", entity.getBdWriter());
+                mapPost.put("bd_created", entity.getBdCreated());
+                mapPost.put("bd_views", entity.getBdViews());
+                mapPost.put("bd_deleted", entity.getBdDeleted());
+                mapPost.put("totalElement", boards.getTotalElements());
+                mapPost.put("totalPage", boards.getTotalPages());
+                postList.add(mapPost);
+            });
+            resBoardListDto.setLists(postList);
+
+        return resBoardListDto;
     }
 }

@@ -27,8 +27,8 @@ public class BoardPermitAllController {
     @GetMapping("/list/{type}")
     public ResBoardListDto boardList(Pageable pageable,
                                      @PathVariable("type")
-                                           String board_type, int page) {
-        return boardService.boardList(pageable, board_type, page);
+                                           String boardType, int page) {
+        return boardService.boardList(pageable, boardType, page);
     }
 
     //게시글 조회
@@ -40,7 +40,7 @@ public class BoardPermitAllController {
 
     //댓글 조회
     @GetMapping("/post/comments/{id}")
-    public ResCommentListDto commnetList(@PathVariable("id") Long id,
+    public ResCommentListDto commentList(@PathVariable("id") Long id,
                                          Pageable pageable, int page) {
         return commentService.commentList(id, pageable, page);
     }

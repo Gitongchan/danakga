@@ -1,17 +1,18 @@
 package com.danakga.webservice.user.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
-import com.danakga.webservice.util.responseDto.ResResultDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.service.UserService;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -109,5 +110,23 @@ public class UserController{
 
     }
 
+/*
+======================================================= 작성한 게시글, 댓글 확인 작업 (진모) =======================================================
+ */
 
+    //작성한 게시글 확인
+    @GetMapping("/myPostList/{type}")
+    public ResBoardListDto myPostList(@LoginUser UserInfo userInfo,
+                                      @PathVariable("type") String boardType,
+                                      Pageable pageable,
+                                      int page) {
+
+        return userService.myPostList(userInfo, boardType, pageable, page);
+    }
+    
+    //작성한 댓글 확인
+    @GetMapping("myCommentList")
+    public ResBoardListDto myCommentList(@LoginUser UserInfo userInfo) {
+        return null;
+    }
 }
