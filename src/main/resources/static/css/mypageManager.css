@@ -1,5 +1,6 @@
 .product-list{
     width: 100%;
+    overflow: scroll;
 }
 
 .product-item{

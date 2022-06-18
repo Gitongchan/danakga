@@ -100,7 +100,6 @@ const check = () => {
                 img.classList.add(`img-item`);
                 img.src= data.files[i].file_path;
                 divImg.appendChild(img);
-                divImg.appendChild(deleteButton);
                 content_img.appendChild(divImg);
             }
             content.innerHTML += data.post.bd_content;

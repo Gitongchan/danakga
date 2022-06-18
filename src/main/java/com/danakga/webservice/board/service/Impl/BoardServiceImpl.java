@@ -92,7 +92,7 @@ public class BoardServiceImpl implements BoardService {
         //기존에 쿠키를 가지고 있다면 해당 쿠키를 oldCookie에 담아줌
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("postView")) {
+                if (cookie.getName().equals("boardView")) {
                     oldCookie = cookie;
                 }
             }
@@ -110,7 +110,7 @@ public class BoardServiceImpl implements BoardService {
             }
         } else {
             boardRepository.updateView(id);
-            Cookie postCookie = new Cookie("postView", "[" + id + "]");
+            Cookie postCookie = new Cookie("boardView", "[" + id + "]");
             postCookie.setPath("/");
             //쿠키 사용시간 1시간 설정
             postCookie.setMaxAge(60 * 60);
