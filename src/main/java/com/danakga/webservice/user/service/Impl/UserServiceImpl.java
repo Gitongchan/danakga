@@ -289,4 +289,14 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public String passwordFind(UserInfoDto userInfoDto) {
+        if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
+            return findUserInfo.getPassword();
+        }
+        return null;
+    }
+
 }
