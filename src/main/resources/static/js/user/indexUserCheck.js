@@ -1,5 +1,6 @@
 //토근값 가져오기
 const token = document.querySelector('meta[name="_csrf"]').content;
+const header = document.querySelector('meta[name="_csrf_header"]').content;
 
 const span_id = document.createElement('span');
 const login_info = document.querySelector('.userinfo');
