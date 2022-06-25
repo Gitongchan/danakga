@@ -87,4 +87,8 @@ public class PageController {
         return "pages/addProduct";
     }
 
+    @GetMapping("/product/grid")
+    public String productgrid(){
+        return "pages/product-grids";
+    }
 }
