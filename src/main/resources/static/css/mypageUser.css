@@ -1,8 +1,12 @@
-.mypage_sidebar{
-    display: flex;
-    margin: 30px 30px;
-    padding: 20px 20px;
+#my-page-nav{
+    margin-bottom: 15px;
 }
+
+#NAVtoggle{
+    width: 100%;
+}
+
+
 
 .mypage_article{
     width:100%
