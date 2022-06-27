@@ -45,4 +45,10 @@ public class BoardPermitAllController {
         return commentService.commentList(id, pageable, page);
     }
 
+    //개별 댓글 조회
+    @GetMapping("/comment/check/{cm_id}")
+    public ResCommentListDto writeComment(@PathVariable(value = "cm_id") Long cm_id) {
+        return commentService.writeComment(cm_id);
+    }
+
 }
