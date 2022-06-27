@@ -1,26 +1,14 @@
 //토근값 가져오기
 const token = document.querySelector('meta[name="_csrf"]').content;
 
-const span_id = document.createElement('span');
-const login_info = document.querySelector('.userinfo');
-const div_id = document.querySelector('.view_id');
-
 //로그인 안되어있다면 로그인, 회원가입 > 로그인 되어있다면 내정보|로그아웃
-
-const left_a = document.createElement('a');
-const left_span = document.createElement('span');
-const right_a = document.createElement('a');
-const right_span = document.createElement('span');
-
-const stick = document.createElement('span');
-stick.innerText = '|';
-
-const logout_form = document.createElement('form');
-const hidden_token = document.createElement('input');
-const logout_btn = document.createElement('button');
 
 const checkID = document.getElementById('checkUserId');
 const checkCompany = document.getElementById('checkCompanyId');
+
+const cart = document.getElementById('cart-items');
+const wish = document.getElementById('wishlist');
+const loginInfo = document.getElementById('user-info');
 
 (async function() {
     try {
@@ -28,109 +16,83 @@ const checkCompany = document.getElementById('checkCompanyId');
         if(res.status === 200){
             const data = await res.json();
             checkID.value = data.id;
+            cart.innerHTML = `
+            <a href="javascript:void(0)" class="main-btn">
+                                  <i class="lni lni-cart"></i>
+                                  <span class="total-items">0</span>
+                                </a>
+                                <!-- Shopping Item -->
+                                <div class="shopping-item">
+                                  <div class="dropdown-cart-header">
+                                    <span><!--아이템 갯수--></span>
+                                    <a href="#">장바구니 보기</a>
+                                  </div>
+                                  <ul class="shopping-list">
+                                    <!-- cart-item내용 들어감-->
+                                  </ul>
+                                  <div class="bottom">
+                                    <div class="total">
+                                      <span>합계</span>
+                                      <span class="total-amount"><!--가격--></span>
+                                    </div>
+                                    <div class="button">
+                                      <a href="#" class="btn animate">주문하기</a>
+                                    </div>
+                                  </div>
+                                </div>
+            `
+            wish.innerHTML = `
+                <a href="javascript:void(0)">
+                    <i class="lni lni-heart"></i>
+                    <span class="total-items">0<!--찜한 아이템 갯수--></span>
+                </a>
+            `
+
+
             const mRes = await fetch('/api/manager');
                 if(mRes.status === 200){
                     const mData = await mRes.json();
                     checkCompany.value = mData.companyId;
-                    console.log(mData);
-                    span_id.innerText = `${data.userid}님! 안녕하세요!`;
-                    left_a.href = '/manager/mypage';
-                    left_span.innerText = '내 정보';
-                    left_a.appendChild(left_span);
-
-                    hidden_token.type = 'hidden';
-                    hidden_token.name = '_csrf';
-                    hidden_token.value = token;
-                    logout_btn.innerText = '로그아웃';
-
-                    logout_form.method = 'POST';
-                    logout_form.action = '/api/user/logout';
-                    logout_form.appendChild(hidden_token);
-                    logout_form.appendChild(logout_btn);
-
-                    div_id.appendChild(span_id);
-                    login_info.appendChild(left_a);
-                    login_info.appendChild(logout_form);
+                    loginInfo.innerHTML = `
+                        <div class="user">
+                            <i class="lni lni-user"></i>                    
+                          ${data.userid}님! 안녕하세요!
+                        </div>
+                        <ul class="user-login">
+                          <li>
+                            <a href="/manager/mypage">내정보</a>
+                          </li>
+                          <li>
+                          <form method="POST" action="/api/user/logout">
+                                <input type="hidden" name="_csrf" value="${token}">
+                                <button>로그아웃</button>
+                          </form>
+                            
+                          </li>
+                        </ul>
+                    `
                 }else{
-                    span_id.innerText = `${data.userid}님! 안녕하세요!`;
-
-                    left_a.href = '/user/mypage';
-                    left_span.innerText = '내 정보';
-                    left_a.appendChild(left_span);
-
-                    hidden_token.type = 'hidden';
-                    hidden_token.name = '_csrf';
-                    hidden_token.value = token;
-                    logout_btn.innerText = '로그아웃';
-
-                    logout_form.method = 'POST';
-                    logout_form.action = '/api/user/logout';
-                    logout_form.appendChild(hidden_token);
-                    logout_form.appendChild(logout_btn);
-
-                    div_id.appendChild(span_id);
-                    login_info.appendChild(left_a);
-                    login_info.appendChild(logout_form);
+                    loginInfo.innerHTML = `
+                        <div class="user">
+                            <i class="lni lni-user"></i>                    
+                          ${data.userid}님! 안녕하세요!
+                        </div>
+                        <ul class="user-login">
+                          <li>
+                            <a href="/user/mypage">내정보</a>
+                          </li>
+                          <li>
+                          <form method="POST" action="/api/user/logout">
+                                <input type="hidden" name="_csrf" value="${token}">
+                                <button>로그아웃</button>
+                          </form>
+                            
+                          </li>
+                        </ul>
+                    `
                 }
         }
     }
     catch (e) {
-        console.log("에러발생!");
-        span_id.innerText = `로그인이 필요합니다!`;
-        left_a.href = '/login';
-        left_span.innerText = '로그인';
-        left_a.appendChild(left_span);
-
-        right_a.href = '/register';
-        right_span.innerText = '회원가입';
-        right_a.appendChild(right_span);
-
-        div_id.appendChild(span_id);
-        login_info.appendChild(left_a);
-        login_info.appendChild(right_a);
     }
 })();
-
-// window.addEventListener('DOMContentLoaded', async ()=>{
-//     const res = await fetch('/api/user')
-//     const data = await res.json();
-//     console.log(res);
-//     console.log(data);
-//     if(res.status === 200){
-//         span_id.innerText = `${data.userid}님! 안녕하세요!`;
-//
-//         left_a.href = '/mypage';
-//         left_span.innerText = '내 정보';
-//         left_a.appendChild(left_span);
-//
-//         // right_a.href = '/user/logout';
-//         // right_span.innerText = "로그아웃"
-//         // right_a.appendChild(right_span);
-//         hidden_token.type = 'hidden';
-//         hidden_token.name = '_csrf';
-//         hidden_token.value = token;
-//         logout_btn.innerText = '로그아웃';
-//
-//         logout_form.method = 'POST';
-//         logout_form.action = '/user/logout';
-//         logout_form.appendChild(hidden_token);
-//         logout_form.appendChild(logout_btn);
-//
-//         div_id.appendChild(span_id);
-//         login_info.appendChild(left_a);
-//         login_info.appendChild(logout_form);
-//     }else if(res.status !== 200){
-//         span_id.innerText = `로그인이 필요합니다!`;
-//         left_a.href = '/login';
-//         left_span.innerText = '로그인';
-//         left_a.appendChild(left_span);
-//
-//         right_a.href = '/register';
-//         right_span.innerText = '회원가입';
-//         right_a.appendChild(right_span);
-//
-//         div_id.appendChild(span_id);
-//         login_info.appendChild(left_a);
-//         login_info.appendChild(right_a);
-//     }
-// });
