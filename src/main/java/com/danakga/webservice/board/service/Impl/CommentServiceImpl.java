@@ -154,5 +154,34 @@ public class CommentServiceImpl implements CommentService {
         }
         return -1L;
     }
+
+    //개별 댓글 조회
+    @Override
+    public ResCommentListDto writeComment(Long cm_id) {
+
+        Board_Comment comments = commentRepository.findByCmId(cm_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 댓글을 찾을 수 없습니다."));
+
+        //Dto에 값을 담아주기 위한 List<Map>
+        List<Map<String, Object>> mapComments = new ArrayList<>();
+
+        //return해줄 Dto 객체 생성
+        ResCommentListDto resCommentListDto = new ResCommentListDto();
+
+        //map에 댓글 정보 put
+        Map<String, Object> writeComments = new HashMap<>();
+        writeComments.put("cm_id", comments.getCmId());
+        writeComments.put("cm_comment", comments.getCmContent());
+        writeComments.put("cm_created", comments.getCmCreated());
+        writeComments.put("cm_deleted", comments.getCmDeleted());
+        writeComments.put("cm_modified", comments.getCmModified());
+        writeComments.put("cm_writer", comments.getCmWriter());
+        mapComments.add(writeComments);
+        
+        //Dto 값 set
+        resCommentListDto.setComments(mapComments);
+
+        return resCommentListDto;
+    }
 }
 
