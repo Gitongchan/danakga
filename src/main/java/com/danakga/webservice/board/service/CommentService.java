@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 public interface CommentService {
 
     //댓글 조회
-    ResCommentListDto commentList (Long id, Pageable pageable, int page);
+    ResCommentListDto commentList (Long cm_id, Pageable pageable, int page);
 
     //댓글 작성
     Long commentWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long id);
@@ -18,4 +18,7 @@ public interface CommentService {
 
     //댓글 삭제 여부 변경
     Long commentDelete(Long bd_id, Long cm_id, UserInfo userInfo);
+    
+    //개별 댓글 조회
+    ResCommentListDto writeComment(Long cm_id);
 }
