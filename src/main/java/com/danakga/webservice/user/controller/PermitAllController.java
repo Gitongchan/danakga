@@ -3,6 +3,7 @@ package com.danakga.webservice.user.controller;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.dto.response.ResUserIdDto;
+import com.danakga.webservice.user.dto.response.ResUserPwDto;
 import com.danakga.webservice.user.service.UserService;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +58,14 @@ public class PermitAllController {
 
 
     //pw찾기
+    @GetMapping("/userpw_find")
+    public ResUserPwDto findUserpw(@RequestBody UserInfoDto userInfoDto){
+
+        String result = userService.passwordFind(userInfoDto);
+        System.out.println(result);
+        return result == null ?
+                new ResUserPwDto(null, "패스워드 찾기 실패.") :  new ResUserPwDto(result, "패스워드 찾기 성공.");
+    }
+
 
 }
