@@ -33,8 +33,9 @@ const reload = async ()=> {
         console.log(data);
         comment.innerHTML = "";
         for (let i in data.comments) {
-            comment.innerHTML +=
-                `
+            if(data.comments[i].cm_writer==checkName.value){
+                comment.innerHTML +=
+                    `
                 <li>
                     <div class="comment-desc">
                         <div class="desc-top" id="${data.comments[i].cm_id}">
@@ -63,6 +64,33 @@ const reload = async ()=> {
                     
                 </div>
         </li>`
+            }else{
+                comment.innerHTML +=
+                    `
+                <li>
+                    <div class="comment-desc">
+                        <div class="desc-top" id="${data.comments[i].cm_id}">
+                            <div class="comment-info-wrap">
+                                <h6 class="comment-uid">${data.comments[i].cm_writer}</h6>
+                                <div class="btn-wrap">
+                                    <button class="reply-link comment-reply">
+                                        <i class="lni lni-reply"></i>답글달기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="date">${data.comments[i].cm_created.split('.')[0]}</span>
+                    </div>
+                    <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].cm_id}">
+                        <p>
+                            ${data.comments[i].cm_content}
+                        </p>
+                    </div>
+                    
+                </div>
+        </li>`
+            }
+
 
         }
         //수정버튼
@@ -103,8 +131,11 @@ const reload = async ()=> {
                     console.log(e)
                 })
                 document.querySelector(`.btn.completeCancel${val}`).addEventListener('click',async (e)=>{
-                    //코멘트 아이디 값만 넘겨서 해당 부분만 값 변경하기 (api필요)
-                    console.log(e)
+                    const res = await fetch(`/api/board/comment/check/${val}`)
+                    const data = await res.json();
+                    if(res.status === 200){
+                        await reload();
+                    }
                 })
                 })
         }

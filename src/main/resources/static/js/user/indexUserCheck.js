@@ -6,6 +6,7 @@ const header = document.querySelector('meta[name="_csrf_header"]').content;
 
 const checkID = document.getElementById('checkUserId');
 const checkCompany = document.getElementById('checkCompanyId');
+const checkName = document.getElementById('checkName');
 
 const cart = document.getElementById('cart-items');
 const wish = document.getElementById('wishlist');
@@ -17,6 +18,7 @@ const loginInfo = document.getElementById('user-info');
         if(res.status === 200){
             const data = await res.json();
             checkID.value = data.id;
+            checkName.value = data.userid;
             cart.innerHTML = `
             <a href="javascript:void(0)" class="main-btn">
                                   <i class="lni lni-cart"></i>
