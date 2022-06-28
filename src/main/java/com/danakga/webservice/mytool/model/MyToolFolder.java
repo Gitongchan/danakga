@@ -3,6 +3,7 @@ package com.danakga.webservice.mytool.model;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,10 @@ public class MyToolFolder {
     @Column(name = "my_tool_folder")
     private String MyToolFolder;
 
-
+    @Builder
+    public MyToolFolder(Long id, UserInfo userInfo, String myToolFolder) {
+        this.id = id;
+        this.userInfo = userInfo;
+        MyToolFolder = myToolFolder;
+    }
 }

@@ -2,6 +2,7 @@ package com.danakga.webservice.mytool.model;
 
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -27,4 +28,11 @@ public class MyToolDetail {
     @ManyToOne
     @JoinColumn(name = "my_tool_folder")
     private MyToolFolder myToolFolder;
+
+    @Builder
+    public MyToolDetail(Long id, Product product, MyToolFolder myToolFolder) {
+        this.id = id;
+        this.product = product;
+        this.myToolFolder = myToolFolder;
+    }
 }
