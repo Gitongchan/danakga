@@ -60,8 +60,8 @@ public class PageController {
         return "pages/edit-product";
     }
 
-    @GetMapping("/board") //조회
-    public String boardlist(){return "pages/boardlist";}
+    @GetMapping("/board/basic") //조회
+    public String boardlist(){return "pages/basic-boardlist";}
 
     @GetMapping("/board/post") //작성
     public String boardEdition(){return "pages/boardPost";}
