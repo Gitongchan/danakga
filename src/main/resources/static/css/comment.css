@@ -1,0 +1,18 @@
+.comment-info-wrap{
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-wrap{
+    display: flex;
+}
+
+.btn-wrap button{
+    margin-left:5px;
+    border: 0;
+    background: none;
+    color: #888;
+}
+.form-group.col-sm-12.comment p{
+    margin-top:20px;
+}

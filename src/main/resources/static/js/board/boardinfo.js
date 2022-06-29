@@ -19,7 +19,7 @@ function getParameterByName(name) {
         results = regex.exec(location.search);
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-const urlParams = getParameterByName('boardid').split('?')[0];
+const boardID = getParameterByName('boardid').split('?')[0];
 const urlWriter = getParameterByName('bdwriter');
 
 (async function() {
@@ -29,7 +29,7 @@ const urlWriter = getParameterByName('bdwriter');
 
         if(res.status === 200){
             if(data.userid === urlWriter){
-                fetch(`/api/board/post/${urlParams}`)
+                fetch(`/api/board/post/${boardID}`)
                     .then((res)=>res.json())
                     .then((data)=>
                     {
@@ -62,7 +62,7 @@ const urlWriter = getParameterByName('bdwriter');
 })();
 
 editBtn.addEventListener('click',()=>{
-    location.replace(`/board/edit?boardid=${urlParams}`)
+    location.replace(`/board/edit?boardid=${boardID}`)
 })
 
 deleteBtn.addEventListener('click',()=>{
@@ -71,7 +71,7 @@ deleteBtn.addEventListener('click',()=>{
     const token = document.querySelector('meta[name="_csrf"]').content;
 
     if(confirm('게시글을 삭제하시겠습니까?')) {
-        fetch(`/api/user/post/delete/${urlParams}`,{
+        fetch(`/api/user/post/delete/${boardID}`,{
             method : "PUT",
             headers: {
                 'header': header,
@@ -88,7 +88,7 @@ deleteBtn.addEventListener('click',()=>{
 })
 
 const check = () => {
-    fetch(`/api/board/post/${urlParams}`)
+    fetch(`/api/board/post/${boardID}`)
         .then((res)=>res.json())
         .then((data)=>
         {
