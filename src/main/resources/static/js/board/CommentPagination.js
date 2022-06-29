@@ -5,19 +5,19 @@
 const pagenation = document.querySelector('.single-inner .text-center .pagination');
 
 (function() {
-    fetch(`/api/board/list/자유게시판?page=0`)
+    fetch(`/api/board/post/comments/${boardID}?page=0`)
         .then((res)=>res.json())
         .then((data)=>{
-            renderPagination(data.lists[0].totalPage);
+            renderPagination(data.comments[0].totalPage);
         })
 })();
 
 function renderPagination(currentPage) {
-    fetch(`/api/board/list/자유게시판?page=0`)
+    fetch(`/api/board/post/comments/${boardID}?page=0`)
         .then((res)=>res.json())
         .then((data)=>{
             //총 페이지 수
-            const total = Math.ceil(data.lists[0].totalElement/10);
+            const total = Math.ceil(data.comments[0].totalElement/10);
             //화면에 보여질 페이지 그룹
             const group = Math.ceil(currentPage/10);
 
@@ -104,21 +104,5 @@ function renderPagination(currentPage) {
 
 //페이지 번호 클릭 시 이동하는 곳
 function onList(e){
-    fetch(`/api/board/list/자유게시판?page=${e}`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            tablelist.innerHTML="";
-            for(let i=0; i<data.lists.length; i++){
-                console.log(data.lists[i]);
-                const tr = document.createElement('tr');
-                tr.innerHTML =
-                    `<td>${data.lists[i].bd_id}</td>
-                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
-                 <td>${data.lists[i].bd_writer}</td>
-                 <td>${data.lists[i].bd_created.split('.')[0]}</td>
-                 <td>${data.lists[i].bd_views}</td>`
-
-                tablelist.appendChild(tr);
-            }
-        })
+    reload(e).then(r => r);
 }
