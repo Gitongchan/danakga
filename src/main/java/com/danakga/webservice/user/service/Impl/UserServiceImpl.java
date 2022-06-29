@@ -338,6 +338,8 @@ public class UserServiceImpl implements UserService {
     //쿼리 생각 중
     @Override
     public ResBoardListDto myCommentList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+
+        //comment, board 둘 다 조회해서 u_id, bd_id, cm_id 전부 비교해서 출력?
         return null;
     }
 
