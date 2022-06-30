@@ -72,6 +72,9 @@ public class PageController {
     @GetMapping("/board/edit") //게시글 수정
     public String boardEdit(){return "pages/boardEdit";}
 
+    @GetMapping("/board/faq") //자주묻는질문
+    public String boardFAQ(){return "pages/faq";}
+
     @GetMapping("/user/edit")
     public String myPageEdit(){
         return "pages/mypageUserEdit";
