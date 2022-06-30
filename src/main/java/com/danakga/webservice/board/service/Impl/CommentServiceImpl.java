@@ -62,6 +62,8 @@ public class CommentServiceImpl implements CommentService {
             commentsMap.put("cm_writer", entity.getCmWriter());
             commentsMap.put("cm_created", entity.getCmCreated());
             commentsMap.put("cm_modify", entity.getCmModified());
+            commentsMap.put("totalElement", board_comments.getTotalElements());
+            commentsMap.put("totalPage", board_comments.getTotalPages());
             mapComments.add(commentsMap);
         });
 
