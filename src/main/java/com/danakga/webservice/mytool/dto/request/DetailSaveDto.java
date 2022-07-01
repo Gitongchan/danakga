@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class DetailSaveDto {
     private Long productId;
     private Long folderId;
+    private int myToolQuantity;
 }

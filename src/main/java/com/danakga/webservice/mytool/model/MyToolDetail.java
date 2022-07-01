@@ -29,10 +29,15 @@ public class MyToolDetail {
     @JoinColumn(name = "my_tool_folder")
     private MyToolFolder myToolFolder;
 
+    //내 장비 수량
+    @Column(name="my_tool_quantity")
+    private int myToolQuantity;
+
     @Builder
-    public MyToolDetail(Long id, Product product, MyToolFolder myToolFolder) {
+    public MyToolDetail(Long id, Product product, MyToolFolder myToolFolder,int myToolQuantity) {
         this.id = id;
         this.product = product;
         this.myToolFolder = myToolFolder;
+        this.myToolQuantity = myToolQuantity;
     }
 }
