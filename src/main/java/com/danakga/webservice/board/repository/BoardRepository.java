@@ -34,4 +34,25 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query("update Board b set b.bdDeleted = 'Y' where b.bdId = :id")
     void updateDeleted(@Param("id") Long id);
+
+    //작성한 댓글의 게시글 조회
+    //런타임 오류있고, inner join으로 하려면 @ManyToOne(optional = false)로 하면 된다고는 함
+//    @Query(
+//            value = "select b.bdId, b.bdTitle, b.bdCreated, b.bdWriter, b.bdViews " +
+//                    "from Board b inner join Board_Comment bc on b.bdId = bc.board.bdId " +
+//                    "where bc.cmWriter = :writer and b.bdType = :boardType and b.bdDeleted = :deleted "
+//    )
+//    Page<Board> myCommentsList(@Param("cm_writer") String writer,
+//                               @Param("bd_type") String boardType,
+//                               @Param("bd_deleted") String deleted,
+//                               Pageable pageable);
+
+    //런타임 오류는 없는데 포스트맨 결과 값 안뜸
+    @Query(
+            "select b from Board b " +
+            "where b = (select bc.board from Board_Comment bc join bc.board where bc.userInfo = :userInfo)"
+    )
+    Page<Board> myCommentsList(@Param("userInfo") UserInfo userInfo,
+                               Pageable pageable);
+
 }

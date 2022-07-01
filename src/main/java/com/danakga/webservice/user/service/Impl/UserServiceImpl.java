@@ -335,12 +335,41 @@ public class UserServiceImpl implements UserService {
     }
 
     //댓글 작성한 게시글 조회
-    //쿼리 생각 중
+    //jpql 더 찾아보기
     @Override
     public ResBoardListDto myCommentList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
-        //comment, board 둘 다 조회해서 u_id, bd_id, cm_id 전부 비교해서 출력?
-        return null;
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+
+        String userName = recentUserInfo.getUserid();
+        String deleted = "N";
+        
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+        Page<Board> boards = boardRepository.myCommentsList(userInfo, pageable);
+
+        List<Board> myComments = boards.getContent();
+
+        ResBoardListDto resBoardListDto = new ResBoardListDto();
+
+        List<Map<String, Object>> commentsList = new ArrayList<>();
+
+        myComments.forEach(entity -> {
+            Map<String, Object> mapComments = new HashMap<>();
+            mapComments.put("bd_id", entity.getBdId());
+            mapComments.put("bd_title", entity.getBdTitle());
+            mapComments.put("bd_writer", entity.getBdWriter());
+            mapComments.put("bd_created", entity.getBdCreated());
+            mapComments.put("bd_views", entity.getBdViews());
+            mapComments.put("bd_deleted", entity.getBdDeleted());
+            mapComments.put("totalElement", boards.getTotalElements());
+            mapComments.put("totalPage", boards.getTotalPages());
+            commentsList.add(mapComments);
+        });
+
+        resBoardListDto.setLists(commentsList);
+
+        return resBoardListDto;
     }
 
     @Override
