@@ -29,12 +29,12 @@ public class MyToolFolder {
 
     //폴더명
     @Column(name = "my_tool_folder")
-    private String MyToolFolder;
+    private String myToolFolder;
 
     @Builder
     public MyToolFolder(Long id, UserInfo userInfo, String myToolFolder) {
         this.id = id;
         this.userInfo = userInfo;
-        MyToolFolder = myToolFolder;
+        this.myToolFolder = myToolFolder;
     }
 }

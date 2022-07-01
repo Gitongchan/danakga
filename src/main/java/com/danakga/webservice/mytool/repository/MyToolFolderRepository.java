@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface MyToolFolderRepository extends JpaRepository<MyToolFolder,Integer> {
     Optional<MyToolFolder> findByIdAndUserInfo(Long Id, UserInfo userInfo);
+    Optional<MyToolFolder> findById(Long Id);
 }
