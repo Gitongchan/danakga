@@ -38,6 +38,7 @@ public class OrdersServiceImpl implements OrdersService {
     //상품 주문 등록
     @Override
     public Long ordersSave(UserInfo userInfo, Long productId, OrdersDto ordersDto) {
+
         UserInfo ordersUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );

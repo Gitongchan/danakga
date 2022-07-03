@@ -80,7 +80,7 @@ public class ProductController {
     //상품 수정,삭제 버튼 활성화
     @GetMapping("/updateBtnCheck/{item}")
     public ResResultDto updateButton(@LoginUser UserInfo userInfo,@PathVariable("item") Long productId){
-        Long result =productService.updateDeleteButton(userInfo,productId); //0 이상이면 활성화
+        Long result = productService.updateDeleteButton(userInfo,productId); //0 이상이면 활성화
         return result == -1L ?
                 new ResResultDto(result,"버튼 비활성화.") : new ResResultDto(result,"버튼 활성화.");
     }
