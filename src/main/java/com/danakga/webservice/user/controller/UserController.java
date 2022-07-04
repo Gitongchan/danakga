@@ -1,17 +1,18 @@
 package com.danakga.webservice.user.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
-import com.danakga.webservice.util.responseDto.ResResultDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.service.UserService;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,8 +22,8 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/user")
 public class UserController{
-    @Autowired private final UserService userService;
-    @Autowired private final CompanyService companyService;
+    private final UserService userService;
+    private final CompanyService companyService;
 
     /**              마이페이지 기능               **/
     //회원정보 조회
@@ -109,5 +110,35 @@ public class UserController{
 
     }
 
+    /**               작성한 게시글, 댓글 조회 작업 (진모)               **/
 
+    //마이페이지 게시글 목록 조회
+    @GetMapping("/myPostList/{type}")
+    public ResBoardListDto myPostList(@LoginUser UserInfo userInfo,
+                                      @PathVariable("type") String boardType,
+                                      Pageable pageable,
+                                      int page) {
+
+        return userService.myPostList(userInfo, boardType, pageable, page);
+    }
+    
+    //마이페이지 댓글의 게시글 조회
+    @GetMapping("myCommentsPost/{type}")
+    public ResBoardListDto myCommentsPost(@LoginUser UserInfo userInfo,
+                                         @PathVariable("type") String boardType,
+                                         Pageable pageable,
+                                         int page) {
+
+        return userService.myCommentsPost(userInfo, boardType, pageable, page);
+    }
+    
+    //마이페이지 댓글 목록 조회
+    @GetMapping("myCommentsList/{type}")
+    public ResCommentListDto myCommentsList(@LoginUser UserInfo userInfo,
+                                            @PathVariable("type") String boardType,
+                                            Pageable pageable,
+                                            int page) {
+
+        return userService.myCommentsList(userInfo, boardType, pageable, page);
+    }
 }

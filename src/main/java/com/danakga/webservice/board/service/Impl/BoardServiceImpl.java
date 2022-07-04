@@ -43,12 +43,12 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 목록
     @Override
-    public ResBoardListDto boardList(Pageable pageable, String board_type, int page) {
+    public ResBoardListDto boardList(Pageable pageable, String boardType, int page) {
 
         final String deleted = "N";
 
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
-        Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable);
+        Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
 
         List<Board> boardList = boards.getContent();
 

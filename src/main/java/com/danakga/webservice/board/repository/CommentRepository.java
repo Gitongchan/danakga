@@ -21,11 +21,22 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     Optional<Board_Comment> findByCmId(Long cm_id);
 
     //댓글 조회
-    Page<Board_Comment> findAllByBoardAndCmDeleted(Board board, String Deleted, Pageable pageable);
+    Page<Board_Comment> findAllByBoardAndCmDeleted(Board board, String deleted, Pageable pageable);
 
     //댓글 삭제 여부 변경
     @Transactional
     @Modifying
     @Query("update Board_Comment cm set cm.cmDeleted = 'Y' where cm.cmId = :id")
     void updateDeleted(@Param("id") Long id);
+
+    //회원이 작성한 댓글 조회
+    @Query(
+            value = "select bc "
+                    + "from Board_Comment bc inner join Board b on bc.board.bdId = b.bdId "
+                    + "where bc.cmWriter = :cmWriter and b.bdType = :bdType and bc.cmDeleted = :cmDeleted"
+    )
+    Page<Board_Comment> myCommentsList(@Param("cmWriter") String cmWriter,
+                                       @Param("bdType") String boardType,
+                                       @Param("cmDeleted") String cmDeleted,
+                                       Pageable pageable);
 }

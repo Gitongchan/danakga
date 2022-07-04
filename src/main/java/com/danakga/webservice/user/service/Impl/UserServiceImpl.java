@@ -1,8 +1,15 @@
 package com.danakga.webservice.user.service.Impl;
 
+import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
+import com.danakga.webservice.board.model.Board;
+import com.danakga.webservice.board.model.Board_Comment;
+import com.danakga.webservice.board.repository.BoardRepository;
+import com.danakga.webservice.board.repository.CommentRepository;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
+import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
@@ -11,7 +18,10 @@ import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,14 +29,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
+    private final BoardRepository boardRepository;
 
-    @Autowired private final UserRepository userRepository;
-    @Autowired private final CompanyRepository companyRepository;
+    private final CommentRepository commentRepository;
 
 
     @Override
@@ -48,7 +61,7 @@ public class UserServiceImpl implements UserService {
         Integer idCheckResult = userIdCheck(userInfoDto.getUserid());
         Integer emailCheckResult = emailCheck(userInfoDto.getEmail());
 
-        if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
+        if (idCheckResult.equals(-1) || emailCheckResult.equals(-1)) {
             return -1L;
         }
         return userRepository.save(
@@ -92,7 +105,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long update(UserInfo userInfo, UpdateUserInfoDto updateUserInfoDto) {
         //로그인 사용자 검증 이후 동작함
-        if(userRepository.findById(userInfo.getId()).isEmpty()) {
+        if (userRepository.findById(userInfo.getId()).isEmpty()) {
             return -1L;
         }
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -101,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
         String rawCheckPassword = updateUserInfoDto.getCheckPassword();
 
-        if(bCryptPasswordEncoder.matches(rawCheckPassword,modifyUser.getPassword())){
+        if (bCryptPasswordEncoder.matches(rawCheckPassword, modifyUser.getPassword())) {
 
             String rawPassword = updateUserInfoDto.getPassword();
             updateUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
@@ -125,7 +138,7 @@ public class UserServiceImpl implements UserService {
             return userInfo.getId();
         }
         return -2L;
-        }
+    }
 
     //회원 탈퇴
     @Override
@@ -140,9 +153,9 @@ public class UserServiceImpl implements UserService {
 
         UserInfo DeleteUser = userRepository.findById(userInfo.getId()).get();
 
-        if(!DeleteUser.getRole().equals(UserRole.ROLE_USER)) return -2L;
+        if (!DeleteUser.getRole().equals(UserRole.ROLE_USER)) return -2L;
 
-        if(bCryptPasswordEncoder.matches(password,DeleteUser.getPassword())) {
+        if (bCryptPasswordEncoder.matches(password, DeleteUser.getPassword())) {
             userRepository.save(
                     UserInfo.builder()
                             .id(DeleteUser.getId()) //로그인 유저 키값을 받아옴
@@ -163,14 +176,14 @@ public class UserServiceImpl implements UserService {
             return userInfo.getId();
         }
         return -3L;
-        }
+    }
 
     //회원 정보 조회
     @Override
     public UserInfo userInfoCheck(UserInfo userInfo) {
 
-        if(userRepository.findById(userInfo.getId()).isPresent()) {
-            return  userRepository.findById(userInfo.getId()).get();
+        if (userRepository.findById(userInfo.getId()).isPresent()) {
+            return userRepository.findById(userInfo.getId()).get();
         }
         return null;
     }
@@ -180,11 +193,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long companyRegister(UserInfo userInfo, UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto) {
 
-        if(companyRepository.findByUserInfo(userInfo).isPresent()){
+        if (companyRepository.findByUserInfo(userInfo).isPresent()) {
             return -1L;//가입된 유저 정보 있으면 -1L
         }
 
-        if(userRepository.findById(userInfo.getId()).isPresent()){
+        if (userRepository.findById(userInfo.getId()).isPresent()) {
 
             UserInfo registerUserInfo = userRepository.findById(userInfo.getId()).get();
 
@@ -218,7 +231,8 @@ public class UserServiceImpl implements UserService {
                             .companyBanknum(companyInfoDto.getCompanyBanknum())
                             .companyEnabled(true)
                             .build()
-            );            return registerUserInfo.getId();
+            );
+            return registerUserInfo.getId();
 
         }
         return -1L;
@@ -226,7 +240,7 @@ public class UserServiceImpl implements UserService {
 
     //탈퇴한 사업자 복구
     @Override
-    public Long companyRestore(UserInfo userInfo,String password) {
+    public Long companyRestore(UserInfo userInfo, String password) {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -236,64 +250,203 @@ public class UserServiceImpl implements UserService {
 
         UserInfo restoreUserInfo = userRepository.findById(userInfo.getId()).get();
 
-        if (companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo,false).isEmpty()) {
+        if (companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo, false).isEmpty()) {
             return -1L; //로그인된 사용자가 사업자 등록이 안되어있거나,이용중지된 사업자가 아님
         }
 
-        if(!bCryptPasswordEncoder.matches(password,restoreUserInfo.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(password, restoreUserInfo.getPassword())) {
             return -2L; //비밀번호 확인 실패시
         }
 
-        CompanyInfo restoreComUserInfo = companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo,false).get();
+        CompanyInfo restoreComUserInfo = companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo, false).get();
 
 
-            userRepository.save(
-                    UserInfo.builder()
-                            .id(restoreUserInfo.getId())
-                            .userid(restoreUserInfo.getUserid())
-                            .password(restoreUserInfo.getPassword())
-                            .name(restoreUserInfo.getName())
-                            .phone(restoreUserInfo.getPhone())
-                            .email(restoreUserInfo.getEmail())
-                            .role(UserRole.ROLE_MANAGER)
-                            .userAdrNum(restoreUserInfo.getUserAdrNum())
-                            .userStreetAdr(restoreUserInfo.getUserStreetAdr())
-                            .userLotAdr(restoreUserInfo.getUserLotAdr())
-                            .userDetailAdr(restoreUserInfo.getUserDetailAdr())
-                            .userEnabled(restoreUserInfo.isUserEnabled())
-                            .build()
-            );
-            companyRepository.save(
-                    CompanyInfo.builder()
-                            .companyId(restoreComUserInfo.getCompanyId())
-                            .userInfo(restoreUserInfo)
-                            .companyName(restoreComUserInfo.getCompanyName())
-                            .companyNum(restoreComUserInfo.getCompanyNum())
-                            .companyAdrNum(restoreComUserInfo.getCompanyAdrNum())
-                            .companyLotAdr(restoreComUserInfo.getCompanyLotAdr())
-                            .companyStreetAdr(restoreComUserInfo.getCompanyStreetAdr())
-                            .companyDetailAdr(restoreComUserInfo.getCompanyDetailAdr())
-                            .companyBanknum(restoreComUserInfo.getCompanyBanknum())
-                            .companyEnabled(true)
-                            .companyDeltedDate(null)
-                            .build()
-            );
-            return restoreUserInfo.getId();
+        userRepository.save(
+                UserInfo.builder()
+                        .id(restoreUserInfo.getId())
+                        .userid(restoreUserInfo.getUserid())
+                        .password(restoreUserInfo.getPassword())
+                        .name(restoreUserInfo.getName())
+                        .phone(restoreUserInfo.getPhone())
+                        .email(restoreUserInfo.getEmail())
+                        .role(UserRole.ROLE_MANAGER)
+                        .userAdrNum(restoreUserInfo.getUserAdrNum())
+                        .userStreetAdr(restoreUserInfo.getUserStreetAdr())
+                        .userLotAdr(restoreUserInfo.getUserLotAdr())
+                        .userDetailAdr(restoreUserInfo.getUserDetailAdr())
+                        .userEnabled(restoreUserInfo.isUserEnabled())
+                        .build()
+        );
+        companyRepository.save(
+                CompanyInfo.builder()
+                        .companyId(restoreComUserInfo.getCompanyId())
+                        .userInfo(restoreUserInfo)
+                        .companyName(restoreComUserInfo.getCompanyName())
+                        .companyNum(restoreComUserInfo.getCompanyNum())
+                        .companyAdrNum(restoreComUserInfo.getCompanyAdrNum())
+                        .companyLotAdr(restoreComUserInfo.getCompanyLotAdr())
+                        .companyStreetAdr(restoreComUserInfo.getCompanyStreetAdr())
+                        .companyDetailAdr(restoreComUserInfo.getCompanyDetailAdr())
+                        .companyBanknum(restoreComUserInfo.getCompanyBanknum())
+                        .companyEnabled(true)
+                        .companyDeltedDate(null)
+                        .build()
+        );
+        return restoreUserInfo.getId();
     }
 
     @Override
     public String useridFind(UserInfoDto userInfoDto) {
-        if(userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
+        if (userRepository.findByEmailAndPhone(userInfoDto.getEmail(), userInfoDto.getPhone()).isPresent()) {
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(), userInfoDto.getPhone()).get();
             return findUserInfo.getUserid();
         }
         return null;
     }
 
+    //작성한 게시글 목록 조회
+    @Override
+    public ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+
+        //회원 조회
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+
+        //pagedble로 db 조회
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+        Page<Board> boards = boardRepository.findAllByUserInfoAndBdType(recentUserInfo, boardType, pageable);
+
+        //page<>를 List로 반환
+        List<Board> myPost = boards.getContent();
+
+        //return할 dto 객체 생성
+        ResBoardListDto resBoardListDto = new ResBoardListDto();
+
+        //dto에 담아줄 List<Map> 생성
+        List<Map<String, Object>> postList = new ArrayList<>();
+
+        //List로 반환된 db 반복문으로 Map으로 get
+        myPost.forEach(entity -> {
+
+            //List<Map>에 당아줄 Map객체 생성 후 put
+            Map<String, Object> mapPost = new HashMap<>();
+            mapPost.put("bd_id", entity.getBdId());
+            mapPost.put("bd_title", entity.getBdTitle());
+            mapPost.put("bd_writer", entity.getBdWriter());
+            mapPost.put("bd_created", entity.getBdCreated());
+            mapPost.put("bd_views", entity.getBdViews());
+            mapPost.put("bd_deleted", entity.getBdDeleted());
+            mapPost.put("totalElement", boards.getTotalElements());
+            mapPost.put("totalPage", boards.getTotalPages());
+            
+            //dto에 담아줄 List<Map>에 담기
+            postList.add(mapPost);
+        });
+        
+        //dto에 List<Map>값 set
+        resBoardListDto.setLists(postList);
+
+        return resBoardListDto;
+    }
+
+    //마이페이지 댓글의 게시글 조회
+    @Override
+    public ResBoardListDto myCommentsPost(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+
+        //회원 조회
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+
+        //삭제 여부 변수
+        String deleted = "N";
+
+        //게시판 목록을 불러오기 위한 List
+        List<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted);
+
+        //댓글 갯수를 위한 pageable
+        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
+        Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
+
+        //return해줄 dto 객체 생성
+        ResBoardListDto resBoardListDto = new ResBoardListDto();
+
+        //dto에 담아줄 List<Map> 생성
+        List<Map<String, Object>> data = new ArrayList<>();
+
+        //List로 반환된 db 반복문으로 Map으로 get
+        boards.forEach(entity -> {
+
+            //List<Map>에 당아줄 Map객체 생성 후 put
+            Map<String, Object> mapComments = new HashMap<>();
+            mapComments.put("bd_id", entity.getBdId());
+            mapComments.put("bd_title", entity.getBdTitle());
+            mapComments.put("bd_writer", entity.getBdWriter());
+            mapComments.put("bd_created", entity.getBdCreated());
+            mapComments.put("bd_views", entity.getBdViews());
+            mapComments.put("totalElement", comments.getTotalElements());
+            mapComments.put("totalPage", comments.getTotalPages());
+
+            //dto에 담아줄 List<Map>에 담기
+            data.add(mapComments);
+        });
+
+        //dto에 List<Map>값 set
+        resBoardListDto.setLists(data);
+
+        return resBoardListDto;
+    }
+
+    //마이페이지 댓글 조회
+    @Override
+    public ResCommentListDto myCommentsList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+
+        //회원 조회
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+
+        //삭제 여부 변수
+        String deleted = "N";
+
+        //페이징 db 조회
+        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
+        Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
+
+        List<Board_Comment> commentsList = comments.getContent();
+
+        //return해줄 dto 객체 생성
+        ResCommentListDto resCommentListDto = new ResCommentListDto();
+
+        //dto에 담아줄 List<Map> 생성
+        List<Map<String, Object>> data = new ArrayList<>();
+
+        //List로 반환된 db 반복문으로 Map으로 get
+        commentsList.forEach(entity -> {
+
+            //List<Map>에 당아줄 Map객체 생성 후 put
+            Map<String, Object> mapComments = new HashMap<>();
+            mapComments.put("cm_id", entity.getCmId());
+            mapComments.put("cm_content", entity.getCmContent());
+            mapComments.put("cm_writer", entity.getCmWriter());
+            mapComments.put("cm_created", entity.getCmCreated());
+            mapComments.put("cm_modify", entity.getCmModified());
+            mapComments.put("bd_id", entity.getBoard().getBdId());
+            mapComments.put("totalElement", comments.getTotalElements());
+            mapComments.put("totalPage", comments.getTotalPages());
+
+            //dto에 담아줄 List<Map>에 담기
+            data.add(mapComments);
+        });
+
+        //dto에 값 set
+        resCommentListDto.setComments(data);
+
+        return resCommentListDto;
+    }
+
     @Override
     public String passwordFind(UserInfoDto userInfoDto) {
-        if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
+        if (userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(), userInfoDto.getEmail(), userInfoDto.getPhone()).isPresent()) {
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(), userInfoDto.getPhone()).get();
             return findUserInfo.getPassword();
         }
         return null;

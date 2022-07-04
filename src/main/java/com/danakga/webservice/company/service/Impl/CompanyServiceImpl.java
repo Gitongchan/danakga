@@ -8,9 +8,7 @@ import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
-import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +19,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Transactional
 public class CompanyServiceImpl implements CompanyService {
-    @Autowired private final CompanyRepository companyRepository;
-    @Autowired private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
     //업체명 중복 체크
     @Override
