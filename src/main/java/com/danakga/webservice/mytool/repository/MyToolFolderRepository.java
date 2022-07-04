@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MyToolFolderRepository extends JpaRepository<MyToolFolder,Integer> {
+public interface MyToolFolderRepository extends JpaRepository<MyToolFolder,Long> {
+
     Optional<MyToolFolder> findByIdAndUserInfo(Long Id, UserInfo userInfo);
+
     Optional<MyToolFolder> findById(Long Id);
 }

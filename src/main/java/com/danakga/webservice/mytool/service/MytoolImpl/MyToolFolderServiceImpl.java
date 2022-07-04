@@ -8,6 +8,7 @@ import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class MyToolFolderServiceImpl implements MyToolFolderService {
     private final MyToolFolderRepository myToolFolderRepository;
 
     //내 장비 폴더 생성
+    @Transactional
     @Override
     public Long MyToolFolderSave(UserInfo userInfo, String folderName) {
         UserInfo folderUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
@@ -31,6 +33,7 @@ public class MyToolFolderServiceImpl implements MyToolFolderService {
     }
 
     //내 장비 폴더명 수정
+    @Transactional
     @Override
     public Long MyToolFolderNameUpdate(UserInfo userInfo, Long folderId, String folderName) {
         UserInfo folderUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(

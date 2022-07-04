@@ -1,6 +1,7 @@
 package com.danakga.webservice.mytool.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.mytool.dto.request.MyToolIdDto;
 import com.danakga.webservice.mytool.dto.request.DetailSaveDto;
 import com.danakga.webservice.mytool.dto.request.FolderNameDto;
 import com.danakga.webservice.mytool.dto.request.UpdateFolderNameDto;
@@ -9,7 +10,6 @@ import com.danakga.webservice.mytool.service.MyToolFolderService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +40,13 @@ public class MyToolController {
     public ResResultDto detailSave(@LoginUser UserInfo userInfo, @RequestBody List<DetailSaveDto> detailSaveDto){
         myToolDetailService.MyToolDetailSave(userInfo,detailSaveDto);
         return new ResResultDto(1L,"장비가 추가 되었습니다.");
+    }
+
+    //내 장비 삭제
+    @DeleteMapping("/detail")
+    public ResResultDto detailDelete(@LoginUser UserInfo userInfo, @RequestBody MyToolIdDto myToolIdDto){
+        myToolDetailService.MyToolDelete(userInfo,myToolIdDto);
+        return new ResResultDto(1L,"장비를 삭제 했습니다.");
     }
 
 }

@@ -2,6 +2,7 @@ package com.danakga.webservice.mytool.service.MytoolImpl;
 
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.mytool.dto.request.DetailSaveDto;
+import com.danakga.webservice.mytool.dto.request.MyToolIdDto;
 import com.danakga.webservice.mytool.model.MyToolDetail;
 import com.danakga.webservice.mytool.model.MyToolFolder;
 import com.danakga.webservice.mytool.repository.MyToolDetailRepository;
@@ -27,9 +28,11 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
     private final MyToolFolderRepository myToolFolderRepository;
     private final UserRepository userRepository;
 
+    //장비 목록 저장
     @Transactional
     @Override
     public void MyToolDetailSave(UserInfo userInfo,List<DetailSaveDto> detailSaveDto) {
+
         UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
         );
@@ -52,4 +55,25 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
         }
 
     }
+
+    //내 장비 목록에 저장된 제품 삭제
+    @Transactional
+    @Override
+    public void MyToolDelete(UserInfo userInfo, MyToolIdDto myToolIdDto) {
+        UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
+
+        MyToolFolder myToolFolder = myToolFolderRepository.findByIdAndUserInfo(myToolIdDto.getMyToolFolderId(),detailUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("폴더 정보를 찾을 수 없습니다.")
+        );
+
+        MyToolDetail myToolDetail = myToolDetailRepository.findByIdAndMyToolFolder(myToolIdDto.getMyToolId(),myToolFolder).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("저장된 제품 정보를 찾을 수 없습니다.")
+        );
+        
+        myToolDetailRepository.delete(myToolDetail);
+
+    }
+
 }

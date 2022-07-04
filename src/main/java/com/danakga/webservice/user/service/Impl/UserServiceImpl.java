@@ -25,8 +25,8 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
 
-    @Autowired private final UserRepository userRepository;
-    @Autowired private final CompanyRepository companyRepository;
+     private final UserRepository userRepository;
+     private final CompanyRepository companyRepository;
 
 
     @Override
