@@ -358,7 +358,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
 
         //삭제 여부 변수
-        String deleted = "N";
+        final String deleted = "N";
 
         //게시판 목록을 불러오기 위한 List
         List<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted);
@@ -405,7 +405,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
 
         //삭제 여부 변수
-        String deleted = "N";
+        final String deleted = "N";
 
         //페이징 db 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());

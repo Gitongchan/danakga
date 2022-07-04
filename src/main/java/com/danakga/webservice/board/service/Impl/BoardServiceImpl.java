@@ -41,6 +41,13 @@ public class BoardServiceImpl implements BoardService {
     private final FilesService filesService;
     private final UserRepository userRepository;
 
+
+    //게시판 검색
+    @Override
+    public ResBoardListDto boardSearch(Pageable pageable, String category, String content) {
+        return null;
+    }
+
     //게시판 목록
     @Override
     public ResBoardListDto boardList(Pageable pageable, String boardType, int page) {

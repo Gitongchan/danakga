@@ -50,4 +50,13 @@ public class BoardPermitAllController {
     public ResCommentListDto writeComments(@PathVariable(value = "cm_id") Long cm_id) {
         return commentService.writeComments(cm_id);
     }
+    
+    //게시판 검색
+    @GetMapping("/list/search/{category}/{content}")
+    public ResBoardListDto boardSearch(Pageable pageable,
+                                       int page,
+                                       @PathVariable(value = "category") String category, //제목, 작성자, 날짜 등
+                                       @PathVariable(value = "content") String content /* 내용 */) {
+        return null;
+    }
 }
