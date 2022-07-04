@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.service.Impl;
 
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Comment;
 import com.danakga.webservice.board.repository.BoardRepository;
@@ -350,7 +351,7 @@ public class UserServiceImpl implements UserService {
 
     //댓글 작성한 게시글 조회
     @Override
-    public ResBoardListDto myCommentList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+    public ResBoardListDto myCommentsPost(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
         //회원 조회
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
@@ -370,7 +371,7 @@ public class UserServiceImpl implements UserService {
         ResBoardListDto resBoardListDto = new ResBoardListDto();
 
         //dto에 담아줄 List<Map> 생성
-        List<Map<String, Object>> commentsList = new ArrayList<>();
+        List<Map<String, Object>> data = new ArrayList<>();
 
         //List로 반환된 db 반복문으로 Map으로 get
         boards.forEach(entity -> {
@@ -386,13 +387,60 @@ public class UserServiceImpl implements UserService {
             mapComments.put("totalPage", comments.getTotalPages());
 
             //dto에 담아줄 List<Map>에 담기
-            commentsList.add(mapComments);
+            data.add(mapComments);
         });
 
         //dto에 List<Map>값 set
-        resBoardListDto.setLists(commentsList);
+        resBoardListDto.setLists(data);
 
         return resBoardListDto;
+    }
+
+    //작성한 댓글 조회
+    @Override
+    public ResCommentListDto myCommentsList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
+
+        //회원 조회
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+
+        //삭제 여부 변수
+        String deleted = "N";
+
+        //페이징 db 조회
+        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
+        Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
+
+        List<Board_Comment> commentsList = comments.getContent();
+
+        //return해줄 dto 객체 생성
+        ResCommentListDto resCommentListDto = new ResCommentListDto();
+
+        //dto에 담아줄 List<Map> 생성
+        List<Map<String, Object>> data = new ArrayList<>();
+
+        //List로 반환된 db 반복문으로 Map으로 get
+        commentsList.forEach(entity -> {
+
+            //List<Map>에 당아줄 Map객체 생성 후 put
+            Map<String, Object> mapComments = new HashMap<>();
+            mapComments.put("cm_id", entity.getCmId());
+            mapComments.put("cm_content", entity.getCmContent());
+            mapComments.put("cm_writer", entity.getCmWriter());
+            mapComments.put("cm_created", entity.getCmCreated());
+            mapComments.put("cm_modify", entity.getCmModified());
+            mapComments.put("bd_id", entity.getBoard().getBdId());
+            mapComments.put("totalElement", comments.getTotalElements());
+            mapComments.put("totalPage", comments.getTotalPages());
+
+            //dto에 담아줄 List<Map>에 담기
+            data.add(mapComments);
+        });
+
+        //dto에 값 set
+        resCommentListDto.setComments(data);
+
+        return resCommentListDto;
     }
 
     @Override

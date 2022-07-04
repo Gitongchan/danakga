@@ -1,6 +1,7 @@
 package com.danakga.webservice.user.service;
 
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
@@ -38,8 +39,13 @@ public interface UserService extends UserDetailsService {
     //페스워드 찾기
     String passwordFind(UserInfoDto userInfoDto);
 
+    //작성한 게시글 조회
     ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page);
 
-    ResBoardListDto myCommentList(UserInfo userInfo, String boardType, Pageable pageable, int page);
+    //작성한 댓글의 게시글 조회
+    ResBoardListDto myCommentsPost(UserInfo userInfo, String boardType, Pageable pageable, int page);
+
+    //작성한 댓글 조회
+    ResCommentListDto myCommentsList(UserInfo userInfo, String boardType, Pageable pageable, int page);
 
 }

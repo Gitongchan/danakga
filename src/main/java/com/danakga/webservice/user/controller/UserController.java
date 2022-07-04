@@ -2,6 +2,7 @@ package com.danakga.webservice.user.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
@@ -109,7 +110,7 @@ public class UserController{
 
     }
 
-    /**               작성한 게시글, 댓글 확인 작업 (진모)               **/
+    /**               작성한 게시글, 댓글 조회 작업 (진모)               **/
 
     //작성한 게시글 목록
     @GetMapping("/myPostList/{type}")
@@ -122,13 +123,22 @@ public class UserController{
     }
     
     //작성한 댓글의 게시글 목록 조회
-    //테이블 3개 조인 후 게시판 종류까지 맞춰서 가져와야 함
-    @GetMapping("myCommentList/{type}")
-    public ResBoardListDto myCommentList(@LoginUser UserInfo userInfo,
+    @GetMapping("myCommentsPost/{type}")
+    public ResBoardListDto myCommentsPost(@LoginUser UserInfo userInfo,
                                          @PathVariable("type") String boardType,
                                          Pageable pageable,
                                          int page) {
 
-        return userService.myCommentList(userInfo, boardType, pageable, page);
+        return userService.myCommentsPost(userInfo, boardType, pageable, page);
+    }
+    
+    //작성한 댓글 목록 조회
+    @GetMapping("myCommentsList/{type}")
+    public ResCommentListDto myCommentsList(@LoginUser UserInfo userInfo,
+                                            @PathVariable("type") String boardType,
+                                            Pageable pageable,
+                                            int page) {
+
+        return userService.myCommentsList(userInfo, boardType, pageable, page);
     }
 }
