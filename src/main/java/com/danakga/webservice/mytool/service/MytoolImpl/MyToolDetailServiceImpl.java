@@ -3,12 +3,14 @@ package com.danakga.webservice.mytool.service.MytoolImpl;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.mytool.dto.request.DetailSaveDto;
 import com.danakga.webservice.mytool.dto.request.MyToolIdDto;
+import com.danakga.webservice.mytool.dto.response.ResMyToolDetailDto;
 import com.danakga.webservice.mytool.model.MyToolDetail;
 import com.danakga.webservice.mytool.model.MyToolFolder;
 import com.danakga.webservice.mytool.repository.MyToolDetailRepository;
 import com.danakga.webservice.mytool.repository.MyToolFolderRepository;
 import com.danakga.webservice.mytool.service.MyToolDetailService;
 import com.danakga.webservice.mytool.service.MyToolFolderService;
+import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -76,4 +79,34 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
 
     }
 
+    //내장비 리스트 / 폴더별로 정렬
+    @Override
+    public List<ResMyToolDetailDto> myToolList(UserInfo userInfo, Long myToolFolderId) {
+        UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
+
+        MyToolFolder myToolFolder = myToolFolderRepository.findByIdAndUserInfo(myToolFolderId,detailUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("폴더 정보를 찾을 수 없습니다.")
+        );
+
+        List<MyToolDetail> myToolDetailList = myToolDetailRepository.findByMyToolFolder(myToolFolder);
+        
+        List<ResMyToolDetailDto> resMyToolDetailDtoList = new ArrayList<>();
+        myToolDetailList.forEach(entity->{
+                    ResMyToolDetailDto listDto = new ResMyToolDetailDto();
+                    listDto.setMyToolFolderId(entity.getMyToolFolder().getId());
+                    listDto.setMyToolId(entity.getId());
+                    listDto.setMyToolProductType(entity.getProduct().getProductType());
+                    listDto.setMyToolProductSubType(entity.getProduct().getProductSubType());
+                    listDto.setMyToolProductBrand(entity.getProduct().getProductBrand());
+                    listDto.setMyToolProductName(entity.getProduct().getProductName());
+                    listDto.setMyToolProductPrice(entity.getProduct().getProductPrice());
+                    listDto.setMyToolQuantity(entity.getMyToolQuantity());
+                    resMyToolDetailDtoList.add(listDto);
+                }
+        );
+
+        return resMyToolDetailDtoList;
+    }
 }

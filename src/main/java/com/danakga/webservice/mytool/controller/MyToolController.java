@@ -5,6 +5,7 @@ import com.danakga.webservice.mytool.dto.request.MyToolIdDto;
 import com.danakga.webservice.mytool.dto.request.DetailSaveDto;
 import com.danakga.webservice.mytool.dto.request.FolderNameDto;
 import com.danakga.webservice.mytool.dto.request.UpdateFolderNameDto;
+import com.danakga.webservice.mytool.dto.response.ResMyToolDetailDto;
 import com.danakga.webservice.mytool.service.MyToolDetailService;
 import com.danakga.webservice.mytool.service.MyToolFolderService;
 import com.danakga.webservice.user.model.UserInfo;
@@ -47,6 +48,13 @@ public class MyToolController {
     public ResResultDto detailDelete(@LoginUser UserInfo userInfo, @RequestBody MyToolIdDto myToolIdDto){
         myToolDetailService.MyToolDelete(userInfo,myToolIdDto);
         return new ResResultDto(1L,"장비를 삭제 했습니다.");
+    }
+
+    //내 장비 조회
+    @GetMapping("/detail/{myToolFolderId}")
+    public List<ResMyToolDetailDto> MyToolList(@LoginUser UserInfo userInfo,@PathVariable("myToolFolderId") Long myToolFolderId){
+
+        return myToolDetailService.myToolList(userInfo,myToolFolderId);
     }
 
 }
