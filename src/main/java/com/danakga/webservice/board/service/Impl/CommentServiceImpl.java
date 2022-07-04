@@ -29,11 +29,10 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-    private Board board;
 
     //댓글 조회
     @Override
-    public ResCommentListDto commentList(Long id, Pageable pageable, int page) {
+    public ResCommentListDto commentsList(Long id, Pageable pageable, int page) {
 
         //삭제여부가 "N"의 값만 가져오기 위한 변수
         final String deleted = "N";
@@ -76,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
 
     //댓글 작성
     @Override
-    public Long commentWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long id) {
+    public Long commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long id) {
 
         //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
         if (boardRepository.findById(id).isPresent()) {
@@ -105,7 +104,7 @@ public class CommentServiceImpl implements CommentService {
 
     //댓글 수정
     @Override
-    public Long commentEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
+    public Long commentsEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
 
         //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
         if (boardRepository.findByBdId(bd_id).isPresent()) {
@@ -138,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
 
     //댓글 삭제 여부 변경
     @Override
-    public Long commentDelete(Long bd_id, Long cm_id, UserInfo userInfo) {
+    public Long commentsDelete(Long bd_id, Long cm_id, UserInfo userInfo) {
 
         //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
         if (boardRepository.findByBdId(bd_id).isPresent()) {
@@ -160,7 +159,7 @@ public class CommentServiceImpl implements CommentService {
 
     //개별 댓글 조회
     @Override
-    public ResCommentListDto writeComment(Long cm_id) {
+    public ResCommentListDto writeComments(Long cm_id) {
 
         Board_Comment comments = commentRepository.findByCmId(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 댓글을 찾을 수 없습니다."));

@@ -39,13 +39,13 @@ public interface UserService extends UserDetailsService {
     //페스워드 찾기
     String passwordFind(UserInfoDto userInfoDto);
 
-    //작성한 게시글 조회
+    //마이페이지 게시글 목록 조회
     ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page);
 
-    //작성한 댓글의 게시글 조회
+    //마이페이지 댓글의 게시글 조회
     ResBoardListDto myCommentsPost(UserInfo userInfo, String boardType, Pageable pageable, int page);
 
-    //작성한 댓글 조회
+    //마이페이지 댓글 조회
     ResCommentListDto myCommentsList(UserInfo userInfo, String boardType, Pageable pageable, int page);
 
 }

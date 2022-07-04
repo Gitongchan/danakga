@@ -112,7 +112,7 @@ public class UserController{
 
     /**               작성한 게시글, 댓글 조회 작업 (진모)               **/
 
-    //작성한 게시글 목록
+    //마이페이지 게시글 목록 조회
     @GetMapping("/myPostList/{type}")
     public ResBoardListDto myPostList(@LoginUser UserInfo userInfo,
                                       @PathVariable("type") String boardType,
@@ -122,7 +122,7 @@ public class UserController{
         return userService.myPostList(userInfo, boardType, pageable, page);
     }
     
-    //작성한 댓글의 게시글 목록 조회
+    //마이페이지 댓글의 게시글 조회
     @GetMapping("myCommentsPost/{type}")
     public ResBoardListDto myCommentsPost(@LoginUser UserInfo userInfo,
                                          @PathVariable("type") String boardType,
@@ -132,7 +132,7 @@ public class UserController{
         return userService.myCommentsPost(userInfo, boardType, pageable, page);
     }
     
-    //작성한 댓글 목록 조회
+    //마이페이지 댓글 목록 조회
     @GetMapping("myCommentsList/{type}")
     public ResCommentListDto myCommentsList(@LoginUser UserInfo userInfo,
                                             @PathVariable("type") String boardType,

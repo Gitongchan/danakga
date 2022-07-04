@@ -40,14 +40,14 @@ public class BoardPermitAllController {
 
     //댓글 조회
     @GetMapping("/post/comments/{id}")
-    public ResCommentListDto commentList(@PathVariable("id") Long id,
+    public ResCommentListDto commentsList(@PathVariable("id") Long id,
                                          Pageable pageable, int page) {
-        return commentService.commentList(id, pageable, page);
+        return commentService.commentsList(id, pageable, page);
     }
 
     //개별 댓글 조회
     @GetMapping("/comment/check/{cm_id}")
-    public ResCommentListDto writeComment(@PathVariable(value = "cm_id") Long cm_id) {
-        return commentService.writeComment(cm_id);
+    public ResCommentListDto writeComments(@PathVariable(value = "cm_id") Long cm_id) {
+        return commentService.writeComments(cm_id);
     }
 }

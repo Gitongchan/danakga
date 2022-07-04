@@ -29,7 +29,7 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     @Query("update Board_Comment cm set cm.cmDeleted = 'Y' where cm.cmId = :id")
     void updateDeleted(@Param("id") Long id);
 
-    //회원이 작성한 댓글 총 페이지 수, 총 갯수
+    //회원이 작성한 댓글 조회
     @Query(
             value = "select bc "
                     + "from Board_Comment bc inner join Board b on bc.board.bdId = b.bdId "

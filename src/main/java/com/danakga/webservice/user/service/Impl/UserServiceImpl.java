@@ -304,7 +304,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    //작성한 게시글 조회
+    //작성한 게시글 목록 조회
     @Override
     public ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
@@ -349,7 +349,7 @@ public class UserServiceImpl implements UserService {
         return resBoardListDto;
     }
 
-    //댓글 작성한 게시글 조회
+    //마이페이지 댓글의 게시글 조회
     @Override
     public ResBoardListDto myCommentsPost(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
@@ -396,7 +396,7 @@ public class UserServiceImpl implements UserService {
         return resBoardListDto;
     }
 
-    //작성한 댓글 조회
+    //마이페이지 댓글 조회
     @Override
     public ResCommentListDto myCommentsList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
