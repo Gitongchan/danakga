@@ -50,5 +50,4 @@ public class BoardPermitAllController {
     public ResCommentListDto writeComment(@PathVariable(value = "cm_id") Long cm_id) {
         return commentService.writeComment(cm_id);
     }
-
 }

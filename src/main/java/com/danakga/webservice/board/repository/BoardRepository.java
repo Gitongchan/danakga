@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
@@ -36,23 +37,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     void updateDeleted(@Param("id") Long id);
 
     //작성한 댓글의 게시글 조회
-    //런타임 오류있고, inner join으로 하려면 @ManyToOne(optional = false)로 하면 된다고는 함
-//    @Query(
-//            value = "select b.bdId, b.bdTitle, b.bdCreated, b.bdWriter, b.bdViews " +
-//                    "from Board b inner join Board_Comment bc on b.bdId = bc.board.bdId " +
-//                    "where bc.cmWriter = :writer and b.bdType = :boardType and b.bdDeleted = :deleted "
-//    )
-//    Page<Board> myCommentsList(@Param("cm_writer") String writer,
-//                               @Param("bd_type") String boardType,
-//                               @Param("bd_deleted") String deleted,
-//                               Pageable pageable);
-
-    //런타임 오류는 없는데 포스트맨 결과 값 안뜸
     @Query(
-            "select b from Board b " +
-            "where b = (select bc.board from Board_Comment bc join bc.board where bc.userInfo = :userInfo)"
+            value = "select b "
+                    + "from Board b inner join Board_Comment bc on b.bdId = bc.board.bdId "
+                    + "where bc.cmWriter = :cmWriter and b.bdType = :bdType and b.bdDeleted = :bdDeleted"
     )
-    Page<Board> myCommentsList(@Param("userInfo") UserInfo userInfo,
-                               Pageable pageable);
-
+    List<Board> myCommentsPost(@Param("cmWriter") String cmWriter,
+                               @Param("bdType") String boardType,
+                               @Param("bdDeleted") String bdDeleted);
 }
