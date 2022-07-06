@@ -13,4 +13,7 @@ public interface MyToolDetailRepository extends JpaRepository<MyToolDetail,Long>
 
     List<MyToolDetail> findByMyToolFolder(MyToolFolder myToolFolder);
 
+    void deleteAllByMyToolFolder(MyToolFolder myToolFolder);
+
+
 }

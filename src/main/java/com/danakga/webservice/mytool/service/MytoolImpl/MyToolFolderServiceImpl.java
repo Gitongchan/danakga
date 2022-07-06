@@ -2,6 +2,7 @@ package com.danakga.webservice.mytool.service.MytoolImpl;
 
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.mytool.dto.response.ResMyToolDetailDto;
+import com.danakga.webservice.mytool.dto.response.ResMyToolFolderDto;
 import com.danakga.webservice.mytool.model.MyToolFolder;
 import com.danakga.webservice.mytool.repository.MyToolFolderRepository;
 import com.danakga.webservice.mytool.service.MyToolFolderService;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,6 +55,26 @@ public class MyToolFolderServiceImpl implements MyToolFolderService {
                         .myToolFolder(folderName)
                         .build()
         ).getId();
+    }
+
+    //내 장비 폴더 리스트
+    @Override
+    public List<ResMyToolFolderDto> myToolFolderList(UserInfo userInfo) {
+        UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
+
+        List<MyToolFolder> myToolFolderList = myToolFolderRepository.findByUserInfo(detailUserInfo);
+
+        List<ResMyToolFolderDto> resMyToolFolderDtoList = new ArrayList<>();
+        myToolFolderList.forEach(entity->{
+                    ResMyToolFolderDto listDto = new ResMyToolFolderDto();
+                    listDto.setMyToolFolderId(entity.getId());
+                    listDto.setMyToolFolderName(entity.getMyToolFolder());
+                    resMyToolFolderDtoList.add(listDto);
+                }
+        );
+        return resMyToolFolderDtoList;
     }
 
 }

@@ -18,9 +18,11 @@ import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,22 +41,43 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
         UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
         );
+        MyToolFolder myToolFolder = myToolFolderRepository.findByIdAndUserInfo(detailSaveDto.get(0).getFolderId(),detailUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("폴더 정보를 찾을 수 없습니다.")
+        );
 
-        for (DetailSaveDto saveDto : detailSaveDto) {
-            Product myToolProduct = productRepository.findByProductId(saveDto.getProductId()).orElseThrow(
-                    () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
-            );
-            MyToolFolder myToolFolder = myToolFolderRepository.findByIdAndUserInfo(saveDto.getFolderId(),detailUserInfo).orElseThrow(
-                    () -> new CustomException.ResourceNotFoundException("폴더 정보를 찾을 수 없습니다.")
-            );
 
-            myToolDetailRepository.save(
-                    MyToolDetail.builder()
-                            .product(myToolProduct)
-                            .myToolFolder(myToolFolder)
-                            .myToolQuantity(saveDto.getMyToolQuantity())
-                            .build()
-            );
+        if(CollectionUtils.isEmpty(myToolDetailRepository.findByMyToolFolder(myToolFolder))){
+            for (DetailSaveDto saveDto : detailSaveDto) {
+                Product myToolProduct = productRepository.findByProductId(saveDto.getProductId()).orElseThrow(
+                        () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+                );
+
+                myToolDetailRepository.save(
+                        MyToolDetail.builder()
+                                .product(myToolProduct)
+                                .myToolFolder(myToolFolder)
+                                .myToolQuantity(saveDto.getMyToolQuantity())
+                                .build()
+                );
+
+            }
+        }
+        else{
+            myToolDetailRepository.deleteAllByMyToolFolder(myToolFolder);
+
+            for (DetailSaveDto saveDto : detailSaveDto) {
+                Product myToolProduct = productRepository.findByProductId(saveDto.getProductId()).orElseThrow(
+                        () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+                );
+
+                myToolDetailRepository.save(
+                        MyToolDetail.builder()
+                                .product(myToolProduct)
+                                .myToolFolder(myToolFolder)
+                                .myToolQuantity(saveDto.getMyToolQuantity())
+                                .build()
+                );
+            }
         }
 
     }

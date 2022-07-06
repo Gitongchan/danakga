@@ -207,7 +207,6 @@ public class UserServiceImpl implements UserService {
             );
             companyRepository.save(
                     CompanyInfo.builder()
-                            .companyId(companyInfoDto.getCompanyId())
                             .userInfo(registerUserInfo)
                             .companyName(companyInfoDto.getCompanyName())
                             .companyNum(companyInfoDto.getCompanyNum())

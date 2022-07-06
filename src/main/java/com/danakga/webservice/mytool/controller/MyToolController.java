@@ -6,6 +6,7 @@ import com.danakga.webservice.mytool.dto.request.DetailSaveDto;
 import com.danakga.webservice.mytool.dto.request.FolderNameDto;
 import com.danakga.webservice.mytool.dto.request.UpdateFolderNameDto;
 import com.danakga.webservice.mytool.dto.response.ResMyToolDetailDto;
+import com.danakga.webservice.mytool.dto.response.ResMyToolFolderDto;
 import com.danakga.webservice.mytool.service.MyToolDetailService;
 import com.danakga.webservice.mytool.service.MyToolFolderService;
 import com.danakga.webservice.user.model.UserInfo;
@@ -36,6 +37,12 @@ public class MyToolController {
         return new ResResultDto(result,"폴더명이 변경 되었습니다.");
     }
 
+    //내 장비 폴더명 조회
+    @GetMapping("/folder")
+    public List<ResMyToolFolderDto> folderList(@LoginUser UserInfo userInfo){
+        return myToolFolderService.myToolFolderList(userInfo);
+    }
+
     //내 장비 추가
     @PostMapping("/detail")
     public ResResultDto detailSave(@LoginUser UserInfo userInfo, @RequestBody List<DetailSaveDto> detailSaveDto){
@@ -56,5 +63,7 @@ public class MyToolController {
 
         return myToolDetailService.myToolList(userInfo,myToolFolderId);
     }
+
+
 
 }
