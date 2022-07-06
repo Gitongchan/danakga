@@ -43,15 +43,23 @@ public class WishServiceImpl implements WishService {
     }
 
     @Override
-    public Integer wishCheck(UserInfo userInfo, Long product_id) {
+    public Long wishCheck(UserInfo userInfo, Long product_id) {
         if (wishRepository.findByUserInfoAndProduct_id(userInfo,product_id).isPresent()) {
-            return -1; //같은 userid있으면 -1반환
+            return wishList(userInfo, product_id); //같은 userid있으면 -1반환
         }
-        return 1;
+        return wishDelete(userInfo,product_id);
     }
 
+
     @Override
-    public Long wishDelete(Long product_id) {
+    public Long wishDelete(UserInfo userInfo, Long product_id) {
+
+        Wish wish = wishRepository.findByUserInfoAndProduct_id(userInfo,product_id).orElseThrow(
+                ()-> new CustomException.ResourceNotFoundException("찜한 상품이 없습니다")
+        );
+
+        wishRepository.delete(wish);
+
         return null;
     }
 

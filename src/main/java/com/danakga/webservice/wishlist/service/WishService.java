@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface WishService {
     //좋아요 기능
     Long wishList(UserInfo userInfo, Long product_id);
-    Integer wishCheck(UserInfo userInfo, Long product_id);
-    Long wishDelete(Long product_id);
+    Long wishCheck(UserInfo userInfo, Long product_id);
+    Long wishDelete(UserInfo userInfo,Long product_id);
 }
