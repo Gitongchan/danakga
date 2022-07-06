@@ -27,18 +27,13 @@ public class Cart {
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
-    @Column(name = "fie_id")
-    private String fieId; // 장바구니명을 받으니 str 형으로 ~
-
-    @Column(name = "cart_amount") // 기본값 1  개수 세는 역할
+    @Column(name = "cart_amount") // 기본값 1  개수 세는 역할s
     private Integer cart_amount;
 
     @Builder
-    public Cart(Long cart_id, Product pd_id, UserInfo u_id, String fieId, Integer cart_amount ){
+    public Cart(Long cart_id, Product pd_id, UserInfo u_id,  Integer cart_amount ){
         this.cart_id = cart_id;
         this.product_id = pd_id;
-        this.userInfo = u_id;
-        this.fieId = fieId;
         this.cart_amount = cart_amount;
     }
 

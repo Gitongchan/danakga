@@ -13,6 +13,6 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart,Integer> {
 
-    @Query("select * from Cart")
-    List<Cart> selectAllCart(@Param("cart_id") Long cart_id, @Param("pd_id") Product product_id, @Param("u_id") UserInfo userInfo, @Param("fie_id") String fieId, @Param("cart_amount") Integer cart_amount);
+    Optional<Cart> findById(Integer integer);
+
 }
