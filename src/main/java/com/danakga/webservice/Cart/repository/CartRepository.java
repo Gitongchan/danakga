@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart,Integer> {
+    List<Cart> findByIdcAndCartIdAndProductIdAndUserInfoAndCartAmount(); // 몽땅 조회
 
-    @Query("select * from Cart")
-    List<Cart> selectAllCart(@Param("cart_id") Long cart_id, @Param("pd_id") Product product_id, @Param("u_id") UserInfo userInfo, @Param("fie_id") String fieId, @Param("cart_amount") Integer cart_amount);
+    Optional<Cart> findByCartId(Long cartId);// 아이디만 있나 조회
+
+
 }
