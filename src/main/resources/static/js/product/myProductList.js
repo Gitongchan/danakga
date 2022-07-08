@@ -14,7 +14,7 @@ document.getElementById('product-listBtn').addEventListener('click',async functi
                 const div = document.createElement('div');
                 div.classList.add('product-item');
                 div.innerHTML = `
-                        <div id="${item.productId}">${item.productId}</div>
+                        <div>${item.productId}</div>
                         <div class="uid">${checkID.value}</div>
                         <div class="pname">${item.productName}</div>
                         <div class="maintype">${item.productType}</div>
@@ -22,10 +22,17 @@ document.getElementById('product-listBtn').addEventListener('click',async functi
                         <div class="price">${item.productPrice}</div>
                         <div class="stock">${item.productStock}</div>
                         <div class="imageYN">${item.productPhoto===""?"N":"Y"}</div>
-                        <div class="info"><a href="/product/info?productId=${item.productId}">상세정보</a></div>
+                        <button class="info delete">삭제</button>
+                        <div class="info" id="${item.productId}"><a href="/product/info?productId=${item.productId}">상세정보</a></div>
                 `
 
                 list.appendChild(div);
+            }
+
+            for(const btn of document.querySelectorAll('.info.delete')){
+                btn.addEventListener('click',(event)=>{
+                    console.log(event.target.nextElementSibling.id);
+                })
             }
         }
     }catch (e) {
