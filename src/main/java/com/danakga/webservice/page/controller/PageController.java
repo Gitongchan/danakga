@@ -88,6 +88,9 @@ public class PageController {
         return "pages/userSignout";
     }
 
+    @GetMapping("/CompanySignout")
+    public String CompanySignout(){return "pages/CompanySignout";}
+
     @GetMapping("/addproduct")
     public String addProduct(){
         return "pages/addProduct";
