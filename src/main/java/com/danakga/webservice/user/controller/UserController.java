@@ -125,9 +125,9 @@ public class UserController{
     //마이페이지 댓글의 게시글 조회
     @GetMapping("myCommentsPost/{type}")
     public ResBoardListDto myCommentsPost(@LoginUser UserInfo userInfo,
-                                         @PathVariable("type") String boardType,
-                                         Pageable pageable,
-                                         int page) {
+                                          @PathVariable("type") String boardType,
+                                          Pageable pageable,
+                                          int page) {
 
         return userService.myCommentsPost(userInfo, boardType, pageable, page);
     }

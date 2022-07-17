@@ -35,6 +35,52 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query("update Board b set b.bdDeleted = 'Y' where b.bdId = :id")
     void updateDeleted(@Param("id") Long id);
+    
+    //전체 기준 게시판 검색
+    @Query(
+            value = "Select b from Board b "
+                    + "where (b.bdTitle Like %:content% "
+                    + "or b.bdContent Like %:content% "
+                    + "or b.bdWriter Like %:content%) "
+                    + "and b.bdType = :type and b.bdDeleted = :deleted"
+    )
+    Page<Board> searchBoard(@Param("content") String content,
+                            @Param("deleted") String deleted,
+                            @Param("type") String boardType,
+                            Pageable pageable);
+
+    //제목 기준 게시판 검색
+    @Query(
+            value = "select b "
+                    + "from Board b "
+                    + "where b.bdTitle Like %:title% and b.bdDeleted = :deleted and b.bdType = :type"
+    )
+    Page<Board> SearchBoardTitle(@Param("deleted") String deleted,
+                                 @Param("title") String content,
+                                 @Param("type") String boardType,
+                                 Pageable pageable);
+
+    //작성자 기준 게시판 검색
+    @Query(
+            value = "select b "
+                    + "from Board b "
+                    + "where b.bdWriter Like %:writer% and b.bdDeleted = :deleted and b.bdType = :type"
+    )
+    Page<Board> SearchBoardWriter(@Param("deleted") String deleted,
+                                  @Param("writer") String content,
+                                  @Param("type") String boardType,
+                                  Pageable pageable);
+
+    //내용 기준 게시판 검색
+    @Query(
+            value = "select b "
+                    + "from Board b "
+                    + "where b.bdContent Like %:content% and b.bdDeleted = :deleted and b.bdType = :type"
+    )
+    Page<Board> SearchBoardContent(@Param("deleted") String deleted,
+                                   @Param("content") String content,
+                                   @Param("type") String boardType,
+                                   Pageable pageable);
 
     //작성한 댓글의 게시글 조회
     @Query(

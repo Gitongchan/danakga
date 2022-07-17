@@ -29,4 +29,7 @@ public interface BoardService {
     //게시글 삭제 여부 변경
     Long postDelete(Long id, UserInfo userInfo);
 
+    //게시판 검색
+    ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page);
+
 }
