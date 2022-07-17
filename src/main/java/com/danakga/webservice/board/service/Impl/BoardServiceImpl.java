@@ -44,8 +44,50 @@ public class BoardServiceImpl implements BoardService {
 
     //게시판 검색
     @Override
-    public ResBoardListDto boardSearch(Pageable pageable, String category, String content) {
-        return null;
+    public ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page) {
+
+        final String deleted = "N";
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+        Page<Board> boards;
+
+        switch (category) {
+            case "제목": //게시글 제목
+                boards = boardRepository.SearchBoardTitle(deleted, content, boardType, pageable);
+                break;
+            case "내용": //게시글 내용
+                boards = boardRepository.SearchBoardContent(deleted, content, boardType, pageable);
+                break;
+            case "작성자": //작성자 아이디
+                boards = boardRepository.SearchBoardWriter(deleted, content, boardType, pageable);
+                break;
+            case "전체":
+                boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
+                break;
+            default: boards = null;
+        }
+
+        List<Board> searchList = boards.getContent();
+
+        List<Map<String, Object>> searchMap = new ArrayList<>();
+
+        ResBoardListDto resBoardListDto = new ResBoardListDto();
+
+        searchList.forEach(entity -> {
+            Map<String, Object> listMap = new HashMap<>();
+            listMap.put("bd_id", entity.getBdId());
+            listMap.put("bd_title", entity.getBdTitle());
+            listMap.put("bd_writer", entity.getBdWriter());
+            listMap.put("bd_created", entity.getBdCreated());
+            listMap.put("bd_views", entity.getBdViews());
+            listMap.put("bd_deleted", entity.getBdDeleted());
+            listMap.put("totalElement", boards.getTotalElements());
+            listMap.put("totalPage", boards.getTotalPages());
+            searchMap.add(listMap);
+        });
+
+        resBoardListDto.setLists(searchMap);
+
+        return resBoardListDto;
     }
 
     //게시판 목록
@@ -54,7 +96,7 @@ public class BoardServiceImpl implements BoardService {
 
         final String deleted = "N";
 
-        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreate").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
 
         List<Board> boardList = boards.getContent();

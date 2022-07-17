@@ -30,6 +30,6 @@ public interface BoardService {
     Long postDelete(Long id, UserInfo userInfo);
 
     //게시판 검색
-    ResBoardListDto boardSearch(Pageable pageable, String category, String content);
+    ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page);
 
 }
