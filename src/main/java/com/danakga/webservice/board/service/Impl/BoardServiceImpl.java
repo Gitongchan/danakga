@@ -70,7 +70,11 @@ public class BoardServiceImpl implements BoardService {
                 boards = boardRepository.SearchBoardWriter(deleted, content, boardType, pageable);
                 break;
             case "전체":
-                boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
+                if(content.equals("")) {
+                    boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
+                } else {
+                    boards = boardRepository.searchBoard(content, deleted, boardType, pageable);
+                }
                 break;
             default: boards = null;
         }

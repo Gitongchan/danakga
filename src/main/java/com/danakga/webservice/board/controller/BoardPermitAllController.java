@@ -53,10 +53,11 @@ public class BoardPermitAllController {
     }
     
     //게시판 검색
+    //제목 카테고리에 값이 없으면 defaultvalue로 ""지정 후 서비스 로직 실행
     @GetMapping("/list/search/{type}")
     public ResBoardListDto boardSearch(Pageable pageable, int page,
                                        @RequestParam(value = "category") String category,
-                                       @RequestParam(value = "content") String content,
+                                       @RequestParam(value = "content", defaultValue = "") String content,
                                        @PathVariable(value = "type") String boardType) {
 
         return boardService.boardSearch(pageable, category, content, boardType, page);
