@@ -7,12 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
     @GetMapping("/")
     public String index(){
-        return "testindex";
-    }
-
-    @GetMapping("/joinPage")
-    public String join(){
-        return "join";
+        return "pages/index";
     }
 
     @GetMapping("/index")
@@ -25,8 +20,8 @@ public class PageController {
         return "pages/userRegister";
     }
 
-    @GetMapping("/test/mainfunction")
-    public String testmain(){
+    @GetMapping("/product/main")
+    public String mainFunction(){
         return "pages/mainfunction";
     }
 
