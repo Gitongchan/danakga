@@ -1,0 +1,240 @@
+ <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
+    <link rel="stylesheet" href="/css/tiny-slider.css" />
+    <link rel="stylesheet" href="/css/glightbox.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+
+ </head>
+
+<body>
+<!--[if lte IE 9]>
+<p class="browserupgrade">
+    You are using an <strong>outdated</strong> browser. Please
+    <a href="https://browsehappy.com/">upgrade your browser</a> to improve
+    your experience and security.
+</p>
+<![endif]-->
+<input type="hidden" id="checkUserId"/>
+<input type="hidden" id="checkCompanyId"/>
+<input type="hidden" id="checkName"/>
+<!-- Preloader -->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="preloader-icon">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>
+<!-- /End Preloader -->
+<!-- Start Header Area -->
+<header class="header navbar-area">
+
+    <!-- Start Topbar -->
+    <div class="topbar">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="top-left">
+                        <ul class="menu-top-link"></ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="top-middle">
+                        <ul class="useful-links">
+                            <li><a href="index.html">홈으로</a></li>
+                            <li><a href="about-us.html">About Us</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="top-end" id="user-info">
+                        <div class="user">
+                            <i class="lni lni-user"></i>
+                        </div>
+                        로그인이 필요합니다!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Topbar -->
+
+    <!-- Start Header Middle -->
+    <div class="header-middle">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-3 col-7">
+                    <!-- Start Header Logo -->
+                    <a class="navbar-brand" href="/index">
+                        <img src="/images/logo/logo.svg" alt="Logo" />
+                    </a>
+                    <!-- End Header Logo -->
+                </div>
+                <div class="col-lg-5 col-md-7 d-xs-none">
+                    <!-- Start Main Menu Search -->
+                    <div class="main-menu-search">
+                        <!-- navbar search start -->
+                        <div class="navbar-search search-style-5">
+                            <div class="search-select">
+                                <div class="select-position">
+                                    <select id="select1">
+                                        <option selected>All</option>
+                                        <option value="1">option 01</option>
+                                        <option value="2">option 02</option>
+                                        <option value="3">option 03</option>
+                                        <option value="4">option 04</option>
+                                        <option value="5">option 05</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="search-input">
+                                <input type="text" placeholder="Search" />
+                            </div>
+                            <div class="search-btn">
+                                <button><i class="lni lni-search-alt"></i></button>
+                            </div>
+                        </div>
+                        <!-- navbar search Ends -->
+                    </div>
+                    <!-- End Main Menu Search -->
+                </div>
+                <div class="col-lg-4 col-md-2 col-5">
+                    <div class="middle-right-area">
+                        <div class="nav-hotline">
+                            <!-- <i class="lni lni-phone"></i>
+                            <h3>
+                              Hotline:
+                              <span>(+100) 123 456 7890</span>
+                            </h3> -->
+                        </div>
+                        <div class="navbar-cart">
+                            <div class="wishlist" id="wishlist">
+                                <button onclick="location.href='/login'">로그인</button>
+                                <!-- <a href="javascript:void(0)">
+                                    <i class="lni lni-heart"></i>
+                                    <span class="total-items">0</span>
+                                  </a> -->
+                            </div>
+                            <div class="cart-items" id="cart-items">
+                                <button onclick="location.href='/register'">회원가입</button>
+
+                                <!--/ End Shopping Item -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Header Middle -->
+
+    <!-- Start Header Bottom -->
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 col-md-6 col-12">
+                <div class="nav-inner">
+                    <!-- Start Mega Category Menu -->
+                    <div class="mega-category-menu">
+                        <span class="cat-button"><i class="lni lni-menu"></i></span>
+<!--                        <ul class="sub-category">-->
+<!--                            <li><a href="product-grids.html">Electronics <i class="lni lni-chevron-right"></i></a>-->
+<!--                                <ul class="inner-sub-category">-->
+<!--                                    <li><a href="product-grids.html">Digital Cameras</a></li>-->
+<!--                                    <li><a href="product-grids.html">Camcorders</a></li>-->
+<!--                                    <li><a href="product-grids.html">Camera Drones</a></li>-->
+<!--                                    <li><a href="product-grids.html">Smart Watches</a></li>-->
+<!--                                    <li><a href="product-grids.html">Headphones</a></li>-->
+<!--                                    <li><a href="product-grids.html">MP3 Players</a></li>-->
+<!--                                    <li><a href="product-grids.html">Microphones</a></li>-->
+<!--                                    <li><a href="product-grids.html">Chargers</a></li>-->
+<!--                                    <li><a href="product-grids.html">Batteries</a></li>-->
+<!--                                    <li><a href="product-grids.html">Cables & Adapters</a></li>-->
+<!--                                </ul>-->
+<!--                            </li>-->
+<!--                            <li><a href="product-grids.html">accessories</a></li>-->
+<!--                            <li><a href="product-grids.html">Televisions</a></li>-->
+<!--                            <li><a href="product-grids.html">best selling</a></li>-->
+<!--                            <li><a href="product-grids.html">top 100 offer</a></li>-->
+<!--                            <li><a href="product-grids.html">sunglass</a></li>-->
+<!--                            <li><a href="product-grids.html">watch</a></li>-->
+<!--                            <li><a href="product-grids.html">man’s product</a></li>-->
+<!--                            <li><a href="product-grids.html">Home Audio & Theater</a></li>-->
+<!--                            <li><a href="product-grids.html">Computers & Tablets </a></li>-->
+<!--                            <li><a href="product-grids.html">Video Games </a></li>-->
+<!--                            <li><a href="product-grids.html">Home Appliances </a></li>-->
+<!--                        </ul>-->
+                    </div>
+                    <!-- End Mega Category Menu -->
+                    <!-- Start Navbar -->
+                    <nav class="navbar navbar-expand-lg">
+                        <button class="navbar-toggler mobile-menu-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                            <span class="toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                            <ul id="nav" class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <a href="/index" class="active" aria-label="Toggle navigation">메인</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/test/mainfunc" aria-label="Toggle navigation">모든 상품</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/product/grid" aria-label="Toggle navigation">신상품</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/product/grid" aria-label="Toggle navigation">인기상품</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="dd-menu collapsed" href="javascript:void(0)" data-bs-toggle="collapse"
+                                       data-bs-target="#submenu-1-4" aria-controls="navbarSupportedContent"
+                                       aria-expanded="false" aria-label="Toggle navigation">커뮤니티</a>
+                                    <ul class="sub-menu collapse" id="submenu-1-4">
+                                        <li class="nav-item"><a href="/board/basic">자유게시판</a>
+                                        </li>
+                                        <li class="nav-item"><a href="/board/qa">문의게시판</a></li>
+                                        <li class="nav-item"><a href="/board/faq">자주 묻는 질문</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/board" aria-label="Toggle navigation">1:1문의</a>
+                                </li>
+                            </ul>
+                        </div> <!-- navbar collapse -->
+                    </nav>
+                    <!-- End Navbar -->
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <!-- Start Nav Social -->
+                <div class="nav-social">
+                    <h5 class="title">공식 SNS계정</h5>
+                    <ul>
+                        <li>
+                            <a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)"><i class="lni lni-twitter-original"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)"><i class="lni lni-instagram"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)"><i class="lni lni-skype"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- End Nav Social -->
+            </div>
+        </div>
+    </div>
+    <!-- End Header Bottom -->
+</header>
+<!-- End Header Area -->

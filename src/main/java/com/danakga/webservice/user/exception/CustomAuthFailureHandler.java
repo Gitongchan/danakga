@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -37,7 +38,7 @@ public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHand
                 errorMessage = "알 수 없는 이유로 로그인에 실패하였습니다 관리자에게 문의하세요.";
             }
 
-        setDefaultFailureUrl("/login?error=true&exception="+ URLEncoder.encode(errorMessage, "UTF-8"));
+        setDefaultFailureUrl("/login?error=true&exception="+ URLEncoder.encode(errorMessage, StandardCharsets.UTF_8));
 
         super.onAuthenticationFailure(request, response, exception);
         }

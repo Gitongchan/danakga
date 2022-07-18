@@ -1,0 +1,62 @@
+#my-page-nav{
+    margin-bottom: 15px;
+}
+
+#NAVtoggle{
+    width: 100%;
+}
+
+
+
+.mypage_article{
+    width:100%
+}
+.mypage_list{
+    width: 120px;
+    height: 500px;
+    border: #8a8a8a 1px solid;
+    border-radius: 15px;
+    margin-right: 30px;
+}
+
+.mypage_list ul{
+    text-align: center;
+    margin-top : 20px;
+}
+
+.mypage_list ul li{
+    text-align: center;
+    margin-bottom : 20px;
+}
+
+.mypage_list ul li a{
+    color:black;
+}
+
+.mypage_list ul li a:hover{
+    color:#0167f3;
+}
+
+.mypage_signout{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signout_box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px;
+    width: 400px;
+    height: 400px;
+    border: black 1px solid;
+    border-radius: 15px;
+}
+
+#signout_form{
+    margin-bottom: 20px;
+}
+
