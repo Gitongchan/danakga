@@ -7,7 +7,10 @@ import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,13 +54,20 @@ public class BoardPermitAllController {
 
         return commentService.writeComments(cm_id);
     }
-    
+
     //게시판 검색
-    @GetMapping("/list/search/{type}")
+    //제목 카테고리에 값이 없으면 defaultvalue로 ""지정 후 서비스 로직 실행,
+    //content값이 들어오지 않았을 때 url을 하나 더 설정하고 content값이 null값으로 처리되어 넘어가지 않게 ""값 담아서 보냄
+    @GetMapping({"/list/search/{type}/{category}/{content}", "/list/search/{type}/{category}"})
     public ResBoardListDto boardSearch(Pageable pageable, int page,
-                                       @RequestParam(value = "category") String category,
-                                       @RequestParam(value = "content") String content,
+                                       @PathVariable(value = "category") String category,
+                                       @PathVariable(value = "content", required = false) String content,
                                        @PathVariable(value = "type") String boardType) {
+
+        //content에 null값 들어가서 오류 발생 시키지 않게 2번째 url 사용 시 ""값 담아서 서비스로 전달
+        if(content == null) {
+            content = "";
+        }
 
         return boardService.boardSearch(pageable, category, content, boardType, page);
     }

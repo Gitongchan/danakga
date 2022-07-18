@@ -35,6 +35,19 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query("update Board b set b.bdDeleted = 'Y' where b.bdId = :id")
     void updateDeleted(@Param("id") Long id);
+    
+    //전체 기준 게시판 검색
+    @Query(
+            value = "Select b from Board b "
+                    + "where (b.bdTitle Like %:content% "
+                    + "or b.bdContent Like %:content% "
+                    + "or b.bdWriter Like %:content%) "
+                    + "and b.bdType = :type and b.bdDeleted = :deleted"
+    )
+    Page<Board> searchBoard(@Param("content") String content,
+                            @Param("deleted") String deleted,
+                            @Param("type") String boardType,
+                            Pageable pageable);
 
     //제목으로 게시판 검색
     @Query(

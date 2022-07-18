@@ -70,7 +70,11 @@ public class BoardServiceImpl implements BoardService {
                 boards = boardRepository.SearchBoardWriter(deleted, content, boardType, pageable);
                 break;
             case "전체":
-                boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
+                if(content.equals("")) {
+                    boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
+                } else {
+                    boards = boardRepository.searchBoard(content, deleted, boardType, pageable);
+                }
                 break;
             default: boards = null;
         }
@@ -81,7 +85,7 @@ public class BoardServiceImpl implements BoardService {
             List<Board> searchList = boards.getContent();
 
             List<Map<String, Object>> searchMap = new ArrayList<>();
-            
+
             searchList.forEach(entity -> {
                 Map<String, Object> listMap = new HashMap<>();
                 listMap.put("bd_id", entity.getBdId());
@@ -107,7 +111,7 @@ public class BoardServiceImpl implements BoardService {
 
         final String deleted = "N";
 
-        pageable = PageRequest.of(page, 10, Sort.by("bdCreate").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
 
         List<Board> boardList = boards.getContent();
