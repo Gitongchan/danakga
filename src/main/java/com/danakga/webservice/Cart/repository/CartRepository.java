@@ -12,6 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart,Integer> {
+    List<Cart> findByIdcAndCartIdAndProductIdAndUserInfoAndCartAmount(); // 몽땅 조회
+
+    Optional<Cart> findByCartId(Long cartId);// 아이디만 있나 조회
+
+
 
     Optional<Cart> findById(Integer integer);
 

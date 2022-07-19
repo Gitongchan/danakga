@@ -1,5 +1,6 @@
 package com.danakga.webservice.Cart.dto.request;
 
+import com.danakga.webservice.user.model.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // 모든 필드 값을 파라미터로 받는 생성자를 만듬
 public class CartDto {
     //장바구니 아이디
-    private Long cart_id;
+    private Long cartId;
     // 상품아이디
-    private Long pd_id;
+    private Long productId;
     //장바구니 명 (상품명인듯)
-    private String fieId;
+    private UserInfo userInfo;
     // 상품 수량
-    private Integer cart_amount;
+    private Integer cartAmount;
 }

@@ -17,24 +17,25 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
-    private Long cart_id;
+    private Long cartId;
 
     @ManyToOne
     @JoinColumn(name = "pd_id")
-    private Product product_id;
+    private Product productId;
 
     @ManyToOne
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
     @Column(name = "cart_amount") // 기본값 1  개수 세는 역할s
-    private Integer cart_amount;
+    private Integer cartAmount;
 
     @Builder
-    public Cart(Long cart_id, Product pd_id, UserInfo u_id,  Integer cart_amount ){
-        this.cart_id = cart_id;
-        this.product_id = pd_id;
-        this.cart_amount = cart_amount;
+    public Cart(Long cartId, Product productId, UserInfo userInfo,  Integer cartAmount ){
+        this.cartId = cartId;
+        this.productId = productId;
+        this.userInfo = userInfo;
+        this.cartAmount = cartAmount;
     }
 
 }
