@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface CartService {
     //장바구니 추가 -> insert
-    Long cartPut( UserInfo userInfo, Long cartId, Long productId,Integer cartAmount);
+    Long cartPut(UserInfo userInfo, Cart cart, Long productId);
     //장바구니 목록 -> select
-    List<Cart> cartList();
+    //List<Cart> cartList();
     // 수량 증가
-    void addItem(Cart cart , Long cartId);
+    //void addItem(Cart cart , Long cartId);
     // 수량 삭제
-    void subItem(Cart cart , Long cartId);
+    //void subItem(Cart cart , Long cartId);
 
     //장바구니 상품 삭제 -> 수량 삭제 -> update
 

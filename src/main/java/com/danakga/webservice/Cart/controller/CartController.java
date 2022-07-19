@@ -16,18 +16,11 @@ public class CartController {
     private final CartService cartService;
     @PostMapping(value = "/cart_put")
     public ResResultDto cartPut(@LoginUser UserInfo userInfo, CartDto cartDto){
-        Long result = cartService.cartPut(userInfo,cartDto.getCartId(),cartDto.getProductId(), cartDto.getCartAmount());
-        return new ResResultDto(result,"장바구니 등록 완료했습니다.");
+        //Long result = cartService.cartPut(userInfo,cartDto.getCartId(),cartDto.getProductId(), cartDto.getCartAmount(), cartDto.getPrice());
+        return null;
+                //new ResResultDto(result,"장바구니 등록 완료했습니다.");
+
     }
 
-    @PostMapping(value="/cart_add")
-    public void cartAdd(Cart cart , CartDto cartDto){
-        cartService.addItem(cart, cartDto.getCartId());
-    }
-
-    @PostMapping(value="/cart_sub")
-    public void cartSub(Cart cart , CartDto cartDto){
-        cartService.subItem(cart, cartDto.getCartId());
-    }
 
 }
