@@ -17,4 +17,6 @@ public class CartDto {
     private UserInfo userInfo;
     // 상품 수량
     private Integer cartAmount;
+
+    private Integer price; // 가격
 }
