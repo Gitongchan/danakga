@@ -46,38 +46,23 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
         );
 
 
-        if(CollectionUtils.isEmpty(myToolDetailRepository.findByMyToolFolder(myToolFolder))){
-            for (DetailSaveDto saveDto : detailSaveDto) {
-                Product myToolProduct = productRepository.findByProductId(saveDto.getProductId()).orElseThrow(
-                        () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
-                );
-
-                myToolDetailRepository.save(
-                        MyToolDetail.builder()
-                                .product(myToolProduct)
-                                .myToolFolder(myToolFolder)
-                                .myToolQuantity(saveDto.getMyToolQuantity())
-                                .build()
-                );
-
-            }
-        }
-        else{
+        //폴더에 등록된 장비가 있으면 삭제후 변경된 목록으로 재등록
+        if(!CollectionUtils.isEmpty(myToolDetailRepository.findByMyToolFolder(myToolFolder))){
             myToolDetailRepository.deleteAllByMyToolFolder(myToolFolder);
+        }
+        for (DetailSaveDto saveDto : detailSaveDto) {
+            Product myToolProduct = productRepository.findByProductId(saveDto.getProductId()).orElseThrow(
+                    () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            );
 
-            for (DetailSaveDto saveDto : detailSaveDto) {
-                Product myToolProduct = productRepository.findByProductId(saveDto.getProductId()).orElseThrow(
-                        () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
-                );
+            myToolDetailRepository.save(
+                    MyToolDetail.builder()
+                            .product(myToolProduct)
+                            .myToolFolder(myToolFolder)
+                            .myToolQuantity(saveDto.getMyToolQuantity())
+                            .build()
+            );
 
-                myToolDetailRepository.save(
-                        MyToolDetail.builder()
-                                .product(myToolProduct)
-                                .myToolFolder(myToolFolder)
-                                .myToolQuantity(saveDto.getMyToolQuantity())
-                                .build()
-                );
-            }
         }
 
     }
