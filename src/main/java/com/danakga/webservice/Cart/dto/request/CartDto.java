@@ -19,4 +19,16 @@ public class CartDto {
     private Integer cartAmount;
 
     private Integer price; // 가격
+
+
+    //가격이랑 수량 변경
+    public void addCount(int cartAmount){
+        this.cartAmount += cartAmount;
+    }
+
+    public void addPrice(int price){
+        this.price += price;
+    }
+
+
 }
