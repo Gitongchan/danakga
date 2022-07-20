@@ -17,6 +17,9 @@ public class ResMyToolDetailDto {
     //내 장비 아이디
     private Long myToolId;
 
+    //등록된 상품 아이디
+    private Long myToolProductId;
+
     //상품 종류
     private String myToolProductType;
 

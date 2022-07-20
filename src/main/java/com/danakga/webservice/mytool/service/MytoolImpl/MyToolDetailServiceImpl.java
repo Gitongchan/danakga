@@ -120,6 +120,7 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
                     ResMyToolDetailDto listDto = new ResMyToolDetailDto();
                     listDto.setMyToolFolderId(entity.getMyToolFolder().getId());
                     listDto.setMyToolId(entity.getId());
+                    listDto.setMyToolProductId(entity.getProduct().getProductId());
                     listDto.setMyToolProductType(entity.getProduct().getProductType());
                     listDto.setMyToolProductSubType(entity.getProduct().getProductSubType());
                     listDto.setMyToolProductBrand(entity.getProduct().getProductBrand());
