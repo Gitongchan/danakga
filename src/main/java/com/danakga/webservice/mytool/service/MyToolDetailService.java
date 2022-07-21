@@ -12,7 +12,7 @@ public interface MyToolDetailService {
     void MyToolDetailSave(UserInfo userInfo,List<DetailSaveDto> detailSaveDto);
     
     //목록에서 장비 제거
-    void MyToolDelete(UserInfo userInfo , MyToolIdDto myToolIdDto);
+    void MyToolDelete(UserInfo userInfo , List<MyToolIdDto> myToolIdDto);
 
     //내 장비 리스트
     List<ResMyToolDetailDto> myToolList(UserInfo userInfo, Long myToolFolderId);

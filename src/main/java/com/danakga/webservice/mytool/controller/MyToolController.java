@@ -55,9 +55,9 @@ public class MyToolController {
         return new ResResultDto(1L,"장비가 추가 되었습니다.");
     }
 
-    //내 장비 삭제
+    //선택한 장비 삭제
     @DeleteMapping("/detail")
-    public ResResultDto detailDelete(@LoginUser UserInfo userInfo, @RequestBody MyToolIdDto myToolIdDto){
+    public ResResultDto detailDelete(@LoginUser UserInfo userInfo, @RequestBody List<MyToolIdDto> myToolIdDto){
         myToolDetailService.MyToolDelete(userInfo,myToolIdDto);
         return new ResResultDto(1L,"장비를 삭제 했습니다.");
     }

@@ -67,24 +67,25 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
 
     }
 
-    //내 장비 목록에 저장된 제품 삭제
+    //내 장비 목록에 저장된 선택한 제품 삭제
     @Transactional
     @Override
-    public void MyToolDelete(UserInfo userInfo, MyToolIdDto myToolIdDto) {
+    public void MyToolDelete(UserInfo userInfo, List<MyToolIdDto> myToolIdDto) {
         UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
         );
 
-        MyToolFolder myToolFolder = myToolFolderRepository.findByIdAndUserInfo(myToolIdDto.getMyToolFolderId(),detailUserInfo).orElseThrow(
+        MyToolFolder myToolFolder = myToolFolderRepository.findByIdAndUserInfo(myToolIdDto.get(0).getMyToolFolderId(),detailUserInfo).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("폴더 정보를 찾을 수 없습니다.")
         );
 
-        MyToolDetail myToolDetail = myToolDetailRepository.findByIdAndMyToolFolder(myToolIdDto.getMyToolId(),myToolFolder).orElseThrow(
-                () -> new CustomException.ResourceNotFoundException("저장된 제품 정보를 찾을 수 없습니다.")
-        );
-        
-        myToolDetailRepository.delete(myToolDetail);
+        for (MyToolIdDto deleteDto : myToolIdDto) {
+            MyToolDetail myToolDetail = myToolDetailRepository.findByIdAndMyToolFolder(deleteDto.getMyToolId(),myToolFolder).orElseThrow(
+                    () -> new CustomException.ResourceNotFoundException("저장된 제품 정보를 찾을 수 없습니다.")
+            );
 
+            myToolDetailRepository.delete(myToolDetail);
+        }
     }
 
     //내장비 리스트 / 폴더별로 정렬
