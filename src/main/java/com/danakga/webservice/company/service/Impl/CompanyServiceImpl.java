@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
@@ -32,6 +31,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     //사업자 회원 등록
+    @Transactional
     @Override
     public Long companyRegister(CompanyUserInfoDto companyUserInfoDto) {
 
@@ -76,6 +76,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     //사업자 정보 수정
+    @Transactional
     @Override
     public Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
         if(companyRepository.findByUserInfo(userInfo).isEmpty()){
@@ -111,6 +112,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     //사업자탈퇴
+    @Transactional
     @Override
     public Long companyDeleted(UserInfo userInfo,String password) {
 
