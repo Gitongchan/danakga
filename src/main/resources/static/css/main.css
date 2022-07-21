@@ -4594,9 +4594,9 @@ blockquote span {
   text-transform: capitalize;
 }
 
+/*수정*/
 .post-comments .comments-list li {
   padding: 30px;
-  padding-left: 130px;
   position: relative;
   font-size: 14px;
   border-radius: 4px;
@@ -4634,7 +4634,7 @@ blockquote span {
 }
 
 .post-comments .comments-list li .comment-desc .desc-top {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   position: relative;
   display: block;
 }
@@ -4650,37 +4650,103 @@ blockquote span {
   font-weight: 400;
 }
 
-.post-comments .comments-list li .comment-desc .desc-top .reply-link {
-  position: absolute;
-  right: 0;
-  top: 0;
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 500;
-  z-index: 2;
-  background-color: transparent;
-  border-radius: 5px;
-  color: #888;
-}
+/*.post-comments .comments-list li .comment-desc .desc-top button {*/
+/*  border: 0;*/
+/*}*/
+/*!*삭제 수정 만듬*!*/
+/*.post-comments .comments-list li .comment-desc .desc-top .delete-link {*/
+/*  position: absolute;*/
+/*  left: 300px;*/
+/*  top: 0;*/
+/*  display: inline-block;*/
+/*  font-size: 13px;*/
+/*  font-weight: 500;*/
+/*  z-index: 2;*/
+/*  background-color: transparent;*/
+/*  border-radius: 5px;*/
+/*  color: #888;*/
+/*}*/
+
+/*.post-comments .comments-list li .comment-desc .desc-top .edit-link {*/
+/*  position: absolute;*/
+/*  top: 0;*/
+/*  display: inline-block;*/
+/*  font-size: 13px;*/
+/*  font-weight: 500;*/
+/*  z-index: 2;*/
+/*  background-color: transparent;*/
+/*  border-radius: 5px;*/
+/*  color: #888;*/
+/*}*/
+
+/*.post-comments .comments-list li .comment-desc .desc-top .reply-link {*/
+/*  position: absolute;*/
+/*  right: 0;*/
+/*  top: 0;*/
+/*  display: inline-block;*/
+/*  font-size: 13px;*/
+/*  font-weight: 500;*/
+/*  z-index: 2;*/
+/*  background-color: transparent;*/
+/*  border-radius: 5px;*/
+/*  color: #888;*/
+/*}*/
 
 @media (max-width: 767px) {
-  .post-comments .comments-list li .comment-desc .desc-top .reply-link {
-    position: relative;
-    display: block;
-    margin-top: 15px;
-  }
+  /*.post-comments .comments-list li .comment-desc .desc-top .reply-link {*/
+  /*  position: relative;*/
+  /*  display: inline-block;*/
+  /*  margin-top: 15px;*/
+  /*}*/
+
+  /*.post-comments .comments-list li .comment-desc .desc-top .edit-link {*/
+  /*  position: relative;*/
+  /*  display: inline-block;*/
+  /*  margin-top: 15px;*/
+  /*}*/
+
+  /*.post-comments .comments-list li .comment-desc .desc-top .delete-link {*/
+  /*  position: relative;*/
+  /*  display: inline-block;*/
+  /*  margin-top: 15px;*/
+  /*  left:0;*/
+  /*}*/
+
 }
 
 .post-comments .comments-list li .comment-desc .desc-top .reply-link:hover {
   color: #0167F3;
 }
 
-.post-comments .comments-list li .comment-desc .desc-top .reply-link i {
-  margin-right: 5px;
-  font-size: 16px;
-  position: relative;
-  top: 1px;
+/*.post-comments .comments-list li .comment-desc .desc-top .reply-link i {*/
+/*  margin-right: 5px;*/
+/*  font-size: 16px;*/
+/*  position: relative;*/
+/*  top: 1px;*/
+/*}*/
+
+.post-comments .comments-list li .comment-desc .desc-top .edit-link:hover {
+  color: #0167F3;
 }
+
+/*.post-comments .comments-list li .comment-desc .desc-top .edit-link i {*/
+/*  margin-right: 5px;*/
+/*  font-size: 16px;*/
+/*  position: relative;*/
+/*  top: 1px;*/
+/*}*/
+
+.post-comments .comments-list li .comment-desc .desc-top .delete-link:hover {
+  color: #0167F3;
+}
+
+/*.post-comments .comments-list li .comment-desc .desc-top .delete-link i {*/
+/*  margin-right: 5px;*/
+/*  font-size: 16px;*/
+/*  position: relative;*/
+/*  top: 1px;*/
+/*}*/
+
 
 .post-comments .comments-list li .comment-desc p {
   font-weight: 400;
@@ -7659,6 +7725,8 @@ blockquote span {
 .footer {
   background-color: #081828;
   position: relative;
+  /*변경*/
+  margin-top:100px;
   /* Single Footer */
   /* End Single Footer */
 }

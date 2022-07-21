@@ -60,8 +60,11 @@ public class PageController {
         return "pages/edit-product";
     }
 
-    @GetMapping("/board") //조회
-    public String boardlist(){return "pages/boardlist";}
+    @GetMapping("/board/basic") //자유  게시판 조회
+    public String basicBoardList(){return "pages/basic-boardlist";}
+
+    @GetMapping("/board/qa") //문의 게시판 조회
+    public String qaBoardList(){return "pages/qa-boardlist";}
 
     @GetMapping("/board/post") //작성
     public String boardEdition(){return "pages/boardPost";}
@@ -71,6 +74,9 @@ public class PageController {
 
     @GetMapping("/board/edit") //게시글 수정
     public String boardEdit(){return "pages/boardEdit";}
+
+    @GetMapping("/board/faq") //자주묻는질문
+    public String boardFAQ(){return "pages/faq";}
 
     @GetMapping("/user/edit")
     public String myPageEdit(){
@@ -82,6 +88,9 @@ public class PageController {
         return "pages/userSignout";
     }
 
+    @GetMapping("/CompanySignout")
+    public String CompanySignout(){return "pages/CompanySignout";}
+
     @GetMapping("/addproduct")
     public String addProduct(){
         return "pages/addProduct";
@@ -91,4 +100,6 @@ public class PageController {
     public String productgrid(){
         return "pages/product-grids";
     }
+    @GetMapping("/userchangecompany")
+    public  String userchangecompany(){return "pages/userchangecompany";}
 }

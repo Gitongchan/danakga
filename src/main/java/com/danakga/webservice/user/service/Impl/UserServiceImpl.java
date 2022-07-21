@@ -25,8 +25,8 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
 
-     private final UserRepository userRepository;
-     private final CompanyRepository companyRepository;
+    @Autowired private final UserRepository userRepository;
+    @Autowired private final CompanyRepository companyRepository;
 
 
     @Override
@@ -207,6 +207,7 @@ public class UserServiceImpl implements UserService {
             );
             companyRepository.save(
                     CompanyInfo.builder()
+                            .companyId(companyInfoDto.getCompanyId())
                             .userInfo(registerUserInfo)
                             .companyName(companyInfoDto.getCompanyName())
                             .companyNum(companyInfoDto.getCompanyNum())

@@ -1,6 +1,8 @@
 {{>pages/header1}}
 
 <link rel="stylesheet" href="/css/board.css">
+<link rel="stylesheet" href="/css/comment.css">
+
 {{>pages/header2}}
 
 <!-- Start Breadcrumbs -->
@@ -50,108 +52,52 @@
                         </div>
                         <!-- Comments -->
                         <div class="post-comments">
-                            <h3 class="comment-title"><span>Post comments</span></h3>
-                            <ul class="comments-list">
-                                <li>
-                                    <div class="comment-img">
-                                        <img src="https://via.placeholder.com/150x150" alt="img">
-                                    </div>
-                                    <div class="comment-desc">
-                                        <div class="desc-top">
-                                            <h6>Arista Williamson</h6>
-                                            <span class="date">19th May 2023</span>
-                                            <a href="javascript:void(0)" class="reply-link"><i
-                                                    class="lni lni-reply"></i>Reply</a>
-                                        </div>
-                                        <p>
-                                            Donec aliquam ex ut odio dictum, ut consequat leo interdum. Aenean nunc
-                                            ipsum, blandit eu enim sed, facilisis convallis orci. Etiam commodo
-                                            lectus
-                                            quis vulputate tincidunt. Mauris tristique velit eu magna maximus
-                                            condimentum.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="children">
-                                    <div class="comment-img">
-                                        <img src="https://via.placeholder.com/150x150" alt="img">
-                                    </div>
-                                    <div class="comment-desc">
-                                        <div class="desc-top">
-                                            <h6>Rosalina Kelian</h6>
-                                            <span class="date">15th May 2023</span>
-                                            <a href="javascript:void(0)" class="reply-link"><i
-                                                    class="lni lni-reply"></i>Reply</a>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="comment-img">
-                                        <img src="https://via.placeholder.com/150x150" alt="img">
-                                    </div>
-                                    <div class="comment-desc">
-                                        <div class="desc-top">
-                                            <h6>Alex Jemmi</h6>
-                                            <span class="date">12th May 2023</span>
-                                            <a href="javascript:void(0)" class="reply-link"><i
-                                                    class="lni lni-reply"></i>Reply</a>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                                            veniam.
-                                        </p>
-                                    </div>
-                                </li>
+                            <h3 class="comment-title"><span>댓글 목록</span></h3>
+                            <ul class="comments-list" id="comment-list">
+                                <!--                                <li class="children">-->
+                                <!--                                    <div class="comment-img">-->
+                                <!--                                        <img src="https://via.placeholder.com/150x150" alt="img">-->
+                                <!--                                    </div>-->
+                                <!--                                    <div class="comment-desc">-->
+                                <!--                                        <div class="desc-top">-->
+                                <!--                                            <h6>Rosalina Kelian</h6>-->
+                                <!--                                            <span class="date">15th May 2023</span>-->
+                                <!--                                            <a href="javascript:void(0)" class="reply-link"><i-->
+                                <!--                                                    class="lni lni-reply"></i>Reply</a>-->
+                                <!--                                        </div>-->
+                                <!--                                        <p>-->
+                                <!--                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod-->
+                                <!--                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim.-->
+                                <!--                                        </p>-->
+                                <!--                                    </div>-->
+                                <!--                                </li>-->
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <ul class="pagination">
                             </ul>
                         </div>
                         <div class="comment-form">
-                            <h3 class="comment-reply-title">Leave a comment</h3>
-                            <form action="#" method="POST">
+                            <h3 class="comment-reply-title">댓글 작성</h3>
+                            <form action="#">
                                 <div class="row">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-box form-group">
-                                            <input type="text" name="name" class="form-control form-control-custom"
-                                                   placeholder="Website URL" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-box form-group">
-                                            <input type="text" name="email" class="form-control form-control-custom"
-                                                   placeholder="Your Name" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-box form-group">
-                                            <input type="email" name="email"
-                                                   class="form-control form-control-custom" placeholder="Your Email" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="form-box form-group">
-                                            <input type="text" name="name" class="form-control form-control-custom"
-                                                   placeholder="Phone Number" />
-                                        </div>
-                                    </div>
                                     <div class="col-12">
                                         <div class="form-box form-group">
-                                                <textarea name="#" class="form-control form-control-custom"
-                                                          placeholder="Your Comments"></textarea>
+                                                <textarea name="#" id="comment-text"
+                                                          class="form-control form-control-custom"
+                                                          placeholder="댓글을 입력하세요!"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="button">
-                                            <button type="submit" class="btn">Post Comment</button>
+                                            <button class="btn" id="comment-post">작성</button>
                                         </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -163,5 +109,7 @@
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
 <script src="/js/board/boardinfo.js"></script>
+<script src="/js/board/boardComment.js"></script>
+<script src="/js/board/CommentPagination.js"></script>
 
 {{>pages/footer2}}

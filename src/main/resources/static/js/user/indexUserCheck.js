@@ -1,10 +1,12 @@
 //토근값 가져오기
 const token = document.querySelector('meta[name="_csrf"]').content;
+const header = document.querySelector('meta[name="_csrf_header"]').content;
 
 //로그인 안되어있다면 로그인, 회원가입 > 로그인 되어있다면 내정보|로그아웃
 
 const checkID = document.getElementById('checkUserId');
 const checkCompany = document.getElementById('checkCompanyId');
+const checkName = document.getElementById('checkName');
 
 const cart = document.getElementById('cart-items');
 const wish = document.getElementById('wishlist');
@@ -16,6 +18,7 @@ const loginInfo = document.getElementById('user-info');
         if(res.status === 200){
             const data = await res.json();
             checkID.value = data.id;
+            checkName.value = data.userid;
             cart.innerHTML = `
             <a href="javascript:void(0)" class="main-btn">
                                   <i class="lni lni-cart"></i>
