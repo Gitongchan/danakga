@@ -77,4 +77,22 @@ public class MyToolFolderServiceImpl implements MyToolFolderService {
         return resMyToolFolderDtoList;
     }
 
+    //폴더 삭제
+    @Transactional
+    @Override
+    public Long MyToolFolderDelete(UserInfo userInfo, Long folderId) {
+
+        UserInfo folderUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
+        MyToolFolder deleteMyToolFolder = myToolFolderRepository.findByIdAndUserInfo(folderId,folderUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("폴더 정보를 찾을 수 없습니다.")
+        );
+
+        myToolFolderRepository.delete(deleteMyToolFolder);
+
+        return deleteMyToolFolder.getId();
+
+    }
+
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -27,6 +29,7 @@ public class MyToolDetail {
     //내 장비 폴더
     @ManyToOne
     @JoinColumn(name = "my_tool_folder")
+    @OnDelete(action = OnDeleteAction.CASCADE) // 상위 폴더가 삭제되면 폴더 목록 데이터도 같이 삭제된다
     private MyToolFolder myToolFolder;
 
     //내 장비 수량

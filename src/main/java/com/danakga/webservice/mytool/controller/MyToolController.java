@@ -1,10 +1,7 @@
 package com.danakga.webservice.mytool.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.mytool.dto.request.MyToolIdDto;
-import com.danakga.webservice.mytool.dto.request.DetailSaveDto;
-import com.danakga.webservice.mytool.dto.request.FolderNameDto;
-import com.danakga.webservice.mytool.dto.request.UpdateFolderNameDto;
+import com.danakga.webservice.mytool.dto.request.*;
 import com.danakga.webservice.mytool.dto.response.ResMyToolDetailDto;
 import com.danakga.webservice.mytool.dto.response.ResMyToolFolderDto;
 import com.danakga.webservice.mytool.service.MyToolDetailService;
@@ -41,6 +38,14 @@ public class MyToolController {
     @GetMapping("/folder")
     public List<ResMyToolFolderDto> folderList(@LoginUser UserInfo userInfo){
         return myToolFolderService.myToolFolderList(userInfo);
+    }
+
+
+    //내 장비 폴더 삭제
+    @DeleteMapping("/folder")
+    public ResResultDto folderDelete(@LoginUser UserInfo userInfo, @RequestBody MyToolFolderIdDto myToolFolderIdDto){
+        Long result = myToolFolderService.MyToolFolderDelete(userInfo,myToolFolderIdDto.getMyToolFolderId());
+        return new ResResultDto(result,"폴더가 삭제 되었습니다.");
     }
 
     //내 장비 추가
