@@ -1,4 +1,4 @@
-package com.danakga.webservice.user.exception;
+package com.danakga.webservice.user.handler;
 
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;

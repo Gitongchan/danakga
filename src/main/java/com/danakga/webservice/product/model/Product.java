@@ -27,12 +27,15 @@ public class Product {
     @JoinColumn(name="pd_com_id")
     private CompanyInfo productCompanyId;
 
+    //상품 종류
     @Column(name = "pd_type")
     private String productType;
 
+    //상품 서브 종류
     @Column(name = "pd_sub_type")
     private String productSubType;
 
+    //상품 브랜드
     @Column(name = "pd_brand")
     private String productBrand;
 

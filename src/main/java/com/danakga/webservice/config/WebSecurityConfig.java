@@ -1,6 +1,7 @@
 package com.danakga.webservice.config;
 
-import com.danakga.webservice.user.exception.CustomAuthFailureHandler;
+import com.danakga.webservice.user.handler.CustomAuthFailureHandler;
+import com.danakga.webservice.user.handler.CustomAuthSuccessHandler;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     private final UserService userService;
     private final CustomAuthFailureHandler customAuthFailureHandler;
+    private final CustomAuthSuccessHandler customAuthSuccessHandler;
 
     @Override
     public void configure(WebSecurity web) { // 4
@@ -36,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .loginPage("/login")
                     .loginProcessingUrl("/login")
                     .failureHandler(customAuthFailureHandler)
-                    .defaultSuccessUrl("/index") // 로그인 성공 후 리다이렉트 주소
+                    .successHandler(customAuthSuccessHandler)
                 .and()
                     .logout() // 8
                     .logoutUrl("/api/user/logout")
