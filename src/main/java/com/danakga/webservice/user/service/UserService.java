@@ -36,6 +36,7 @@ public interface UserService extends UserDetailsService {
 
     //아이디 찾기
     String useridFind(UserInfoDto userInfoDto);
+
     //페스워드 찾기
     String passwordFind(UserInfoDto userInfoDto);
 

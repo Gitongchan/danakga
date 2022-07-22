@@ -5,19 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
-    @GetMapping("/")
+    @GetMapping("/index")
     public String index(){
-        return "testindex";
+        return "pages/index";
     }
 
     @GetMapping("/joinPage")
     public String join(){
         return "join";
-    }
-
-    @GetMapping("/index")
-    public String testindex(){
-        return "pages/index";
     }
 
     @GetMapping("/register")
