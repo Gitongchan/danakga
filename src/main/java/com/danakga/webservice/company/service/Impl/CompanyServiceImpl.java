@@ -5,6 +5,7 @@ import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.company.service.CompanyService;
+import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -67,6 +68,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyLotAdr(companyUserInfoDto.getCompanyLotAdr())
                             .companyStreetAdr(companyUserInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
+                            .companyBankName(companyUserInfoDto.getCompanyName())
                             .companyBanknum(companyUserInfoDto.getCompanyBanknum())
                             .companyEnabled(true)
                             .build()
@@ -79,10 +81,13 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     @Override
     public Long companyUpdate(UserInfo userInfo, CompanyInfoDto companyInfoDto) {
-        if(companyRepository.findByUserInfo(userInfo).isEmpty()){
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다.")
+        );
+        if(companyRepository.findByUserInfo(checkUserInfo).isEmpty()){
             return -1L;
         }
-            CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(userInfo).orElseGet(
+            CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(checkUserInfo).orElseGet(
                     ()->CompanyInfo.builder().build()
             );
             companyRepository.save(
@@ -95,6 +100,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyLotAdr(companyInfoDto.getCompanyLotAdr())
                             .companyStreetAdr(companyInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
+                            .companyBankName(companyInfoDto.getCompanyBankName())
                             .companyBanknum(companyInfoDto.getCompanyBanknum())
                             .companyEnabled(updateCompanyInfo.isCompanyEnabled())
                             .build()
@@ -105,10 +111,12 @@ public class CompanyServiceImpl implements CompanyService {
     //사업자 회사 정보 조회
     @Override
     public CompanyInfo companyInfoCheck(UserInfo userInfo) {
-        if(companyRepository.findByUserInfo(userInfo).isPresent()){
-            return companyRepository.findByUserInfo(userInfo).get();
-        }
-        return null;
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다.")
+        );
+        return companyRepository.findByUserInfo(checkUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
+        );
     }
 
     //사업자탈퇴
@@ -118,10 +126,9 @@ public class CompanyServiceImpl implements CompanyService {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        if(userRepository.findById(userInfo.getId()).isEmpty()){
-            return -1L;
-        }
-        UserInfo comUserInfo = userRepository.findById(userInfo.getId()).get();
+        UserInfo comUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다.")
+        );
 
         if(!comUserInfo.getRole().equals(UserRole.ROLE_MANAGER)){
             return -1L; //사업자가 아니면
@@ -162,9 +169,10 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyLotAdr(deleteCompanyInfo.getCompanyLotAdr())
                             .companyStreetAdr(deleteCompanyInfo.getCompanyStreetAdr())
                             .companyDetailAdr(deleteCompanyInfo.getCompanyDetailAdr())
+                            .companyBankName(deleteCompanyInfo.getCompanyBankName())
                             .companyBanknum(deleteCompanyInfo.getCompanyBanknum())
                             .companyEnabled(false)
-                            .companyDeltedDate(LocalDateTime.now())
+                            .companyDeletedDate(LocalDateTime.now())
                             .build()
 
             );
