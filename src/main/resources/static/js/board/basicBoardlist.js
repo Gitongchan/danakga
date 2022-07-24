@@ -4,7 +4,6 @@ fetch(`/api/board/list/자유게시판?page=0`)
     .then((res)=>res.json())
     .then((data)=>{
         for(let i=0; i<data.lists.length; i++){
-            console.log(data.lists[i]);
             const tr = document.createElement('tr');
             tr.innerHTML =
                 `<td>${data.lists[i].bd_id}</td>

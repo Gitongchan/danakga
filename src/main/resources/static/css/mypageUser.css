@@ -60,3 +60,20 @@
     margin-bottom: 20px;
 }
 
+.category_list {
+    position: relative;
+    border-bottom: 1px solid #33383e;
+    margin-bottom: 15px;
+}
+
+.category_list_wrap{
+    display: flex;
+}
+
+.category_list_wrap li button{
+    height: 100%;
+    width: 120px;
+    padding: 10px;
+    border: 1px solid #bfbfbf;
+}
+

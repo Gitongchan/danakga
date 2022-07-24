@@ -111,7 +111,7 @@ public class BoardServiceImpl implements BoardService {
 
         final String deleted = "N";
 
-        pageable = PageRequest.of(page, 10, Sort.by("bdCreate").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
 
         List<Board> boardList = boards.getContent();
