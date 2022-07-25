@@ -17,27 +17,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class WishController {
 // 파라미터 받아서 작성 -> 레파지 토리 작성 -> 서비스 작성
 
     private final WishService wishService;
-    // 유저 리파지토르 사용 > save -> 사용
 
-    // 찜목록 좋아요
-    @PostMapping(value = "/wishlist")
+    // 찜 등록 , 삭제
+    @PostMapping(value = "/wish")
     public ResResultDto wishListLike(@LoginUser UserInfo userInfo, @RequestBody WishProductDto wishProductDto){
-        Long result = wishService.wishList(userInfo,wishProductDto.getPd_id());
-        return new ResResultDto(result,"찜 등록 완료했습니다.");
+        Long result = wishService.wishProcess(userInfo,wishProductDto.getProductId());
+        return result == -1L ?
+        new ResResultDto(result,"위시리스트에서 제거했습니다.") : new ResResultDto(result,"위시리스트에 등록했습니다.");
     }
 
-    //찜 체크
-    @GetMapping("/wishlist_check")
-    public ResDupliCheckDto wishListCheck(@LoginUser UserInfo userInfo, @RequestBody WishProductDto wishProductDto){
-        return new ResDupliCheckDto(wishService.wishCheck(userInfo,wishProductDto.getPd_id()));
-    }
-    // 찜 삭제
-    @PostMapping
-    public ResResultDto wishDelete(@LoginUser UserInfo userInfo, @RequestBody WishProductDto wishProductDto) {
-        return null;
-    }
 }

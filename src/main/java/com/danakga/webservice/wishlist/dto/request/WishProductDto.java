@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class WishProductDto {
 
     // 상품 아이디
-    private Long pd_id;
+    private Long productId;
 
 }

@@ -18,27 +18,27 @@ public class Wish {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "wish_id")
-        private Long wish_id;
+        private Long wishId;
 
 
         @ManyToOne
         @JoinColumn(name = "pd_id")
-        private Product product_id;
+        private Product productId;
 
         @ManyToOne
         @JoinColumn(name = "u_id")
         private UserInfo userInfo;
 
-        @UpdateTimestamp
-        private LocalDateTime wish_date;
+        @Column(name = "wish_date")
+        private LocalDateTime wishDate;
 
 
         @Builder
-        public Wish(Long wish_id, Product pd_id, UserInfo u_id, LocalDateTime wish_date) {
-            this.wish_id = wish_id;
-            this.product_id = pd_id;
-            this.userInfo = u_id;
-            this.wish_date = wish_date;
+        public Wish(Long wishId, Product productId, UserInfo userInfo, LocalDateTime wishDate) {
+            this.wishId = wishId;
+            this.productId = productId;
+            this.userInfo = userInfo;
+            this.wishDate = wishDate;
         }
     }
 
