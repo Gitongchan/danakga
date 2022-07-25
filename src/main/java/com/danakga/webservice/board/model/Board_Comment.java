@@ -35,7 +35,6 @@ public class Board_Comment {
     @UpdateTimestamp
     private LocalDateTime cmModified;
 
-
     @ManyToOne
     @JoinColumn(name = "bd_id")
     private Board board;
