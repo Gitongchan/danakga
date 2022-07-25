@@ -1,4 +1,4 @@
-package com.danakga.webservice.wishlist.model;
+package com.danakga.webservice.wishList.model;
 
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

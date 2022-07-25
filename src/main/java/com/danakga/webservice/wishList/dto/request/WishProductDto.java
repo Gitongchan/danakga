@@ -1,4 +1,4 @@
-package com.danakga.webservice.wishlist.dto.request;
+package com.danakga.webservice.wishList.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
