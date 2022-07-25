@@ -1,4 +1,4 @@
-package com.danakga.webservice.Cart.dto.request;
+package com.danakga.webservice.cart.dto.request;
 
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AllArgsConstructor;
@@ -13,22 +13,12 @@ public class CartDto {
     private Long cartId;
     // 상품아이디
     private Long productId;
-    //장바구니 명 (상품명인듯)
-    private UserInfo userInfo;
     // 상품 수량
     private Integer cartAmount;
 
-    private Integer price; // 가격
 
 
     //가격이랑 수량 변경
-    public void addCount(int cartAmount){
-        this.cartAmount += cartAmount;
-    }
-
-    public void addPrice(int price){
-        this.price += price;
-    }
 
 
 }

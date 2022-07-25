@@ -1,4 +1,4 @@
-package com.danakga.webservice.Cart.model;
+package com.danakga.webservice.cart.model;
 
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
@@ -25,18 +25,17 @@ public class Cart {
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
-    private Integer price;
 
     @Column(name = "cart_amount") // 기본값 1  개수 세는 역할s
     private Integer cartAmount;
 
     @Builder
-    public Cart(Long cartId, Product productId, UserInfo userInfo,  Integer cartAmount, Integer price ){
+    public Cart(Long cartId, Product productId, UserInfo userInfo,  Integer cartAmount ){
         this.cartId = cartId;
         this.productId = productId;
         this.userInfo = userInfo;
         this.cartAmount = cartAmount;
-        this.price = price;
+
     }
 
 }
