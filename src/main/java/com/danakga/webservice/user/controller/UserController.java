@@ -123,7 +123,7 @@ public class UserController{
     }
     
     //마이페이지 댓글의 게시글 조회
-    @GetMapping("myCommentsPost/{type}")
+    @GetMapping("/myCommentsPost/{type}")
     public ResBoardListDto myCommentsPost(@LoginUser UserInfo userInfo,
                                           @PathVariable("type") String boardType,
                                           Pageable pageable,
@@ -133,7 +133,7 @@ public class UserController{
     }
     
     //마이페이지 댓글 목록 조회
-    @GetMapping("myCommentsList/{type}")
+    @GetMapping("/myCommentsList/{type}")
     public ResCommentListDto myCommentsList(@LoginUser UserInfo userInfo,
                                             @PathVariable("type") String boardType,
                                             Pageable pageable,

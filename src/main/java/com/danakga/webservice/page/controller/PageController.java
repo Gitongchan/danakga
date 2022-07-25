@@ -30,6 +30,16 @@ public class PageController {
         return "pages/mypageUser";
     }
 
+    @GetMapping("/user/myboard")
+    public String mypageUserBoard(){
+        return "pages/mypageUserBoard";
+    }
+
+    @GetMapping("/manager/myboard")
+    public String mypageManagerBoard(){
+        return "pages/mypageUserBoard";
+    }
+
     @GetMapping("/manager/mypage")
     public String mypageManager(){
         return "pages/mypageManager";
