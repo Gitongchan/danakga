@@ -37,7 +37,7 @@ public class PageController {
 
     @GetMapping("/manager/myboard")
     public String mypageManagerBoard(){
-        return "pages/mypageManagerBoard";
+        return "pages/mypageUserBoard";
     }
 
     @GetMapping("/manager/mypage")

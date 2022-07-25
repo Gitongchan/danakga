@@ -22,16 +22,42 @@
             <article class="mypage_article">
                 <div class="category_list">
                     <ul class="category_list_wrap">
-                        <li><button id="my_board_search" class="active">게시글</button></li>
-                        <li><button id="my_commentBoard_search">댓글+게시글</button></li>
-                        <li><button id="my_comment_search">댓글</button></li>
+                        <li class="select" id="li_board-search"><button id="my_board_search">게시글</button></li>
+                        <li id="li-comment-board-search"><button id="my_commentBoard_search">댓글+게시글</button></li>
+                        <li id="li-comment-search"><button id="my_comment_search">댓글</button></li>
                     </ul>
                 </div>
                 <input type="hidden" id="category_value" value="myboard"/>
                 <div class="category">
-                    <ul class="category_list_wrap">
-                        <li><button id="free">자유게시판</button></li>
-                        <li><button id="qna">문의게시판</button></li>
+                    <ul class="category_list_type_wrap">
+                        <li id="li_free"><button id="free">자유게시판</button></li>
+                        <li id="li_qna"><button id="qna">문의게시판</button></li>
+                    </ul>
+                </div>
+                <div id="board-table-wrap">
+                    <table class="table table-striped table-hover" id="myBoardTable">
+                        <colgroup>
+                            <col width="10%"/>
+                            <col width="50%"/>
+                            <col width="10%"/>
+                            <col width="20%"/>
+                            <col width="10%"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>글제목</th>
+                            <th>작성자</th>
+                            <th>시간</th>
+                            <th>조회수</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myBoardTableList">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center">
+                    <ul class="pagination">
                     </ul>
                 </div>
             </article>
@@ -42,5 +68,7 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
+<script src="/js/user/myBoardPagination.js"></script>
 <script src="/js/user/myPageBoard.js"></script>
+
 {{>pages/footer2}}
