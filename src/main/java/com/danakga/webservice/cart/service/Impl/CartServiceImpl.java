@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,6 +63,27 @@ public class CartServiceImpl implements CartService {
         }
 
     }
+
+    @Override
+    public Long cartDelete(Product productId) {
+        Cart cart = cartRepository.findByProductId(productId);
+        if(cart != null){
+            cartRepository.delete(cart);
+            return 1L;
+        }
+        return -1L;
+    }
+
+    @Override
+    public Long cartDeleteAll(Cart cart,Product productId) {
+        for (int i=0; i<cart.getCartAmount(); i++){
+            Cart cart2 = cartRepository.findByProductId(productId);
+            cartRepository.delete(cart2);
+        }
+            return 1L;
+
+    }
+
 
 //
 //    @Override
