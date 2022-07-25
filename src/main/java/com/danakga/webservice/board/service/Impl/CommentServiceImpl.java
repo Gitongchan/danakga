@@ -44,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
         //bd_id, deleted = N 값인 댓글만 페이징해서 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> board_comments = commentRepository.findAllByBoardAndCmDeleted(board, deleted, pageable);
-        
+
         //paging한 baord_comments를 .getContent()하여 리스트로 변환하여 담아줌
         List<Board_Comment> commentList = board_comments.getContent();
 
@@ -89,7 +89,7 @@ public class CommentServiceImpl implements CommentService {
                 Board_Comment board_Comment;
 
                 commentRepository.save(
-                       board_Comment = Board_Comment.builder()
+                        board_Comment = Board_Comment.builder()
                                 .cmContent(reqCommentDto.getCmContent())
                                 .cmWriter(recentUserInfo.getUserid())
                                 .board(recentBoard)
@@ -106,19 +106,19 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long commentsEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
 
-        //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
-        if (boardRepository.findByBdId(bd_id).isPresent()) {
+        //회원 정보 확인 후 게시글 가져오기
+        if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-            if (userRepository.findById(userInfo.getId()).isPresent()) {
+            if (boardRepository.findById(bd_id).isPresent()) {
 
                 Board recentBoard = boardRepository.findByBdId(bd_id).get();
 
                 UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
-                Board_Comment board_Comment = commentRepository.findByBoardAndCmId(recentBoard,cm_id);
+                Board_Comment board_Comment = commentRepository.findByBoardAndCmId(recentBoard, cm_id);
 
                 commentRepository.save(
-                        Board_Comment.builder()
+                        board_Comment = Board_Comment.builder()
                                 .cmId(board_Comment.getCmId())
                                 .cmContent(reqCommentDto.getCmContent())
                                 .cmWriter(recentUserInfo.getUserid())
@@ -142,9 +142,9 @@ public class CommentServiceImpl implements CommentService {
         //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
         if (boardRepository.findByBdId(bd_id).isPresent()) {
 
-            Board board = boardRepository.findByBdId(bd_id).get();
+            if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-            if(userRepository.findById(userInfo.getId()).isPresent()) {
+                Board board = boardRepository.findByBdId(bd_id).get();
 
                 Board_Comment board_Comment = commentRepository.findByBoardAndCmId(board, cm_id);
 
@@ -179,11 +179,44 @@ public class CommentServiceImpl implements CommentService {
         writeComments.put("cm_modified", comments.getCmModified());
         writeComments.put("cm_writer", comments.getCmWriter());
         mapComments.add(writeComments);
-        
+
         //Dto 값 set
         resCommentListDto.setComments(mapComments);
 
         return resCommentListDto;
     }
-}
 
+    //대댓글 작성
+    @Override
+    public Long answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id) {
+
+        if(userRepository.findById(userInfo.getId()).isPresent()) {
+
+            if(boardRepository.findById(bd_id).isPresent()) {
+
+                //해당 댓글 있는지 조회 후 대댓글 작성
+                if(commentRepository.findById(cm_id).isPresent()) {
+                    
+                    UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+
+                    Board recentBoard = boardRepository.findById(bd_id).get();
+
+                    Board_Comment board_comment;
+
+                    commentRepository.save(
+                            board_comment = Board_Comment.builder()
+                                    .cmContent(reqCommentDto.getCmContent())
+                                    .cmWriter(recentUserInfo.getUserid())
+                                    //대댓글 컬럼 추가
+                                    .board(recentBoard)
+                                    .userInfo(recentUserInfo)
+                                    .build()
+                    );
+                    return board_comment.getCmId();
+                }
+
+            }
+        }
+        return -1L;
+    }
+}

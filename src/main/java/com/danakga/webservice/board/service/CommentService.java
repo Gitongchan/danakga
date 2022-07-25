@@ -21,4 +21,7 @@ public interface CommentService {
     
     //개별 댓글 조회
     ResCommentListDto writeComments(Long cm_id);
+    
+    //대댓글 작성
+    Long answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id);
 }

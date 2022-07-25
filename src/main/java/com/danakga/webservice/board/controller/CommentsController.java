@@ -60,4 +60,19 @@ public class CommentsController {
         return result == -1L ?
                 new ResResultDto(result, "댓글 삭제 실패") : new ResResultDto(result, "댓글 삭제 성공");
     }
+
+    @PostMapping("/comment/answer/write/{bd_id}/{cm_id}")
+    public ResResultDto answerWrite(@PathVariable(value = "bd_id") Long bd_id,
+                                    @PathVariable(value = "cm_id") Long cm_id,
+                                    @RequestBody ReqCommentDto reqCommentDto,
+                                    @LoginUser UserInfo userInfo) {
+
+        Long result = commentService.answerWrite(userInfo, reqCommentDto, bd_id, cm_id);
+
+        return result == -1L ?
+                new ResResultDto(result, "대댓글 작성 실패") : new ResResultDto(result, "대댓글 작성 성공");
+    }
+
+
+
 }
