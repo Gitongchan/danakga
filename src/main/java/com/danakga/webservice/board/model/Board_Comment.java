@@ -37,7 +37,7 @@ public class Board_Comment {
     @Column(name = "cm_step")
     private int cmStep;
 
-    //댓글의 순서, 깊이 (댓글은 0, 대댓글은 1, 대대댓글은 2), depth 또는 order라고 쓰는듯
+    //댓글의 순서, 깊이 (댓글은 0, 대댓글은 1, 대대댓글은 2), depth 또는 order라고 함
     @Column(name = "cm_depth")
     private int cmDepth;
 
@@ -45,7 +45,7 @@ public class Board_Comment {
     @Column(name = "cm_answernum")
     private int cmAnswerNum;
 
-    //대댓글의 부모 id값 (board_commnet의 Long값)
+    //대댓글의 부모 id값
     @Column(name = "cm_parentnum")
     private int cmParentNum;
 

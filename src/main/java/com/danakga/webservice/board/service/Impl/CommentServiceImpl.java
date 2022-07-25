@@ -187,6 +187,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //대댓글 작성
+    //대댓글 작성 시 cmAnswerNum(대댓글 갯수)도 update 시켜야함
+    //cmStep(댓글의 계층)은 탬플릿이 대댓글까지 밖에 안돼서 댓글 0, 대댓글 1로 고정
+    //cmGroup(댓글의 그룹)은 가장 큰 그룹 값 찾아서 +1 해야함
     @Override
     public Long answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id) {
 
@@ -196,6 +199,10 @@ public class CommentServiceImpl implements CommentService {
 
                 //해당 댓글 있는지 조회 후 대댓글 작성
                 if(commentRepository.findById(cm_id).isPresent()) {
+
+                    //Long값의 댓글 번호를 int로 형변환
+                    //Wrapper 클래스 Long의 intValue()를 이용하여 int로 형변환
+                    final int parentNum = cm_id.intValue();
                     
                     UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
@@ -208,6 +215,7 @@ public class CommentServiceImpl implements CommentService {
                                     .cmContent(reqCommentDto.getCmContent())
                                     .cmWriter(recentUserInfo.getUserid())
                                     //대댓글 컬럼 추가
+                                    .cmParentNum(parentNum)
                                     .board(recentBoard)
                                     .userInfo(recentUserInfo)
                                     .build()
