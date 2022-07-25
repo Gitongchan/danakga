@@ -8,12 +8,16 @@
 <div class="container mt-10" id="board-wrap">
     <div class="row">
         <div class="input-group mb-3 col-sm-12" >
-            <select class="form-select" id="type" aria-label="select value">
-                <option value="자유게시판" selected>자유</option>
-                <option value="문의게시판">문의</option>
-            </select>
-            <input type="text" class="form-control" placeholder="Search">
-            <button class="btn btn-success" type="submit">검색</button>
+            <div class="col-1">
+                <select class="form-select" id="type" aria-label="select value">
+                    <option value="전체" selected>전체</option>
+                    <option value="제목">제목</option>
+                    <option value="내용">내용</option>
+                    <option value="작성자" >작성자</option>
+                </select>
+            </div>
+            <input type="text" class="form-control" placeholder="Search" id="search">
+            <button class="btn btn-success" type="submit" id="searchbtn">검색</button>
             <button type="button" class="btn btn-primary" onclick="location.href='/board/post'">게시글 작성</button>
         </div>
     </div>
@@ -52,6 +56,7 @@
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
 <script src="/js/board/basicBoardlist.js"></script>
 <script src="/js/board/basicPagination.js"></script>
+<script src="/js/board/boardSearch.js"></script>
 
 
 {{>pages/footer2}}
