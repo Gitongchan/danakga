@@ -119,3 +119,7 @@
     align-items: center;
     justify-content: center;
 }
+
+#board-table-wrap{
+    height: 400px;
+}
