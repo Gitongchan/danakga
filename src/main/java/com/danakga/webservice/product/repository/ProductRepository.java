@@ -14,7 +14,7 @@ import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<Product,Integer> {
+public interface ProductRepository extends JpaRepository<Product,Long> {
     //대표 이미지 변경을 위해서 사용
     @Modifying
     @Query("UPDATE Product p set p.productPhoto = :productMainPhoto where p.productId = :productId")

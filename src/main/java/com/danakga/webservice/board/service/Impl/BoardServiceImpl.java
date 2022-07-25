@@ -41,14 +41,78 @@ public class BoardServiceImpl implements BoardService {
     private final FilesService filesService;
     private final UserRepository userRepository;
 
+
+    //게시판 검색
+    @Override
+    public ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page) {
+
+        //Page<> board 선언
+        Page<Board> boards;
+
+        //return할 ListDto 객체 선언
+        ResBoardListDto resBoardListDto = new ResBoardListDto();
+
+        //DB 조회를 위한 deleted 값
+        final String deleted = "N";
+
+        //pageable 값 설정
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+
+        //switch case로 제목, 내용, 작성자, 전체 게시글 목록 검색 조회, default 값은 필수
+        switch (category) {
+            case "제목": //게시글 제목
+                boards = boardRepository.SearchBoardTitle(deleted, content, boardType, pageable);
+                break;
+            case "내용": //게시글 내용
+                boards = boardRepository.SearchBoardContent(deleted, content, boardType, pageable);
+                break;
+            case "작성자": //작성자 아이디
+                boards = boardRepository.SearchBoardWriter(deleted, content, boardType, pageable);
+                break;
+            case "전체":
+                if(content.equals("")) {
+                    boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
+                } else {
+                    boards = boardRepository.searchBoard(content, deleted, boardType, pageable);
+                }
+                break;
+            default: boards = null;
+        }
+
+        //boards가 null인지 확인, 확인 안하면 .getContent() npe 경고문
+        if(boards != null) {
+
+            List<Board> searchList = boards.getContent();
+
+            List<Map<String, Object>> searchMap = new ArrayList<>();
+            
+            searchList.forEach(entity -> {
+                Map<String, Object> listMap = new HashMap<>();
+                listMap.put("bd_id", entity.getBdId());
+                listMap.put("bd_title", entity.getBdTitle());
+                listMap.put("bd_writer", entity.getBdWriter());
+                listMap.put("bd_created", entity.getBdCreated());
+                listMap.put("bd_views", entity.getBdViews());
+                listMap.put("bd_deleted", entity.getBdDeleted());
+                listMap.put("totalElement", boards.getTotalElements());
+                listMap.put("totalPage", boards.getTotalPages());
+                searchMap.add(listMap);
+            });
+
+            resBoardListDto.setLists(searchMap);
+        }
+
+        return resBoardListDto;
+    }
+
     //게시판 목록
     @Override
-    public ResBoardListDto boardList(Pageable pageable, String board_type, int page) {
+    public ResBoardListDto boardList(Pageable pageable, String boardType, int page) {
 
         final String deleted = "N";
 
-        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
-        Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, board_type, pageable);
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreate").descending());
+        Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
 
         List<Board> boardList = boards.getContent();
 

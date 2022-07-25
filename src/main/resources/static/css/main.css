@@ -7725,6 +7725,8 @@ blockquote span {
 .footer {
   background-color: #081828;
   position: relative;
+  /*변경*/
+  margin-top:100px;
   /* Single Footer */
   /* End Single Footer */
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public interface BoardService {
 
     //게시판 목록
-    ResBoardListDto boardList(Pageable pageable, String board_type, int page);
+    ResBoardListDto boardList(Pageable pageable, String boardType, int page);
 
     //게시글 조회
     ResBoardPostDto getPost(Long bd_id, HttpServletRequest request, HttpServletResponse response);
@@ -28,5 +28,8 @@ public interface BoardService {
 
     //게시글 삭제 여부 변경
     Long postDelete(Long id, UserInfo userInfo);
+
+    //게시판 검색
+    ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page);
 
 }
