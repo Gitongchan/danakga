@@ -356,11 +356,8 @@ public class UserServiceImpl implements UserService {
         final String deleted = "N";
 
         //게시판 목록을 불러오기 위한 List
-        List<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted);
-
-        //댓글 갯수를 위한 pageable
-        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
-        Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+        Page<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted, pageable);
 
         //return해줄 dto 객체 생성
         ResBoardListDto resBoardListDto = new ResBoardListDto();
@@ -378,8 +375,8 @@ public class UserServiceImpl implements UserService {
             mapComments.put("bd_writer", entity.getBdWriter());
             mapComments.put("bd_created", entity.getBdCreated());
             mapComments.put("bd_views", entity.getBdViews());
-            mapComments.put("totalElement", comments.getTotalElements());
-            mapComments.put("totalPage", comments.getTotalPages());
+            mapComments.put("totalElement", boards.getTotalElements());
+            mapComments.put("totalPage", boards.getTotalPages());
 
             //dto에 담아줄 List<Map>에 담기
             data.add(mapComments);
