@@ -1,3 +1,4 @@
+
 {{>pages/header1}}
 <link rel="stylesheet" href="/css/board.css">
 
@@ -7,6 +8,10 @@
 <div class="container mt-10" id="board-wrap">
     <div class="row">
         <div class="input-group mb-3 col-sm-12" >
+            <select class="form-select" id="type" aria-label="select value">
+                <option value="자유게시판" selected>자유</option>
+                <option value="문의게시판">문의</option>
+            </select>
             <input type="text" class="form-control" placeholder="Search">
             <button class="btn btn-success" type="submit">검색</button>
             <button type="button" class="btn btn-primary" onclick="location.href='/board/post'">게시글 작성</button>
