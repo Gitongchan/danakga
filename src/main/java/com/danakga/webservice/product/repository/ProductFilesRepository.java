@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductFilesRepository extends JpaRepository<ProductFiles,Integer> {
+public interface ProductFilesRepository extends JpaRepository<ProductFiles,Long> {
     List<ProductFiles> findByProduct(Product product);
 
     void deleteByProductAndPfSaveName(Product product,String PfSaveName);

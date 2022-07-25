@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface OrdersRepository extends JpaRepository<Orders,Integer>{
+public interface OrdersRepository extends JpaRepository<Orders,Long>{
 
     Optional<Orders> findByOrdersId(Long ordersId);
 
