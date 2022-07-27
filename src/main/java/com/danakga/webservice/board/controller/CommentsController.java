@@ -24,12 +24,12 @@ public class CommentsController {
     private final CommentService commentService;
 
     // 댓글 작성 (게시글 id, 댓글 내용 받기)
-    @PostMapping("/comment/write/{id}")
+    @PostMapping("/comment/write/{bd_id}")
     public ResResultDto commentsWrite(@LoginUser UserInfo userInfo,
                                      @Valid @RequestBody ReqCommentDto reqCommentDto,
-                                     @PathVariable("id") Long id) {
+                                     @PathVariable("bd_id") Long bd_id) {
 
-        Long result = commentService.commentsWrite(userInfo, reqCommentDto, id);
+        Long result = commentService.commentsWrite(userInfo, reqCommentDto, bd_id);
         return result == -1L ?
                 new ResResultDto(result, "댓글 작성 실패") : new ResResultDto(result, "댓글 작성 성공");
     }

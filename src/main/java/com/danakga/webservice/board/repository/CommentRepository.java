@@ -26,8 +26,8 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     //댓글 삭제 여부 변경
     @Transactional
     @Modifying
-    @Query("update Board_Comment cm set cm.cmDeleted = 'Y' where cm.cmId = :id")
-    void updateDeleted(@Param("id") Long id);
+    @Query("update Board_Comment bc set bc.cmDeleted = 'Y' where bc.cmId = :cmId")
+    void updateDeleted(@Param("cmId") Long cm_id);
 
     //회원이 작성한 댓글 조회
     @Query(
@@ -39,4 +39,25 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
                                        @Param("bdType") String boardType,
                                        @Param("cmDeleted") String cmDeleted,
                                        Pageable pageable);
+
+    // 그룹의 최댓값
+    @Query(
+            value = "select max(bc.cmGroup) as maxGroup "
+                    + "from Board_Comment bc"
+    )
+    Integer maxGroupValue();
+
+    // depth의 최댓값
+    @Query(
+            value = "select max(bc.cmDepth) as maxDepth "
+                    + "from Board_Comment bc "
+                    + "where bc.cmGroup = :cmGroup"
+    )
+    Integer maxDepthValue(@Param("cmGroup") int cmGroup);
+
+    // answerNum(대댓글 갯수) 증가
+    @Transactional
+    @Modifying
+    @Query("update Board_Comment bc set bc.cmAnswerNum = bc.cmAnswerNum + 1 where bc.cmId = :cmId")
+    void updateAnswerNum(@Param("cmId") Long cm_id);
 }

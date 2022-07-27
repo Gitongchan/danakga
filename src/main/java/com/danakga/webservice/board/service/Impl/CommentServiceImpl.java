@@ -17,10 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -74,24 +71,37 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //댓글 작성
+    //cmGroup을 가장 큰 group값 +1 해줘야 함
+    //cmStep은 댓글 0, 대댓글 1
     @Override
-    public Long commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long id) {
+    public Long commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id) {
 
         //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
-        if (boardRepository.findById(id).isPresent()) {
+        if (boardRepository.findById(bd_id).isPresent()) {
 
             if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-                Board recentBoard = boardRepository.findById(id).get();
+                Board recentBoard = boardRepository.findById(bd_id).get();
 
                 UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
                 Board_Comment board_Comment;
 
+                Integer groupCount = commentRepository.maxGroupValue();
+
+                if(groupCount == null) {
+                    groupCount = 0;
+                }
+
                 commentRepository.save(
                         board_Comment = Board_Comment.builder()
                                 .cmContent(reqCommentDto.getCmContent())
                                 .cmWriter(recentUserInfo.getUserid())
+                                .cmGroup(groupCount + 1)
+                                .cmStep(0)
+                                .cmDepth(0)
+                                .cmAnswerNum(0)
+                                .cmParentNum(0)
                                 .board(recentBoard)
                                 .userInfo(recentUserInfo)
                                 .build()
@@ -109,7 +119,7 @@ public class CommentServiceImpl implements CommentService {
         //회원 정보 확인 후 게시글 가져오기
         if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-            if (boardRepository.findById(bd_id).isPresent()) {
+            if (boardRepository.findByBdId(bd_id).isPresent()) {
 
                 Board recentBoard = boardRepository.findByBdId(bd_id).get();
 
@@ -119,7 +129,6 @@ public class CommentServiceImpl implements CommentService {
 
                 commentRepository.save(
                         board_Comment = Board_Comment.builder()
-                                .cmId(board_Comment.getCmId())
                                 .cmContent(reqCommentDto.getCmContent())
                                 .cmWriter(recentUserInfo.getUserid())
                                 .cmDeleted(board_Comment.getCmDeleted())
@@ -197,32 +206,37 @@ public class CommentServiceImpl implements CommentService {
 
             if(boardRepository.findById(bd_id).isPresent()) {
 
-                //해당 댓글 있는지 조회 후 대댓글 작성
                 if(commentRepository.findById(cm_id).isPresent()) {
 
                     //Long값의 댓글 번호를 int로 형변환
-                    //Wrapper 클래스 Long의 intValue()를 이용하여 int로 형변환
                     final int parentNum = cm_id.intValue();
                     
                     UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
                     Board recentBoard = boardRepository.findById(bd_id).get();
 
-                    Board_Comment board_comment;
+                    Board_Comment board_Comment = commentRepository.findById(cm_id).get();
+
+                    Integer depthCount = commentRepository.maxDepthValue(board_Comment.getCmGroup());
 
                     commentRepository.save(
-                            board_comment = Board_Comment.builder()
+                            board_Comment = Board_Comment.builder()
                                     .cmContent(reqCommentDto.getCmContent())
                                     .cmWriter(recentUserInfo.getUserid())
-                                    //대댓글 컬럼 추가
+                                    .cmGroup(board_Comment.getCmGroup())
+                                    .cmStep(1)
+                                    .cmDepth(depthCount + 1)
                                     .cmParentNum(parentNum)
                                     .board(recentBoard)
                                     .userInfo(recentUserInfo)
                                     .build()
                     );
-                    return board_comment.getCmId();
-                }
 
+                    //댓글의 대댓글갯수 증가
+                    commentRepository.updateAnswerNum(cm_id);
+
+                    return board_Comment.getCmId();
+                }
             }
         }
         return -1L;
