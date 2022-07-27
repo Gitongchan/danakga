@@ -5,14 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
-    @GetMapping("/index")
+    @GetMapping("/")
     public String index(){
         return "pages/index";
     }
 
-    @GetMapping("/joinPage")
-    public String join(){
-        return "join";
+    @GetMapping("/index")
+    public String testindex(){
+        return "pages/index";
     }
 
     @GetMapping("/register")
@@ -20,8 +20,8 @@ public class PageController {
         return "pages/userRegister";
     }
 
-    @GetMapping("/test/mainfunc")
-    public String testmain(){
+    @GetMapping("/product/main")
+    public String mainFunction(){
         return "pages/mainfunction";
     }
 
