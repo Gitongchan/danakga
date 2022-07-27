@@ -55,10 +55,13 @@ public class ResProductDto {
     //누적구매수
     private Integer productOrderCount;
 
+    //찜 카운트
+    private Long productWishCount;
+
     //파일
     private List<Map<String,Object>> files;
 
-    public ResProductDto(Product product, CompanyInfo companyInfo) {
+    public ResProductDto(Product product, CompanyInfo companyInfo,Long productWishCount) {
         this.companyId = companyInfo.getCompanyId();
         this.companyName = companyInfo.getCompanyName();
         this.productId = product.getProductId();
@@ -73,5 +76,6 @@ public class ResProductDto {
         this.productUploadDate = product.getProductUploadDate();
         this.productViewCount = product.getProductViewCount();
         this.productOrderCount = product.getProductOrderCount();
+        this.productWishCount = productWishCount;
     }
 }

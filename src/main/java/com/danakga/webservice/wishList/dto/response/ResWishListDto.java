@@ -22,6 +22,9 @@ public class ResWishListDto {
     //가게 이름
     private String companyName;
 
+    //상품 아이디
+    private Long productId;
+
     //상품 브랜드
     private String productBrand;
 

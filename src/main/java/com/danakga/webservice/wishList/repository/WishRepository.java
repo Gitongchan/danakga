@@ -16,4 +16,6 @@ public interface WishRepository extends JpaRepository<Wish,Long> {
 
     Optional<Wish> findByWishId(Long wishId);
 
+    Long countByProductId(Product product);
+
 }

@@ -72,6 +72,7 @@ public class WishServiceImpl implements WishService {
             ResWishListDto listDto = new ResWishListDto();
             listDto.setWishId(entity.getWishId());
             listDto.setCompanyName(entity.getProductId().getProductCompanyId().getCompanyName());
+            listDto.setProductId(entity.getProductId().getProductId());
             listDto.setProductBrand(entity.getProductId().getProductBrand());
             listDto.setProductName(entity.getProductId().getProductName());
             listDto.setProductPrice(entity.getProductId().getProductPrice());
