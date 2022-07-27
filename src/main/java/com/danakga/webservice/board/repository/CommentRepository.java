@@ -31,9 +31,9 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
 
     //회원이 작성한 댓글 조회
     @Query(
-            value = "select bc "
-                    + "from Board_Comment bc inner join Board b on bc.board.bdId = b.bdId "
-                    + "where bc.cmWriter = :cmWriter and b.bdType = :bdType and bc.cmDeleted = :cmDeleted"
+            value = "select bc " +
+                    "from Board_Comment bc inner join Board b on bc.board.bdId = b.bdId " +
+                    "where bc.cmWriter = :cmWriter and b.bdType = :bdType and bc.cmDeleted = :cmDeleted"
     )
     Page<Board_Comment> myCommentsList(@Param("cmWriter") String cmWriter,
                                        @Param("bdType") String boardType,
@@ -49,11 +49,20 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
 
     // depth의 최댓값
     @Query(
-            value = "select max(bc.cmDepth) as maxDepth "
-                    + "from Board_Comment bc "
-                    + "where bc.cmGroup = :cmGroup"
+            value = "select max(bc.cmDepth) as maxDepth " +
+                    "from Board_Comment bc " +
+                    "where bc.cmGroup = :cmGroup"
     )
-    Integer maxDepthValue(@Param("cmGroup") int cmGroup);
+    int maxDepthValue(@Param("cmGroup") int cmGroup);
+
+    // step의 최댓값
+    @Query(
+            value = "select max(bc.cmStep) as maxStep " +
+                    "from Board_Comment bc " +
+                    "where bc.cmGroup = :cmGroup"
+
+    )
+    int maxStepValue(@Param("cmGroup") int cmGroup);
 
     // answerNum(대댓글 갯수) 증가
     @Transactional

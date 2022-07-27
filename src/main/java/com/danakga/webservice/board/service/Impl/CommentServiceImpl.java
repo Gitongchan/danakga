@@ -71,8 +71,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //댓글 작성
-    //cmGroup을 가장 큰 group값 +1 해줘야 함
-    //cmStep은 댓글 0, 대댓글 1
+    //cmGroup을 가장 큰 group값 +1 해줘야 함 o
+    //cmdepth은 댓글은 0 대댓글 하나씩 작성 시 + 1 o
     @Override
     public Long commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id) {
 
@@ -87,8 +87,10 @@ public class CommentServiceImpl implements CommentService {
 
                 Board_Comment board_Comment;
 
+                // null값 비교를 위해 Integer 사용
                 Integer groupCount = commentRepository.maxGroupValue();
 
+                //댓글이 처음 작성 됐을 때를 위한 초기 값 설정
                 if(groupCount == null) {
                     groupCount = 0;
                 }
@@ -196,9 +198,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //대댓글 작성
-    //대댓글 작성 시 cmAnswerNum(대댓글 갯수)도 update 시켜야함
-    //cmStep(댓글의 계층)은 탬플릿이 대댓글까지 밖에 안돼서 댓글 0, 대댓글 1로 고정
-    //cmGroup(댓글의 그룹)은 가장 큰 그룹 값 찾아서 +1 해야함
+    //대댓글 작성 시 cmAnswerNum(대댓글 갯수)도 update 시켜야함 o
+    //cmStep(댓글의 계층)은 탬플릿이 대댓글까지 밖에 안돼서 댓글 0, 대댓글 1로 고정 o
+    //cmGroup(댓글의 그룹) 작성하려는 대댓글의 댓글 조회해서 값 넣어주기 o
     @Override
     public Long answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id) {
 
@@ -217,7 +219,7 @@ public class CommentServiceImpl implements CommentService {
 
                     Board_Comment board_Comment = commentRepository.findById(cm_id).get();
 
-                    Integer depthCount = commentRepository.maxDepthValue(board_Comment.getCmGroup());
+                    int depthCount = commentRepository.maxDepthValue(board_Comment.getCmGroup());
 
                     commentRepository.save(
                             board_Comment = Board_Comment.builder()
@@ -232,7 +234,7 @@ public class CommentServiceImpl implements CommentService {
                                     .build()
                     );
 
-                    //댓글의 대댓글갯수 증가
+                    //댓글의 AnswerNum 증가
                     commentRepository.updateAnswerNum(cm_id);
 
                     return board_Comment.getCmId();

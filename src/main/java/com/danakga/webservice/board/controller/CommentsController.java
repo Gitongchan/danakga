@@ -15,12 +15,6 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 public class CommentsController {
 
-
-    /* 대댓글 DB 구조 생각 중, DB 컬럼 만들어야 하고, 작성부터 조회까지 싹 로직 바꿔야 할 듯
-    * 참고 중인 블로그
-    * https://velog.io/@yoho98/%EA%B2%8C%EC%8B%9C%EA%B8%80-%EB%8C%93%EA%B8%80-%EB%8C%80%EB%8C%93%EA%B8%80%EB%AC%B4%ED%95%9C%EB%8C%93%EA%B8%80-%EB%A1%9C%EC%A7%81
-    * https://www.youtube.com/watch?v=bhnDSyiPvaY&t=186s */
-
     private final CommentService commentService;
 
     // 댓글 작성 (게시글 id, 댓글 내용 받기)
@@ -60,6 +54,16 @@ public class CommentsController {
         return result == -1L ?
                 new ResResultDto(result, "댓글 삭제 실패") : new ResResultDto(result, "댓글 삭제 성공");
     }
+
+    /*
+
+     * 참고 중인 블로그
+     * https://velog.io/@yoho98/%EA%B2%8C%EC%8B%9C%EA%B8%80-%EB%8C%93%EA%B8%80-%EB%8C%80%EB%8C%93%EA%B8%80%EB%AC%B4%ED%95%9C%EB%8C%93%EA%B8%80-%EB%A1%9C%EC%A7%81
+     * https://www.youtube.com/watch?v=bhnDSyiPvaY&t=186s
+
+     * 07/27 대댓글 작성 완료, 댓글 작성 로직 변경
+
+     */
 
     @PostMapping("/comment/answer/write/{bd_id}/{cm_id}")
     public ResResultDto answerWrite(@PathVariable(value = "bd_id") Long bd_id,
