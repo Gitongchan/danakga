@@ -17,6 +17,7 @@ import com.danakga.webservice.product.service.ProductService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
+import com.danakga.webservice.wishList.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductFilesRepository productFilesRepository;
     private final ProductRepository productRepository;
     private final ProductFilesService productFilesService;
+    private final WishRepository wishRepository;
     
     //상품등록
     @Transactional
@@ -144,6 +146,7 @@ public class ProductServiceImpl implements ProductService {
             listDto.setProductStock(entity.getProductStock());
             listDto.setProductViewCount(entity.getProductViewCount());
             listDto.setProductOrderCount(entity.getProductOrderCount());
+            listDto.setProductWishCount(wishRepository.countByProductId(entity));
             listDto.setProductUploadDate(entity.getProductUploadDate());
             listDto.setTotalPage(productPage.getTotalPages());
             listDto.setTotalElement(productPage.getTotalElements());
@@ -237,7 +240,9 @@ public class ProductServiceImpl implements ProductService {
         }
 
         List<Map<String, Object>> mapFiles = new ArrayList<>();
-        ResProductDto resProductDto = new ResProductDto(productInfo,companyInfo);
+
+        Long productWishCount = wishRepository.countByProductId(productInfo);
+        ResProductDto resProductDto = new ResProductDto(productInfo,companyInfo,productWishCount);
 
         files.forEach(entity->{
             Map<String, Object> filesMap = new HashMap<>();
