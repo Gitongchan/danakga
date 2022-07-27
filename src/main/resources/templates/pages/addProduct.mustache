@@ -141,6 +141,8 @@
         let thumb = document.querySelector('#thumb-file');
         let input = document.querySelector('#file-input');
 
+        const price = document.getElementById('productPrice').value;
+        const stock = document.getElementById('productStock').value;
         const productData = {
             productCompanyId: {
                 companyId: document.getElementById('checkCompanyId').value
@@ -150,8 +152,8 @@
             productBrand: brandType.options[brandType.selectedIndex].value,
             productName: document.getElementById('productName').value,
             productContent: editorData,
-            productPrice: document.getElementById('productPrice').value,
-            productStock: document.getElementById('productStock').value,
+            productPrice: price.trim().length === 0 ? "0" : price,
+            productStock: stock.trim().length === 0 ? "0" : stock,
             productViewCount: 0,
             productOrderCount: 0
         }

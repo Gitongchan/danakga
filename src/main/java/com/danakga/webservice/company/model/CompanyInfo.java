@@ -51,6 +51,10 @@ public class CompanyInfo {
     @Column(name = "com_detail_adr")
     private String companyDetailAdr;
 
+    //회사 은행명
+    @Column(name = "com_bank_name")
+    private String companyBankName;
+
     //회사 계좌
     @Column(name = "com_banknum")
     private String companyBanknum;
@@ -61,12 +65,12 @@ public class CompanyInfo {
 
     //사업자 탈퇴 날짜
     @Column(name = "com_deleted_date")
-    private LocalDateTime companyDeltedDate;
+    private LocalDateTime companyDeletedDate;
 
     @Builder
     public CompanyInfo(Long companyId, UserInfo userInfo, String companyName, String companyNum,
                        String companyAdrNum, String companyStreetAdr,String companyLotAdr, String companyDetailAdr,
-                       String companyBanknum, boolean companyEnabled, LocalDateTime companyDeltedDate) {
+                       String companyBankName,String companyBanknum, boolean companyEnabled, LocalDateTime companyDeletedDate) {
         this.companyId = companyId;
         this.userInfo = userInfo;
         this.companyName = companyName;
@@ -75,8 +79,9 @@ public class CompanyInfo {
         this.companyStreetAdr = companyStreetAdr;
         this.companyLotAdr = companyLotAdr;
         this.companyDetailAdr = companyDetailAdr;
+        this.companyBankName = companyBankName;
         this.companyBanknum = companyBanknum;
         this.companyEnabled = companyEnabled;
-        this.companyDeltedDate = companyDeltedDate;
+        this.companyDeletedDate = companyDeletedDate;
     }
 }

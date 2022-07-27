@@ -29,16 +29,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
+
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final BoardRepository boardRepository;
-
     private final CommentRepository commentRepository;
 
 
@@ -61,7 +64,7 @@ public class UserServiceImpl implements UserService {
         Integer idCheckResult = userIdCheck(userInfoDto.getUserid());
         Integer emailCheckResult = emailCheck(userInfoDto.getEmail());
 
-        if (idCheckResult.equals(-1) || emailCheckResult.equals(-1)) {
+        if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
             return -1L;
         }
         return userRepository.save(
@@ -105,7 +108,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long update(UserInfo userInfo, UpdateUserInfoDto updateUserInfoDto) {
         //로그인 사용자 검증 이후 동작함
-        if (userRepository.findById(userInfo.getId()).isEmpty()) {
+        if(userRepository.findById(userInfo.getId()).isEmpty()) {
             return -1L;
         }
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -114,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
         String rawCheckPassword = updateUserInfoDto.getCheckPassword();
 
-        if (bCryptPasswordEncoder.matches(rawCheckPassword, modifyUser.getPassword())) {
+        if(bCryptPasswordEncoder.matches(rawCheckPassword,modifyUser.getPassword())){
 
             String rawPassword = updateUserInfoDto.getPassword();
             updateUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
@@ -138,7 +141,7 @@ public class UserServiceImpl implements UserService {
             return userInfo.getId();
         }
         return -2L;
-    }
+        }
 
     //회원 탈퇴
     @Override
@@ -153,9 +156,9 @@ public class UserServiceImpl implements UserService {
 
         UserInfo DeleteUser = userRepository.findById(userInfo.getId()).get();
 
-        if (!DeleteUser.getRole().equals(UserRole.ROLE_USER)) return -2L;
+        if(!DeleteUser.getRole().equals(UserRole.ROLE_USER)) return -2L;
 
-        if (bCryptPasswordEncoder.matches(password, DeleteUser.getPassword())) {
+        if(bCryptPasswordEncoder.matches(password,DeleteUser.getPassword())) {
             userRepository.save(
                     UserInfo.builder()
                             .id(DeleteUser.getId()) //로그인 유저 키값을 받아옴
@@ -176,14 +179,14 @@ public class UserServiceImpl implements UserService {
             return userInfo.getId();
         }
         return -3L;
-    }
+        }
 
     //회원 정보 조회
     @Override
     public UserInfo userInfoCheck(UserInfo userInfo) {
 
-        if (userRepository.findById(userInfo.getId()).isPresent()) {
-            return userRepository.findById(userInfo.getId()).get();
+        if(userRepository.findById(userInfo.getId()).isPresent()) {
+            return  userRepository.findById(userInfo.getId()).get();
         }
         return null;
     }
@@ -193,11 +196,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long companyRegister(UserInfo userInfo, UserInfoDto userInfoDto, CompanyInfoDto companyInfoDto) {
 
-        if (companyRepository.findByUserInfo(userInfo).isPresent()) {
+        if(companyRepository.findByUserInfo(userInfo).isPresent()){
             return -1L;//가입된 유저 정보 있으면 -1L
         }
 
-        if (userRepository.findById(userInfo.getId()).isPresent()) {
+        if(userRepository.findById(userInfo.getId()).isPresent()){
 
             UserInfo registerUserInfo = userRepository.findById(userInfo.getId()).get();
 
@@ -228,11 +231,11 @@ public class UserServiceImpl implements UserService {
                             .companyLotAdr(companyInfoDto.getCompanyLotAdr())
                             .companyStreetAdr(companyInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyInfoDto.getCompanyDetailAdr())
+                            .companyBankName(companyInfoDto.getCompanyBankName())
                             .companyBanknum(companyInfoDto.getCompanyBanknum())
                             .companyEnabled(true)
                             .build()
-            );
-            return registerUserInfo.getId();
+            );            return registerUserInfo.getId();
 
         }
         return -1L;
@@ -240,7 +243,7 @@ public class UserServiceImpl implements UserService {
 
     //탈퇴한 사업자 복구
     @Override
-    public Long companyRestore(UserInfo userInfo, String password) {
+    public Long companyRestore(UserInfo userInfo,String password) {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -250,58 +253,50 @@ public class UserServiceImpl implements UserService {
 
         UserInfo restoreUserInfo = userRepository.findById(userInfo.getId()).get();
 
-        if (companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo, false).isEmpty()) {
+        if (companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo,false).isEmpty()) {
             return -1L; //로그인된 사용자가 사업자 등록이 안되어있거나,이용중지된 사업자가 아님
         }
 
-        if (!bCryptPasswordEncoder.matches(password, restoreUserInfo.getPassword())) {
+        if(!bCryptPasswordEncoder.matches(password,restoreUserInfo.getPassword())) {
             return -2L; //비밀번호 확인 실패시
         }
 
-        CompanyInfo restoreComUserInfo = companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo, false).get();
+        CompanyInfo restoreComUserInfo = companyRepository.findByUserInfoAndCompanyEnabled(restoreUserInfo,false).get();
 
 
-        userRepository.save(
-                UserInfo.builder()
-                        .id(restoreUserInfo.getId())
-                        .userid(restoreUserInfo.getUserid())
-                        .password(restoreUserInfo.getPassword())
-                        .name(restoreUserInfo.getName())
-                        .phone(restoreUserInfo.getPhone())
-                        .email(restoreUserInfo.getEmail())
-                        .role(UserRole.ROLE_MANAGER)
-                        .userAdrNum(restoreUserInfo.getUserAdrNum())
-                        .userStreetAdr(restoreUserInfo.getUserStreetAdr())
-                        .userLotAdr(restoreUserInfo.getUserLotAdr())
-                        .userDetailAdr(restoreUserInfo.getUserDetailAdr())
-                        .userEnabled(restoreUserInfo.isUserEnabled())
-                        .build()
-        );
-        companyRepository.save(
-                CompanyInfo.builder()
-                        .companyId(restoreComUserInfo.getCompanyId())
-                        .userInfo(restoreUserInfo)
-                        .companyName(restoreComUserInfo.getCompanyName())
-                        .companyNum(restoreComUserInfo.getCompanyNum())
-                        .companyAdrNum(restoreComUserInfo.getCompanyAdrNum())
-                        .companyLotAdr(restoreComUserInfo.getCompanyLotAdr())
-                        .companyStreetAdr(restoreComUserInfo.getCompanyStreetAdr())
-                        .companyDetailAdr(restoreComUserInfo.getCompanyDetailAdr())
-                        .companyBanknum(restoreComUserInfo.getCompanyBanknum())
-                        .companyEnabled(true)
-                        .companyDeltedDate(null)
-                        .build()
-        );
-        return restoreUserInfo.getId();
-    }
-
-    @Override
-    public String useridFind(UserInfoDto userInfoDto) {
-        if (userRepository.findByEmailAndPhone(userInfoDto.getEmail(), userInfoDto.getPhone()).isPresent()) {
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(), userInfoDto.getPhone()).get();
-            return findUserInfo.getUserid();
-        }
-        return null;
+            userRepository.save(
+                    UserInfo.builder()
+                            .id(restoreUserInfo.getId())
+                            .userid(restoreUserInfo.getUserid())
+                            .password(restoreUserInfo.getPassword())
+                            .name(restoreUserInfo.getName())
+                            .phone(restoreUserInfo.getPhone())
+                            .email(restoreUserInfo.getEmail())
+                            .role(UserRole.ROLE_MANAGER)
+                            .userAdrNum(restoreUserInfo.getUserAdrNum())
+                            .userStreetAdr(restoreUserInfo.getUserStreetAdr())
+                            .userLotAdr(restoreUserInfo.getUserLotAdr())
+                            .userDetailAdr(restoreUserInfo.getUserDetailAdr())
+                            .userEnabled(restoreUserInfo.isUserEnabled())
+                            .build()
+            );
+            companyRepository.save(
+                    CompanyInfo.builder()
+                            .companyId(restoreComUserInfo.getCompanyId())
+                            .userInfo(restoreUserInfo)
+                            .companyName(restoreComUserInfo.getCompanyName())
+                            .companyNum(restoreComUserInfo.getCompanyNum())
+                            .companyAdrNum(restoreComUserInfo.getCompanyAdrNum())
+                            .companyLotAdr(restoreComUserInfo.getCompanyLotAdr())
+                            .companyStreetAdr(restoreComUserInfo.getCompanyStreetAdr())
+                            .companyDetailAdr(restoreComUserInfo.getCompanyDetailAdr())
+                            .companyBankName(restoreComUserInfo.getCompanyBankName())
+                            .companyBanknum(restoreComUserInfo.getCompanyBanknum())
+                            .companyEnabled(true)
+                            .companyDeletedDate(null)
+                            .build()
+            );
+            return restoreUserInfo.getId();
     }
 
     //작성한 게시글 목록 조회
@@ -338,11 +333,11 @@ public class UserServiceImpl implements UserService {
             mapPost.put("bd_deleted", entity.getBdDeleted());
             mapPost.put("totalElement", boards.getTotalElements());
             mapPost.put("totalPage", boards.getTotalPages());
-            
+
             //dto에 담아줄 List<Map>에 담기
             postList.add(mapPost);
         });
-        
+
         //dto에 List<Map>값 set
         resBoardListDto.setLists(postList);
 
@@ -361,11 +356,8 @@ public class UserServiceImpl implements UserService {
         final String deleted = "N";
 
         //게시판 목록을 불러오기 위한 List
-        List<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted);
-
-        //댓글 갯수를 위한 pageable
-        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
-        Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+        Page<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted, pageable);
 
         //return해줄 dto 객체 생성
         ResBoardListDto resBoardListDto = new ResBoardListDto();
@@ -383,8 +375,8 @@ public class UserServiceImpl implements UserService {
             mapComments.put("bd_writer", entity.getBdWriter());
             mapComments.put("bd_created", entity.getBdCreated());
             mapComments.put("bd_views", entity.getBdViews());
-            mapComments.put("totalElement", comments.getTotalElements());
-            mapComments.put("totalPage", comments.getTotalPages());
+            mapComments.put("totalElement", boards.getTotalElements());
+            mapComments.put("totalPage", boards.getTotalPages());
 
             //dto에 담아줄 List<Map>에 담기
             data.add(mapComments);
@@ -444,9 +436,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String useridFind(UserInfoDto userInfoDto) {
+        if(userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
+            return findUserInfo.getUserid();
+        }
+        return null;
+    }
+
+    @Override
     public String passwordFind(UserInfoDto userInfoDto) {
-        if (userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(), userInfoDto.getEmail(), userInfoDto.getPhone()).isPresent()) {
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(), userInfoDto.getPhone()).get();
+        if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
             return findUserInfo.getPassword();
         }
         return null;

@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
@@ -88,7 +87,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                     + "from Board b inner join Board_Comment bc on b.bdId = bc.board.bdId "
                     + "where bc.cmWriter = :cmWriter and b.bdType = :bdType and b.bdDeleted = :bdDeleted"
     )
-    List<Board> myCommentsPost(@Param("cmWriter") String cmWriter,
+    Page<Board> myCommentsPost(@Param("cmWriter") String cmWriter,
                                @Param("bdType") String boardType,
-                               @Param("bdDeleted") String bdDeleted);
+                               @Param("bdDeleted") String bdDeleted,
+                               Pageable pageable);
 }
