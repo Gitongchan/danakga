@@ -14,4 +14,6 @@ public interface WishRepository extends JpaRepository<Wish,Long> {
 
     Page<Wish> findByUserInfo(UserInfo userInfo,Pageable pageable);
 
+    Optional<Wish> findByWishId(Long wishId);
+
 }

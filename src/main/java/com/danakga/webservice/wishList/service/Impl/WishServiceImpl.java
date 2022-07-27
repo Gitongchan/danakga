@@ -6,6 +6,7 @@ import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
+import com.danakga.webservice.wishList.dto.request.WishIdDto;
 import com.danakga.webservice.wishList.dto.response.ResWishListDto;
 import com.danakga.webservice.wishList.model.Wish;
 import com.danakga.webservice.wishList.repository.WishRepository;
@@ -81,6 +82,25 @@ public class WishServiceImpl implements WishService {
         });
 
         return wishListDto;
+    }
+
+    //선택한 제품 찜목록에서 삭제
+    @Override
+    public Long wishDelete(UserInfo userInfo, List<WishIdDto> wishIdDto) {
+        UserInfo wishUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
+        );
+
+        for(WishIdDto idDto : wishIdDto){
+            Wish wish = wishRepository.findByWishId(idDto.getWishId()).orElseThrow(
+                    () -> new CustomException.ResourceNotFoundException("선택한 제품이 위시리스트에 존재 하지 않습니다.")
+            );
+            wishRepository.delete(wish);
+        }
+
+
+        return 1L;
+
     }
 
 }

@@ -3,6 +3,7 @@ package com.danakga.webservice.wishList.controller;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
+import com.danakga.webservice.wishList.dto.request.WishIdDto;
 import com.danakga.webservice.wishList.dto.request.WishProductDto;
 import com.danakga.webservice.wishList.dto.response.ResWishListDto;
 import com.danakga.webservice.wishList.service.WishService;
@@ -32,6 +33,13 @@ public class WishController {
     @GetMapping(value = "/wish/{page}")
     public List<ResWishListDto> wishList(@LoginUser UserInfo userInfo, Pageable pageable,@PathVariable int page){
         return wishService.wishList(userInfo,pageable,page);
+    }
+
+    @DeleteMapping(value = "/wish")
+    public ResResultDto wishDelete(@LoginUser UserInfo userInfo, @RequestBody List<WishIdDto> wishIdDto){
+        Long result = wishService.wishDelete(userInfo,wishIdDto);
+
+        return new ResResultDto(result,"선택한 제품을 삭제하였습니다.");
     }
 
 
