@@ -5,6 +5,7 @@ import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
+import com.danakga.webservice.user.dto.request.PasswordDto;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.dto.response.ResUserInfoDto;
@@ -52,17 +53,15 @@ public class UserController{
 
     //회원 탈퇴
     @PutMapping("/user_deleted")
-    public ResResultDto userDeleted(@LoginUser UserInfo userInfo, @RequestParam("password") String password){
-        Long result = userService.userDeleted(userInfo,password);
+    public ResResultDto userDeleted(@LoginUser UserInfo userInfo, @RequestBody PasswordDto password){
+        Long result = userService.userDeleted(userInfo,password.getPassword());
+
 
         if(result.equals(-1L)){
-            return new ResResultDto(result,"회원 탈퇴 실패.");
+            return new ResResultDto(result,"회원 탈퇴 실패,비밀번호 입력 오류.");
         }
-        else if(result.equals(-2L)){
-            return new ResResultDto(result,"일반회원만 탈퇴할 수 있습니다.");
-        }
-        else if(result.equals(-3L)) {
-            return new ResResultDto(result, "회원 탈퇴 실패,비밀번호 입력 오류.");
+        else if(result.equals(-2L)) {
+            return new ResResultDto(result, "일반회원만 탈퇴할 수 있습니다.");
         }
         else return new ResResultDto(result,"회원 탈퇴 성공했습니다.");
 
