@@ -150,35 +150,33 @@ public class UserServiceImpl implements UserService {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        if (userRepository.findById(userInfo.getId()).isEmpty()) {
-            return -1L;
-        }
+        UserInfo deleteUser = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
 
-        UserInfo DeleteUser = userRepository.findById(userInfo.getId()).get();
+        if(!deleteUser.getRole().equals(UserRole.ROLE_USER)) return -2L; //사업자 탈퇴먼저 진행
 
-        if(!DeleteUser.getRole().equals(UserRole.ROLE_USER)) return -2L;
-
-        if(bCryptPasswordEncoder.matches(password,DeleteUser.getPassword())) {
+        if(bCryptPasswordEncoder.matches(password,deleteUser.getPassword())) {
             userRepository.save(
                     UserInfo.builder()
-                            .id(DeleteUser.getId()) //로그인 유저 키값을 받아옴
-                            .userid(DeleteUser.getUserid()) //그대로 유지
-                            .password(DeleteUser.getPassword())
-                            .name(DeleteUser.getName())
-                            .phone(DeleteUser.getPhone())
-                            .email(DeleteUser.getEmail())
-                            .role(DeleteUser.getRole())
-                            .userAdrNum(DeleteUser.getUserAdrNum())
-                            .userStreetAdr(DeleteUser.getUserStreetAdr())
-                            .userLotAdr(DeleteUser.getUserLotAdr())
-                            .userDetailAdr(DeleteUser.getUserDetailAdr())
+                            .id(deleteUser.getId()) //로그인 유저 키값을 받아옴
+                            .userid(deleteUser.getUserid()) //그대로 유지
+                            .password(deleteUser.getPassword())
+                            .name(deleteUser.getName())
+                            .phone(deleteUser.getPhone())
+                            .email(deleteUser.getEmail())
+                            .role(deleteUser.getRole())
+                            .userAdrNum(deleteUser.getUserAdrNum())
+                            .userStreetAdr(deleteUser.getUserStreetAdr())
+                            .userLotAdr(deleteUser.getUserLotAdr())
+                            .userDetailAdr(deleteUser.getUserDetailAdr())
                             .userDeletedDate(LocalDateTime.now()) //현재시간
                             .userEnabled(false)//사용자 이용 중지
                             .build()
             );
             return userInfo.getId();
         }
-        return -3L;
+        else
+            return -1L; // 비밀번호 매칭 실패시
         }
 
     //회원 정보 조회
