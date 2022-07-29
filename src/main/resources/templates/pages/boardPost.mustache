@@ -101,7 +101,13 @@
                         console.error(res);
                     }
                 })
-                .then(data => console.log(data))
+                .then(data => {
+                    if(boardData.bdType=="자유게시판"){
+                        location.replace('/board/basic');
+                    }else{
+                        location.replace('/board/qa');
+                    }
+                })
                 .catch(error => console.log(error))
         // ...
     } );

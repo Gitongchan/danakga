@@ -191,7 +191,9 @@
                         console.error(res);
                     }
                 })
-                .then(data => console.log(data))
+                .then(data => {
+                    location.replace('/manager/myproductlist');
+                })
                 .catch(error => console.log(error))
         // ...
     });
