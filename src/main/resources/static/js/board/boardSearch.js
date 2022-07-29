@@ -10,7 +10,12 @@ const category = document.querySelector('.form-select');
 const type = getParameterByName('type');
 
 const getInfo = async () => {
+    // 페이징 부분을 비워주는 곳
+    pagenation.innerHTML= '';
+
     console.log(category.value);
+    console.log(type.value);
+    console.log(content.value);
     if(content.value.trim().length===0){
         alert('값을 입력해주세요!')
         return;
@@ -20,6 +25,7 @@ const getInfo = async () => {
         if(res.ok){
             const data = await res.json();
             tablelist.innerHTML = '';
+            console.log(data);
             for(let i=0; i<data.lists.length; i++){
                 const tr = document.createElement('tr');
                 tr.innerHTML =
@@ -31,11 +37,13 @@ const getInfo = async () => {
 
                 tablelist.appendChild(tr);
             }
+            //  페이징을 해주면 된다.
+            console.log(searchPagination())
+            searchPagination(data.lists[0].totalPage,data.lists[0].totalElement);
         }
     }catch (e) {
 
     }
-
 }
 
 searchBtn.addEventListener('click', getInfo);
