@@ -17,17 +17,19 @@ btn.addEventListener('click',function() {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if(data.id === 1){
+                    if(data.id === -1){
+                        alert("회원탈퇴 실패!")
+                    }else if(data.id === -2){
+                        alert("일반 회원만 탈퇴할 수 있습니다!")
+                    }else if(data.id === -3){
+                        alert("비밀번호 오류!");
+                    } else{
                         alert("회원 탈퇴 성공")
                         window.location.replace('/index');
-                    }else if(data.id === -3){
-                        alert("비밀번호 오류!")
-                    }else{
-                        alert("일반회원만 탈퇴 할 수 있습니다!");
                     }
                 })
         }
     }else{
-        alert('비밀번호를 다시 입력하세요!')
+        alert('8자 이상의 비밀번호를 입력하세요!')
     }
 })
