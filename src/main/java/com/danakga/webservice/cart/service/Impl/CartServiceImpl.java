@@ -74,6 +74,7 @@ public class CartServiceImpl implements CartService {
         return -1L;
     }
 
+
     @Override
     public Long cartDeleteAll(Cart cart,Product productId) {
         for (int i=0; i<cart.getCartAmount(); i++){

@@ -1,6 +1,7 @@
 package com.danakga.webservice.cart.service;
 
 import com.danakga.webservice.cart.dto.request.CartDto;
+import com.danakga.webservice.cart.model.Cart;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
 
@@ -14,6 +15,6 @@ public interface CartService {
     //장바구니 비우기 -> delete
     Long cartDelete(Product productId);
 
-    Long cartDeleteAll(Product productId);
+    Long cartDeleteAll(Cart cart, Product productId);
 
 }
