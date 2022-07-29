@@ -2,27 +2,10 @@
 //data[0].totalPage // 페이지 그룹 개수
 // 이전 버튼 : 화면에 그려진 첫번째 페이지 - 1
 // 다음 버튼 : 화면에 그려진 마지막 페이지 + 1
-const pagenation = document.querySelector('#board-wrap .text-center .pagination');
 
-const searchbtn = document.querySelector('#searchbtn');
-
-searchbtn.addEventListener('click',renderPagination);
-
-
-(function() {
-    fetch(`/api/board/list/자유게시판?page=0`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            renderPagination(data.lists[0].totalPage);
-        })
-})();
-
-function renderPagination(currentPage) {
-    fetch(`/api/board/list/자유게시판?page=0`)
-        .then((res)=>res.json())
-        .then((data)=>{
+function searchPagination(currentPage, totalE) {
             //총 페이지 수
-            const total = Math.ceil(data.lists[0].totalElement/10);
+            const total = Math.ceil(totalE/10);
             //화면에 보여질 페이지 그룹
             const group = Math.ceil(currentPage/10);
 
@@ -95,21 +78,19 @@ function renderPagination(currentPage) {
                     else if (id === "allprev") selectedPage = 1;
                     else if (id === "allnext") selectedPage = total;
                     //페이지 그리는 함수
-                    else onList(id);
+                    else searchList(id);
 
 
 
                     pagenation.innerHTML = "";
-                    renderPagination(selectedPage);//페이지네이션 그리는 함수
-
+                    searchPagination(selectedPage,totalE);//페이지네이션 그리는 함수
                 })
             }
-        })
 }
 
 //페이지 번호 클릭 시 이동하는 곳
-function onList(e){
-    fetch(`/api/board/list/자유게시판?page=${e}`)
+function searchList(e){
+    fetch(`/api/board/list/search/${type}/${category.value}/${content.value}?page=${e}`)
         .then((res)=>res.json())
         .then((data)=>{
             tablelist.innerHTML="";
