@@ -29,7 +29,7 @@ public class Board_Comment {
     @Column(name = "cm_writer")
     private String cmWriter;
 
-    //댓글의 그룹 (처음 시작은 0이고 댓글이 작성될 때 마다 +1씩 해주면 되는데, 가장 큰 group값 + 1로 항상 해주어야 한다.)
+    //댓글의 그룹 (처음 시작은 0이고 댓글이 작성될 때 마다 +1씩 해주면 되는데, 가장 큰 group 값 + 1)
     @Column(name = "cm_group")
     private int cmGroup;
 
@@ -37,7 +37,7 @@ public class Board_Comment {
     @Column(name = "cm_step")
     private int cmStep;
 
-    //댓글의 순서, 깊이 (댓글은 0, 대댓글은 1, 대대댓글은 2), depth 또는 order라고 함
+    //대댓글의 순서
     @Column(name = "cm_depth")
     private int cmDepth;
 
@@ -63,7 +63,7 @@ public class Board_Comment {
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
-    //삭제 여부를 insert시 N 값으로 자동 입력
+    //삭제 여부를 insert 하면 N 값으로 자동 입력
     @PrePersist
     public void deleted() {
         this.cmDeleted = "N";

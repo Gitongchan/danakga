@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
         //삭제여부가 "N"의 값만 가져오기 위한 변수
         final String deleted = "N";
 
-        //해당 bdid값이 없다면 exception 값 전달
+        //해당 bd_id값이 없다면 exception 값 전달
         Board board = boardRepository.findByBdId(id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글 찾을 수 없습니다."));
 
@@ -77,9 +77,9 @@ public class CommentServiceImpl implements CommentService {
     public Long commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id) {
 
         //게시글 먼저 있는지 확인 후 회원 정보와 게시글 db 가져옴
-        if (boardRepository.findById(bd_id).isPresent()) {
+        if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-            if (userRepository.findById(userInfo.getId()).isPresent()) {
+            if (boardRepository.findById(bd_id).isPresent()) {
 
                 Board recentBoard = boardRepository.findById(bd_id).get();
 
@@ -91,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
                 Integer groupCount = commentRepository.maxGroupValue();
 
                 //댓글이 처음 작성 됐을 때를 위한 초기 값 설정
-                if(groupCount == null) {
+                if (groupCount == null) {
                     groupCount = 0;
                 }
 
@@ -202,15 +202,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id) {
 
-        if(userRepository.findById(userInfo.getId()).isPresent()) {
+        if (userRepository.findById(userInfo.getId()).isPresent()) {
 
-            if(boardRepository.findById(bd_id).isPresent()) {
+            if (boardRepository.findById(bd_id).isPresent()) {
 
-                if(commentRepository.findById(cm_id).isPresent()) {
+                if (commentRepository.findById(cm_id).isPresent()) {
 
                     //Long값의 댓글 번호를 int로 형변환
                     final int parentNum = cm_id.intValue();
-                    
+
                     UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
 
                     Board recentBoard = boardRepository.findById(bd_id).get();
@@ -246,20 +246,36 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long answerEdit(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id, Long an_id) {
 
-        //이렇게 db를 4번이나 조회하는건 아닌거 같음;
-        if(userRepository.findById(userInfo.getId()).isPresent()) {
+        //이렇게 4개를 다 조회 하는게 맞나 싶기도 하고
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다."));
 
-            if(boardRepository.findById(bd_id).isPresent()) {
+        Board recentBoard = boardRepository.findById(bd_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글이 존재하지 않습니다."));
 
-                if(commentRepository.findById(cm_id).isPresent()) {
+        Board_Comment recentComment = commentRepository.findById(cm_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
 
-                    if(commentRepository.findById(an_id).isPresent()) {
+        Board_Comment recentAnswer = commentRepository.findById(an_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 대댓글이 존재하지 않습니다."));
 
-                    }
-                }
-            }
-        }
+        commentRepository.save(
+                recentAnswer = Board_Comment.builder()
+                        .cmId(recentAnswer.getCmId())
+                        .cmContent(reqCommentDto.getCmContent())
+                        .cmWriter(recentUserInfo.getUserid())
+                        .cmDeleted(recentAnswer.getCmDeleted())
+                        .cmCreated(recentAnswer.getCmCreated())
+                        .cmModified(recentAnswer.getCmModified())
+                        .cmGroup(recentAnswer.getCmGroup())
+                        .cmDepth(recentAnswer.getCmDepth())
+                        .cmParentNum(recentAnswer.getCmParentNum())
+                        .cmStep(recentAnswer.getCmStep())
+                        .userInfo(recentUserInfo)
+                        .board(recentBoard)
+                        .build()
+        );
 
-        return -1L;
+        return recentAnswer.getCmId();
     }
 }

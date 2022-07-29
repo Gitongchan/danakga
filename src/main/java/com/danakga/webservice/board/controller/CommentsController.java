@@ -80,7 +80,7 @@ public class CommentsController {
     }
 
     //대댓글 수정
-    @PostMapping("/comment/answer/edit/{bd_id}/{cm_id}/{an_id}")
+    @PutMapping("/comment/answer/edit/{bd_id}/{cm_id}/{an_id}")
     public ResResultDto answerEdit(@PathVariable(value = "bd_id") Long bd_id, //게시글 id
                                    @PathVariable(value = "cm_id") Long cm_id, //댓글 id
                                    @PathVariable(value = "an_id") Long an_id, //대댓글의 id
@@ -90,7 +90,7 @@ public class CommentsController {
         Long result = commentService.answerEdit(userInfo, reqCommentDto, bd_id, cm_id, an_id);
 
         return result == -1L ?
-                new ResResultDto(result, "대댓글 작성 실패") : new ResResultDto(result, "대댓글 작성 성공");
+                new ResResultDto(result, "대댓글 수정 실패") : new ResResultDto(result, "대댓글 수정 성공");
     }
 
 }
