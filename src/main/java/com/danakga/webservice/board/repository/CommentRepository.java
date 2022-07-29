@@ -47,7 +47,15 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     )
     Integer maxGroupValue();
 
-    // depth의 최댓값
+    // group에서의 step의 최댓값
+    @Query(
+            value = "select max(bc.cmStep) as maxStep " +
+                    "from Board_Comment bc " +
+                    "where bc.cmGroup = :cmGroup"
+    )
+    int maxStepValue(@Param("cmGroup") int cmGroup);
+
+    // group에서의 depth의 최댓값
     @Query(
             value = "select max(bc.cmDepth) as maxDepth " +
                     "from Board_Comment bc " +
@@ -55,14 +63,12 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     )
     int maxDepthValue(@Param("cmGroup") int cmGroup);
 
-    // step의 최댓값
-    @Query(
-            value = "select max(bc.cmStep) as maxStep " +
-                    "from Board_Comment bc " +
-                    "where bc.cmGroup = :cmGroup"
-
-    )
-    int maxStepValue(@Param("cmGroup") int cmGroup);
+    /*  댓글과 대댓글 정렬 방법
+    (조건으로 몇번 게시글인지, 삭제여부까지 해야함, pagable 추가)
+    SELECT *
+    FROM board_comment
+    ORDER BY cm_group DESC, cm_depth ASC
+    */
 
     // answerNum(대댓글 갯수) 증가
     @Transactional

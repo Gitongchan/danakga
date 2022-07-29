@@ -131,6 +131,7 @@ public class CommentServiceImpl implements CommentService {
 
                 commentRepository.save(
                         board_Comment = Board_Comment.builder()
+                                .cmId(board_Comment.getCmId())
                                 .cmContent(reqCommentDto.getCmContent())
                                 .cmWriter(recentUserInfo.getUserid())
                                 .cmDeleted(board_Comment.getCmDeleted())
@@ -198,9 +199,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //대댓글 작성
-    //대댓글 작성 시 cmAnswerNum(대댓글 갯수)도 update 시켜야함 o
-    //cmStep(댓글의 계층)은 탬플릿이 대댓글까지 밖에 안돼서 댓글 0, 대댓글 1로 고정 o
-    //cmGroup(댓글의 그룹) 작성하려는 대댓글의 댓글 조회해서 값 넣어주기 o
     @Override
     public Long answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id) {
 
@@ -219,6 +217,8 @@ public class CommentServiceImpl implements CommentService {
 
                     Board_Comment board_Comment = commentRepository.findById(cm_id).get();
 
+                    int stepCount = commentRepository.maxStepValue(board_Comment.getCmGroup());
+
                     int depthCount = commentRepository.maxDepthValue(board_Comment.getCmGroup());
 
                     commentRepository.save(
@@ -226,7 +226,7 @@ public class CommentServiceImpl implements CommentService {
                                     .cmContent(reqCommentDto.getCmContent())
                                     .cmWriter(recentUserInfo.getUserid())
                                     .cmGroup(board_Comment.getCmGroup())
-                                    .cmStep(1)
+                                    .cmStep(stepCount + 1)
                                     .cmDepth(depthCount + 1)
                                     .cmParentNum(parentNum)
                                     .board(recentBoard)
