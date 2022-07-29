@@ -65,7 +65,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Long cartDelete(Product productId) {
+    public Long cartDelete(Long productId) {
         Cart cart = cartRepository.findByProductId(productId);
         if(cart != null){
             cartRepository.delete(cart);
@@ -76,7 +76,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public Long cartDeleteAll(Cart cart,Product productId) {
+    public Long cartDeleteAll(Cart cart,Long productId) {
         for (int i=0; i<cart.getCartAmount(); i++){
             Cart cart2 = cartRepository.findByProductId(productId);
             cartRepository.delete(cart2);

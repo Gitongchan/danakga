@@ -13,8 +13,8 @@ public interface CartService {
     //List<Cart> cartList(UserInfo userInfo);
 
     //장바구니 비우기 -> delete
-    Long cartDelete(Product productId);
+    Long cartDelete(Long productId);
 
-    Long cartDeleteAll(Cart cart, Product productId);
+    Long cartDeleteAll(Cart cart, Long productId);
 
 }
