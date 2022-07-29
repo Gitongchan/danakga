@@ -217,8 +217,6 @@ public class CommentServiceImpl implements CommentService {
 
                     Board_Comment board_Comment = commentRepository.findById(cm_id).get();
 
-                    int stepCount = commentRepository.maxStepValue(board_Comment.getCmGroup());
-
                     int depthCount = commentRepository.maxDepthValue(board_Comment.getCmGroup());
 
                     commentRepository.save(
@@ -226,7 +224,7 @@ public class CommentServiceImpl implements CommentService {
                                     .cmContent(reqCommentDto.getCmContent())
                                     .cmWriter(recentUserInfo.getUserid())
                                     .cmGroup(board_Comment.getCmGroup())
-                                    .cmStep(stepCount + 1)
+                                    .cmStep(1)
                                     .cmDepth(depthCount + 1)
                                     .cmParentNum(parentNum)
                                     .board(recentBoard)
@@ -241,6 +239,27 @@ public class CommentServiceImpl implements CommentService {
                 }
             }
         }
+        return -1L;
+    }
+
+    //대댓글 수정
+    @Override
+    public Long answerEdit(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id, Long an_id) {
+
+        //이렇게 db를 4번이나 조회하는건 아닌거 같음;
+        if(userRepository.findById(userInfo.getId()).isPresent()) {
+
+            if(boardRepository.findById(bd_id).isPresent()) {
+
+                if(commentRepository.findById(cm_id).isPresent()) {
+
+                    if(commentRepository.findById(an_id).isPresent()) {
+
+                    }
+                }
+            }
+        }
+
         return -1L;
     }
 }

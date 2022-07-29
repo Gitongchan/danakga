@@ -24,4 +24,7 @@ public interface CommentService {
     
     //대댓글 작성
     Long answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id);
+
+    //대댓글 수정
+    Long answerEdit(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id, Long an_id);
 }
