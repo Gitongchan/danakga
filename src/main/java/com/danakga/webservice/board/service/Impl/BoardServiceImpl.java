@@ -302,9 +302,7 @@ public class BoardServiceImpl implements BoardService {
                 if(deletedFiles.delete()){
                     fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
                 }
-
             }
-
         }
 
 

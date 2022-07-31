@@ -63,6 +63,7 @@ public class CommentsController {
 
      * 07/27 대댓글 작성 완료, 댓글 작성 로직 변경
      * 07/29 대댓글 작성 최종 완료 (depth 값 변경)
+     * 07/29 대댓글 수정 테스트 완료
 
      */
 
@@ -91,6 +92,20 @@ public class CommentsController {
 
         return result == -1L ?
                 new ResResultDto(result, "대댓글 수정 실패") : new ResResultDto(result, "대댓글 수정 성공");
+    }
+    
+    
+    //대댓글 삭제 여부 변경
+    @PutMapping("/comment/answer/delete/{bd_id}/{cm_id}/{an_id}")
+    public ResResultDto answerDelete(@PathVariable(value = "bd_id") Long bd_id, //게시글 id
+                                     @PathVariable(value = "cm_id") Long cm_id, //댓글 id
+                                     @PathVariable(value = "an_id") Long an_id, //대댓글 id
+                                     @LoginUser UserInfo userInfo) {
+        
+        Long result = commentService.answerDelete(userInfo, bd_id, cm_id, an_id);
+
+        return result == -1L ?
+                new ResResultDto(result, "대댓글 삭제 실패") : new ResResultDto(result, "대댓글 삭제 성공");
     }
 
 }

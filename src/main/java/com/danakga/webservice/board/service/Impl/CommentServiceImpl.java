@@ -29,21 +29,20 @@ public class CommentServiceImpl implements CommentService {
 
     //댓글 조회
     @Override
-    public ResCommentListDto commentsList(Long id, Pageable pageable, int page) {
+    public ResCommentListDto commentsList(Long bd_id, Pageable pageable, int page) {
 
         //삭제여부가 "N"의 값만 가져오기 위한 변수
         final String deleted = "N";
+        final int commentStep = 0;
+        final int answerStep = 1;
 
         //해당 bd_id값이 없다면 exception 값 전달
-        Board board = boardRepository.findByBdId(id)
+        Board board = boardRepository.findByBdId(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글 찾을 수 없습니다."));
 
         //bd_id, deleted = N 값인 댓글만 페이징해서 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
-        Page<Board_Comment> board_comments = commentRepository.findAllByBoardAndCmDeleted(board, deleted, pageable);
-
-        //paging한 baord_comments를 .getContent()하여 리스트로 변환하여 담아줌
-        List<Board_Comment> commentList = board_comments.getContent();
+        Page<Board_Comment> comments = commentRepository.findAllByBoardAndCmDeletedAndCmStep(board, deleted, commentStep, pageable);
 
         //Dto에 값을 담아주기 위한 List<Map>
         List<Map<String, Object>> mapComments = new ArrayList<>();
@@ -51,19 +50,45 @@ public class CommentServiceImpl implements CommentService {
         //return해줄 Dto 객체 생성
         ResCommentListDto resCommentListDto = new ResCommentListDto();
 
+
         //List 값을 반복문으로 Map에 담아줌
-        commentList.forEach(entity -> {
-            Map<String, Object> commentsMap = new HashMap<>();
-            commentsMap.put("cm_id", entity.getCmId());
-            commentsMap.put("cm_content", entity.getCmContent());
-            commentsMap.put("cm_writer", entity.getCmWriter());
-            commentsMap.put("cm_created", entity.getCmCreated());
-            commentsMap.put("cm_modify", entity.getCmModified());
-            commentsMap.put("totalElement", board_comments.getTotalElements());
-            commentsMap.put("totalPage", board_comments.getTotalPages());
+        //이 부분이 너무 어려웠다.
+        comments.forEach(comment -> {
+
+            //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
+            Map<String, Object> commentsMap = new LinkedHashMap<>();
+
+            //대댓글 담을 List<map>
+            List<Map<String, Object>> answersList = new ArrayList<>();
+
+            //DB를 조회할때 forEach로 반복되는 댓글의 id값을 받아서 각 댓글의 대댓글을 조회
+            Pageable reqPage = PageRequest.of(page, 10);
+            Page<Board_Comment> answers = commentRepository.answerList(comment.getCmId(), answerStep, deleted, reqPage);
+
+            answers.forEach(answer -> {
+
+                Map<String, Object> answersMap = new HashMap<>();
+
+                answersMap.put("cm_id", answer.getCmId());
+                answersMap.put("cm_content", answer.getCmContent());
+                answersMap.put("cm_writer", answer.getCmWriter());
+                answersMap.put("cm_step", answer.getCmStep());
+                answersMap.put("cm_created", answer.getCmCreated());
+                answersMap.put("cm_modify", answer.getCmModified());
+                answersList.add(answersMap);
+            });
+
+            commentsMap.put("cm_id", comment.getCmId());
+            commentsMap.put("cm_content", comment.getCmContent());
+            commentsMap.put("cm_writer", comment.getCmWriter());
+            commentsMap.put("cm_step", comment.getCmStep());
+            commentsMap.put("cm_created", comment.getCmCreated());
+            commentsMap.put("cm_modify", comment.getCmModified());
+            commentsMap.put("totalElement", comments.getTotalElements());
+            commentsMap.put("totalPage", comments.getTotalPages());
+            commentsMap.put("answer", answersList);
             mapComments.add(commentsMap);
         });
-
         //Dto 값 set
         resCommentListDto.setComments(mapComments);
 
@@ -71,8 +96,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //댓글 작성
-    //cmGroup을 가장 큰 group값 +1 해줘야 함 o
-    //cmdepth은 댓글은 0 대댓글 하나씩 작성 시 + 1 o
     @Override
     public Long commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id) {
 
@@ -161,7 +184,7 @@ public class CommentServiceImpl implements CommentService {
                 Board_Comment board_Comment = commentRepository.findByBoardAndCmId(board, cm_id);
 
                 //deleted 값 변경
-                commentRepository.updateDeleted(cm_id);
+                commentRepository.updateCmDeleted(cm_id);
 
                 return board_Comment.getCmId();
             }
@@ -246,7 +269,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long answerEdit(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id, Long an_id) {
 
-        //이렇게 4개를 다 조회 하는게 맞나 싶기도 하고
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다."));
 
@@ -275,6 +297,28 @@ public class CommentServiceImpl implements CommentService {
                         .board(recentBoard)
                         .build()
         );
+
+        return recentAnswer.getCmId();
+    }
+
+    //대댓글 상태 여부 변경
+    @Override
+    public Long answerDelete(UserInfo userInfo, Long bd_id, Long cm_id, Long an_id) {
+
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다."));
+
+        Board recentBoard = boardRepository.findById(bd_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글이 존재하지 않습니다."));
+
+        Board_Comment recentComment = commentRepository.findById(cm_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
+
+        Board_Comment recentAnswer = commentRepository.findByBoardAndCmId(recentBoard, an_id);
+
+        commentRepository.updateAnDeleted(an_id);
+
+        commentRepository.deleteAnswerNum(cm_id);
 
         return recentAnswer.getCmId();
     }

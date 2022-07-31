@@ -21,7 +21,18 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     Optional<Board_Comment> findByCmId(Long cm_id);
 
     //댓글 조회
-    Page<Board_Comment> findAllByBoardAndCmDeleted(Board board, String deleted, Pageable pageable);
+    @Query(
+            value = "select bc " +
+                    "from Board_Comment bc " +
+                    "where bc.board.bdId = :bdId and bc.cmDeleted = :cmDeleted and bc.cmStep = :cmStep " +
+                    "order by bc.cmGroup desc, bc.cmDepth asc"
+    )
+    Page<Board_Comment> answerList(@Param("bdId") Long bd_id,
+                                    @Param("cmStep") int cmStep,
+                                    @Param("cmDeleted") String deleted,
+                                    Pageable pageable);
+
+    Page<Board_Comment> findAllByBoardAndCmDeletedAndCmStep(Board board, String deleted, int commentStep, Pageable pageable);
 
     /*  댓글과 대댓글 정렬 조회 방법
     (위 조건으로 where절 추가 후 뿌리기)
@@ -34,7 +45,7 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     @Transactional
     @Modifying
     @Query("update Board_Comment bc set bc.cmDeleted = 'Y' where bc.cmId = :cmId")
-    void updateDeleted(@Param("cmId") Long cm_id);
+    void updateCmDeleted(@Param("cmId") Long cm_id);
 
     //회원이 작성한 댓글 조회
     @Query(
@@ -68,4 +79,17 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     @Modifying
     @Query("update Board_Comment bc set bc.cmAnswerNum = bc.cmAnswerNum + 1 where bc.cmId = :cmId")
     void updateAnswerNum(@Param("cmId") Long cm_id);
+
+    // answerNum(대댓글 갯수) 증가
+    @Transactional
+    @Modifying
+    @Query("update Board_Comment bc set bc.cmAnswerNum = bc.cmAnswerNum - 1 where bc.cmId = :cmId")
+    void deleteAnswerNum(@Param("cmId") Long cm_id);
+
+
+    //대댓글 삭제 여부 변경
+    @Transactional
+    @Modifying
+    @Query("update Board_Comment bc set bc.cmDeleted = 'Y' where bc.cmId = :anId")
+    void updateAnDeleted(@Param("anId") Long an_id);
 }
