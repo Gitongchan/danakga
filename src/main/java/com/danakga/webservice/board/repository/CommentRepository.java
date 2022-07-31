@@ -34,18 +34,20 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
 
     Page<Board_Comment> findAllByBoardAndCmDeletedAndCmStep(Board board, String deleted, int commentStep, Pageable pageable);
 
-    /*  댓글과 대댓글 정렬 조회 방법
-    (위 조건으로 where절 추가 후 뿌리기)
-    SELECT *
-    FROM board_comment
-    ORDER BY cm_group DESC, cm_depth ASC
-    */
-
     //댓글 삭제 여부 변경
     @Transactional
     @Modifying
     @Query("update Board_Comment bc set bc.cmDeleted = 'Y' where bc.cmId = :cmId")
     void updateCmDeleted(@Param("cmId") Long cm_id);
+    
+    //댓글 삭제 시 대댓글도 삭제 여부 변경
+//    @Transactional
+//    @Modifying
+//    @Query(
+//            value = "update Board_Comment as bc, (select bc2 from Board_Comment bc2 where bc2.cmGroup = :cmGroup) as an " +
+//                    "set "
+//    )
+//    void updateCmAllDeleted(@Param("cmGroup") Long cmGroup);
 
     //회원이 작성한 댓글 조회
     @Query(

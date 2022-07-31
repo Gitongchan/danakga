@@ -186,6 +186,8 @@ public class CommentServiceImpl implements CommentService {
                 //deleted 값 변경
                 commentRepository.updateCmDeleted(cm_id);
 
+//                commentRepository.updateCmAllDeleted(board_Comment.getCmGroup());
+
                 return board_Comment.getCmId();
             }
         }
