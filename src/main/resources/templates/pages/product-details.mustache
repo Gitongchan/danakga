@@ -40,7 +40,13 @@
                 </div>
                 <div class="col-lg-6 col-md-12 col-12">
                     <div class="product-info">
-                        <h2 class="title" id="p-title"></h2>
+                        <div class="d-flex justify-content-between">
+                            <h2 class="title" id="p-title"></h2>
+                            <div>
+                                <span class="mx-1"><i class="lni lni-eye mx-1"></i><span id="views-count"></span></span>
+                                <span class="mx-1"><i class="lni lni-heart-filled mx-1"></i><span id="heart-count"></span></span>
+                            </div>
+                        </div>
                         <p class="category"><i class="lni lni-tag"></i> 회사명:
                             <a href="javascript:void(0)">
                                 <span id="p-company"></span>
@@ -84,7 +90,7 @@
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-12">
                                     <div class="wish-button">
-                                        <button class="btn"><i class="lni lni-heart"></i>찜하기</button>
+                                        <button class="btn" id="wish_btn"><i class="lni lni-heart"></i>찜하기</button>
                                     </div>
                                 </div>
                             </div>

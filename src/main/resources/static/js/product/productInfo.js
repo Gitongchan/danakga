@@ -7,7 +7,10 @@ const pSubtype = document.getElementById('sub-type-text');
 const pContent = document.getElementById('product-info');
 const thumbPhoto = document.querySelector('.main-img');
 const pImgs = document.querySelector('.images');
+const pViews = document.getElementById('views-count');
+const pHeart = document.getElementById('heart-count');
 
+const wishButton = document.querySelector('#wish_btn');
 const editBtnAfter = document.querySelector('.product-info');
 
 const regex= /[^0-9]/gi;
@@ -18,7 +21,6 @@ function getParameterByName(name) {
         results = regex.exec(location.search);
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-
 const urlID = getParameterByName('productId');
 
 console.log(urlID);
@@ -54,7 +56,10 @@ console.log(urlID);
                     pImg.src= data.files[i].file_path;
                     pImgs.appendChild(pImg);
                 }
+
                 pName.innerText = data.productName;
+                pViews.textContent = data.productViewCount==="0" ? 0 : data.productViewCount;
+                pHeart.textContent = data.productWishCount==="0" ? 0 : data.productWishCount;
                 pCompany.innerText = data.companyName;
                 pBrand.innerText = "브랜드 : " + (data.productBrand === "" ? "브랜드 없음" : data.productBrand);
                 pMaintype.innerText = "메인종류 : " + data.productType;
@@ -74,6 +79,8 @@ console.log(urlID);
                     pImgs.appendChild(pImg);
                 }
                 pName.innerText = data.productName;
+                pViews.textContent = data.productViewCount==="0" ? 0 : data.productViewCount;
+                pHeart.textContent = data.productWishCount==="0" ? 0 : data.productWishCount;
                 pCompany.innerText = data.companyName;
                 pBrand.innerText = "브랜드 : " + (data.productBrand === "" ? "브랜드 없음" : data.productBrand);
                 pMaintype.innerText = "메인종류 : " + data.productType;
@@ -84,6 +91,7 @@ console.log(urlID);
         }
     })();
 
+    //구매하기 버튼
     document.getElementById('buyBtn').addEventListener('click',function (){
         const header = document.querySelector('meta[name="_csrf_header"]').content;
         const token = document.querySelector('meta[name="_csrf"]').content;
@@ -116,5 +124,30 @@ console.log(urlID);
         }
     })
 
-
-
+    wishButton.addEventListener('click', async () => {
+        // 찜하기 버튼을 눌렀을 때 동작해야 하는 곳
+        try{
+            const res = await fetch('/api/user/wish',{
+                method: 'POST',
+                headers: {
+                    'header': header,
+                    'X-CSRF-Token': token,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({productId : urlID})
+            });
+            const data = await res.json();
+            //위시리스트에서 제거 됐을 때
+            if(data.id === -1){
+                alert(data.message);
+                location.reload();
+            }else{
+                // 위시리스트에 추가될 때
+                alert(data.message);
+                location.reload();
+            }
+        }catch (e) {
+            console.log(e);
+        }
+    })
