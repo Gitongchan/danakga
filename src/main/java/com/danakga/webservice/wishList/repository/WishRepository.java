@@ -14,8 +14,10 @@ public interface WishRepository extends JpaRepository<Wish,Long> {
 
     Page<Wish> findByUserInfo(UserInfo userInfo,Pageable pageable);
 
-    Optional<Wish> findByWishId(Long wishId);
+    Optional<Wish> findByWishIdAndUserInfo(Long wishId,UserInfo userInfo);
 
     Long countByProductId(Product product);
+
+
 
 }

@@ -35,6 +35,13 @@ public class WishController {
         return wishService.wishList(userInfo,pageable,page);
     }
 
+    @GetMapping(value = "/wish/check/{productId}")
+    public ResResultDto wishCheck(@LoginUser UserInfo userInfo,@PathVariable("productId") Long productId){
+        Long result = wishService.wishCheck(userInfo,productId);
+        return result == -1L ?
+                new ResResultDto(result,"위시리스트에 등록되지 않은 제품입니다.") : new ResResultDto(result,"위시리스트에 등록된 제품입니다.");
+    }
+
     @DeleteMapping(value = "/wish")
     public ResResultDto wishDelete(@LoginUser UserInfo userInfo, @RequestBody List<WishIdDto> wishIdDto){
         Long result = wishService.wishDelete(userInfo,wishIdDto);
