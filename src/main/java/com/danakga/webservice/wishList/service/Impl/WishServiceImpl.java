@@ -93,7 +93,7 @@ public class WishServiceImpl implements WishService {
         );
 
         for(WishIdDto idDto : wishIdDto){
-            Wish wish = wishRepository.findByWishId(idDto.getWishId()).orElseThrow(
+            Wish wish = wishRepository.findByWishIdAndUserInfo(idDto.getWishId(),wishUserInfo).orElseThrow(
                     () -> new CustomException.ResourceNotFoundException("선택한 제품이 위시리스트에 존재 하지 않습니다.")
             );
             wishRepository.delete(wish);
@@ -102,6 +102,25 @@ public class WishServiceImpl implements WishService {
 
         return 1L;
 
+    }
+
+    
+    //위시리스트 체크
+    @Override
+    public Long wishCheck(UserInfo userInfo, Long productId) {
+        UserInfo wishUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
+        );
+        Product productInfo = productRepository.findByProductId(productId).orElseThrow( // 파라미터로 long 타입을 갖기 때문
+                ()->new CustomException.ResourceNotFoundException("상품 아이디를 찾을 수 없습니다")
+        );
+
+        long result = 1L;
+
+        if(wishRepository.findByUserInfoAndProductId(wishUserInfo,productInfo).isEmpty()){
+            result = -1L;
+        }
+        return result;
     }
 
 }
