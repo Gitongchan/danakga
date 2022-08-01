@@ -3,7 +3,9 @@ package com.danakga.webservice.orders.controller;
         import com.danakga.webservice.annotation.LoginUser;
         import com.danakga.webservice.orders.dto.request.OrdersDto;
         import com.danakga.webservice.orders.dto.request.StatusDto;
+        import com.danakga.webservice.orders.dto.response.ResOrdersDto;
         import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
+        import com.danakga.webservice.orders.dto.response.ResSalesDto;
         import com.danakga.webservice.orders.dto.response.ResSalesListDto;
         import com.danakga.webservice.orders.service.OrdersService;
         import com.danakga.webservice.user.model.UserInfo;
@@ -22,10 +24,9 @@ public class OrdersController {
     private final OrdersService ordersService;
 
     //주문하기
-    @PostMapping("/api/user/orders/{productId}")
-    public ResResultDto ordersSave(@LoginUser UserInfo userInfo, @PathVariable("productId") Long productId
-            ,@RequestBody OrdersDto ordersDto){
-        Long result = ordersService.ordersSave(userInfo,productId,ordersDto);
+    @PostMapping("/api/user/orders")
+    public ResResultDto ordersSave(@LoginUser UserInfo userInfo,@RequestBody OrdersDto ordersDto){
+        Long result = ordersService.ordersSave(userInfo,ordersDto.getProductId(),ordersDto);
         return result == -1L ?
                 new ResResultDto(result,"재고가 부족합니다.") : new ResResultDto(result,"성공적으로 주문되었습니다.");
     }
@@ -38,6 +39,13 @@ public class OrdersController {
 
         return ordersService.ordersList(userInfo,pageable,page,startDate,endDate);
     }
+
+    //주문 상세 내역
+    @GetMapping("api/user/orders/list/detail/{ordersId}")
+    public ResOrdersDto myOrdersDetail(@LoginUser UserInfo userInfo,@PathVariable("ordersId") Long ordersId){
+        return ordersService.ordersDetail(userInfo,ordersId);
+    }
+
     
     //판매내역
     @GetMapping("api/manager/sales/list")
@@ -46,6 +54,12 @@ public class OrdersController {
                                               @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime){
 
         return ordersService.salesList(userInfo,pageable,page,startTime,endTime);
+    }
+
+    //판매상세내역
+    @GetMapping("api/manager/sales/detail/{ordersId}")
+    public ResSalesDto mySalesDetail(@LoginUser UserInfo userInfo,@PathVariable("ordersId") Long ordersId){
+        return ordersService.salesDetail(userInfo,ordersId);
     }
     
     //사업자 - 판매내역 업데이트
