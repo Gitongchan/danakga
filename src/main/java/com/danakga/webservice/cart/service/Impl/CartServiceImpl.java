@@ -1,6 +1,7 @@
 package com.danakga.webservice.cart.service.Impl;
 
 import com.danakga.webservice.cart.dto.request.CartDto;
+import com.danakga.webservice.cart.dto.request.CartIdDto;
 import com.danakga.webservice.cart.model.Cart;
 import com.danakga.webservice.cart.repository.CartRepository;
 import com.danakga.webservice.cart.service.CartService;
@@ -67,14 +68,6 @@ public class CartServiceImpl implements CartService {
 
     }
 
-    @Override
-    public void cartDelete(Product product) {
-        Product product2 = productRepository.findByProductId(product.getProductId()).orElseThrow(
-                () -> new CustomException.ResourceNotFoundException("장바구니 아이디를 찾을 수 없습니다.")
-        );
-        productRepository.delete(product2);
-
-    }
     // 유저 정보만 파라미터로 받아옴
     @Override
     public Long cartDeleteAll(UserInfo userInfo) {
@@ -88,21 +81,18 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public void MyToolDelete(UserInfo userInfo, List<Product> productList) {
+    @Transactional
+    public void MyToolDelete(UserInfo userInfo, List<CartIdDto> cartIdDtoList) {
         UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
         );
 
-        Product product = productRepository.findByProductId(productList.get(0).getProductId()).orElseThrow(
-                () -> new CustomException.ResourceNotFoundException("장바구니 아이디를 찾을 수 없습니다.")
-        );
-
-        for (Product deleteDto : productList) {
-            Product product1 = productRepository.findByProductId(deleteDto.getProductId()).orElseThrow(
+        for (CartIdDto deleteDto : cartIdDtoList) {
+            Cart deleteCart = cartRepository.findByCartId(deleteDto.getCartId()).orElseThrow(
                     () -> new CustomException.ResourceNotFoundException("저장된 제품 정보를 찾을 수 없습니다.")
             );
 
-            productRepository.delete(product1);
+            cartRepository.delete(deleteCart);
         }
     }
 

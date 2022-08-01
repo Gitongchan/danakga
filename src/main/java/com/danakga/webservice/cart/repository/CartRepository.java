@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface CartRepository extends JpaRepository<Cart,Long> {
 //    List<Cart> findByIdcAndCartIdAndProductIdAndUserInfoAndCartAmountAndPrice(); // 몽땅 조회
     Optional<Cart> findByCartId(Long cartId);// 아이디만 있나 조회
-//
-//
+    Optional<Cart> findByCartIdAndUserInfo(UserInfo userInfo, Long cartId);// 아이디만 있나 조회
+
 //
     Optional<Cart> findByUserInfoAndProductId(UserInfo userInfo , Product productId);
 
