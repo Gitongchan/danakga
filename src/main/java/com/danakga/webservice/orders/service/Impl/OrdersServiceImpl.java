@@ -5,7 +5,9 @@ import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.request.StatusDto;
+import com.danakga.webservice.orders.dto.response.ResOrdersDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
+import com.danakga.webservice.orders.dto.response.ResSalesDto;
 import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.orders.model.OrdersStatus;
 import com.danakga.webservice.orders.model.Orders;
@@ -87,12 +89,12 @@ public class OrdersServiceImpl implements OrdersService {
                 listDto.setOrdersId(entity.getOrdersId());
                 listDto.setOrdersDate(entity.getOrdersDate());
                 listDto.setCompanyName(entity.getProduct().getProductCompanyId().getCompanyName());
+                listDto.setProductId(entity.getProduct().getProductId());
                 listDto.setProductBrand(entity.getProduct().getProductBrand());
                 listDto.setProductName(entity.getProduct().getProductName());
                 listDto.setOrdersQuantity(entity.getOrdersQuantity());
-                listDto.setOrdersFinishedDate(entity.getOrdersFinishedDate());
+                listDto.setOrdersPrice(entity.getOrdersPrice());
                 listDto.setOrderStatus(entity.getOrdersStatus());
-                listDto.setOrdersTrackingNum(entity.getOrdersTrackingNum());
                 listDto.setTotalPage(ordersPage.getTotalPages());
                 listDto.setTotalElement(ordersPage.getTotalElements());
                 ordersListDto.add(listDto);
@@ -100,6 +102,37 @@ public class OrdersServiceImpl implements OrdersService {
         );
         return ordersListDto;
     }
+
+    //주문 상세 내역
+    @Override
+    public ResOrdersDto ordersDetail(UserInfo userInfo, Long ordersId) {
+        UserInfo ordersUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
+        );
+        Orders orders = ordersRepository.findByOrdersIdAndUserInfo(ordersId,ordersUserInfo).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("주문 정보를 찾을 수 없습니다.")
+        );
+
+        return ResOrdersDto.builder()
+                .ordersId(orders.getOrdersId())
+                .companyName(orders.getProduct().getProductCompanyId().getCompanyName())
+                .productBrand(orders.getProduct().getProductBrand())
+                .productName(orders.getProduct().getProductName())
+                .ordersQuantity(orders.getOrdersQuantity())
+                .ordersPrice(orders.getOrdersPrice())
+                .ordersDate(orders.getOrdersDate())
+                .ordersStatus(orders.getOrdersStatus())
+                .ordersFinishedDate(orders.getOrdersFinishedDate())
+                .ordersTrackingNum(orders.getOrdersTrackingNum())
+                .userName(orders.getUserInfo().getName())
+                .userPhone(orders.getUserInfo().getPhone())
+                .userAdrNum(orders.getUserInfo().getUserAdrNum())
+                .userStreetAdr(orders.getUserInfo().getUserStreetAdr())
+                .userLotAdr(orders.getUserInfo().getUserLotAdr())
+                .userDetailAdr(orders.getUserInfo().getUserDetailAdr())
+                .build();
+    }
+
 
     //판매내역
     @Override
@@ -118,22 +151,13 @@ public class OrdersServiceImpl implements OrdersService {
         salesList.forEach(entity->{
             ResSalesListDto listDto = new ResSalesListDto();
                     listDto.setOrdersId(entity.getOrdersId());
-                    //고객정보
-                    listDto.setUserId(entity.getUserInfo().getUserid());
-                    listDto.setUserName(entity.getUserInfo().getName());
-                    listDto.setUserPhone(entity.getUserInfo().getPhone());
-                    listDto.setUserAdrNum(entity.getUserInfo().getUserAdrNum());
-                    listDto.setUserStreetAdr(entity.getUserInfo().getUserStreetAdr());
-                    listDto.setUserLotAdr(entity.getUserInfo().getUserLotAdr());
-                    listDto.setUserDetailAdr(entity.getUserInfo().getUserDetailAdr());
-                    //상품정보
+                    listDto.setProductId(entity.getProduct().getProductId());
                     listDto.setProductBrand(entity.getProduct().getProductBrand());
                     listDto.setProductName(entity.getProduct().getProductName());
                     listDto.setOrdersQuantity(entity.getOrdersQuantity());
+                    listDto.setOrdersPrice(entity.getOrdersPrice());
                     listDto.setOrdersDate(entity.getOrdersDate());
                     listDto.setOrderStatus(entity.getOrdersStatus());
-                    listDto.setOrdersFinishedDate(entity.getOrdersFinishedDate());
-                    listDto.setOrdersTrackingNum(entity.getOrdersTrackingNum());
                     listDto.setTotalPage(salesPage.getTotalPages());
                     listDto.setTotalElement(salesPage.getTotalElements());
                     salesListDto.add(listDto);
@@ -141,6 +165,40 @@ public class OrdersServiceImpl implements OrdersService {
         );
         return salesListDto;
 
+    }
+
+    //사업자 - 판매 내역 상세 정보
+    @Override
+    public ResSalesDto salesDetail(UserInfo userInfo,Long ordersId) {
+        UserInfo salesUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
+        );
+        CompanyInfo salesCompanyInfo = companyRepository.findByUserInfo(salesUserInfo).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사용자의 회사정보를 찾을 수 없습니다.")
+        );
+        Orders orders = ordersRepository.findByOrdersIdAndCompany(ordersId,salesCompanyInfo.getCompanyId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("주문 정보를 찾을 수 없습니다.")
+        );
+        return ResSalesDto.builder()
+                .ordersId(orders.getOrdersId())
+                //유저정보
+                .userId(orders.getUserInfo().getUserid())
+                .userName(orders.getUserInfo().getName())
+                .userPhone(orders.getUserInfo().getPhone())
+                .userAdrNum(orders.getUserInfo().getUserAdrNum())
+                .userStreetAdr(orders.getUserInfo().getUserStreetAdr())
+                .userLotAdr(orders.getUserInfo().getUserLotAdr())
+                .userDetailAdr(orders.getUserInfo().getUserStreetAdr())
+                //상품정보
+                .productBrand(orders.getProduct().getProductBrand())
+                .productName(orders.getProduct().getProductName())
+                .ordersQuantity(orders.getOrdersQuantity())
+                .ordersPrice(orders.getOrdersPrice())
+                .ordersDate(orders.getOrdersDate())
+                .orderStatus(orders.getOrdersStatus())
+                .ordersFinishedDate(orders.getOrdersFinishedDate())
+                .ordersTrackingNum(orders.getOrdersTrackingNum())
+                .build();
     }
 
     //사업자 - 판매 내역 상태 업데이트
@@ -177,8 +235,6 @@ public class OrdersServiceImpl implements OrdersService {
             return -1L;
         }
         ordersRepository.updateSalesStatus(status,updateSalesCompanyInfo.getCompanyId(),orders.getOrdersId());
-
-
 
         return ordersId;
     }

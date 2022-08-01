@@ -15,4 +15,6 @@ public interface WishService {
     List<ResWishListDto> wishList(UserInfo userInfo, Pageable pageable, int page);
 
     Long wishDelete(UserInfo userInfo , List<WishIdDto> wishIdDto);
+
+    Long wishCheck(UserInfo userInfo,Long productId);
 }

@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrdersDto {
+    //상품 아이디
+    private Long productId;
+
     //주문 아이디(주문번호)
     private Long ordersId;
 

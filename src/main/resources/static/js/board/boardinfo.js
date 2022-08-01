@@ -21,6 +21,7 @@ function getParameterByName(name) {
 }
 const boardID = getParameterByName('boardid').split('?')[0];
 const urlWriter = getParameterByName('bdwriter');
+const boardType = getParameterByName('bdType');
 
 (async function() {
     try {
@@ -62,7 +63,7 @@ const urlWriter = getParameterByName('bdwriter');
 })();
 
 editBtn.addEventListener('click',()=>{
-    location.replace(`/board/edit?boardid=${boardID}`)
+    location.replace(`/board/edit?boardid=${boardID}&bdwriter=${urlWriter}`)
 })
 
 deleteBtn.addEventListener('click',()=>{
@@ -82,7 +83,11 @@ deleteBtn.addEventListener('click',()=>{
         })
             .then((res)=>res.json())
             .then((data)=>{
-                console.log(data);
+                if(boardType == 'free'){
+                    location.replace('/board/basic');
+                }else{
+                    location.replace('/board/qa');
+                }
             })
     }
 })

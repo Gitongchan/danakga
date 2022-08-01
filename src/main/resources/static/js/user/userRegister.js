@@ -315,7 +315,10 @@ const companyBtn = function() {
                 console.error(res);
             }
         })
-        .then(data => console.log(data))
+        .then(data => {
+            alert('사업자 회원가입 성공!');
+            location.replace('/login');
+        })
         .catch(error => console.log(error))
 }
 
@@ -355,7 +358,10 @@ uRegisterOK.addEventListener('click',  function () {
                 console.error(res);
             }
         })
-        .then(data => console.log(data))
+        .then(data => {
+            alert('회원가입 성공!');
+            location.replace('/login');
+        })
         .catch(error => console.log(error))
 });
 

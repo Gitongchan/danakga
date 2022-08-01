@@ -8,7 +8,7 @@ fetch(`/api/board/list/문의게시판?page=0`)
             const tr = document.createElement('tr');
             tr.innerHTML =
                 `<td>${data.lists[i].bd_id}</td>
-                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
+                 <td><a href="/board/info?bdType=qa&boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
                  <td>${data.lists[i].bd_writer}</td>
                  <td>${data.lists[i].bd_created.split('.')[0]}</td>
                  <td>${data.lists[i].bd_views}</td>`

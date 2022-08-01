@@ -24,7 +24,7 @@ public interface ProductService {
 
     //상품 목록 조회
     List<ResProductListDto> productList(Pageable pageable,
-                                        @RequestBody ProductSearchDto productSearchDto, int page);
+                                        ProductSearchDto productSearchDto, int page,String sort,String order);
 
     //내가 등록한 상품 목록 조회
     List<ResProductListDto> myProductList(@LoginUser UserInfo userInfo,
