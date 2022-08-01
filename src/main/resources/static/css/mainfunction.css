@@ -36,7 +36,6 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
     margin: 30px 0;
 }
 
-
 .search_option_wrap{
     margin-bottom: 30px;
     border: 1px solid #8a8a8a;
@@ -121,6 +120,7 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
 .cate_item{
     width:65px;
     flex-shrink: 0;
+    margin-right: 10px;
 }
 
 .cate_list{
@@ -234,6 +234,15 @@ article.main_right_content > div > div{
     background: #adb5bd;
 }
 
+.panel{
+    width:100%;
+    display: block;
+    background: #adb5bd;
+}
+
+.panel.hide {
+    display: none;
+}
 /*
     Screen Size
     xs <576px
