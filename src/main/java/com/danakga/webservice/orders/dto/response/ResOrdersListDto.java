@@ -11,11 +11,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ResOrdersListDto {
 
+    //주문번호
+    private Long ordersId;
+
     //가게이름
     private String companyName;
 
     //상품브랜드
     private String productBrand;
+
+    //상품 아이디
+    private Long productId;
 
     //상품명
     private String productName;
@@ -23,20 +29,14 @@ public class ResOrdersListDto {
     //주문수량
     private int ordersQuantity;
 
-    //주문번호
-    private Long ordersId;
+    //주문금액
+    private int ordersPrice;
 
     //주문 날짜
     private LocalDateTime ordersDate;
 
     //주문 상태
     private String orderStatus;
-
-    //배송 완료 날짜
-    private LocalDateTime ordersFinishedDate;
-
-    //운송장 번호
-    private String ordersTrackingNum;
 
     private int totalPage;
 

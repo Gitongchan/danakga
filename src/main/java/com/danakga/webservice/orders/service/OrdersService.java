@@ -2,7 +2,9 @@ package com.danakga.webservice.orders.service;
 
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.request.StatusDto;
+import com.danakga.webservice.orders.dto.response.ResOrdersDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
+import com.danakga.webservice.orders.dto.response.ResSalesDto;
 import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +21,21 @@ public interface OrdersService {
     List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page,
                                       LocalDateTime startDate,LocalDateTime endDate);
 
+    //주문상세내역
+    ResOrdersDto ordersDetail(UserInfo userInfo, Long ordersId);
+
     //판매내역
     List<ResSalesListDto> salesList(UserInfo userInfo,Pageable pageable,int page,
                                     LocalDateTime startDate, LocalDateTime endDate);
+
+    //판매 상세 내역
+    ResSalesDto salesDetail(UserInfo userInfo,Long ordersId);
 
     //판매내역 상태 업데이트
     Long updateSalesStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);
 
     //판매내역 상태 업데이트
     Long updateOrdersStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);
+
     
 }
