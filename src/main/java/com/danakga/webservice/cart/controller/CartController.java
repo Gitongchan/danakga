@@ -21,11 +21,10 @@ public class CartController {
         return new ResResultDto(result,"장바구니 등록  성공.");
 
     }
-    @PostMapping(value="/cart/delete")
+    @DeleteMapping(value="/cart/delete")
     public  ResResultDto cartDelete(@RequestParam Long product){
-        Long result = cartService.cartDelete(product);
-        return result == -1L ?
-                new ResResultDto(result,"장바구니 삭제 실패.") : new ResResultDto(result,"장바구니 삭제 성공.");
+
+        return null;
     }
 
 

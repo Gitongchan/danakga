@@ -5,6 +5,9 @@ import com.danakga.webservice.cart.model.Cart;
 import com.danakga.webservice.cart.repository.CartRepository;
 import com.danakga.webservice.cart.service.CartService;
 import com.danakga.webservice.exception.CustomException;
+import com.danakga.webservice.mytool.dto.request.MyToolIdDto;
+import com.danakga.webservice.mytool.model.MyToolDetail;
+import com.danakga.webservice.mytool.model.MyToolFolder;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
@@ -65,25 +68,47 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Long cartDelete(Long productId) {
-        Cart cart = cartRepository.findByProductId(productId);
-        if(cart != null){
-            cartRepository.delete(cart);
-            return 1L;
-        }
-        return -1L;
+    public void cartDelete(Product product) {
+        Product product2 = productRepository.findByProductId(product.getProductId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("장바구니 아이디를 찾을 수 없습니다.")
+        );
+        productRepository.delete(product2);
+
+    }
+    // 유저 정보만 파라미터로 받아옴
+    @Override
+    public Long cartDeleteAll(UserInfo userInfo) {
+        UserInfo cartUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
+        );
+
+        userRepository.deleteById(cartUserInfo.getId());
+        return null;
     }
 
 
     @Override
-    public Long cartDeleteAll(Cart cart,Long productId) {
-        for (int i=0; i<cart.getCartAmount(); i++){
-            Cart cart2 = cartRepository.findByProductId(productId);
-            cartRepository.delete(cart2);
-        }
-            return 1L;
+    public void MyToolDelete(UserInfo userInfo, List<Product> productList) {
+        UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
 
+        Product product = productRepository.findByProductId(productList.get(0).getProductId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("장바구니 아이디를 찾을 수 없습니다.")
+        );
+
+        for (Product deleteDto : productList) {
+            Product product1 = productRepository.findByProductId(deleteDto.getProductId()).orElseThrow(
+                    () -> new CustomException.ResourceNotFoundException("저장된 제품 정보를 찾을 수 없습니다.")
+            );
+
+            productRepository.delete(product1);
+        }
     }
+
+
+
+
 
 
 //
