@@ -57,6 +57,7 @@ console.log(urlID);
                     pImgs.appendChild(pImg);
                 }
 
+
                 pName.innerText = data.productName;
                 pViews.textContent = data.productViewCount==="0" ? 0 : data.productViewCount;
                 pHeart.textContent = data.productWishCount==="0" ? 0 : data.productWishCount;
@@ -66,6 +67,16 @@ console.log(urlID);
                 pSubtype.innerText = "세부종류 : " + data.productSubType;
                 pPrice.innerText = data.productPrice + "원";
                 pContent.innerHTML = data.productContent;
+
+                // 해당 상품이 내 위시리스트에 있나 확인하기
+                const wishRes = await fetch(`/api/user/wish/check/${urlID}`);
+                const wishData = await wishRes.json();
+                if(wishData.id === -1){
+                    wishButton.innerHTML = `<i class="lni lni-heart"></i>찜하기`
+                }else{
+                    wishButton.innerHTML = `<i class="lni lni-heart-filled"></i></i>찜하기`
+                }
+                
             }catch (e) {
                 thumbPhoto.innerHTML =
                     `
