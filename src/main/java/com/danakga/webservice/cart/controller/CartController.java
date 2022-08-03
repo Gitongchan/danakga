@@ -27,7 +27,16 @@ public class CartController {
     }
     @DeleteMapping(value="/cart/delete")
     public ResResultDto cartDelete(@LoginUser UserInfo userInfo, @RequestBody List<CartIdDto> cartIdDto){
-        cartService.MyToolDelete(userInfo,cartIdDto);
+        cartService.MyCartDelete(userInfo,cartIdDto);
+        return new ResResultDto(1L,"장바구니에서 삭제하였습니다.");
+    }
+
+    // 조회
+    // 전체 삭제
+
+    @DeleteMapping(value="/cart/deleteAll")
+    public ResResultDto cartDeleteAll(@LoginUser UserInfo userInfo, @RequestBody CartIdDto cartIdDto){
+        cartService.cartDeleteAll(userInfo);
         return new ResResultDto(1L,"장바구니에서 삭제하였습니다.");
     }
 

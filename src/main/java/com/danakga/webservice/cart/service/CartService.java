@@ -12,11 +12,11 @@ public interface CartService {
     //장바구니 추가 -> insert
     Long cartPut(UserInfo userInfo, CartDto cartDto);
 
-    void MyToolDelete(UserInfo userInfo, List<CartIdDto> productList);
+    void MyCartDelete(UserInfo userInfo, List<CartIdDto> productList);
 
 
     //장바구니 목록 -> s
 
-    Long cartDeleteAll(UserInfo userInfo);
+    void cartDeleteAll(UserInfo userInfo);
 
 }

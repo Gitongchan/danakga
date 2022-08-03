@@ -70,19 +70,18 @@ public class CartServiceImpl implements CartService {
 
     // 유저 정보만 파라미터로 받아옴
     @Override
-    public Long cartDeleteAll(UserInfo userInfo) {
+    public void cartDeleteAll(UserInfo userInfo) {
         UserInfo cartUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
 
-        userRepository.deleteById(cartUserInfo.getId());
-        return null;
+        cartRepository.deleteById(cartUserInfo.getId());
     }
 
 
     @Override
     @Transactional
-    public void MyToolDelete(UserInfo userInfo, List<CartIdDto> cartIdDtoList) {
+    public void MyCartDelete(UserInfo userInfo, List<CartIdDto> cartIdDtoList) {
         UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
         );
@@ -96,23 +95,6 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-
-
-
-
-
-//
-//    @Override
-//    public Long cartDelete(Long cartId) {
-//        CartDto  cartDto = new CartDto();
-//        Cart cart = cartRepository.findByCartId(cartDto.getCartId());
-//        Long result = -1L;
-//        if(cart.isPresent()){
-//            cartRepository.delete(cartId);
-//            result = 1L;
-//        }
-//        return result;
-//    }
 
 
 }
