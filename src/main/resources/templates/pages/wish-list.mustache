@@ -26,11 +26,17 @@
     <!-- Shopping Cart -->
     <div class="shopping-cart section">
         <div class="container">
+            <div class="text-end button">
+                <button class="btn" id="wishSelectDelete">선택 지우기</button>
+            </div>
             <div class="cart-list-head">
                 <!-- Cart List Title -->
                 <div class="cart-list-title">
                     <div class="row">
-                        <div class="col-lg-2 col-md-2 col-12">
+                        <div class="col-lg-1 col-md-2 col-12">
+                            <p>선택여부</p>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-12">
                             <p>회사명</p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
@@ -50,10 +56,13 @@
                 <!-- End Cart List Title -->
                 <!-- Cart Single List list -->
                 <div class="cart-single-list">
-                    <div class="row align-items-center">
-                    </div>
+
                 </div>
                 <!-- End Single List list -->
+                <div class="text-center">
+                    <ul class="pagination">
+                    </ul>
+                </div>
             </div>
 <!--            <div class="row">-->
 <!--                <div class="col-12">-->
@@ -99,4 +108,5 @@
     <!--  이곳에 페이지 별 js 로드시키기-->
     <!--  예시 : <script src="/js/dummydata.js"></script> -->
     <script src="/js/wish/myWishList.js"></script>
+    <script src="/js/wish/myWishPagination.js"></script>
     {{>pages/footer2}}
