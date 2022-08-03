@@ -331,6 +331,15 @@ public class CommentServiceImpl implements CommentService {
         //댓글의 대댓글 갯수 -1
         commentRepository.deleteAnswerNum(cm_id);
 
+        //다시 db 조회 하여 바뀐 대댓글 갯수 값을 사용
+        Board_Comment checkComment = commentRepository.findById(cm_id)
+                        .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
+
+        //and 연산자로 2가지 모두 참일때만 처리
+        if(checkComment.getCmDeleted().equals("Y") && checkComment.getCmAnswerNum() == 0) {
+            commentRepository.updateCmDeleted(cm_id);
+        }
+
         return recentAnswer.getCmId();
     }
 }

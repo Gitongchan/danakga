@@ -21,7 +21,7 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     Optional<Board_Comment> findByCmId(Long cm_id);
 
     //댓글 조회
-    Page<Board_Comment> findAllByBoardAndCmDeletedAndCmStep(Board board, String deleted, int commentStep, Pageable pageable);
+    Page<Board_Comment> findAllByBoardAndCmDeletedAndCmStep(Board board, String deleted,int commentStep, Pageable pageable);
 
     //대댓글 체크
     Optional<Board_Comment> findByCmParentNumAndCmId(int cm_id, Long an_id);
@@ -47,7 +47,7 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     //댓글 삭제 시 content 값 변경
     @Transactional
     @Modifying
-    @Query("update Board_Comment bc set bc.cmContent = '작성자가 삭제한 댓글 입니다.' where bc.cmId = :cmId")
+    @Query("update Board_Comment bc set bc.cmDeleted = 'Y', bc.cmContent = '작성자가 삭제한 댓글 입니다.' where bc.cmId = :cmId")
     void updateCmContent(@Param("cmId") Long cm_id);
 
     //회원이 작성한 댓글 조회
@@ -83,9 +83,11 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     @Query("update Board_Comment bc set bc.cmAnswerNum = bc.cmAnswerNum + 1 where bc.cmId = :cmId")
     void updateAnswerNum(@Param("cmId") Long cm_id);
 
-    // answerNum(대댓글 갯수) 증가
+    // answerNum(대댓글 갯수) 감소
+    // 대댓글 값으로 댓글도 같이 삭제 해야하기 때문에 사용
+    //clearAutomatically 사용하여 1차 캐시(jpa의 가상 db라고 할 수 있음)와 db 동기화
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Board_Comment bc set bc.cmAnswerNum = bc.cmAnswerNum - 1 where bc.cmId = :cmId")
     void deleteAnswerNum(@Param("cmId") Long cm_id);
 
