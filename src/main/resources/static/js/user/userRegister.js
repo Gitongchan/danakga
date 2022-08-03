@@ -281,9 +281,6 @@ companyTap.addEventListener('click',()=>{
 // 사업자 버튼 눌렸을 때 버튼 동작하는 함수
 const companyBtn = function() {
     event.preventDefault();
-    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
 
     const postData = {
         userid: userData.userid.value,
@@ -325,9 +322,6 @@ const companyBtn = function() {
 //일반 회원일 때
 uRegisterOK.addEventListener('click',  function () {
     event.preventDefault();
-    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
 
     const postData = {
         userid: userData.userid.value,

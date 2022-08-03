@@ -123,3 +123,11 @@
 #board-table-wrap{
     height: 400px;
 }
+
+.cart-list-head{
+    height: 550px;
+}
+
+.cart-single-list{
+    height: 400px;
+}

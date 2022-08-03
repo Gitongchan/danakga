@@ -35,6 +35,10 @@ public class PageController {
         return "pages/mypageUserBoard";
     }
 
+    @GetMapping("/user/wishlist")
+    public String myPageWishList(){
+        return "pages/wish-list";
+    }
     @GetMapping("/manager/myboard")
     public String mypageManagerBoard(){
         return "pages/mypageUserBoard";
