@@ -18,9 +18,11 @@ public interface CommentService {
 
     //댓글 삭제 여부 변경
     Long commentsDelete(Long bd_id, Long cm_id, UserInfo userInfo);
-    
+
     //개별 댓글 조회
     ResCommentListDto writeComments(Long cm_id);
+
+
 
                                 /* ================= 대댓글 ================= */
 
@@ -32,4 +34,5 @@ public interface CommentService {
     
     //대댓글 삭제 여부 변경
     Long answerDelete(UserInfo userInfo, Long bd_id, Long cm_id, Long an_id);
+
 }

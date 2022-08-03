@@ -51,8 +51,7 @@ public class CommentsController {
         //게시글 삭제 여부 변경 로직 실행
         Long result = commentService.commentsDelete(bd_id, cm_id, userInfo);
 
-        return result == -1L ?
-                new ResResultDto(result, "댓글 삭제 실패") : new ResResultDto(result, "댓글 삭제 성공");
+        return new ResResultDto(result, "댓글 삭제 성공");
     }
 
     /*
@@ -104,8 +103,7 @@ public class CommentsController {
         
         Long result = commentService.answerDelete(userInfo, bd_id, cm_id, an_id);
 
-        return result == -1L ?
-                new ResResultDto(result, "대댓글 삭제 실패") : new ResResultDto(result, "대댓글 삭제 성공");
+        return new ResResultDto(result, "대댓글 삭제 성공");
     }
 
 }

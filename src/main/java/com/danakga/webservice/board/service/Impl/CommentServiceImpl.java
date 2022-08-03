@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
         Board board = boardRepository.findByBdId(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글 찾을 수 없습니다."));
 
-        //bd_id, deleted = N 값인 댓글만 페이징해서 조회
+        //step이 0값 == 댓글 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> comments = commentRepository.findAllByBoardAndCmDeletedAndCmStep(board, deleted, commentStep, pageable);
 
@@ -62,8 +62,8 @@ public class CommentServiceImpl implements CommentService {
             List<Map<String, Object>> answersList = new ArrayList<>();
 
             //DB를 조회할때 forEach로 반복되는 댓글의 id값을 받아서 각 댓글의 대댓글을 조회
-            Pageable reqPage = PageRequest.of(page, 10);
-            Page<Board_Comment> answers = commentRepository.answerList(comment.getCmId(), answerStep, deleted, reqPage);
+            Pageable answerPage = PageRequest.of(page, 10);
+            Page<Board_Comment> answers = commentRepository.answerList(comment.getCmId(), answerStep, deleted, answerPage);
 
             answers.forEach(answer -> {
 
@@ -73,6 +73,7 @@ public class CommentServiceImpl implements CommentService {
                 answersMap.put("cm_content", answer.getCmContent());
                 answersMap.put("cm_writer", answer.getCmWriter());
                 answersMap.put("cm_step", answer.getCmStep());
+                answersMap.put("cm_parentNum", answer.getCmParentNum());
                 answersMap.put("cm_created", answer.getCmCreated());
                 answersMap.put("cm_modify", answer.getCmModified());
                 answersList.add(answersMap);
@@ -84,6 +85,7 @@ public class CommentServiceImpl implements CommentService {
             commentsMap.put("cm_step", comment.getCmStep());
             commentsMap.put("cm_created", comment.getCmCreated());
             commentsMap.put("cm_modify", comment.getCmModified());
+            commentsMap.put("cm_answerNum", comment.getCmAnswerNum());
             commentsMap.put("totalElement", comments.getTotalElements());
             commentsMap.put("totalPage", comments.getTotalPages());
             commentsMap.put("answer", answersList);
@@ -174,24 +176,23 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long commentsDelete(Long bd_id, Long cm_id, UserInfo userInfo) {
 
-        //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
-        if (boardRepository.findByBdId(bd_id).isPresent()) {
+        UserInfo recentUser = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원의 정보가 없습니다."));
 
-            if (userRepository.findById(userInfo.getId()).isPresent()) {
+        Board recentBoard = boardRepository.findById(bd_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글이 존재하지 않습니다."));
 
-                Board board = boardRepository.findByBdId(bd_id).get();
+        Board_Comment recentComment = commentRepository.findById(cm_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
 
-                Board_Comment board_Comment = commentRepository.findByBoardAndCmId(board, cm_id);
-
-                //deleted 값 변경
-                commentRepository.updateCmDeleted(cm_id);
-
-//                commentRepository.updateCmAllDeleted(board_Comment.getCmGroup());
-
-                return board_Comment.getCmId();
-            }
+        //만약 대댓글이 없으면 바로 삭제를 위해 deleted값을 Y로 변경
+        //대댓글이 있으면 content의 값을 "작성자가 삭제한 댓글입니다."로 변경
+        if (recentComment.getCmAnswerNum() == 0) {
+            commentRepository.updateCmDeleted(cm_id);
+        } else {
+            commentRepository.updateCmContent(cm_id);
         }
-        return -1L;
+        return recentComment.getCmId();
     }
 
     //개별 댓글 조회
@@ -199,7 +200,7 @@ public class CommentServiceImpl implements CommentService {
     public ResCommentListDto writeComments(Long cm_id) {
 
         Board_Comment comments = commentRepository.findByCmId(cm_id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
         //Dto에 값을 담아주기 위한 List<Map>
         List<Map<String, Object>> mapComments = new ArrayList<>();
@@ -271,6 +272,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long answerEdit(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id, Long an_id) {
 
+        int parentValue = cm_id.intValue();
+
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다."));
 
@@ -280,8 +283,9 @@ public class CommentServiceImpl implements CommentService {
         Board_Comment recentComment = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
 
-        Board_Comment recentAnswer = commentRepository.findById(an_id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 대댓글이 존재하지 않습니다."));
+        Board_Comment recentAnswer = commentRepository.findByCmParentNumAndCmId(parentValue, an_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("대댓글이 존재하지 않습니다."));
+
 
         commentRepository.save(
                 recentAnswer = Board_Comment.builder()
@@ -303,9 +307,11 @@ public class CommentServiceImpl implements CommentService {
         return recentAnswer.getCmId();
     }
 
-    //대댓글 상태 여부 변경
+    //대댓글 삭제 상태 여부 변경
     @Override
     public Long answerDelete(UserInfo userInfo, Long bd_id, Long cm_id, Long an_id) {
+
+        int parentValue = cm_id.intValue();
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다."));
@@ -316,10 +322,13 @@ public class CommentServiceImpl implements CommentService {
         Board_Comment recentComment = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
 
-        Board_Comment recentAnswer = commentRepository.findByBoardAndCmId(recentBoard, an_id);
+        Board_Comment recentAnswer = commentRepository.findByCmParentNumAndCmId(parentValue, an_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("대댓글이 존재하지 않습니다."));
 
+        //대댓글 상태 변경
         commentRepository.updateAnDeleted(an_id);
 
+        //댓글의 대댓글 갯수 -1
         commentRepository.deleteAnswerNum(cm_id);
 
         return recentAnswer.getCmId();

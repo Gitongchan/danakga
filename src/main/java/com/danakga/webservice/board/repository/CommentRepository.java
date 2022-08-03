@@ -21,6 +21,12 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     Optional<Board_Comment> findByCmId(Long cm_id);
 
     //댓글 조회
+    Page<Board_Comment> findAllByBoardAndCmDeletedAndCmStep(Board board, String deleted, int commentStep, Pageable pageable);
+
+    //대댓글 체크
+    Optional<Board_Comment> findByCmParentNumAndCmId(int cm_id, Long an_id);
+
+    //대댓글 조회
     @Query(
             value = "select bc " +
                     "from Board_Comment bc " +
@@ -32,22 +38,17 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
                                     @Param("cmDeleted") String deleted,
                                     Pageable pageable);
 
-    Page<Board_Comment> findAllByBoardAndCmDeletedAndCmStep(Board board, String deleted, int commentStep, Pageable pageable);
-
     //댓글 삭제 여부 변경
     @Transactional
     @Modifying
     @Query("update Board_Comment bc set bc.cmDeleted = 'Y' where bc.cmId = :cmId")
     void updateCmDeleted(@Param("cmId") Long cm_id);
-    
-    //댓글 삭제 시 대댓글도 삭제 여부 변경
-//    @Transactional
-//    @Modifying
-//    @Query(
-//            value = "update Board_Comment as bc, (select bc2 from Board_Comment bc2 where bc2.cmGroup = :cmGroup) as an " +
-//                    "set "
-//    )
-//    void updateCmAllDeleted(@Param("cmGroup") Long cmGroup);
+
+    //댓글 삭제 시 content 값 변경
+    @Transactional
+    @Modifying
+    @Query("update Board_Comment bc set bc.cmContent = '작성자가 삭제한 댓글 입니다.' where bc.cmId = :cmId")
+    void updateCmContent(@Param("cmId") Long cm_id);
 
     //회원이 작성한 댓글 조회
     @Query(
