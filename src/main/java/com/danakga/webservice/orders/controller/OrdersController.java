@@ -25,10 +25,10 @@ public class OrdersController {
 
     //주문하기
     @PostMapping("/api/user/orders")
-    public ResResultDto ordersSave(@LoginUser UserInfo userInfo,@RequestBody OrdersDto ordersDto){
-        Long result = ordersService.ordersSave(userInfo,ordersDto.getProductId(),ordersDto);
+    public ResResultDto ordersSave(@LoginUser UserInfo userInfo,@RequestBody List<OrdersDto> ordersDto){
+        Long result = ordersService.ordersSave(userInfo,ordersDto);
         return result == -1L ?
-                new ResResultDto(result,"재고가 부족합니다.") : new ResResultDto(result,"성공적으로 주문되었습니다.");
+                new ResResultDto(result,"재고가 부족한 상품이 포함되어있습니다.") : new ResResultDto(result,"성공적으로 주문되었습니다.");
     }
 
     //주문내역
