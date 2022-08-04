@@ -15,7 +15,7 @@ import java.util.List;
 public interface OrdersService {
 
     //주문하기
-    Long ordersSave(UserInfo userInfo, Long productId, OrdersDto ordersDto);
+    Long ordersSave(UserInfo userInfo, List<OrdersDto> ordersDto);
     
     //주문내역
     List<ResOrdersListDto> ordersList(UserInfo userInfo, Pageable pageable, int page,

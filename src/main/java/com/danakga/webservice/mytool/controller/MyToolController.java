@@ -64,7 +64,7 @@ public class MyToolController {
 
     //내 장비 조회
     @GetMapping("/detail/{myToolFolderId}")
-    public List<ResMyToolDetailDto> MyToolList(@LoginUser UserInfo userInfo,@PathVariable("myToolFolderId") Long myToolFolderId){
+    public List<ResMyToolDetailDto> myToolList(@LoginUser UserInfo userInfo,@PathVariable("myToolFolderId") Long myToolFolderId){
 
         return myToolDetailService.myToolList(userInfo,myToolFolderId);
     }

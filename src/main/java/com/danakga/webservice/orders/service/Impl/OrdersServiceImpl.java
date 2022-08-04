@@ -39,36 +39,38 @@ public class OrdersServiceImpl implements OrdersService {
 
     //상품 주문 등록
     @Override
-    public Long ordersSave(UserInfo userInfo, Long productId, OrdersDto ordersDto) {
+    public Long ordersSave(UserInfo userInfo, List<OrdersDto> ordersDto) {
 
         UserInfo ordersUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
-        Product ordersProduct = productRepository.findByProductId(productId).orElseThrow(
-                ()->new CustomException.ResourceNotFoundException("해당 상품을 찾을 수 없습니다")
-        );
 
-        Orders orders = ordersRepository.save(
-                Orders.builder()
-                        .userInfo(ordersUserInfo)
-                        .product(ordersProduct)
-                        .ordersStatus(OrdersStatus.READY.getStatus())
-                        .ordersDate(LocalDateTime.now())
-                        .ordersFinishedDate(null) //배송완료시에 입력됨
-                        .ordersPrice(ordersDto.getOrdersPrice())
-                        .ordersQuantity(ordersDto.getOrdersQuantity())
-                        .ordersTrackingNum(null) //배송완료시에 입력됨
-                        .build()
-        );
+        for (OrdersDto orderDto : ordersDto) {
+            Product ordersProduct = productRepository.findByProductId(orderDto.getProductId()).orElseThrow(
+                    ()->new CustomException.ResourceNotFoundException("해당 상품을 찾을 수 없습니다")
+            );
 
-        //제품 수량 변경
-        if(ordersProduct.getProductStock() < ordersDto.getOrdersQuantity()){
-            return -1L; // 재고 부족
-        }else{
-            productRepository.updateProductStock(ordersDto.getOrdersQuantity(),ordersProduct.getProductId());
+            ordersRepository.save(
+                    Orders.builder()
+                            .userInfo(ordersUserInfo)
+                            .product(ordersProduct)
+                            .ordersStatus(OrdersStatus.READY.getStatus())
+                            .ordersDate(LocalDateTime.now())
+                            .ordersFinishedDate(null) //배송완료시에 입력됨
+                            .ordersPrice(orderDto.getOrdersPrice())
+                            .ordersQuantity(orderDto.getOrdersQuantity())
+                            .ordersTrackingNum(null) //배송완료시에 입력됨
+                            .build()
+            );
+
+            //재고가 부족하면 -1L반환 , 아니면 재고 업데이트
+            if(ordersProduct.getProductStock() < orderDto.getOrdersQuantity()){
+                return -1L; // 재고 부족
+            }else{
+                productRepository.updateProductStock(orderDto.getOrdersQuantity(),ordersProduct.getProductId());
+            }
         }
-
-        return orders.getOrdersId();
+        return 1L;
     }
 
     //주문 내역
