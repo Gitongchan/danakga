@@ -13,20 +13,22 @@ for(const btn of moreBtn){
 }
 
 //내 장비(장바구니)
-const rod = document.querySelector('.rod');
+const sea_rod = document.querySelector('.sea_rod');
+const fresh_rod = document.querySelector('.fresh_rod');
+const one_throw_rod = document.querySelector('.one_throw_rod');
 const reel = document.querySelector('.reel');
-const chum = document.querySelector('.chum');
-const lure = document.querySelector('.lure');
-const cloth = document.querySelector('.cloth');
+const line = document.querySelector('.line');
+const hook = document.querySelector('.hook');
 const all = document.querySelector('.all');
 
 
 //내장비 담기 하면 들어가 공간
-const rod_id = document.getElementById('rod_panel');
+const sea_rod_id = document.getElementById('sea_rod_panel');
+const fresh_rod_id = document.getElementById('fresh_rod_panel');
+const one_throw_rod_id = document.getElementById('one_throw_rod_panel');
 const reel_id = document.getElementById('reel_panel');
-const chum_id = document.getElementById('chum_panel');
-const lure_id = document.getElementById('lure_panel');
-const cloth_id = document.getElementById('cloth_panel');
+const line_id = document.getElementById('line_panel');
+const hook_id = document.getElementById('hook_panel');
 const all_id = document.getElementById('all_panel');
 
 //체크박스 타이틀 제목
@@ -34,19 +36,41 @@ const title_name = document.querySelector('.title_name');
 // 타이틀 히든 벨류
 const title_value = document.getElementById('title_value');
 
-rod.addEventListener('click', () => {
-    title_name.textContent = '낚시대';
-    title_value.value = "낚시대";
-    if(rod_id.classList.contains('hide')){
-        rod_id.classList.remove('hide');
+
+sea_rod.addEventListener('click', () => {
+    title_name.textContent = '바다로드';
+    title_value.value = "바다로드";
+    if(sea_rod_id.classList.contains('hide')){
+        sea_rod_id.classList.remove('hide');
     }else{
-        rod_id.classList.add('hide');
+        sea_rod_id.classList.add('hide');
+    }
+})
+
+fresh_rod.addEventListener('click', () => {
+    title_name.textContent = '민물로드';
+    title_value.value = "민물로드";
+    if(fresh_rod_id.classList.contains('hide')){
+        fresh_rod_id.classList.remove('hide');
+    }else{
+        fresh_rod_id.classList.add('hide');
+    }
+})
+
+
+one_throw_rod.addEventListener('click', () => {
+    title_name.textContent = '원투낚시';
+    title_value.value = "원투낚시";
+    if(one_throw_rod_id.classList.contains('hide')){
+        one_throw_rod_id.classList.remove('hide');
+    }else{
+        one_throw_rod_id.classList.add('hide');
     }
 })
 
 reel.addEventListener('click', () => {
-    title_name.textContent = '릴'
-    title_value.value = "릴";
+    title_name.textContent = '릴/용품'
+    title_value.value = "릴/용품";
     if(reel_id.classList.contains('hide')){
         reel_id.classList.remove('hide');
     }else{
@@ -54,41 +78,30 @@ reel.addEventListener('click', () => {
     }
 })
 
-chum.addEventListener('click', () => {
-    title_name.textContent = '밑밥'
-    title_value.value = "밑밥";
-    if(chum_id.classList.contains('hide')){
-        chum_id.classList.remove('hide');
+line.addEventListener('click', () => {
+    title_name.textContent = '라인/용품'
+    title_value.value = "라인/용품";
+    if(line_id.classList.contains('hide')){
+        line_id.classList.remove('hide');
     }else{
-        chum_id.classList.add('hide');
+        line_id.classList.add('hide');
     }
 })
 
-lure.addEventListener('click', () => {
+hook.addEventListener('click', () => {
     title_name.textContent = '루어'
     title_value.value = "루어";
 
-    if(lure_id.classList.contains('hide')){
-        lure_id.classList.remove('hide');
+    if(hook_id.classList.contains('hide')){
+        hook_id.classList.remove('hide');
     }else{
-        lure_id.classList.add('hide');
-    }
-})
-
-cloth.addEventListener('click', () => {
-    title_name.textContent = '의류'
-    title_value.value = "의류";
-
-    if(cloth_id.classList.contains('hide')){
-        cloth_id.classList.remove('hide');
-    }else{
-        cloth_id.classList.add('hide');
+        hook_id.classList.add('hide');
     }
 })
 
 all.addEventListener('click', () => {
-    title_name.textContent = '공통장비'
-    title_value.value = "공통장비";
+    title_name.textContent = '기타'
+    title_value.value = "기타";
 
     if(all_id.classList.contains('hide')){
         all_id.classList.remove('hide');
@@ -97,9 +110,15 @@ all.addEventListener('click', () => {
     }
 })
 
-async function searchProduct (type, subtype, brand, name, stock) {
+
+async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
+    // productType : 메인타입
+    // productSubType : 서브타입
+    // productBrand : 브랜드
+    // productName : 이름
+    // productStock : 재고수
     try{
-        const res = await fetch(`/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}?page=0`)
+        const res = await fetch(`/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=0&sort=${sort}&order=${desc}`)
         const data = await res.json();
 
         console.log(data);
@@ -108,6 +127,8 @@ async function searchProduct (type, subtype, brand, name, stock) {
     }
 }
 
+
+//첫 로딩시 동작하는 곳
 (async function(){
-    await searchProduct(title_value.value,"","","","");
+    await searchProduct(title_value.value,'%25','%25','%25',"1", "productUploadDate", "desc");
 })();

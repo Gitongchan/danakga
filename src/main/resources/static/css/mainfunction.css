@@ -110,7 +110,8 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
 
 .search_cate_contents{
     position: relative;
-    height: 15px;
+    /*더보기 누르기*/
+    /*height: 15px;*/
 }
 
 .search_cate_contents.open{
@@ -118,9 +119,10 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
 }
 
 .cate_item{
-    width:65px;
+    width:101px;
     flex-shrink: 0;
     margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .cate_list{
