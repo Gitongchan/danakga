@@ -20,6 +20,15 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
 
     Optional<Orders> findByUserInfo(UserInfo userinfo);
 
+    Optional<Orders> findByOrdersIdAndUserInfo(Long ordersId,UserInfo userInfo);
+
+
+    @Query(
+            value = "select o from Orders o join o.product p join p.productCompanyId c " +
+                    "where c.companyId = :companyId and o.ordersId = :ordersId"
+    )
+    Optional<Orders> findByOrdersIdAndCompany(@Param("ordersId")Long ordersId,@Param("companyId")Long companyId);
+
     //주문내역 조회
     @Query(
             value = "select o from Orders o join o.product p " +

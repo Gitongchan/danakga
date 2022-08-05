@@ -1,7 +1,8 @@
 package com.danakga.webservice.company.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.company.dto.reponse.ResCompanyInfoDto;
+import com.danakga.webservice.company.dto.request.PasswordDto;
+import com.danakga.webservice.company.dto.response.ResCompanyInfoDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.model.UserInfo;
@@ -18,9 +19,9 @@ public class CompanyController {
 
     //사업자 탈퇴
     @PutMapping("/deleted")
-    public ResResultDto companyDeleted(@LoginUser UserInfo userInfo,@RequestParam("password") String password){
+    public ResResultDto companyDeleted(@LoginUser UserInfo userInfo,@RequestBody PasswordDto password){
 
-        Long result = companyService.companyDeleted(userInfo,password);
+        Long result = companyService.companyDeleted(userInfo,password.getPassword());
         if(result == -2L){
             return new ResResultDto(result,"사업자 탈퇴 실패, 비밀번호 확인 오류");
         }

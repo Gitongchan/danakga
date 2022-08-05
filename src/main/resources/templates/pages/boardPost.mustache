@@ -1,5 +1,5 @@
 {{>pages/header1}}
-<link rel="stylesheet" href="/css/board.css">
+<link rel="stylesheet" href="/static/css/board.css">
 {{>pages/header2}}
 <div class="container">
     <form class="row" id="boardform" enctype="multipart/form-data">
@@ -101,11 +101,17 @@
                         console.error(res);
                     }
                 })
-                .then(data => console.log(data))
+                .then(data => {
+                    if(boardData.bdType=="자유게시판"){
+                        location.replace('/board/basic');
+                    }else{
+                        location.replace('/board/qa');
+                    }
+                })
                 .catch(error => console.log(error))
         // ...
     } );
 
 </script>
-<script src="/js/board/boardFilePreview.js"></script>
+<script src="/static/js/board/boardFilePreview.js"></script>
 {{>pages/footer2}}

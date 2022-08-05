@@ -991,6 +991,7 @@ Author: lineicons.com
 
 .lni-heart-filled::before {
   content: "\eae4";
+  color: red;
 }
 
 .lni-heart-monitor::before {

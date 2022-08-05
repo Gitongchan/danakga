@@ -13,7 +13,9 @@ function getParameterByName(name) {
         results = regex.exec(location.search);
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-const urlParams = getParameterByName('boardid');
+const urlParams = getParameterByName('boardid').split('?')[0];
+const urlWriter = getParameterByName('bdwriter');
+
 
 fetch(`/api/board/post/${urlParams}`)
     .then((res)=>res.json())

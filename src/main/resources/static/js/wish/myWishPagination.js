@@ -2,27 +2,23 @@
 //data[0].totalPage // 페이지 그룹 개수
 // 이전 버튼 : 화면에 그려진 첫번째 페이지 - 1
 // 다음 버튼 : 화면에 그려진 마지막 페이지 + 1
-const pagenation = document.querySelector('#board-wrap .text-center .pagination');
-
-const searchbtn = document.querySelector('#searchbtn');
-
-searchbtn.addEventListener('click',renderPagination);
+const pagenation = document.querySelector('.text-center .pagination');
 
 
 (function() {
-    fetch(`/api/board/list/자유게시판?page=0`)
+    fetch(`/api/user/wish/0`)
         .then((res)=>res.json())
         .then((data)=>{
-            renderPagination(data.lists[0].totalPage);
+            renderPagination(data[0].totalPage);
         })
 })();
 
 function renderPagination(currentPage) {
-    fetch(`/api/board/list/자유게시판?page=0`)
+    fetch(`/api/user/wish/0`)
         .then((res)=>res.json())
         .then((data)=>{
             //총 페이지 수
-            const total = Math.ceil(data.lists[0].totalElement/10);
+            const total = Math.ceil(data[0].totalElement/10);
             //화면에 보여질 페이지 그룹
             const group = Math.ceil(currentPage/10);
 
@@ -109,21 +105,58 @@ function renderPagination(currentPage) {
 
 //페이지 번호 클릭 시 이동하는 곳
 function onList(e){
-    fetch(`/api/board/list/자유게시판?page=${e}`)
+    fetch(`/api/user/wish/${e}`)
         .then((res)=>res.json())
         .then((data)=>{
-            tablelist.innerHTML="";
-            for(let i=0; i<data.lists.length; i++){
-                console.log(data.lists[i]);
-                const tr = document.createElement('tr');
-                tr.innerHTML =
-                    `<td>${data.lists[i].bd_id}</td>
-                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
-                 <td>${data.lists[i].bd_writer}</td>
-                 <td>${data.lists[i].bd_created.split('.')[0]}</td>
-                 <td>${data.lists[i].bd_views}</td>`
-
-                tablelist.appendChild(tr);
+            wish_list.innerHTML="";
+            for(let i=0; i < data.length; i++){
+                wish_list.innerHTML +=`
+                <div class="row align-items-center mb-10">
+                    <div class="col-lg-2 col-md-2 col-12">
+                        <h6 class="product-name">
+                                ${data[i].companyName}
+                        </h6>
+                        </div>
+                    <div class="col-lg-2 col-md-2 col-12">
+                        <p>${data[i].productBrand === "" ? "브랜드 없음" : data[i].productBrand}</p>
+                    </div>
+                    <div class="col-lg-4 col-md-3 col-12">
+                           <a href="/product/info?productId=${data[i].productId}">
+                        <p>${data[i].productName}</p>
+                            </a>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-12">
+                        <p>${data[i].productPrice}원</p>
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-12">
+                        <button class="remove-item item-${data[i].wishId}" id=${data[i].wishId}><i class="lni lni-close"></i></button>
+                    </div>
+                </div>`
+            }
+            const deleteBtn = document.querySelectorAll(`.remove-item`);
+            for(const button of deleteBtn){
+                button.addEventListener('click', async (event) =>{
+                    console.log(event.target.id);
+                    if(confirm('관심 상품에서 삭제하시겠습니까?')){
+                        const res = await fetch('/api/user/wish',{
+                            method: 'DELETE',
+                            headers: {
+                                'header': header,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                "Content-Type": "application/json",
+                                'X-CSRF-Token': token
+                            },
+                        })
+                        console.log(JSON.stringify([{wishId: event.target.id}]));
+                        if(res.ok) {
+                            const data = await res.json();
+                            alert('삭제되었습니다!');
+                            location.reload();
+                        }else{
+                            alert('삭제 실패!');
+                        }
+                    }
+                })
             }
         })
 }

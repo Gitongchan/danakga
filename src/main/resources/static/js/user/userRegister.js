@@ -281,9 +281,6 @@ companyTap.addEventListener('click',()=>{
 // 사업자 버튼 눌렸을 때 버튼 동작하는 함수
 const companyBtn = function() {
     event.preventDefault();
-    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
 
     const postData = {
         userid: userData.userid.value,
@@ -315,16 +312,16 @@ const companyBtn = function() {
                 console.error(res);
             }
         })
-        .then(data => console.log(data))
+        .then(data => {
+            alert('사업자 회원가입 성공!');
+            location.replace('/login');
+        })
         .catch(error => console.log(error))
 }
 
 //일반 회원일 때
 uRegisterOK.addEventListener('click',  function () {
     event.preventDefault();
-    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
 
     const postData = {
         userid: userData.userid.value,
@@ -355,7 +352,10 @@ uRegisterOK.addEventListener('click',  function () {
                 console.error(res);
             }
         })
-        .then(data => console.log(data))
+        .then(data => {
+            alert('회원가입 성공!');
+            location.replace('/login');
+        })
         .catch(error => console.log(error))
 });
 

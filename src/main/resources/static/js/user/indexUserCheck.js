@@ -19,6 +19,10 @@ const loginInfo = document.getElementById('user-info');
             const data = await res.json();
             checkID.value = data.id;
             checkName.value = data.userid;
+
+            //찜 갯수 체크
+            const wishRes = await fetch('/api/user/wish/0');
+            const wishData = await wishRes.json();
             cart.innerHTML = `
             <a href="javascript:void(0)" class="main-btn">
                                   <i class="lni lni-cart"></i>
@@ -45,9 +49,9 @@ const loginInfo = document.getElementById('user-info');
                                 </div>
             `
             wish.innerHTML = `
-                <a href="javascript:void(0)">
+                <a href="/user/wishlist">
                     <i class="lni lni-heart"></i>
-                    <span class="total-items">0<!--찜한 아이템 갯수--></span>
+                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
                 </a>
             `
 
