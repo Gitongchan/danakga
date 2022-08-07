@@ -26,14 +26,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //조회수 증가
     @Transactional
     @Modifying
-    @Query("update Board b set b.bdViews = b.bdViews + 1 where b.bdId = :id")
-    void updateView(@Param("id") Long id);
+    @Query("update Board b set b.bdViews = b.bdViews + 1 where b.bdId = :bdId")
+    void updateView(@Param("bdId") Long bd_id);
 
     //게시글 삭제 여부 변경
     @Transactional
     @Modifying
-    @Query("update Board b set b.bdDeleted = 'Y' where b.bdId = :id")
-    void updateDeleted(@Param("id") Long id);
+    @Query("update Board b set b.bdDeleted = 'Y' where b.bdId = :bdId")
+    void updateDeleted(@Param("bdId") Long bd_id);
     
     //전체 기준 게시판 검색
     @Query(
@@ -48,7 +48,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                             @Param("type") String boardType,
                             Pageable pageable);
 
-    //제목 기준 게시판 검색
+    //제목으로 게시판 검색
     @Query(
             value = "select b "
                     + "from Board b "
@@ -59,7 +59,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                                  @Param("type") String boardType,
                                  Pageable pageable);
 
-    //작성자 기준 게시판 검색
+    //작성자로 게시판 검색
     @Query(
             value = "select b "
                     + "from Board b "
@@ -70,7 +70,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                                   @Param("type") String boardType,
                                   Pageable pageable);
 
-    //내용 기준 게시판 검색
+    //내용으로 게시판 검색
     @Query(
             value = "select b "
                     + "from Board b "

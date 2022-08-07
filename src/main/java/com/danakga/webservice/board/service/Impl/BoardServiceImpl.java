@@ -85,7 +85,7 @@ public class BoardServiceImpl implements BoardService {
             List<Board> searchList = boards.getContent();
 
             List<Map<String, Object>> searchMap = new ArrayList<>();
-            
+
             searchList.forEach(entity -> {
                 Map<String, Object> listMap = new HashMap<>();
                 listMap.put("bd_id", entity.getBdId());
@@ -302,9 +302,7 @@ public class BoardServiceImpl implements BoardService {
                 if(deletedFiles.delete()){
                     fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
                 }
-
             }
-
         }
 
 
