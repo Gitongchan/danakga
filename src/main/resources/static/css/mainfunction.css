@@ -111,7 +111,7 @@ body, div, dl, dt, dd, form, fieldset, button, strong, span, ul, ol, li, p, div,
 .search_cate_contents{
     position: relative;
     /*더보기 누르기*/
-    /*height: 15px;*/
+    height: 15px;
 }
 
 .search_cate_contents.open{
@@ -245,6 +245,24 @@ article.main_right_content > div > div{
 .panel.hide {
     display: none;
 }
+
+
+.table_wrap{
+    height: 500px;
+}
+
+#product_list tr{
+    vertical-align: middle;
+}
+
+.item_list_view .active{
+    background: #0167f3;
+}
+
+.item_list_view .active a{
+    color: #fff;
+}
+
 /*
     Screen Size
     xs <576px

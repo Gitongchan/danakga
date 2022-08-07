@@ -1,3 +1,14 @@
+const searchBtn = document.getElementById('searchBtn');
+const searchText = document.getElementById('searchText');
+searchBtn.addEventListener('click',async (event)=>{
+
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, searchText.value,"1", "productUploadDate", "desc");
+})
+
+
 // 카테고리 더보기 버튼 부분
 const moreBtn = document.querySelectorAll('.btn_item_more');
 
@@ -35,11 +46,81 @@ const all_id = document.getElementById('all_panel');
 const title_name = document.querySelector('.title_name');
 // 타이틀 히든 벨류
 const title_value = document.getElementById('title_value');
+// 카테고리 부분
+const cate_list = document.querySelector('.cate_list.two');
+//상품 정보 담을 곳
+const product_list = document.getElementById('product_list');
 
 
-sea_rod.addEventListener('click', () => {
+sea_rod.addEventListener('click', async () => {
+
     title_name.textContent = '바다로드';
     title_value.value = "바다로드";
+    cate_list.innerHTML =`
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="%" checked>
+                    <span class="item_text">상관없음</span>
+            </label>
+        </li>
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="인쇼어">
+                    <span class="item_text">인쇼어</span>
+            </label>
+        </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="라이트지깅">
+                <span class="item_text">라이트지깅</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="볼락/락피쉬">
+                <span class="item_text">볼락/락피쉬</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="지깅로드">
+                <span class="item_text">지깅로드</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="선상캐스트로드">
+                <span class="item_text">선상캐스트로드</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="외수질/침선">
+                <span class="item_text">외수질/침선</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="타이라바">
+                <span class="item_text">타이라바</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="좌대용">
+                <span class="item_text">좌대용</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="두족류">
+                <span class="item_text">두족류</span>
+        </label>
+    </li>`;
+
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value,'%',"1", "productUploadDate", "desc");
     if(sea_rod_id.classList.contains('hide')){
         sea_rod_id.classList.remove('hide');
     }else{
@@ -47,9 +128,57 @@ sea_rod.addEventListener('click', () => {
     }
 })
 
-fresh_rod.addEventListener('click', () => {
+fresh_rod.addEventListener('click', async () => {
+
     title_name.textContent = '민물로드';
     title_value.value = "민물로드";
+    cate_list.innerHTML =`
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="%" checked>
+                    <span class="item_text">상관없음</span>
+            </label>
+        </li>
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="스피닝로드">
+                    <span class="item_text">스피닝로드</span>
+            </label>
+        </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="베이트로드">
+                <span class="item_text">베이트로드</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="계류로드">
+                <span class="item_text">계류로드</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="가물치로드">
+                <span class="item_text">가물치로드</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="빙어로드">
+                <span class="item_text">빙어로드</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="플라이로드">
+                <span class="item_text">플라이로드</span>
+        </label>
+    </li>`;
+
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value,'%',"1", "productUploadDate", "desc");
     if(fresh_rod_id.classList.contains('hide')){
         fresh_rod_id.classList.remove('hide');
     }else{
@@ -58,9 +187,39 @@ fresh_rod.addEventListener('click', () => {
 })
 
 
-one_throw_rod.addEventListener('click', () => {
+one_throw_rod.addEventListener('click', async () => {
+
     title_name.textContent = '원투낚시';
     title_value.value = "원투낚시";
+    cate_list.innerHTML =`
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="%" checked>
+                    <span class="item_text">상관없음</span>
+            </label>
+        </li>
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="원투로드">
+                    <span class="item_text">원투로드</span>
+            </label>
+        </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="원투릴">
+                <span class="item_text">원투릴</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="원투소픔">
+                <span class="item_text">원투소품</span>
+        </label>
+    </li>`;
+
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value,'%',"1", "productUploadDate", "desc");
     if(one_throw_rod_id.classList.contains('hide')){
         one_throw_rod_id.classList.remove('hide');
     }else{
@@ -68,9 +227,57 @@ one_throw_rod.addEventListener('click', () => {
     }
 })
 
-reel.addEventListener('click', () => {
+reel.addEventListener('click', async () => {
+
     title_name.textContent = '릴/용품'
     title_value.value = "릴/용품";
+    cate_list.innerHTML =`
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="%" checked>
+                    <span class="item_text">상관없음</span>
+            </label>
+        </li>
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="스피닝릴">
+                    <span class="item_text">스피닝릴</span>
+            </label>
+        </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="베이트릴">
+                <span class="item_text">베이트릴</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="전동릴">
+                <span class="item_text">전동릴</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="빙어릴">
+                <span class="item_text">빙어릴</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="전동릴부품">
+                <span class="item_text">전동릴부품</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="튜님용품">
+                <span class="item_text">플라이</span>
+        </label>
+    </li>`;
+
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value,'%',"1", "productUploadDate", "desc");
     if(reel_id.classList.contains('hide')){
         reel_id.classList.remove('hide');
     }else{
@@ -78,9 +285,62 @@ reel.addEventListener('click', () => {
     }
 })
 
-line.addEventListener('click', () => {
+line.addEventListener('click', async () => {
     title_name.textContent = '라인/용품'
     title_value.value = "라인/용품";
+    cate_list.innerHTML =`
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="%" checked>
+                    <span class="item_text">상관없음</span>
+            </label>
+        </li>
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="카본라인">
+                    <span class="item_text">카본라인</span>
+            </label>
+        </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="합사라인">
+                <span class="item_text">합사라인</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="모노라인">
+                <span class="item_text">모노라인</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="하이브리드라인">
+                <span class="item_text">하이브리드라인</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="플라이라인">
+                <span class="item_text">플라이라인</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="라인결속기">
+                <span class="item_text">라인결속기</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="플라이">
+                <span class="item_text">플라이</span>
+        </label>
+    </li>`;
+
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value,'%',"1", "productUploadDate", "desc");
     if(line_id.classList.contains('hide')){
         line_id.classList.remove('hide');
     }else{
@@ -88,10 +348,68 @@ line.addEventListener('click', () => {
     }
 })
 
-hook.addEventListener('click', () => {
-    title_name.textContent = '루어'
-    title_value.value = "루어";
+hook.addEventListener('click', async () => {
+    title_name.textContent = '바늘/훅'
+    title_value.value = "바늘/훅";
+    cate_list.innerHTML =`
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="%" checked>
+                    <span class="item_text">상관없음</span>
+            </label>
+        </li>
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="지그헤드">
+                    <span class="item_text">지그헤드</span>
+            </label>
+        </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="다운샷">
+                <span class="item_text">다운샷</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="와이드갭">
+                <span class="item_text">와이드갭</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="스트레이트">
+                <span class="item_text">스트레이트</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="플래시스위머">
+                <span class="item_text">플래시스위머</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="웜스프링">
+                <span class="item_text">웜스프링</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="플라이">
+                <span class="item_text">플라이</span>
+        </label>
+    </li>
+    <li class="cate_item">
+        <label class="item_checkbox">
+            <input type="radio" name="area" value="플라이">
+                <span class="item_text">플라이</span>
+        </label>
+    </li>`;
 
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value,'%',"1", "productUploadDate", "desc");
     if(hook_id.classList.contains('hide')){
         hook_id.classList.remove('hide');
     }else{
@@ -99,16 +417,45 @@ hook.addEventListener('click', () => {
     }
 })
 
-all.addEventListener('click', () => {
+all.addEventListener('click', async () => {
+
     title_name.textContent = '기타'
     title_value.value = "기타";
+    cate_list.innerHTML =`
+        <li class="cate_item">
+            <label class="item_checkbox">
+                <input type="radio" name="area" value="기타" checked>
+                    <span class="item_text">기타</span>
+            </label>
+        </li>`;
 
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value,'%',"1", "productUploadDate", "desc");
     if(all_id.classList.contains('hide')){
         all_id.classList.remove('hide');
     }else{
         all_id.classList.add('hide');
     }
 })
+
+
+const typeRadios = document.querySelectorAll('input[type=radio][name="area"]');
+typeRadios.forEach((el)=> el.addEventListener('change', async ()=>{
+//브랜드 값 가지고있는곳
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+//type값 가지고 있는곳
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value,type_checked.value,brand_checked.value,'%',"1", "productUploadDate", "desc");
+}))
+const brandRadios = document.querySelectorAll('input[type=radio][name="brand"]');
+brandRadios.forEach((el)=> el.addEventListener('change', async ()=>{
+//브랜드 값 가지고있는곳
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+//type값 가지고 있는곳
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    await searchProduct(title_value.value,type_checked.value,brand_checked.value,'%',"1", "productUploadDate", "desc");
+}))
 
 
 async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
@@ -118,17 +465,90 @@ async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
     // productName : 이름
     // productStock : 재고수
     try{
-        const res = await fetch(`/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=0&sort=${sort}&order=${desc}`)
-        const data = await res.json();
+        const url = `/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=0&sort=${sort}&order=${desc}`;
+        const res = await fetch(encodeURI(url));
+        product_list.innerHTML = '';
 
-        console.log(data);
+        if(res.ok){
+            const data = await res.json();
+            if(data.length > 0){
+                for (let i = 0; i < data.length; i++) {
+                    product_list.innerHTML +=
+                        `
+                <tr>
+                    <td class="item_images">
+                    <img src="${data[i].productPhoto}" alt="">
+                    </td>
+                    <td class="title_price">
+                    <p class=""><a href="/product/info?productId=${data[i].productId}">${data[i].productName}</a></p>
+                    </td>
+                    <td class="right_price">
+                        <p>${data[i].productPrice}원</p>
+                        <button class="add_cart" id="">담기</button>
+                    </td>
+                </tr>`
+                }
+            }else{
+                product_list.innerHTML =
+                    `
+                <tr>
+                    <td class="item_images">
+                    <img src="" alt="이미지없음">
+                    </td>
+                    <td class="title_price">
+                    <p class=""><a href="">검색정보 없음</a></p>
+                    </td>
+                    <td class="right_price">
+                        <p>정보없음</p>
+                        <button class="" id="">담기</button>
+                    </td>
+                </tr>`
+            }
+        }
     }catch (e) {
-
+        product_list.innerHTML = '';
+            product_list.innerHTML +=
+                `
+                <tr>
+                    <td class="item_images">
+                    <img src="" alt="이미지없음">
+                    </td>
+                    <td class="title_price">
+                    <p class=""><a href="">정보없음</a></p>
+                    </td>
+                    <td class="right_price">
+                        <p>정보없음</p>
+                        <button class="" id="">담기</button>
+                    </td>
+                </tr>`
     }
 }
 
+// 신상품, 주문순, 조회순 버튼 클릭시 동작!
+const view_wrap = document.querySelectorAll('.item_list_view .category_list_wrap ul li');
+view_wrap.forEach((el)=> el.addEventListener('click', async () =>{
+    view_wrap.forEach((ele)=> ele.classList.remove('active'));
+    document.getElementById(el.id).classList.add('active');
+    const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
+    const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
+    const text = searchText.value.trim().length === 0 ? '%' : searchText.value;
+
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, text,"1", el.id, "desc");
+}));
 
 //첫 로딩시 동작하는 곳
 (async function(){
-    await searchProduct(title_value.value,'%25','%25','%25',"1", "productUploadDate", "desc");
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    const type = getParameterByName('type');
+
+    const view_wrap = document.querySelectorAll('.item_list_view .category_list_wrap ul li');
+    view_wrap.forEach((ele)=> ele.classList.remove('active'));
+    document.getElementById(type).classList.add('active');
+
+    await searchProduct(title_value.value,'%','%','%',"1", type, "desc");
 })();
