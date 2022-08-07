@@ -7,6 +7,7 @@ import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardRepository;
+import com.danakga.webservice.board.repository.CommentRepository;
 import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.board.service.FilesService;
@@ -27,10 +28,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +38,8 @@ public class BoardServiceImpl implements BoardService {
     private final FileRepository fileRepository;
     private final FilesService filesService;
     private final UserRepository userRepository;
+
+    private final CommentRepository commentRepository;
 
 
     //게시판 검색
@@ -70,24 +70,24 @@ public class BoardServiceImpl implements BoardService {
                 boards = boardRepository.SearchBoardWriter(deleted, content, boardType, pageable);
                 break;
             case "전체":
-                if(content.equals("")) {
+                if (content.equals("")) {
                     boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
                 } else {
                     boards = boardRepository.searchBoard(content, deleted, boardType, pageable);
                 }
                 break;
-            default: boards = null;
+            default:
+                boards = null;
         }
 
-        //boards가 null인지 확인, 확인 안하면 .getContent() npe 경고문
-        if(boards != null) {
-
-            List<Board> searchList = boards.getContent();
+        if (boards != null) {
 
             List<Map<String, Object>> searchMap = new ArrayList<>();
 
-            searchList.forEach(entity -> {
+            boards.forEach(entity -> {
+
                 Map<String, Object> listMap = new HashMap<>();
+
                 listMap.put("bd_id", entity.getBdId());
                 listMap.put("bd_title", entity.getBdTitle());
                 listMap.put("bd_writer", entity.getBdWriter());
@@ -114,13 +114,11 @@ public class BoardServiceImpl implements BoardService {
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
 
-        List<Board> boardList = boards.getContent();
-
         List<Map<String, Object>> mapPosts = new ArrayList<>();
 
         ResBoardListDto resBoardListDto = new ResBoardListDto();
 
-        boardList.forEach(entity -> {
+        boards.forEach(entity -> {
             Map<String, Object> postMap = new HashMap<>();
             postMap.put("bd_id", entity.getBdId());
             postMap.put("bd_title", entity.getBdTitle());
@@ -142,7 +140,7 @@ public class BoardServiceImpl implements BoardService {
     public ResBoardPostDto getPost(Long id, HttpServletRequest request, HttpServletResponse response) {
 
         //게시글 존재 여부 확인
-        Board boardWrapper = boardRepository.findByBdId(id)
+        Board boardWrapper = boardRepository.findById(id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
         //게시글의 파일 조회
@@ -181,14 +179,25 @@ public class BoardServiceImpl implements BoardService {
             response.addCookie(postCookie);
         }
 
-        //파일, 게시글 정보 담을 List
-        List<Map<String, Object>> mapFiles = new ArrayList<>();
-
         //값 담아줄 Dto 객체 생성
         ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
 
-        //게시글 값 (게시글은 단일 값이기 때문에 List 까지 씌울 필요는 없음)
-        Map<String, Object> postMap = new HashMap<>();
+        //파일 값 List
+        List<Map<String, Object>> fileList = new ArrayList<>();
+
+        //게시글 값 List
+        List<Map<String, Object>> postList = new ArrayList<>();
+
+        //file 정보 값
+        files.forEach(entity -> {
+            Map<String, Object> filesMap = new HashMap<>();
+            filesMap.put("file_name", entity.getFileSaveName());
+            filesMap.put("file_path", entity.getFilePath());
+            fileList.add(filesMap);
+        });
+
+        //게시글 정보 담을 Map
+        Map<String, Object> postMap = new LinkedHashMap<>();
 
         postMap.put("bd_id", boardWrapper.getBdId());
         postMap.put("bd_writer", boardWrapper.getBdWriter());
@@ -197,18 +206,10 @@ public class BoardServiceImpl implements BoardService {
         postMap.put("bd_created", boardWrapper.getBdCreated());
         postMap.put("bd_modified", boardWrapper.getBdModified());
         postMap.put("bd_views", boardWrapper.getBdViews());
+        postMap.put("files", fileList);
+        postList.add(postMap);
 
-        //file 정보 값
-        files.forEach(entity -> {
-            Map<String, Object> filesMap = new HashMap<>();
-            filesMap.put("file_name", entity.getFileSaveName());
-            filesMap.put("file_path", entity.getFilePath());
-            mapFiles.add(filesMap);
-        });
-        
-        //각 파일, 댓글 List<Map>에 set
-        resBoardPostDto.setFiles(mapFiles);
-        resBoardPostDto.setPost(postMap);
+        resBoardPostDto.setPost(postList);
 
         return resBoardPostDto;
     }
@@ -219,10 +220,8 @@ public class BoardServiceImpl implements BoardService {
     public Long postWrite(ReqBoardDto reqBoardDto,
                           UserInfo userInfo, List<MultipartFile> files) {
 
-        if (userRepository.findById(userInfo.getId()).isEmpty()) {
-            return -1L;
-        }
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+        UserInfo recentUser = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
         Board board;
 
@@ -232,10 +231,10 @@ public class BoardServiceImpl implements BoardService {
             boardRepository.save(
                     board = Board.builder()
                             .bdType(reqBoardDto.getBdType())
-                            .bdWriter(recentUserInfo.getUserid())
+                            .bdWriter(recentUser.getUserid())
                             .bdTitle(reqBoardDto.getBdTitle())
                             .bdContent(reqBoardDto.getBdContent())
-                            .userInfo(recentUserInfo)
+                            .userInfo(recentUser)
                             .build()
             );
             return board.getBdId();
@@ -249,10 +248,10 @@ public class BoardServiceImpl implements BoardService {
                     boardRepository.save(
                             board = Board.builder()
                                     .bdType(reqBoardDto.getBdType())
-                                    .bdWriter(recentUserInfo.getUserid())
+                                    .bdWriter(recentUser.getUserid())
                                     .bdTitle(reqBoardDto.getBdTitle())
                                     .bdContent(reqBoardDto.getBdContent())
-                                    .userInfo(recentUserInfo)
+                                    .userInfo(recentUser)
                                     .build()
                     );
                     if (!filesService.saveFileUpload(files, board).equals(1L)) {
@@ -268,24 +267,18 @@ public class BoardServiceImpl implements BoardService {
     //게시글 수정
     @Transactional
     @Override
-    public Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
+    public Long postEdit(Long bd_id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
 
-        //유저 db 최신화
-        if (userRepository.findById(userInfo.getId()).isEmpty()) {
-            return -1L;
-        }
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId()).get();
+        //유저 정보, 게시글 정보 조회
+        UserInfo recentUser = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        //게시판 db 최신화
-        if (boardRepository.findByBdId(id).isEmpty()) {
-            return -1L;
-        }
+        Board recentBoard = boardRepository.findById(bd_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
-        Board board = boardRepository.findByBdId(id).get();
-        
         //삭제된 파일이 있는경우 해당 파일의 저장된 파일이름을 받아서 삭제 후 
         //새로 업로드 할 파일이 있다면 글 수정 후 파일 업로드, 업로드 할 파일이 없다면 글만 수정
-        if(reqDeletedFileDto != null) {
+        if (reqDeletedFileDto != null) {
             //삭제 파일명을 담아주기 위한 List
             List<String> fileNameList = new ArrayList<>();
             //dto에서 삭제 파일명을 담아주는 List, Map
@@ -297,10 +290,10 @@ public class BoardServiceImpl implements BoardService {
             }
 
             //List<String>값을 반복문으로 파일명 빼서 삭제
-            for(String deleteFile : fileNameList) {
+            for (String deleteFile : fileNameList) {
                 File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + deleteFile);
-                if(deletedFiles.delete()){
-                    fileRepository.deleteByBoardAndFileSaveName(board, deleteFile);
+                if (deletedFiles.delete()) {
+                    fileRepository.deleteByBoardAndFileSaveName(recentBoard, deleteFile);
                 }
             }
         }
@@ -310,18 +303,18 @@ public class BoardServiceImpl implements BoardService {
         //else 파일 같이 들어오면 게시글 수정 후 파일 업로드
         if (CollectionUtils.isEmpty(files)) {
             boardRepository.save(
-                    board = Board.builder()
-                            .bdId(id)
+                    recentBoard = Board.builder()
+                            .bdId(recentBoard.getBdId())
                             .bdType(reqBoardDto.getBdType())
-                            .bdWriter(recentUserInfo.getUserid())
+                            .bdWriter(recentUser.getUserid())
                             .bdTitle(reqBoardDto.getBdTitle())
                             .bdContent(reqBoardDto.getBdContent())
-                            .bdDeleted(board.getBdDeleted())
-                            .bdCreated(board.getBdCreated())
-                            .userInfo(recentUserInfo)
+                            .bdDeleted(recentBoard.getBdDeleted())
+                            .bdCreated(recentBoard.getBdCreated())
+                            .userInfo(recentUser)
                             .build()
             );
-            return board.getBdId();
+            return recentBoard.getBdId();
 
         } else if (!CollectionUtils.isEmpty(files)) {
 
@@ -333,21 +326,21 @@ public class BoardServiceImpl implements BoardService {
                 //파일 경로 + 파일명으로 파일 있는지 검사 후 삭제
                 if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
                     boardRepository.save(
-                            board = Board.builder()
-                                    .bdId(id)
+                            recentBoard = Board.builder()
+                                    .bdId(recentBoard.getBdId())
                                     .bdType(reqBoardDto.getBdType())
-                                    .bdWriter(recentUserInfo.getUserid())
+                                    .bdWriter(recentUser.getUserid())
                                     .bdTitle(reqBoardDto.getBdTitle())
                                     .bdContent(reqBoardDto.getBdContent())
-                                    .bdCreated(board.getBdCreated())
-                                    .bdDeleted(board.getBdDeleted())
-                                    .userInfo(recentUserInfo)
+                                    .bdCreated(recentBoard.getBdCreated())
+                                    .bdDeleted(recentBoard.getBdDeleted())
+                                    .userInfo(recentUser)
                                     .build()
                     );
-                    if (!filesService.saveFileUpload(files, board).equals(1L)) {
+                    if (!filesService.saveFileUpload(files, recentBoard).equals(1L)) {
                         return -2L;
                     }
-                    return board.getBdId();
+                    return recentBoard.getBdId();
                 }
             }
         }
@@ -357,19 +350,17 @@ public class BoardServiceImpl implements BoardService {
     //게시글 삭제 여부 변경
     @Transactional
     @Override
-    public Long postDelete(Long id, UserInfo userInfo) {
+    public Long postDelete(Long bd_id, UserInfo userInfo) {
 
-        //해당 id의 null값 체크 후 값이 있으면  deleted 값 변경
-        if (boardRepository.findByBdId(id).isPresent()) {
+        Board recentBoard = boardRepository.findById(bd_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
-            Board board = boardRepository.findByBdId(id).get();
+        //deleted 값 변경
+        boardRepository.updateDeleted(bd_id);
+        
+        //대댓글 같이 삭제 상태 변경
+        commentRepository.deleteBoard(bd_id);
 
-            //deleted 값 변경
-            boardRepository.updateDeleted(id);
-
-            return board.getBdId();
-        }
-        return -1L;
+        return recentBoard.getBdId();
     }
-
 }

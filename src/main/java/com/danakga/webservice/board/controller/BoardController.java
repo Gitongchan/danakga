@@ -41,15 +41,15 @@ public class BoardController {
     }
 
     //게시글 수정
-    @PutMapping(value = "/post/edit/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResResultDto postEdit(@PathVariable(value = "id") Long id,
+    @PutMapping(value = "/post/edit/{bd_id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResResultDto postEdit(@PathVariable(value = "bd_id") Long bd_id,
                                  @LoginUser UserInfo userInfo,
                                  @RequestPart(value = "keys") ReqBoardDto reqBoardDto,
                                  @RequestPart(value = "deletedFiles", required = false) ReqDeletedFileDto reqDeletedFileDto,
                                  @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
         //게시글 수정 로직 실행
-        Long result = boardService.postEdit(id, userInfo, reqBoardDto, reqDeletedFileDto, files);
+        Long result = boardService.postEdit(bd_id, userInfo, reqBoardDto, reqDeletedFileDto, files);
         
         if(result.equals(-2L)) {
             return new ResResultDto(result, "게시글 수정에 실패 했습니다(이미지 업로드 오류)");
@@ -69,8 +69,7 @@ public class BoardController {
         //게시글 삭제 로직 실행
         Long result = boardService.postDelete(id, userInfo);
 
-        return result == -1L ?
-                new ResResultDto(result, "게시글 삭제 실패") : new ResResultDto(result, "게시글 삭제 성공");
+        return new ResResultDto(result, "게시글 삭제 성공");
     }
 
 }

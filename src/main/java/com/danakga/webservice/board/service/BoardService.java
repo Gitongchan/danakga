@@ -24,10 +24,10 @@ public interface BoardService {
     Long postWrite(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
-    Long postEdit(Long id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files);
+    Long postEdit(Long bd_id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files);
 
     //게시글 삭제 여부 변경
-    Long postDelete(Long id, UserInfo userInfo);
+    Long postDelete(Long bd_id, UserInfo userInfo);
 
     //게시판 검색
     ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page);
