@@ -54,17 +54,6 @@ public class CommentsController {
         return new ResResultDto(result, "댓글 삭제 성공");
     }
 
-    /*
-
-     * 참고 중인 블로그
-     * https://velog.io/@yoho98/%EA%B2%8C%EC%8B%9C%EA%B8%80-%EB%8C%93%EA%B8%80-%EB%8C%80%EB%8C%93%EA%B8%80%EB%AC%B4%ED%95%9C%EB%8C%93%EA%B8%80-%EB%A1%9C%EC%A7%81
-     * https://www.youtube.com/watch?v=bhnDSyiPvaY&t=186s
-
-     * 07/27 대댓글 작성 완료, 댓글 작성 로직 변경
-     * 07/29 대댓글 작성 최종 완료 (depth 값 변경)
-     * 07/29 대댓글 수정 테스트 완료
-
-     */
 
     //대댓글 작성
     @PostMapping("/comment/answer/write/{bd_id}/{cm_id}")

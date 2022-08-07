@@ -31,18 +31,21 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResCommentListDto commentsList(Long bd_id, Pageable pageable, int page) {
 
-        //삭제여부가 "N"의 값만 가져오기 위한 변수
-        final String deleted = "N";
+        //삭제여부가 "N", "M"의 값만 가져오기 위한 변수
+        final String deleted1 = "N";
+        final String deleted2 = "M";
+        
+        //댓글, 대댓글 구분
         final int commentStep = 0;
         final int answerStep = 1;
 
-        //해당 bd_id값이 없다면 exception 값 전달
+        //해당 bd_id값이 없다면 exception 전달
         Board board = boardRepository.findByBdId(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글 찾을 수 없습니다."));
 
         //step이 0값 == 댓글 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
-        Page<Board_Comment> comments = commentRepository.findAllByBoardAndCmDeletedAndCmStep(board, deleted, commentStep, pageable);
+        Page<Board_Comment> comments = commentRepository.commentList(bd_id, deleted1, deleted2, commentStep, pageable);
 
         //Dto에 값을 담아주기 위한 List<Map>
         List<Map<String, Object>> mapComments = new ArrayList<>();
@@ -52,7 +55,6 @@ public class CommentServiceImpl implements CommentService {
 
 
         //List 값을 반복문으로 Map에 담아줌
-        //이 부분이 너무 어려웠다.
         comments.forEach(comment -> {
 
             //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
@@ -61,12 +63,15 @@ public class CommentServiceImpl implements CommentService {
             //대댓글 담을 List<map>
             List<Map<String, Object>> answersList = new ArrayList<>();
 
+            int parentNum = comment.getCmId().intValue();
+
             //DB를 조회할때 forEach로 반복되는 댓글의 id값을 받아서 각 댓글의 대댓글을 조회
             Pageable answerPage = PageRequest.of(page, 10);
-            Page<Board_Comment> answers = commentRepository.answerList(comment.getCmId(), answerStep, deleted, answerPage);
+            Page<Board_Comment> answers = commentRepository.answerList(parentNum, deleted1, answerStep, answerPage);
 
             answers.forEach(answer -> {
 
+                //대댓글 값 담는 Map
                 Map<String, Object> answersMap = new HashMap<>();
 
                 answersMap.put("cm_id", answer.getCmId());
@@ -74,6 +79,7 @@ public class CommentServiceImpl implements CommentService {
                 answersMap.put("cm_writer", answer.getCmWriter());
                 answersMap.put("cm_step", answer.getCmStep());
                 answersMap.put("cm_parentNum", answer.getCmParentNum());
+                answersMap.put("cm_deleted", answer.getCmDeleted());
                 answersMap.put("cm_created", answer.getCmCreated());
                 answersMap.put("cm_modify", answer.getCmModified());
                 answersList.add(answersMap);
@@ -83,6 +89,7 @@ public class CommentServiceImpl implements CommentService {
             commentsMap.put("cm_content", comment.getCmContent());
             commentsMap.put("cm_writer", comment.getCmWriter());
             commentsMap.put("cm_step", comment.getCmStep());
+            commentsMap.put("cm_deleted", comment.getCmDeleted());
             commentsMap.put("cm_created", comment.getCmCreated());
             commentsMap.put("cm_modify", comment.getCmModified());
             commentsMap.put("cm_answerNum", comment.getCmAnswerNum());
@@ -190,6 +197,7 @@ public class CommentServiceImpl implements CommentService {
         if (recentComment.getCmAnswerNum() == 0) {
             commentRepository.updateCmDeleted(cm_id);
         } else {
+            //대댓글이 있는 경우 상태 값 M으로 변경
             commentRepository.updateCmContent(cm_id);
         }
         return recentComment.getCmId();
@@ -272,6 +280,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long answerEdit(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id, Long an_id) {
 
+        // int형 변환
         int parentValue = cm_id.intValue();
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
@@ -311,32 +320,35 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Long answerDelete(UserInfo userInfo, Long bd_id, Long cm_id, Long an_id) {
 
+        // int형 변환
         int parentValue = cm_id.intValue();
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다."));
 
         Board recentBoard = boardRepository.findById(bd_id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
         Board_Comment recentComment = commentRepository.findById(cm_id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
         Board_Comment recentAnswer = commentRepository.findByCmParentNumAndCmId(parentValue, an_id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("대댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("대댓글을 찾을 수 없습니다."));
 
         //대댓글 상태 변경
         commentRepository.updateAnDeleted(an_id);
 
         //댓글의 대댓글 갯수 -1
+        //여기서 1차 캐시와 db가 연동되어서 1차 캐시 값 최신화
         commentRepository.deleteAnswerNum(cm_id);
 
-        //다시 db 조회 하여 바뀐 대댓글 갯수 값을 사용
+        /* update 후에 댓글 최신 값으로 조회 */
         Board_Comment checkComment = commentRepository.findById(cm_id)
-                        .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
-        //and 연산자로 2가지 모두 참일때만 처리
-        if(checkComment.getCmDeleted().equals("Y") && checkComment.getCmAnswerNum() == 0) {
+        // 2가지 모두 참일때만 처리
+        // 댓글이 삭제 처리지만 대댓글이 있는 경우
+        if(checkComment.getCmDeleted().equals("M") && checkComment.getCmAnswerNum() == 0) {
             commentRepository.updateCmDeleted(cm_id);
         }
 
