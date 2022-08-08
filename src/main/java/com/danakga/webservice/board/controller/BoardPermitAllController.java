@@ -32,7 +32,7 @@ public class BoardPermitAllController {
         return boardService.boardList(pageable, boardType, page);
     }
 
-    //게시글 조회
+    //개별 게시글 조회
     @GetMapping("/post/{id}")
     public ResBoardPostDto getPost(@PathVariable("id") Long id,
                                    HttpServletRequest request, HttpServletResponse response) {

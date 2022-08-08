@@ -137,10 +137,10 @@ public class BoardServiceImpl implements BoardService {
 
     //게시글 조회
     @Override
-    public ResBoardPostDto getPost(Long id, HttpServletRequest request, HttpServletResponse response) {
+    public ResBoardPostDto getPost(Long bd_id, HttpServletRequest request, HttpServletResponse response) {
 
         //게시글 존재 여부 확인
-        Board boardWrapper = boardRepository.findById(id)
+        Board boardWrapper = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
         //게시글의 파일 조회
@@ -163,16 +163,16 @@ public class BoardServiceImpl implements BoardService {
         //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 id가 없다면 조회수 증가
         //그리고 해당 게시글 id에 대한 쿠키를 다시 담아서 보냄
         if (oldCookie != null) {
-            if (!oldCookie.getValue().contains("[" + id.toString() + "]")) {
-                boardRepository.updateView(id);
-                oldCookie.setValue(oldCookie.getValue() + "[" + id + "]");
+            if (!oldCookie.getValue().contains("[" + bd_id.toString() + "]")) {
+                boardRepository.updateView(bd_id);
+                oldCookie.setValue(oldCookie.getValue() + "[" + bd_id + "]");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60);
                 response.addCookie(oldCookie);
             }
         } else {
-            boardRepository.updateView(id);
-            Cookie postCookie = new Cookie("boardView", "[" + id + "]");
+            boardRepository.updateView(bd_id);
+            Cookie postCookie = new Cookie("boardView", "[" + bd_id + "]");
             postCookie.setPath("/");
             //쿠키 사용시간 1시간 설정
             postCookie.setMaxAge(60 * 60);
@@ -359,7 +359,7 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.updateDeleted(bd_id);
         
         //대댓글 같이 삭제 상태 변경
-        commentRepository.deleteBoard(bd_id);
+        commentRepository.deleteBoardComments(bd_id);
 
         return recentBoard.getBdId();
     }

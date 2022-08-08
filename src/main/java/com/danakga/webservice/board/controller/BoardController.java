@@ -62,12 +62,12 @@ public class BoardController {
     }
 
     //게시글 삭제
-    @PutMapping("/post/delete/{id}")
-    public ResResultDto postDelete(@PathVariable(value = "id") Long id,
+    @PutMapping("/post/delete/{bd_id}")
+    public ResResultDto postDelete(@PathVariable(value = "bd_id") Long bd_id,
                                    @LoginUser UserInfo userInfo) {
 
         //게시글 삭제 로직 실행
-        Long result = boardService.postDelete(id, userInfo);
+        Long result = boardService.postDelete(bd_id, userInfo);
 
         return new ResResultDto(result, "게시글 삭제 성공");
     }

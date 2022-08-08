@@ -112,5 +112,5 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     @Transactional
     @Modifying
     @Query("update Board_Comment bc set bc.cmDeleted = 'Y' where bc.board.bdId = :bdId")
-    void deleteBoard(@Param("bd_id") Long bd_id);
+    void deleteBoardComments(@Param("bd_id") Long bd_id);
 }
