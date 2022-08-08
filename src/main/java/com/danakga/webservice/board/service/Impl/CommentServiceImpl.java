@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
         final int answerStep = 1;
 
         //해당 bd_id값이 없다면 exception 전달
-        Board board = boardRepository.findByBdId(bd_id)
+        Board board = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
         //step이 0값 == 댓글 조회
@@ -193,31 +193,57 @@ public class CommentServiceImpl implements CommentService {
         return recentComment.getCmId();
     }
 
-    //개별 댓글 조회 (대댓글 추가하기)
+    //개별 댓글 조회
     @Override
     public ResCommentListDto writeComments(Long cm_id) {
+
+        final String deleted = "N";
+        final int answerStep = 1;
 
         Board_Comment comments = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
+        int parentNum = comments.getCmId().intValue();
+
+        //개별 댓글 조회
+        List<Board_Comment> answers = commentRepository.eachAnswerList(parentNum, deleted, answerStep);
+
         //Dto에 값을 담아주기 위한 List<Map>
-        List<Map<String, Object>> mapComments = new ArrayList<>();
+        List<Map<String, Object>> commentList = new ArrayList<>();
+
+        List<Map<String, Object>> answerList = new ArrayList<>();
 
         //return해줄 Dto 객체 생성
         ResCommentListDto resCommentListDto = new ResCommentListDto();
 
         //map에 댓글 정보 put
-        Map<String, Object> writeComments = new HashMap<>();
-        writeComments.put("cm_id", comments.getCmId());
-        writeComments.put("cm_comment", comments.getCmContent());
-        writeComments.put("cm_created", comments.getCmCreated());
-        writeComments.put("cm_deleted", comments.getCmDeleted());
-        writeComments.put("cm_modified", comments.getCmModified());
-        writeComments.put("cm_writer", comments.getCmWriter());
-        mapComments.add(writeComments);
+        Map<String, Object> commentMap = new LinkedHashMap<>();
+
+        Map<String, Object> answerMap = new HashMap<>();
+
+        answers.forEach(answer -> {
+            answerMap.put("cm_id", answer.getCmId());
+            answerMap.put("cm_content", answer.getCmContent());
+            answerMap.put("cm_writer", answer.getCmWriter());
+            answerMap.put("cm_step", answer.getCmStep());
+            answerMap.put("cm_parentNum", answer.getCmParentNum());
+            answerMap.put("cm_deleted", answer.getCmDeleted());
+            answerMap.put("cm_created", answer.getCmCreated());
+            answerMap.put("cm_modify", answer.getCmModified());
+            answerList.add(answerMap);
+        });
+
+        commentMap.put("cm_id", comments.getCmId());
+        commentMap.put("cm_comment", comments.getCmContent());
+        commentMap.put("cm_created", comments.getCmCreated());
+        commentMap.put("cm_deleted", comments.getCmDeleted());
+        commentMap.put("cm_modified", comments.getCmModified());
+        commentMap.put("cm_writer", comments.getCmWriter());
+        commentMap.put("answers", answerList);
+        commentList.add(commentMap);
 
         //Dto 값 set
-        resCommentListDto.setComments(mapComments);
+        resCommentListDto.setComments(commentList);
 
         return resCommentListDto;
     }

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
@@ -18,10 +19,6 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
 
     //댓글 수정 시 bd_id, cm_id에 맞는 댓글만 수정
     Optional<Board_Comment> findByBoardAndCmId(Board board, Long cm_id);
-
-
-    //개별 댓글 조회
-    Optional<Board_Comment> findByCmId(Long cm_id);
 
 
     //댓글 조회
@@ -61,7 +58,7 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
 
 
     //대댓글 체크
-    Optional<Board_Comment> findByCmParentNumAndCmId(int cm_id, Long an_id);
+    Optional<Board_Comment> findByCmParentNumAndCmId(int parentNum, Long an_id);
 
 
     //대댓글 조회
@@ -75,6 +72,17 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
                                    @Param("cmDeleted") String deleted,
                                    @Param("cmStep") int cmStep,
                                    Pageable pageable);
+
+    //개별 대댓글 조회
+    @Query(
+            value = "select bc " +
+                    "from Board_Comment bc " +
+                    "where bc.cmParentNum = :cmParentNum and bc.cmDeleted = :cmDeleted and bc.cmStep = :cmStep " +
+                    "order by bc.cmGroup desc, bc.cmDepth asc"
+    )
+    List<Board_Comment> eachAnswerList(@Param("cmParentNum") int cmParentNum,
+                                   @Param("cmDeleted") String deleted,
+                                   @Param("cmStep") int cmStep);
 
 
     // 그룹의 최댓값
