@@ -38,16 +38,12 @@ public class BoardServiceImpl implements BoardService {
     private final FileRepository fileRepository;
     private final FilesService filesService;
     private final UserRepository userRepository;
-
     private final CommentRepository commentRepository;
 
 
     //게시판 검색
     @Override
     public ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page) {
-
-        //Page<> board 선언
-        Page<Board> boards;
 
         //return할 ListDto 객체 선언
         ResBoardListDto resBoardListDto = new ResBoardListDto();
@@ -57,6 +53,7 @@ public class BoardServiceImpl implements BoardService {
 
         //pageable 값 설정
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+        Page<Board> boards;
 
         //switch case로 제목, 내용, 작성자, 전체 게시글 목록 검색 조회, default 값은 필수
         switch (category) {
@@ -220,21 +217,20 @@ public class BoardServiceImpl implements BoardService {
     public Long postWrite(ReqBoardDto reqBoardDto,
                           UserInfo userInfo, List<MultipartFile> files) {
 
-        UserInfo recentUser = userRepository.findById(userInfo.getId())
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        Board board;
 
         //들어온 파일이 없다면 게시글만 작성
         //파일이 있다면 게시글 작성 후 파일 업로드
         if (CollectionUtils.isEmpty(files)) {
-            boardRepository.save(
+            Board board = boardRepository.save(
                     board = Board.builder()
                             .bdType(reqBoardDto.getBdType())
-                            .bdWriter(recentUser.getUserid())
+                            .bdWriter(recentUserInfo.getUserid())
                             .bdTitle(reqBoardDto.getBdTitle())
                             .bdContent(reqBoardDto.getBdContent())
-                            .userInfo(recentUser)
+                            .userInfo(recentUserInfo)
                             .build()
             );
             return board.getBdId();
@@ -245,13 +241,13 @@ public class BoardServiceImpl implements BoardService {
 
                 //List에 값이 있으면 saveFileUpload 실행
                 if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
-                    boardRepository.save(
+                    Board board = boardRepository.save(
                             board = Board.builder()
                                     .bdType(reqBoardDto.getBdType())
-                                    .bdWriter(recentUser.getUserid())
+                                    .bdWriter(recentUserInfo.getUserid())
                                     .bdTitle(reqBoardDto.getBdTitle())
                                     .bdContent(reqBoardDto.getBdContent())
-                                    .userInfo(recentUser)
+                                    .userInfo(recentUserInfo)
                                     .build()
                     );
                     if (!filesService.saveFileUpload(files, board).equals(1L)) {
@@ -270,7 +266,7 @@ public class BoardServiceImpl implements BoardService {
     public Long postEdit(Long bd_id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
 
         //유저 정보, 게시글 정보 조회
-        UserInfo recentUser = userRepository.findById(userInfo.getId())
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
         Board recentBoard = boardRepository.findById(bd_id)
@@ -306,12 +302,12 @@ public class BoardServiceImpl implements BoardService {
                     recentBoard = Board.builder()
                             .bdId(recentBoard.getBdId())
                             .bdType(reqBoardDto.getBdType())
-                            .bdWriter(recentUser.getUserid())
+                            .bdWriter(recentUserInfo.getUserid())
                             .bdTitle(reqBoardDto.getBdTitle())
                             .bdContent(reqBoardDto.getBdContent())
                             .bdDeleted(recentBoard.getBdDeleted())
                             .bdCreated(recentBoard.getBdCreated())
-                            .userInfo(recentUser)
+                            .userInfo(recentUserInfo)
                             .build()
             );
             return recentBoard.getBdId();
@@ -329,12 +325,12 @@ public class BoardServiceImpl implements BoardService {
                             recentBoard = Board.builder()
                                     .bdId(recentBoard.getBdId())
                                     .bdType(reqBoardDto.getBdType())
-                                    .bdWriter(recentUser.getUserid())
+                                    .bdWriter(recentUserInfo.getUserid())
                                     .bdTitle(reqBoardDto.getBdTitle())
                                     .bdContent(reqBoardDto.getBdContent())
                                     .bdCreated(recentBoard.getBdCreated())
                                     .bdDeleted(recentBoard.getBdDeleted())
-                                    .userInfo(recentUser)
+                                    .userInfo(recentUserInfo)
                                     .build()
                     );
                     if (!filesService.saveFileUpload(files, recentBoard).equals(1L)) {
