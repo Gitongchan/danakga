@@ -25,12 +25,9 @@ public class ProductPermitAllController {
                                                @RequestParam String productSubType,
                                                @RequestParam String productBrand,
                                                @RequestParam String productName,
-                                               @RequestParam Integer productStock,
+                                               @RequestParam int productStock,
                                                @RequestParam int page,@RequestParam String sort,@RequestParam String order) {
-        ProductSearchDto productSearchDto = new ProductSearchDto(
-                productType,productSubType,productBrand,productName,productStock
-        );
-        return productService.productList(pageable, productSearchDto, page,sort,order);
+        return productService.productList(pageable,productType,productSubType,productBrand,productName,productStock, page,sort,order);
     }
 
     //메인페이지 상품 리스트
