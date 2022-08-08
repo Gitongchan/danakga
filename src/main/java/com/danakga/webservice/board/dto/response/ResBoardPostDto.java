@@ -15,9 +15,6 @@ import java.util.Map;
 public class ResBoardPostDto {
     
     //게시글 정보
-    private Map<String, Object> post;
-
-    //파일 정보
-    private List<Map<String,Object>> files;
+    private List<Map<String, Object>> post;
 
 }
