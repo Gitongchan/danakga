@@ -122,8 +122,9 @@ public class ProductServiceImpl implements ProductService {
 
     //상품 리스트
     @Override
-    public List<ResProductListDto> productList(Pageable pageable, ProductSearchDto productSearchDto, int page,
-                                               String sort,String order) {
+    public List<ResProductListDto> productList(Pageable pageable,
+                                               String productType,String productSubType,String productBrand,String productName,int productStock,
+                                               int page,String sort,String order) {
 
         if(order.equals("asc"))
             pageable = PageRequest.of(page, 10, Sort.by(sort).ascending());
@@ -131,8 +132,8 @@ public class ProductServiceImpl implements ProductService {
             pageable = PageRequest.of(page, 10, Sort.by(sort).descending());
 
         Page<Product> productPage = productRepository.searchProductList(
-                productSearchDto.getProductType(),productSearchDto.getProductSubType(),productSearchDto.getProductBrand(),
-                productSearchDto.getProductName(),productSearchDto.getProductStock(),pageable
+                productType,productSubType,productBrand,
+                productName,productStock,pageable
         );
         List<Product> productList = productPage.getContent();
 
