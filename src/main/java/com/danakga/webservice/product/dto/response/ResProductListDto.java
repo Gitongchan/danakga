@@ -42,7 +42,7 @@ public class ResProductListDto {
     private Integer productViewCount;
     
     //찜 키운트
-    private Long productWishCount;
+    private long productWishCount;
 
     //누적구매수
     private Integer productOrderCount;
