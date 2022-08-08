@@ -283,6 +283,19 @@ article.main_right_content > div > div{
     flex:0 0 80px;
 }
 
+#product_list img{
+    width: 80px;
+    height: 80px;
+}
+.cart_price{
+}
+
+.delete_item{
+    width: 50px;
+    background: none;
+    border: none;
+    font-weight: bold;
+}
 /*
     Screen Size
     xs <576px

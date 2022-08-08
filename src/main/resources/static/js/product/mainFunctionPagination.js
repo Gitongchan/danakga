@@ -123,9 +123,31 @@ function productOnList(e, url1, url2){
                 }
                 const buttons = document.querySelectorAll('.add_cart');
                 for(const button of buttons){
-                    button.addEventListener('click', (event) => {
+                    button.addEventListener('click', async (event) => {
                         //담기 이벤트
                         alert(event.target.id);
+                        const res = await fetch(`/api/product/item/${event.target.id}`);
+
+                        if(res.ok){
+                            const data = await res.json();
+                            if(title_value.value === '바다로드'){
+
+                                sea_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '민물로드'){
+                                fresh_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '원투낚시'){
+                                one_throw_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '릴/용품'){
+                                reel_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '라인/용품'){
+                                line_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '바늘/훅'){
+                                hook_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '기타'){
+                                all_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }
+                        }
+
                     })
                 }
             }else{

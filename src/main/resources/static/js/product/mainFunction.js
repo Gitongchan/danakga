@@ -1,3 +1,13 @@
+// 상품이 담길 곳
+const sea_rod_arr = [];
+const fresh_rod_arr = [];
+const one_throw_rod_arr = [];
+const reel_arr = [];
+const line_arr = [];
+const hook_arr = [];
+const all_arr = []
+
+
 const searchBtn = document.getElementById('searchBtn');
 const searchText = document.getElementById('searchText');
 searchBtn.addEventListener('click',async (event)=>{
@@ -473,7 +483,7 @@ async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
     try{
         const url = `/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=0&sort=${sort}&order=${desc}`;
         const paginationUrl1 = `/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=`;
-        const paginationUrl2 = `&sort=${sort}&order=${desc}`;
+        const paginationUrl2 = `&sort=${sort}&order=des`;
 
         const res = await fetch(encodeURI(url));
         product_list.innerHTML = '';
@@ -501,9 +511,59 @@ async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
                 }
                 const buttons = document.querySelectorAll('.add_cart');
                 for(const button of buttons){
-                    button.addEventListener('click', (event) => {
+                    button.addEventListener('click', async (event) => {
                         //담기 이벤트
-                        alert(event.target.id);
+                        const res = await fetch(`/api/product/item/${event.target.id}`);
+
+                        if(res.ok){
+                            const data = await res.json();
+                            if(title_value.value === '바다로드'){
+                                if(sea_rod_arr.some(item => item.id === event.target.id)){
+                                    sea_rod_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    sea_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                sea_rod_id.innerHTML = '';
+                                sea_rod_arr.forEach(el=>{
+                                    sea_rod_id.innerHTML += `
+                                        <div class="item d-flex justify-content-between ${el.id}">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus-${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus-${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price">${el.price}<span>원</span></p>
+                                            <button class="delete_item">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                })
+
+
+                            }else if(title_value.value === '민물로드'){
+                                fresh_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '원투낚시'){
+                                one_throw_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '릴/용품'){
+                                reel_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '라인/용품'){
+                                line_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '바늘/훅'){
+                                hook_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }else if(title_value.value === '기타'){
+                                all_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                            }
+                        }
+
                     })
                 }
             }else{
@@ -552,7 +612,7 @@ view_wrap.forEach((el)=> el.addEventListener('click', async () =>{
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
     const text = searchText.value.trim().length === 0 ? '%' : searchText.value;
 
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, text,"1", el.id, "desc");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, text,"1", el.id, "des");
 }));
 
 //첫 로딩시 동작하는 곳
@@ -569,5 +629,5 @@ view_wrap.forEach((el)=> el.addEventListener('click', async () =>{
     view_wrap.forEach((ele)=> ele.classList.remove('active'));
     document.getElementById(type).classList.add('active');
 
-    await searchProduct(title_value.value,'%','%','%',"1", type, "desc");
+    await searchProduct(title_value.value,'%','%','%',"1", type, "des");
 })();
