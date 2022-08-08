@@ -442,19 +442,25 @@ all.addEventListener('click', async () => {
 
 const typeRadios = document.querySelectorAll('input[type=radio][name="area"]');
 typeRadios.forEach((el)=> el.addEventListener('change', async ()=>{
-//브랜드 값 가지고있는곳
+    //브랜드 값 가지고있는곳
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
-//type값 가지고 있는곳
+    //type값 가지고 있는곳
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value,type_checked.value,brand_checked.value,'%',"1", "productUploadDate", "desc");
+    //신상품, 최고주문순, 조회최다순 정보 가지고 있는 곳
+    const value_checked = document.querySelector('.category_list_wrap ul li.active');
+    await searchProduct(title_value.value,type_checked.value,brand_checked.value,'%',"1", value_checked.id, "desc");
 }))
+
 const brandRadios = document.querySelectorAll('input[type=radio][name="brand"]');
 brandRadios.forEach((el)=> el.addEventListener('change', async ()=>{
-//브랜드 값 가지고있는곳
+    //브랜드 값 가지고있는곳
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
-//type값 가지고 있는곳
+    //type값 가지고 있는곳
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value,type_checked.value,brand_checked.value,'%',"1", "productUploadDate", "desc");
+    //신상품, 최고주문순, 조회최다순 정보 가지고 있는 곳
+    const value_checked = document.querySelector('.category_list_wrap ul li.active');
+
+    await searchProduct(title_value.value,type_checked.value,brand_checked.value,'%',"1", value_checked.id, "desc");
 }))
 
 
@@ -466,11 +472,16 @@ async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
     // productStock : 재고수
     try{
         const url = `/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=0&sort=${sort}&order=${desc}`;
+        const paginationUrl1 = `/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=`;
+        const paginationUrl2 = `&sort=${sort}&order=${desc}`;
+
         const res = await fetch(encodeURI(url));
         product_list.innerHTML = '';
 
         if(res.ok){
             const data = await res.json();
+            console.log(url);
+            console.log(data);
             if(data.length > 0){
                 for (let i = 0; i < data.length; i++) {
                     product_list.innerHTML +=
@@ -484,9 +495,16 @@ async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
                     </td>
                     <td class="right_price">
                         <p>${data[i].productPrice}원</p>
-                        <button class="add_cart" id="">담기</button>
+                        <button class="add_cart" id="${data[i].productId}">담기</button>
                     </td>
                 </tr>`
+                }
+                const buttons = document.querySelectorAll('.add_cart');
+                for(const button of buttons){
+                    button.addEventListener('click', (event) => {
+                        //담기 이벤트
+                        alert(event.target.id);
+                    })
                 }
             }else{
                 product_list.innerHTML =
@@ -504,6 +522,7 @@ async function searchProduct (type, subtype, brand, name, stock, sort, desc) {
                     </td>
                 </tr>`
             }
+            productRenderPagination(data[0].totalPage, encodeURI(url), encodeURI(paginationUrl1), encodeURI(paginationUrl2));
         }
     }catch (e) {
         product_list.innerHTML = '';

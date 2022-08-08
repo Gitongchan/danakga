@@ -33,6 +33,7 @@ public class ProductPermitAllController {
         return productService.productList(pageable, productSearchDto, page,sort,order);
     }
 
+
     //메인페이지 상품 리스트
     @GetMapping("/main-page/list/{sort}")
     public List<ResProductListDto> productMainPageList(Pageable pageable,

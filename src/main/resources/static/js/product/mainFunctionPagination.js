@@ -2,27 +2,16 @@
 //data[0].totalPage // 페이지 그룹 개수
 // 이전 버튼 : 화면에 그려진 첫번째 페이지 - 1
 // 다음 버튼 : 화면에 그려진 마지막 페이지 + 1
-const pagenation = document.querySelector('#board-wrap .text-center .pagination');
-
-const searchbtn = document.querySelector('#searchbtn');
-
-searchbtn.addEventListener('click',renderPagination);
+const pagenation = document.querySelector('.text-center .pagination');
 
 
-(function() {
-    fetch(`/api/board/list/자유게시판?page=0`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            renderPagination(data.lists[0].totalPage);
-        })
-})();
-
-function renderPagination(currentPage) {
-    fetch(`/api/board/list/자유게시판?page=0`)
+function productRenderPagination(currentPage, url, pURL1, pURL2) {
+    pagenation.innerHTML = '';
+    fetch(url)
         .then((res)=>res.json())
         .then((data)=>{
             //총 페이지 수
-            const total = Math.ceil(data.lists[0].totalElement/10);
+            const total = Math.ceil(data[0].totalElement/10);
             //화면에 보여질 페이지 그룹
             const group = Math.ceil(currentPage/10);
 
@@ -95,12 +84,12 @@ function renderPagination(currentPage) {
                     else if (id === "allprev") selectedPage = 1;
                     else if (id === "allnext") selectedPage = total;
                     //페이지 그리는 함수
-                    else onList(id);
+                    else productOnList(id ,pURL1, pURL2);
 
 
 
                     pagenation.innerHTML = "";
-                    renderPagination(selectedPage);//페이지네이션 그리는 함수
+                    productRenderPagination(selectedPage, url, pURL1, pURL2);//페이지네이션 그리는 함수
 
                 })
             }
@@ -108,22 +97,52 @@ function renderPagination(currentPage) {
 }
 
 //페이지 번호 클릭 시 이동하는 곳
-function onList(e){
-    fetch(`/api/board/list/자유게시판?page=${e}`)
+function productOnList(e, url1, url2){
+    console.log(`${url1+e+url2}`)
+    fetch(`${url1 + e + url2}`)
         .then((res)=>res.json())
         .then((data)=>{
-            tablelist.innerHTML="";
-            for(let i=0; i<data.lists.length; i++){
-                console.log(data.lists[i]);
-                const tr = document.createElement('tr');
-                tr.innerHTML =
-                    `<td>${data.lists[i].bd_id}</td>
-                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
-                 <td>${data.lists[i].bd_writer}</td>
-                 <td>${data.lists[i].bd_created.split('.')[0]}</td>
-                 <td>${data.lists[i].bd_views}</td>`
-
-                tablelist.appendChild(tr);
+            console.log(data);
+            product_list.innerHTML = '';
+            if(data.length > 0){
+                for (let i = 0; i < data.length; i++) {
+                    product_list.innerHTML +=
+                        `
+                <tr>
+                    <td class="item_images">
+                    <img src="${data[i].productPhoto}" alt="">
+                    </td>
+                    <td class="title_price">
+                    <p class=""><a href="/product/info?productId=${data[i].productId}">${data[i].productName}</a></p>
+                    </td>
+                    <td class="right_price">
+                        <p>${data[i].productPrice}원</p>
+                        <button class="add_cart" id="${data[i].productId}">담기</button>
+                    </td>
+                </tr>`
+                }
+                const buttons = document.querySelectorAll('.add_cart');
+                for(const button of buttons){
+                    button.addEventListener('click', (event) => {
+                        //담기 이벤트
+                        alert(event.target.id);
+                    })
+                }
+            }else{
+                product_list.innerHTML =
+                    `
+                <tr>
+                    <td class="item_images">
+                    <img src="" alt="이미지없음">
+                    </td>
+                    <td class="title_price">
+                    <p class=""><a href="">검색정보 없음</a></p>
+                    </td>
+                    <td class="right_price">
+                        <p>정보없음</p>
+                        <button class="" id="">담기</button>
+                    </td>
+                </tr>`
             }
         })
 }

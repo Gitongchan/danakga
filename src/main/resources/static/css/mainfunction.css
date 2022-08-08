@@ -263,6 +263,26 @@ article.main_right_content > div > div{
     color: #fff;
 }
 
+.pagination {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    margin: 40px 0; !important;
+}
+
+.scroll-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.card {
+    width: 120px;
+    height: 40px;
+    flex:0 0 80px;
+}
+
 /*
     Screen Size
     xs <576px
