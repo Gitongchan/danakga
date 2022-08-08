@@ -358,8 +358,8 @@ public class BoardServiceImpl implements BoardService {
         //deleted 값 변경
         boardRepository.updateDeleted(bd_id);
         
-        //대댓글 같이 삭제 상태 변경
-        commentRepository.deleteBoardComments(bd_id);
+        //댓글과 대댓글 포함해서 삭제 상태 변경
+        commentRepository.deleteBoardComment(bd_id);
 
         return recentBoard.getBdId();
     }

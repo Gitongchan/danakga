@@ -37,7 +37,6 @@ public class BoardController {
         } else {
             return new ResResultDto(result, "게시글을 작성 했습니다.");
         }
-
     }
 
     //게시글 수정
@@ -58,7 +57,6 @@ public class BoardController {
         } else {
             return new ResResultDto(result, "게시글을 수정 했습니다.");
         }
-
     }
 
     //게시글 삭제
@@ -69,7 +67,7 @@ public class BoardController {
         //게시글 삭제 로직 실행
         Long result = boardService.postDelete(bd_id, userInfo);
 
-        return new ResResultDto(result, "게시글 삭제 성공");
+        return new ResResultDto(result, "게시글이 삭제되었습니다.");
     }
 
 }

@@ -34,7 +34,7 @@ public class Board {
     @Column(name = "bd_content", columnDefinition = "TEXT")
     private String bdContent;
 
-    //String Y = 게시글 삭제, N = 보여줌
+    //String Y = 게시글 삭제, N = 보여줌, M = 댓글만 삭제된 상태(대댓글이 있는 경우)
     @Column(name = "bd_deleted")
     private String bdDeleted;
 
