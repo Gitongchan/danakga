@@ -233,13 +233,33 @@ article.main_right_content > div > button > div{
 }
 
 article.main_right_content > div > div{
-    background: #adb5bd;
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .panel{
     width:100%;
     display: block;
-    background: #adb5bd;
+}
+
+.panel div > div > div > button{
+    width: 20px;
+    height: 20px;
+}
+
+.panel div > div > p{
+    color: #000;
+    font-size: 16px;
+}
+
+
+.panel div > div > div > span{
+    color: #000;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+.panel span{
 }
 
 .panel.hide {

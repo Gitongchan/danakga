@@ -45,9 +45,9 @@ public class PageController {
     }
 
     @GetMapping("/manager/mypage")
-    public String mypageManager(){
-        return "pages/mypageManager";
-    }
+    public String mypageManager(){return "pages/mypageManager";}
+    @GetMapping("/product/myTools")
+    public String mytools(){return "pages/myTools";}
 
     @GetMapping("/manager/companyinfo")
     public String mypageCompany(){

@@ -125,28 +125,584 @@ function productOnList(e, url1, url2){
                 for(const button of buttons){
                     button.addEventListener('click', async (event) => {
                         //담기 이벤트
-                        alert(event.target.id);
                         const res = await fetch(`/api/product/item/${event.target.id}`);
 
                         if(res.ok){
                             const data = await res.json();
                             if(title_value.value === '바다로드'){
+                                if(sea_rod_arr.some(item => item.id === event.target.id)){
+                                    sea_rod_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    sea_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                sea_rod_id.innerHTML = '';
+                                sea_rod_arr.forEach(el=>{
+                                    sea_rod_id.innerHTML += `
+                                        <div class="item item-${el.id} d-flex justify-content-between ">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus ${el.id}" value="${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus ${el.id}" value="${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price-${el.id}">${el.price}<span>원</span></p>
+                                            <button class="delete_item" value="${el.id}">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                    const minus_btn = document.querySelectorAll('.minus');
+                                    for(const button of minus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            sea_rod_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    if(value.quantity === 1){
+                                                        return;
+                                                    }
+                                                    value.quantity -= 1;
+                                                    value.price = (+value.price) - (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+                                        })
+                                    }
 
-                                sea_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
-                            }else if(title_value.value === '민물로드'){
-                                fresh_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
-                            }else if(title_value.value === '원투낚시'){
-                                one_throw_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                    const plus_btn = document.querySelectorAll('.plus');
+                                    for(const button of plus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            sea_rod_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    value.quantity += 1;
+                                                    value.price = (+value.price) + (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+
+                                        })
+                                    }
+                                })
+
+                                const delete_btn = document.querySelectorAll('.delete_item');
+                                for(const button of delete_btn){
+                                    button.addEventListener('click', (event) => {
+                                        const idValue = event.target.attributes.value.value;
+                                        const $parent = document.querySelector(`.item-${idValue}`);
+                                        sea_rod_arr = sea_rod_arr.filter(el => el.id !== idValue);
+                                        $parent.remove();
+                                    })
+                                }
+
+
+                            }
+                            else if(title_value.value === '민물로드'){
+                                if(fresh_rod_arr.some(item => item.id === event.target.id)){
+                                    fresh_rod_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    fresh_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                fresh_rod_id.innerHTML = '';
+                                fresh_rod_arr.forEach(el=>{
+                                    fresh_rod_id.innerHTML += `
+                                        <div class="item item-${el.id} d-flex justify-content-between ">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus ${el.id}" value="${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus ${el.id}" value="${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price-${el.id}">${el.price}<span>원</span></p>
+                                            <button class="delete_item" value="${el.id}">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                    const minus_btn = document.querySelectorAll('.minus');
+                                    for(const button of minus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            fresh_rod_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    if(value.quantity === 1){
+                                                        return;
+                                                    }
+                                                    value.quantity -= 1;
+                                                    value.price = (+value.price) - (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+                                        })
+                                    }
+
+                                    const plus_btn = document.querySelectorAll('.plus');
+                                    for(const button of plus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            fresh_rod_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    value.quantity += 1;
+                                                    value.price = (+value.price) + (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+
+                                        })
+                                    }
+                                })
+
+                                const delete_btn = document.querySelectorAll('.delete_item');
+                                for(const button of delete_btn){
+                                    button.addEventListener('click', (event) => {
+                                        const idValue = event.target.attributes.value.value;
+                                        const $parent = document.querySelector(`.item-${idValue}`);
+                                        fresh_rod_arr = fresh_rod_arr.filter(el => el.id !== idValue);
+                                        $parent.remove();
+                                    })
+                                }
+
+                            } else if(title_value.value === '원투낚시'){
+                                if(one_throw_rod_arr.some(item => item.id === event.target.id)){
+                                    one_throw_rod_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    one_throw_rod_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                one_throw_rod_id.innerHTML = '';
+                                one_throw_rod_arr.forEach(el=>{
+                                    one_throw_rod_id.innerHTML += `
+                                        <div class="item item-${el.id} d-flex justify-content-between ">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus ${el.id}" value="${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus ${el.id}" value="${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price-${el.id}">${el.price}<span>원</span></p>
+                                            <button class="delete_item" value="${el.id}">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                    const minus_btn = document.querySelectorAll('.minus');
+                                    for(const button of minus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            one_throw_rod_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    if(value.quantity === 1){
+                                                        return;
+                                                    }
+                                                    value.quantity -= 1;
+                                                    value.price = (+value.price) - (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+                                        })
+                                    }
+
+                                    const plus_btn = document.querySelectorAll('.plus');
+                                    for(const button of plus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            one_throw_rod_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    value.quantity += 1;
+                                                    value.price = (+value.price) + (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+
+                                        })
+                                    }
+                                })
+
+                                const delete_btn = document.querySelectorAll('.delete_item');
+                                for(const button of delete_btn){
+                                    button.addEventListener('click', (event) => {
+                                        const idValue = event.target.attributes.value.value;
+                                        const $parent = document.querySelector(`.item-${idValue}`);
+                                        one_throw_rod_arr = one_throw_rod_arr.filter(el => el.id !== idValue);
+                                        $parent.remove();
+                                    })
+                                }
                             }else if(title_value.value === '릴/용품'){
-                                reel_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                if(reel_arr.some(item => item.id === event.target.id)){
+                                    reel_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    reel_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                reel_id.innerHTML = '';
+                                reel_arr.forEach(el=>{
+                                    reel_id.innerHTML += `
+                                        <div class="item item-${el.id} d-flex justify-content-between ">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus ${el.id}" value="${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus ${el.id}" value="${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price-${el.id}">${el.price}<span>원</span></p>
+                                            <button class="delete_item" value="${el.id}">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                    const minus_btn = document.querySelectorAll('.minus');
+                                    for(const button of minus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            reel_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    if(value.quantity === 1){
+                                                        return;
+                                                    }
+                                                    value.quantity -= 1;
+                                                    value.price = (+value.price) - (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+                                        })
+                                    }
+
+                                    const plus_btn = document.querySelectorAll('.plus');
+                                    for(const button of plus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            reel_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    value.quantity += 1;
+                                                    value.price = (+value.price) + (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+
+                                        })
+                                    }
+                                })
+
+                                const delete_btn = document.querySelectorAll('.delete_item');
+                                for(const button of delete_btn){
+                                    button.addEventListener('click', (event) => {
+                                        const idValue = event.target.attributes.value.value;
+                                        const $parent = document.querySelector(`.item-${idValue}`);
+                                        reel_arr = reel_arr.filter(el => el.id !== idValue);
+                                        $parent.remove();
+                                    })
+                                }
                             }else if(title_value.value === '라인/용품'){
-                                line_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                if(line_arr.some(item => item.id === event.target.id)){
+                                    line_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    line_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                line_id.innerHTML = '';
+                                line_arr.forEach(el=>{
+                                    line_id.innerHTML += `
+                                        <div class="item item-${el.id} d-flex justify-content-between ">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus ${el.id}" value="${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus ${el.id}" value="${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price-${el.id}">${el.price}<span>원</span></p>
+                                            <button class="delete_item" value="${el.id}">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                    const minus_btn = document.querySelectorAll('.minus');
+                                    for(const button of minus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            line_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    if(value.quantity === 1){
+                                                        return;
+                                                    }
+                                                    value.quantity -= 1;
+                                                    value.price = (+value.price) - (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+                                        })
+                                    }
+
+                                    const plus_btn = document.querySelectorAll('.plus');
+                                    for(const button of plus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            line_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    value.quantity += 1;
+                                                    value.price = (+value.price) + (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+
+                                        })
+                                    }
+                                })
+
+                                const delete_btn = document.querySelectorAll('.delete_item');
+                                for(const button of delete_btn){
+                                    button.addEventListener('click', (event) => {
+                                        const idValue = event.target.attributes.value.value;
+                                        const $parent = document.querySelector(`.item-${idValue}`);
+                                        line_arr = line_arr.filter(el => el.id !== idValue);
+                                        $parent.remove();
+                                    })
+                                }
                             }else if(title_value.value === '바늘/훅'){
-                                hook_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                if(hook_arr.some(item => item.id === event.target.id)){
+                                    hook_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    hook_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                hook_id.innerHTML = '';
+                                hook_arr.forEach(el=>{
+                                    hook_id.innerHTML += `
+                                        <div class="item item-${el.id} d-flex justify-content-between ">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus ${el.id}" value="${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus ${el.id}" value="${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price-${el.id}">${el.price}<span>원</span></p>
+                                            <button class="delete_item" value="${el.id}">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                    const minus_btn = document.querySelectorAll('.minus');
+                                    for(const button of minus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            hook_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    if(value.quantity === 1){
+                                                        return;
+                                                    }
+                                                    value.quantity -= 1;
+                                                    value.price = (+value.price) - (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+                                        })
+                                    }
+
+                                    const plus_btn = document.querySelectorAll('.plus');
+                                    for(const button of plus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            hook_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    value.quantity += 1;
+                                                    value.price = (+value.price) + (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+
+                                        })
+                                    }
+                                })
+
+                                const delete_btn = document.querySelectorAll('.delete_item');
+                                for(const button of delete_btn){
+                                    button.addEventListener('click', (event) => {
+                                        const idValue = event.target.attributes.value.value;
+                                        const $parent = document.querySelector(`.item-${idValue}`);
+                                        hook_arr = hook_arr.filter(el => el.id !== idValue);
+                                        $parent.remove();
+                                    })
+                                }
                             }else if(title_value.value === '기타'){
-                                all_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                if(all_arr.some(item => item.id === event.target.id)){
+                                    all_arr.map(value => {
+                                        if(value.id === event.target.id){
+                                            value.quantity += 1;
+                                            value.price = (+value.price) + (+data.productPrice);
+                                        }
+                                    })
+                                }else{
+                                    all_arr.push({id:event.target.id, name: data.productName, price: data.productPrice, quantity:1})
+                                }
+                                all_id.innerHTML = '';
+                                all_arr.forEach(el=>{
+                                    all_id.innerHTML += `
+                                        <div class="item item-${el.id} d-flex justify-content-between ">
+                                             <div>
+                                                <p class="w-100">${el.name}</p>
+                                                <div>
+                                                    <button class="minus ${el.id}" value="${el.id}">-</button>
+                                                    <span class="quantity-${el.id}">${el.quantity}</span>
+                                                    <button class="plus ${el.id}" value="${el.id}">+</button>
+                                                </div>
+                                            </div>
+                                           <div class="d-flex align-items-center">
+                                           <p class="cart_price-${el.id}">${el.price}<span>원</span></p>
+                                            <button class="delete_item" value="${el.id}">X</button>
+                                            </div>
+                                        </div>
+                                        `
+                                    const minus_btn = document.querySelectorAll('.minus');
+                                    for(const button of minus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            all_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    if(value.quantity === 1){
+                                                        return;
+                                                    }
+                                                    value.quantity -= 1;
+                                                    value.price = (+value.price) - (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+                                        })
+                                    }
+
+                                    const plus_btn = document.querySelectorAll('.plus');
+                                    for(const button of plus_btn){
+                                        button.addEventListener('click', async (event)=>{
+                                            const idValue = event.target.attributes.value.value;
+                                            const quaintValue = document.querySelector(`.quantity-${idValue}`);
+                                            const priceValue = document.querySelector(`.cart_price-${idValue}`);
+                                            const priceRes = await fetch(`/api/product/item/${idValue}`);
+                                            const priceData = await priceRes.json();
+                                            all_arr.map(value => {
+                                                if(value.id === idValue){
+                                                    value.quantity += 1;
+                                                    value.price = (+value.price) + (+priceData.productPrice);
+                                                    quaintValue.textContent = value.quantity;
+                                                    priceValue.innerHTML = `${value.price}<span>원</span>`;
+                                                }
+                                            })
+
+                                        })
+                                    }
+                                })
+
+                                const delete_btn = document.querySelectorAll('.delete_item');
+                                for(const button of delete_btn){
+                                    button.addEventListener('click', (event) => {
+                                        const idValue = event.target.attributes.value.value;
+                                        const $parent = document.querySelector(`.item-${idValue}`);
+                                        all_arr = all_arr.filter(el => el.id !== idValue);
+                                        $parent.remove();
+                                    })
+                                }
                             }
                         }
+
 
                     })
                 }
