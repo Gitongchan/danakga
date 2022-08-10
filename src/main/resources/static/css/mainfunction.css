@@ -301,6 +301,7 @@ article.main_right_content > div > div{
     width: 120px;
     height: 40px;
     flex:0 0 80px;
+    color: white;
 }
 
 #product_list img{
@@ -315,6 +316,12 @@ article.main_right_content > div > div{
     background: none;
     border: none;
     font-weight: bold;
+}
+
+#all_price{
+    font-size: 21px;
+    color: black;
+    margin-bottom: 10px;
 }
 /*
     Screen Size

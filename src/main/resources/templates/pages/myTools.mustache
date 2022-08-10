@@ -58,16 +58,13 @@
 
 
 <script src="/js/bootstrap.min.js"></script>
-<script src="/js/main.js"></script>
 <script src="/js/user/indexUserCheck.js"></script>
 <script>
     async function list(){
-        const res = await fetch('/api/user/myTool/folder')
+        const res = await fetch('/api/user/myTool/folder');
 
         if(res.ok){
             const data = await res.json();
-            console.log(data);
-            console.log(data.length);
             const list_box = document.getElementById('folder_list');
 //             // 내 장비 추가부분
 //             // myToolFolderId: 1
@@ -85,6 +82,7 @@
             }
         }
     }
+
     (async function(){
         await list();
     })();
@@ -96,7 +94,8 @@
         const selectFolder = document.querySelector('input[name="folder"]:checked');
         if(confirm('선택한 폴더에 장비를 저장하시겠습니까?')){
             //예를 눌렀을 시 동작하는 곳
-            
+            opener.call(selectFolder.value);
+            window.close();
         }
     });
 
@@ -125,4 +124,7 @@
         }
     });
 </script>
-{{>pages/footer2}}
+
+</body>
+
+</html>
