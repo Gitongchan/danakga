@@ -8,7 +8,7 @@ let hook_arr = [];
 let all_arr = []
 
 //총 가격 보여주는 곳
-let all_price;
+let all_price = 0;
 //내장비 담기 하면 들어가 공간
 const sea_rod_id = document.getElementById('sea_rod_panel');
 const fresh_rod_id = document.getElementById('fresh_rod_panel');

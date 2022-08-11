@@ -502,13 +502,13 @@ async function searchProduct(type, subtype, brand, name, stock, sort, desc) {
                     button.addEventListener('click', async (event) => {
                         //담기 이벤트
                         const res = await fetch(`/api/product/item/${event.target.id}`);
-
                         if (res.ok) {
                             const data = await res.json();
                             if (title_value.value === '바다로드') {
                                 if (sea_rod_arr.some(item => item.id === +event.target.id)) {
                                     sea_rod_arr.map(value => {
                                         if (value.id === +event.target.id) {
+                                            console.log(data.productPrice);
                                             all_price += (+data.productPrice);
                                             value.quantity += 1;
                                             value.price = (+value.price) + (+data.productPrice);
@@ -756,7 +756,7 @@ window.call = async (data) => {
 
     if(addTool.ok){
         alert("장비 저장 완료!");
-        location.replace('/index');
+        location.replace('/mypage/cart');
     }
 
 }
