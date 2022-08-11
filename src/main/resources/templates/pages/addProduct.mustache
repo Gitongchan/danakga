@@ -37,19 +37,26 @@
                     <div class="col-sm-12 mb-10">
                         <div class="form-group input-group">
                             <label for="main-type" class="m-auto">상품종류</label>
-                            <select class="form-select" id="main-type" aria-label="select main-type">
-                                <option value="낚시대">낚시대</option>
-                                <option value="릴">릴</option>
-                                <option value="라인">라인</option>
-                                <option value="밑밥">밑밥</option>
-                                <option value="루어">루어</option>
-                                <option value="의류">의류</option>
+                            <select class="form-select" id="main-type" aria-label="select main-type" onchange="changeSubType()">
+                                <option value="바다로드">바다로드</option>
+                                <option value="민물로드">민물로드</option>
+                                <option value="원투낚시">원투낚시</option>
+                                <option value="릴/용품">릴/용품</option>
+                                <option value="라인/용품">라인/용품</option>
+                                <option value="바늘/훅">바늘/훅</option>
+                                <option value="기타">기타</option>
                             </select>
                             <label for="sub-type" class="m-auto">세부종류</label>
                             <select class="form-select" id="sub-type" aria-label="select sub-type">
-                                <option value="바다">바다</option>
-                                <option value="민물">민물</option>
-                                <option value="루어">루어</option>
+                                <option value="인쇼어">인쇼어</option>
+                                <option value="라이트지깅">라이트지깅</option>
+                                <option value="볼락/락피쉬">볼락/락피쉬</option>
+                                <option value="지깅로드">지깅로드</option>
+                                <option value="선상캐스트로드">선상캐스트로드</option>
+                                <option value="외수질/침선">외수질/침선</option>
+                                <option value="타이라바">타이라바</option>
+                                <option value="좌대용">좌대용</option>
+                                <option value="두족류">두족류</option>
                             </select>
                         </div>
                     </div>
@@ -57,10 +64,16 @@
                         <div class="form-group input-group">
                             <label for="brand-type" class="m-auto">브랜드</label>
                             <select class="form-select" id="brand-type" aria-label="select brand-type">
-                                <option value="" selected>설정안함</option>
-                                <option value="블랙이소">블랙이소</option>
-                                <option value="털보네">털보네</option>
-                                <option value="갓프레임">갓프레임</option>
+                                <option value="시마노" selected>시마노</option>
+                                <option value="바낙스">바낙스</option>
+                                <option value="청룡조구">청룡조구</option>
+                                <option value="아부가르시아">아부가르시아</option>
+                                <option value="다이와">다이와</option>
+                                <option value="해동조구사">해동조구사</option>
+                                <option value="키우라">키우라</option>
+                                <option value="용성">용성</option>
+                                <option value="은성사">은성사</option>
+                                <option value="가마가츠">가마가츠</option>
                             </select>
                         </div>
                     </div>
@@ -121,6 +134,81 @@
                 console.error(error);
             });
 
+
+    //메인 타입 변경시 서브타입이 알맞게 들어가도록
+    function changeSubType(){
+        const mainType = document.getElementById('main-type');
+        const mainTypeValue = mainType.options[mainType.selectedIndex].value;
+        const subType = document.getElementById('sub-type');
+
+        if(mainTypeValue === "바다로드"){
+            subType.innerHTML = `
+                        <option value="인쇼어">인쇼어</option>
+                        <option value="라이트지깅">라이트지깅</option>
+                        <option value="볼락/락피쉬">볼락/락피쉬</option>
+                        <option value="지깅로드">지깅로드</option>
+                        <option value="선상캐스트로드">선상캐스트로드</option>
+                        <option value="외수질/침선">외수질/침선</option>
+                        <option value="타이라바">타이라바</option>
+                        <option value="좌대용">좌대용</option>
+                        <option value="두족류">두족류</option>
+
+            `;
+        }else if(mainTypeValue === "민물로드"){
+            subType.innerHTML = `
+                        <option value="스피닝로드">스피닝로드</option>
+                        <option value="베이트로드">베이트로드</option>
+                        <option value="계류로드">계류로드</option>
+                        <option value="가물치로드">가물치로드</option>
+                        <option value="빙어로드">빙어로드</option>
+                        <option value="플라이로드">플라이로드</option>
+
+            `;
+        }else if(mainTypeValue === "원투낚시"){
+            subType.innerHTML = `
+                        <option value="원투로드">원투로드</option>
+                        <option value="원투릴">원투릴</option>
+                        <option value="원투채비">원투채비</option>
+                        <option value="원투소품">원투소품</option>
+            `;
+        }else if(mainTypeValue === "릴/용품"){
+            subType.innerHTML = `
+                        <option value="스피닝릴">스피닝릴</option>
+                        <option value="베이트릴">베이트릴</option>
+                        <option value="전동릴">전동릴</option>
+                        <option value="빙어릴">빙어릴</option>
+                        <option value="전동릴부품">전동릴부품</option>
+                        <option value="튜닝용품">튜닝용품</option>
+                        <option value="플라이">플라이</option>
+            `;
+        }else if(mainTypeValue === "라인/용품"){
+            subType.innerHTML = `
+                        <option value="카본라인">카본라인</option>
+                        <option value="합사라인">합사라인</option>
+                        <option value="모노라인">모노라인</option>
+                        <option value="하이브리드라인">하이브리드라인</option>
+                        <option value="플라이라인">플라이라인</option>
+                        <option value="라인결속기">라인결속기</option>
+                        <option value="플라이">플라이</option>
+            `;
+        }else if(mainTypeValue === "바늘/훅"){
+            subType.innerHTML = `
+                        <option value="지그헤드">지그헤드</option>
+                        <option value="다운샷">다운샷</option>
+                        <option value="와이드갭">와이드갭</option>
+                        <option value="스트레이트">스트레이트</option>
+                        <option value="플래시스위머">플래시스위머</option>
+                        <option value="웜스프링">웜스프링</option>
+                        <option value="플라이">플라이</option>
+                        <option value="타이라바">타이라바</option>
+            `;
+        }else{
+            //기타일 시
+            subType.innerHTML = `
+                        <option value="기타">기타</option>
+            `;
+        }
+    }
 
     document.querySelector('#productBtn').addEventListener('click', (e) => {
         e.preventDefault();

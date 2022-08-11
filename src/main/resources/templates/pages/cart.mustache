@@ -1,24 +1,24 @@
     {{>pages/header1}}
+    <link rel="stylesheet" href="/css/cart.css">
+
     {{>pages/header2}}
 
 
     <!-- Start Breadcrumbs -->
-    <div class="breadcrumbs">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 col-md-6 col-12">
-                    <div class="breadcrumbs-content">
-                        <h1 class="page-title">Cart</h1>
+    <div class="container">
+        <div class="row">
+            <section class="mypage_sidebar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light" id="my-page-nav">
+                    <button class="navbar-toggler" id="NAVtoggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span>목록보기</span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            {{>pages/mypageUserNAV}}
+                        </ul>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-12">
-                    <ul class="breadcrumb-nav">
-                        <li><a href="index.mustache"><i class="lni lni-home"></i> Home</a></li>
-                        <li><a href="index.mustache">Shop</a></li>
-                        <li>Cart</li>
-                    </ul>
-                </div>
-            </div>
+                </nav>
+            </section>
         </div>
     </div>
     <!-- End Breadcrumbs -->
@@ -26,141 +26,43 @@
     <!-- Shopping Cart -->
     <div class="shopping-cart section">
         <div class="container">
+            <div class="scroll-container" id="tools_list">
+            </div>
+            <div class="align-right mt-1 mb-1">
+                <button id="folder_manager">폴더 관리</button>
+                <button id="tool_select_delete">선택 삭제</button>
+            </div>
             <div class="cart-list-head">
                 <!-- Cart List Title -->
                 <div class="cart-list-title">
                     <div class="row">
                         <div class="col-lg-1 col-md-1 col-12">
-
+                            <p>선택</p>
                         </div>
                         <div class="col-lg-4 col-md-3 col-12">
-                            <p>Product Name</p>
+                            <p>상품명</p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            <p>Quantity</p>
+                            <p>수량</p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            <p>Subtotal</p>
+                            <p>합계</p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            <p>Discount</p>
+                            <p>상세분류</p>
                         </div>
                         <div class="col-lg-1 col-md-2 col-12">
-                            <p>Remove</p>
+                            <p>삭제</p>
                         </div>
                     </div>
                 </div>
+
                 <!-- End Cart List Title -->
                 <!-- Cart Single List list -->
                 <div class="cart-single-list">
-                    <div class="row align-items-center">
-                        <div class="col-lg-1 col-md-1 col-12">
-                            <a href="product-details.mustache"><img src="https://via.placeholder.com/220x200" alt="#"></a>
-                        </div>
-                        <div class="col-lg-4 col-md-3 col-12">
-                            <h5 class="product-name"><a href="product-details.mustache">
-                                    Canon EOS M50 Mirrorless Camera</a></h5>
-                            <p class="product-des">
-                                <span><em>Type:</em> Mirrorless</span>
-                                <span><em>Color:</em> Black</span>
-                            </p>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <div class="count-input">
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <p>$910.00</p>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <p>$29.00</p>
-                        </div>
-                        <div class="col-lg-1 col-md-2 col-12">
-                            <a class="remove-item" href="javascript:void(0)"><i class="lni lni-close"></i></a>
-                        </div>
-                    </div>
                 </div>
                 <!-- End Single List list -->
-                <!-- Cart Single List list -->
-                <div class="cart-single-list">
-                    <div class="row align-items-center">
-                        <div class="col-lg-1 col-md-1 col-12">
-                            <a href="product-details.mustache"><img src="https://via.placeholder.com/220x200" alt="#"></a>
-                        </div>
-                        <div class="col-lg-4 col-md-3 col-12">
-                            <h5 class="product-name"><a href="product-details.mustache">
-                                    Apple iPhone X 256 GB Space Gray</a></h5>
-                            <p class="product-des">
-                                <span><em>Memory:</em> 256 GB</span>
-                                <span><em>Color:</em> Space Gray</span>
-                            </p>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <div class="count-input">
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <p>$1100.00</p>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <p>—</p>
-                        </div>
-                        <div class="col-lg-1 col-md-2 col-12">
-                            <a class="remove-item" href="javascript:void(0)"><i class="lni lni-close"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Single List list -->
-                <!-- Cart Single List list -->
-                <div class="cart-single-list">
-                    <div class="row align-items-center">
-                        <div class="col-lg-1 col-md-1 col-12">
-                            <a href="product-details.mustache"><img src="https://via.placeholder.com/220x200" alt="#"></a>
-                        </div>
-                        <div class="col-lg-4 col-md-3 col-12">
-                            <h5 class="product-name"><a href="product-details.mustache">HP LaserJet Pro Laser Printer</a></h5>
-                            <p class="product-des">
-                                <span><em>Type:</em> Laser</span>
-                                <span><em>Color:</em> White</span>
-                            </p>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <div class="count-input">
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <p>$550.00</p>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-12">
-                            <p>—</p>
-                        </div>
-                        <div class="col-lg-1 col-md-2 col-12">
-                            <a class="remove-item" href="javascript:void(0)"><i class="lni lni-close"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Single List list -->
+
             </div>
             <div class="row">
                 <div class="col-12">
@@ -168,28 +70,25 @@
                     <div class="total-amount">
                         <div class="row">
                             <div class="col-lg-8 col-md-6 col-12">
-                                <div class="left">
-                                    <div class="coupon">
-                                        <form action="#" target="_blank">
-                                            <input name="Coupon" placeholder="Enter Your Coupon">
-                                            <div class="button">
-                                                <button class="btn">Apply Coupon</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+<!--                                <div class="left">-->
+<!--                                    <div class="coupon">-->
+<!--                                        <form action="#" target="_blank">-->
+<!--                                            <input name="Coupon" placeholder="Enter Your Coupon">-->
+<!--                                            <div class="button">-->
+<!--                                                <button class="btn">Apply Coupon</button>-->
+<!--                                            </div>-->
+<!--                                        </form>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                             <div class="col-lg-4 col-md-6 col-12">
                                 <div class="right">
                                     <ul>
-                                        <li>Cart Subtotal<span>$2560.00</span></li>
-                                        <li>Shipping<span>Free</span></li>
-                                        <li>You Save<span>$29.00</span></li>
-                                        <li class="last">You Pay<span>$2531.00</span></li>
+                                        <li>총 합계<span id="cart_price">0</span></li>
                                     </ul>
                                     <div class="button">
-                                        <a href="checkout.mustache" class="btn">Checkout</a>
-                                        <a href="product-grids.mustache" class="btn btn-alt">Continue shopping</a>
+                                        <a href="javascript:void(0)" class="btn" id="order_btn">주문하기</a>
+                                        <a href="/product/main?type=productUploadDate" class="btn btn-alt">더 쇼핑하기</a>
                                     </div>
                                 </div>
                             </div>
@@ -205,5 +104,6 @@
     {{>pages/footer1}}
     <!--  이곳에 페이지 별 js 로드시키기-->
     <!--  예시 : <script src="/js/dummydata.js"></script> -->
+    <script src="/js/cart/myToolList.js"></script>
 
     {{>pages/footer2}}
