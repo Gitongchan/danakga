@@ -8,16 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart,Long> {
-//    List<Cart> findByIdcAndCartIdAndProductIdAndUserInfoAndCartAmountAndPrice(); // 몽땅 조회
     Optional<Cart> findByCartId(Long cartId);// 아이디만 있나 조회
-    Optional<Cart> findByCartIdAndUserInfo(UserInfo userInfo, Long cartId);// 아이디만 있나 조회
 
-//
+    Optional<Cart> findByCartIdAndUserInfo(Long cartId, UserInfo userInfo);// 아이디만 있나 조회
+
     Optional<Cart> findByUserInfoAndProductId(UserInfo userInfo , Product productId);
 
-    Optional<Cart> findById(Long aLong);
 
-    Optional<Cart>  findByProductId(Long productId);
+    Optional<Cart>  findByProductId(Product productId);
 
     Optional<Cart> findByUserInfo(UserInfo userInfo);
 //

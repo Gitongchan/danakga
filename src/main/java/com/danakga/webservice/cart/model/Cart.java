@@ -6,11 +6,10 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity //JPA가 관리하는 클래스
-@Getter // 게터 자동 삽입
+@Entity
+@Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)//무분별한 객체 생성에 대해 한번 더 체크할 수 있는 수단
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

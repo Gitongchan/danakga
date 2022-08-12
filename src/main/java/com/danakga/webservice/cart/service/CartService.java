@@ -9,13 +9,10 @@ import com.danakga.webservice.user.model.UserInfo;
 import java.util.List;
 
 public interface CartService {
-    //장바구니 추가 -> insert
-    Long cartPut(UserInfo userInfo, CartDto cartDto);
+    //장바구니 추가
+    Long cartSave(UserInfo userInfo, List<CartDto> cartDto);
 
     void MyCartDelete(UserInfo userInfo, List<CartIdDto> productList);
-
-
-    //장바구니 목록 -> s
 
     void cartDeleteAll(UserInfo userInfo);
 

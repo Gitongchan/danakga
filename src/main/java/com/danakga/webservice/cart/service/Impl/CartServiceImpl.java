@@ -6,9 +6,6 @@ import com.danakga.webservice.cart.model.Cart;
 import com.danakga.webservice.cart.repository.CartRepository;
 import com.danakga.webservice.cart.service.CartService;
 import com.danakga.webservice.exception.CustomException;
-import com.danakga.webservice.mytool.dto.request.MyToolIdDto;
-import com.danakga.webservice.mytool.model.MyToolDetail;
-import com.danakga.webservice.mytool.model.MyToolFolder;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
@@ -18,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,46 +22,49 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
-// 수량 수정
-    // 선택 삭제-> 최근에 참고 해서
 
-    @Transactional
+
+    //장바구니 추가
     @Override
-    public Long cartPut(UserInfo userInfo,CartDto cartDto) {
+    @Transactional
+    public Long cartSave(UserInfo userInfo, List<CartDto> cartDtoList) {
         // 장바구니 담기
         // 유저 id로 해당 유저의 장바구니 찾기
         UserInfo cartUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
-        Product productInfo = productRepository.findByProductId(cartDto.getProductId()).orElseThrow(
-                () -> new CustomException.ResourceNotFoundException("상품 아이디를 찾을 수 없습니다 : " + cartDto.getProductId())
-        );
 
-        // 장바구니가 존재하지 않는다면
-        if (cartRepository.findByUserInfoAndProductId(cartUserInfo, productInfo).isEmpty()) {
-
-            return cartRepository.save(
-                    Cart.builder()
-                            .productId(productInfo)
-                            .userInfo(cartUserInfo)
-                            .cartAmount(cartDto.getCartAmount())
-                            .build()
-            ).getCartId();
-        }
-        // 상품이 장바구니에 이미 존재한다면 수량만 증가
-        else {
-            Cart cart = cartRepository.findByUserInfoAndProductId(cartUserInfo, productInfo).get();// 객체를 가져와 담음
-            cartRepository.save(
-                    Cart.builder()
-                            .cartId(cart.getCartId())
-                            .productId(cart.getProductId())
-                            .userInfo(cart.getUserInfo())
-                            .cartAmount(cart.getCartAmount() + cartDto.getCartAmount())
-                            .build()
+        for (CartDto cartDto : cartDtoList) {
+            Product productInfo = productRepository.findByProductId(cartDto.getProductId()).orElseThrow(
+                    () -> new CustomException.ResourceNotFoundException("상품 아이디를 찾을 수 없습니다 : " + cartDto.getProductId())
             );
-            return cart.getCartId();
-        }
+   
+            // 장바구니에 존재하지 않는다면
+            if (cartRepository.findByUserInfoAndProductId(cartUserInfo, productInfo).isEmpty()) {
 
+                cartRepository.save(
+                        Cart.builder()
+                                .productId(productInfo)
+                                .userInfo(cartUserInfo)
+                                .cartAmount(cartDto.getCartAmount())
+                                .build()
+                );
+            }
+            // 상품이 장바구니에 이미 존재한다면 수량만 증가
+            else {
+                Cart cart = cartRepository.findByUserInfoAndProductId(cartUserInfo, productInfo).get();// 객체를 가져와 담음
+                cartRepository.save(
+                        Cart.builder()
+                                .cartId(cart.getCartId())
+                                .productId(cart.getProductId())
+                                .userInfo(cart.getUserInfo())
+                                .cartAmount(cart.getCartAmount() + cartDto.getCartAmount())
+                                .build()
+                );
+
+            }
+        }
+        return 1L;
     }
 
     // 유저 정보만 파라미터로 받아옴
