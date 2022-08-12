@@ -51,15 +51,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         Map<String,Object> reviewMap = new LinkedHashMap<>();
 
-        if(checkReview.isEmpty()) {
-
-            reviewMap.put("exception", new CustomException.ResourceNotFoundException("등록된 후기가 없습니다."));
-
-            reviewList.add(reviewMap);
-
-            return new ResReviewListDto(reviewList);
-        }
-
         checkReview.forEach(review -> {
             reviewMap.put("re_content", review.getReContent());
             reviewMap.put("re_created", review.getReCreated());
