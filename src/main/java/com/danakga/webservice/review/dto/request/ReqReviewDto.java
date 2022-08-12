@@ -28,6 +28,6 @@ public class ReqReviewDto {
     private String reviewContent;
 
     //후기 별점
-    private Double reviewScore;
+    private int reviewScore;
 
 }

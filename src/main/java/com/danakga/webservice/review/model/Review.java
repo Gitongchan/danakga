@@ -2,6 +2,7 @@ package com.danakga.webservice.review.model;
 
 
 import com.danakga.webservice.orders.model.Orders;
+import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,54 +21,59 @@ public class Review {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "r_id")
-    private Long rId;
+    private Long reId;
 
     @Column(name = "r_content")
-    private String rContent;
+    private String reContent;
 
     @Column(name = "r_score")
-    private double rScore;
+    private int reScore;
 
     @Column(name = "r_writer")
-    private String rWriter;
+    private String reWriter;
 
     @CreationTimestamp
-    private LocalDateTime rCreated;
+    private LocalDateTime reCreated;
 
     @UpdateTimestamp
-    private LocalDateTime rModified;
+    private LocalDateTime reModified;
 
     @Column(name = "r_deleted")
-    private String rDeleted;
+    private String reDeleted;
 
     //회원 정보
     @ManyToOne
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
-    //주문내역
+    //주문 내역
     @OneToOne
     @JoinColumn(name = "o_id")
     private Orders orders;
 
+    @ManyToOne
+    @JoinColumn(name = "p_id")
+    private Product product;
+
     //insert시 기본값으로 r_deleted에 "N"값 적용
     @PrePersist
     public void deleted() {
-        this.rDeleted = "N";
+        this.reDeleted = "N";
     }
 
     @Builder
-    public Review(Long rId, String rContent, double rScore, String rWriter,
-                  LocalDateTime rCreated, LocalDateTime rModified, String rDeleted,
-                  UserInfo userInfo, Orders orders) {
-        this.rId = rId;
-        this.rContent = rContent;
-        this.rScore = rScore;
-        this.rWriter = rWriter;
-        this.rDeleted = rDeleted;
-        this.rCreated = rCreated;
-        this.rModified = rModified;
+    public Review(Long reId, String reContent, int reScore, String reWriter,
+                  LocalDateTime reCreated, LocalDateTime reModified, String reDeleted,
+                  UserInfo userInfo, Orders orders, Product product) {
+        this.reId = reId;
+        this.reContent = reContent;
+        this.reScore = reScore;
+        this.reWriter = reWriter;
+        this.reDeleted = reDeleted;
+        this.reCreated = reCreated;
+        this.reModified = reModified;
         this.userInfo = userInfo;
         this.orders = orders;
+        this.product = product;
     }
 }
