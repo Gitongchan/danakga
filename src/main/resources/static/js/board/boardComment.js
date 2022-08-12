@@ -264,8 +264,14 @@ const reload = async (e)=> {
         const commentReply = document.querySelectorAll(".reply-link.comment-reply");
         for(const replyBtn of commentReply){
             replyBtn.addEventListener('click',async (event)=>{
-                if(document.querySelector('.reply_true') != null){
+
+                if(checkName.value === ''){
+                    alert('로그인을 해주세요!');
                     return;
+                }else{
+                    if(document.querySelector('.reply_true') != null){
+                        return;
+                    }
                 }
                 console.log(event);
                 const $parentNode = document.querySelector(`.parent${event.target.offsetParent.id}`);
