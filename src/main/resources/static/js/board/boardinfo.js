@@ -33,22 +33,22 @@ const boardType = getParameterByName('bdType');
                 fetch(`/api/board/post/${boardID}`)
                     .then((res)=>res.json())
                     .then((data)=>
-                    {
-                        for(let i =0; i< data.files.length; i++){
+                {
+                    for(let i =0; i< data.post[0].files.length; i++){
                             const img = document.createElement('img');
                             const divImg = document.createElement('div');
                             const deleteButton = document.createElement('button');
                             divImg.classList.add(`current-img`);
                             img.classList.add(`img-item`);
-                            img.src= data.files[i].file_path;
+                            img.src= data[0].files[i].file_path;
                             divImg.appendChild(img);
                             content_img.appendChild(divImg);
                         }
 
                         userid.after(btnWrap);
-                        content.innerHTML += data.post.bd_content;
-                        title.innerText = data.post.bd_title;
-                        span.innerText= data.post.bd_writer;
+                        content.innerHTML += data.post[0].bd_content;
+                        title.innerText = data.post[0].bd_title;
+                        span.innerText= data.post[0].bd_writer;
                         userid.appendChild(span);
                     });
             }
@@ -97,19 +97,19 @@ const check = () => {
         .then((res)=>res.json())
         .then((data)=>
         {
-            for(let i =0; i< data.files.length; i++){
+            for(let i =0; i< data.post[0].files.length; i++){
                 const img = document.createElement('img');
                 const divImg = document.createElement('div');
                 const deleteButton = document.createElement('button');
                 divImg.classList.add(`current-img`);
                 img.classList.add(`img-item`);
-                img.src= data.files[i].file_path;
+                img.src= data.post[0].files[i].file_path;
                 divImg.appendChild(img);
                 content_img.appendChild(divImg);
             }
-            content.innerHTML += data.post.bd_content;
-            title.innerText = data.post.bd_title;
-            span.innerText= data.post.bd_writer;
+            content.innerHTML += data.post[0].bd_content;
+            title.innerText = data.post[0].bd_title;
+            span.innerText= data.post[0].bd_writer;
             userid.appendChild(span);
         });
 }
