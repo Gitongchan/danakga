@@ -1,4 +1,11 @@
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 
 const searchBtn = document.getElementById('searchBtn');
 const searchText = document.getElementById('searchText');
@@ -764,13 +771,7 @@ window.call = async (data) => {
 //첫 로딩시 동작하는 곳
 (async function () {
 
-    await toolsList ()
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    await toolsList();
 
     const type = getParameterByName('type');
 

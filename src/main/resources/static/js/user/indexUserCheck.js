@@ -59,7 +59,6 @@ const loginInfo = document.getElementById('user-info');
                                 <input type="hidden" name="_csrf" value="${token}">
                                 <button>로그아웃</button>
                           </form>
-                            
                           </li>
                         </ul>
                     `
