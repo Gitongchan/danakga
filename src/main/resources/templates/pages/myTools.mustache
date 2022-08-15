@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta id="_csrf" name="_csrf" content="{{_csrf.token}}"/>
+    <meta id="_csrf_header" name="_csrf_header" content="{{_csrf.headerName}}"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.svg" />
+    <meta id="author" content="jin"/>
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+    <title>내 장비 저장</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        ul {
+            list-style: none;
+        }
+        .radio_box{
+            padding: 20px 0;
+            margin: 10px 0;
+            background: #e7e7e7;
+            width: 75%
+        }
+        .notice p{
+            font-size: 14px;
+        }
+        .save_btn{
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="d-flex flex-column justify-content-center align-items-center w-100">
+    <div class="radio_box">
+        <ul class="cate_list" id="folder_list">
+        </ul>
+    </div>
+    <div class="w-75 d-flex justify-content-center align-items-center save_btn">
+        <button id="save_btn">저장하기</button>
+    </div>
+    <div class="w-75 mb-5">
+        <span>폴더 만들기:</span><input type="text" min="1" id="folder_text" /><button id="folder_btn">확인</button>
+    </div>
+    <div class="w-75 notice">
+        <h5>견적 저장 안내</h5>
+        <p>1. 장바구니에 담긴 상품을 내장비에 저장할 수 있습니다.</p>
+        <p>2. 저장한 내장비는 '내 장비 불러오기'에서 확인할 수 있습니다</p>
+        <p>3. 내장비가 저장되어 있는 폴더에 새롭게 저장 시 기존 장비는 삭제됩니다.</p>
+        <p>4. 내장비 수정 및 삭제는 마이페이지를 이용해주세요.</p>
+    </div>
+</div>
+
+
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/user/indexUserCheck.js"></script>
+<script>
+    async function list(){
+        const res = await fetch('/api/user/myTool/folder');
+
+        if(res.ok){
+            const data = await res.json();
+            const list_box = document.getElementById('folder_list');
+//             // 내 장비 추가부분
+//             // myToolFolderId: 1
+//             // myToolFolderName: "내장비 1"
+            list_box.innerHTML = '';
+            for(let i = 0; i < data.length; i++){
+                list_box.innerHTML += `
+                <li class="cate_item">
+                    <label class="item_checkbox">
+                        <input type="radio" name="folder" value="${data[i].myToolFolderId}"  checked>
+                        <span class="item_text">${data[i].myToolFolderName}</span>
+                    </label>
+                 </li>
+                `
+            }
+        }
+    }
+
+    (async function(){
+        await list();
+    })();
+
+
+    //내 장비 저장할 폴더
+    const save_btn = document.getElementById('save_btn');
+    save_btn.addEventListener('click', async () => {
+        const selectFolder = document.querySelector('input[name="folder"]:checked');
+        if(confirm('선택한 폴더에 장비를 저장하시겠습니까?')){
+            //예를 눌렀을 시 동작하는 곳
+            opener.call(selectFolder.value);
+            window.close();
+        }
+    });
+
+    //폴더 생성 버튼
+    const folder_btn = document.getElementById('folder_btn');
+    folder_btn.addEventListener('click', async () => {
+        const text = document.getElementById('folder_text');
+        if(text.value.trim().length === 0 ){
+            alert("폴더명을 입력해주세요!")
+        }else{
+            const addFolder = await fetch(`/api/user/myTool/folder`,{
+                method: 'POST',
+                headers: {
+                    'header': header,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    "Content-Type": "application/json",
+                    'X-CSRF-Token': token
+                },
+                body: JSON.stringify({"folderName":text.value})
+            });
+            if(addFolder.ok){
+                alert('폴더 생성 완료!');
+                text.value = '';
+                await list();
+            }
+        }
+    });
+</script>
+
+</body>
+
+</html>

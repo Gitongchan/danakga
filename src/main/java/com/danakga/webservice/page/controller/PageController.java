@@ -45,9 +45,15 @@ public class PageController {
     }
 
     @GetMapping("/manager/mypage")
-    public String mypageManager(){
-        return "pages/mypageManager";
-    }
+    public String mypageManager(){return "pages/mypageManager";}
+    @GetMapping("/product/myTools")
+    public String mytools(){return "pages/myTools";}
+
+    @GetMapping("/mypage/myFolder")
+    public String myFolder(){return "pages/myFolder";}
+
+    @GetMapping("/mypage/cart")
+    public String myPageCart(){return "pages/cart";}
 
     @GetMapping("/manager/companyinfo")
     public String mypageCompany(){

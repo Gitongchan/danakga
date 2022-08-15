@@ -21,33 +21,18 @@ const loginInfo = document.getElementById('user-info');
             checkName.value = data.userid;
 
             //찜 갯수 체크
+            const cartRes = await fetch('/api/user/myTool/folder');
+            const cartData = await cartRes.json();
+            cart.innerHTML = `
+            <a href="/mypage/cart" class="main-btn">
+                                  <i class="lni lni-cart"></i>
+                                  <span class="total-items">${cartData.length}</span>
+                                </a>
+            `
+
+            //찜 갯수 체크
             const wishRes = await fetch('/api/user/wish/0');
             const wishData = await wishRes.json();
-            cart.innerHTML = `
-            <a href="javascript:void(0)" class="main-btn">
-                                  <i class="lni lni-cart"></i>
-                                  <span class="total-items">0</span>
-                                </a>
-                                <!-- Shopping Item -->
-                                <div class="shopping-item">
-                                  <div class="dropdown-cart-header">
-                                    <span><!--아이템 갯수--></span>
-                                    <a href="#">장바구니 보기</a>
-                                  </div>
-                                  <ul class="shopping-list">
-                                    <!-- cart-item내용 들어감-->
-                                  </ul>
-                                  <div class="bottom">
-                                    <div class="total">
-                                      <span>합계</span>
-                                      <span class="total-amount"><!--가격--></span>
-                                    </div>
-                                    <div class="button">
-                                      <a href="#" class="btn animate">주문하기</a>
-                                    </div>
-                                  </div>
-                                </div>
-            `
             wish.innerHTML = `
                 <a href="/user/wishlist">
                     <i class="lni lni-heart"></i>
@@ -74,7 +59,6 @@ const loginInfo = document.getElementById('user-info');
                                 <input type="hidden" name="_csrf" value="${token}">
                                 <button>로그아웃</button>
                           </form>
-                            
                           </li>
                         </ul>
                     `

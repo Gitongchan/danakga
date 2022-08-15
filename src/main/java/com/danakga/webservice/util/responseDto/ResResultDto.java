@@ -14,4 +14,7 @@ public class ResResultDto {
         this.id = id;
         this.message = message;
     }
+
+    public ResResultDto(Long wishCheck) {
+    }
 }

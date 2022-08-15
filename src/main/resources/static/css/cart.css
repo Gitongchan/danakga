@@ -1,0 +1,25 @@
+.scroll-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.card {
+    width: 120px;
+    height: 40px;
+    flex:0 0 80px;
+    color: white;
+}
+
+#tool_select_delete{
+    background: #0167F3;
+    color: white;
+    padding: 5px;
+}
+
+#folder_manager{
+    background: black;
+    color: white;
+    padding: 5px;
+}
