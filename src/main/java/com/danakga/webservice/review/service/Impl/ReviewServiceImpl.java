@@ -92,10 +92,45 @@ public class ReviewServiceImpl implements ReviewService {
                         .reContent(reqReviewDto.getReviewContent())
                         .reScore(reqReviewDto.getReviewScore())
                         .orders(checkOrders)
+                        .product(checkProduct)
                         .userInfo(checkUserInfo)
                         .build()
         );
 
         return new ResResultDto(review.getReId(), "후기를 작성 했습니다.");
+    }
+    
+    
+    /* 후기 수정 */
+    @Override
+    public ResResultDto reviewEdit(ReqReviewDto reqReviewDto, UserInfo userInfo, Long re_id) {
+
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
+
+        Product checkProduct = productRepository.findById(reqReviewDto.getProductId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        Orders checkOrders = ordersRepository.findByOrdersIdAndProduct(reqReviewDto.getOrderId(), checkProduct)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
+
+        Review checkReview = reviewRepository.findById(re_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("작성한 후기를 찾을 수 없습니다."));
+
+        checkReview = reviewRepository.save(
+                Review.builder()
+                        .reId(checkReview.getReId())
+                        .reWriter(checkUserInfo.getUserid())
+                        .reContent(reqReviewDto.getReviewContent())
+                        .reScore(reqReviewDto.getReviewScore())
+                        .reCreated(checkReview.getReCreated())
+                        .reDeleted(checkReview.getReDeleted())
+                        .orders(checkOrders)
+                        .product(checkProduct)
+                        .userInfo(checkUserInfo)
+                        .build()
+        );
+
+        return new ResResultDto(checkReview.getReId(), "후기를 수정 했습니다.");
     }
 }

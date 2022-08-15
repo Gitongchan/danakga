@@ -14,4 +14,7 @@ public interface ReviewService {
     /* 후기 작성 */
     ResResultDto reviewWrite(ReqReviewDto reqReviewDto, UserInfo userInfo);
 
+    /* 후기 수정 */
+    ResResultDto reviewEdit(ReqReviewDto reqReviewDto, UserInfo userInfo, Long re_id);
+
 }

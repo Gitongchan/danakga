@@ -7,10 +7,7 @@ import com.danakga.webservice.review.service.ReviewService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -29,4 +26,13 @@ public class ReviewController {
         return reviewService.reviewWrite(reqReviewDto, userInfo);
     }
 
+    
+    /* 후기 수정 */
+    @PostMapping("/review/edit/{re_id}")
+    public ResResultDto reviewEdit(@Valid @RequestBody ReqReviewDto reqReviewDto,
+                                   @PathVariable("re_id") Long re_id,
+                                   @LoginUser UserInfo userInfo) {
+
+        return reviewService.reviewEdit(reqReviewDto, userInfo, re_id);
+    }
 }

@@ -161,7 +161,6 @@ public class CommentServiceImpl implements CommentService {
                         .cmWriter(recentUserInfo.getUserid())
                         .cmDeleted(board_Comment.getCmDeleted())
                         .cmCreated(board_Comment.getCmCreated())
-                        .cmModified(board_Comment.getCmModified())
                         .userInfo(recentUserInfo)
                         .board(recentBoard)
                         .build()
