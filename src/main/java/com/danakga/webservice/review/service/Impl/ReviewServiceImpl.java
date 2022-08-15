@@ -45,13 +45,14 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
 
         pageable = PageRequest.of(page, 10, Sort.by("r_created").descending());
-        Page<Review> checkReview = reviewRepository.findByProductAndRDeleted(checkProduct, deleted, pageable);
+        Page<Review> checkReview = reviewRepository.findByProductAndReDeleted(checkProduct, deleted, pageable);
 
         List<Map<String,Object>> reviewList = new ArrayList<>();
 
         Map<String,Object> reviewMap = new LinkedHashMap<>();
 
         checkReview.forEach(review -> {
+            reviewMap.put("re_id", review.getReId());
             reviewMap.put("re_content", review.getReContent());
             reviewMap.put("re_created", review.getReCreated());
             reviewMap.put("re_score", review.getReScore());

@@ -11,9 +11,13 @@ import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    // 주문번호로 후기 조회
+    /* 주문번호로 후기 조회 */
     Optional<Review> findByOrders(Orders orders);
 
-    Page<Review> findByProductAndRDeleted(Product product, String deleted, Pageable pageable);
+    /* 상품의 후기 목록 조회 */
+    Page<Review> findByProductAndReDeleted(Product product, String deleted, Pageable pageable);
+    
+    /* 마이페이지 후기 목록 조회 */
+    Page<Review> findByReWriter(String writer, Pageable pageable);
 
 }
