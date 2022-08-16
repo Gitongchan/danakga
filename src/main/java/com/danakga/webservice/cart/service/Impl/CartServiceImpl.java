@@ -74,7 +74,7 @@ public class CartServiceImpl implements CartService {
                 () -> new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
 
-        cartRepository.deleteById(cartUserInfo.getId());
+        cartRepository.deleteAllByUserInfo(cartUserInfo);
     }
 
 

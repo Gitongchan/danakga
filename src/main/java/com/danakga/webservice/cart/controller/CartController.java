@@ -33,9 +33,9 @@ public class CartController {
     }
 
     @DeleteMapping(value="/cart/all")
-    public ResResultDto cartDeleteAll(@LoginUser UserInfo userInfo, @RequestBody CartIdDto cartIdDto){
+    public ResResultDto cartDeleteAll(@LoginUser UserInfo userInfo){
         cartService.cartDeleteAll(userInfo);
-        return new ResResultDto(1L,"장바구니에서 삭제하였습니다.");
+        return new ResResultDto(1L,"장바구니를 초기화하였습니다.");
     }
 
 
