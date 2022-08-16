@@ -23,8 +23,7 @@ public class CartController {
     @PostMapping(value = "/cart")
     public ResResultDto cartSave(@LoginUser UserInfo userInfo,@RequestBody List<CartDto> cartDtoList){
         Long result = cartService.cartSave(userInfo,cartDtoList);
-        return result == -1L ?  
-                new ResResultDto(result,"장바구니 등록 실패.") : new ResResultDto(result,"장바구니 등록 성공.");
+        return new ResResultDto(result,"장바구니 등록 성공.");
     }
 
     @DeleteMapping(value="/cart")

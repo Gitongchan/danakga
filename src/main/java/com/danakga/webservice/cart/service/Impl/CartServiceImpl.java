@@ -67,8 +67,8 @@ public class CartServiceImpl implements CartService {
         return 1L;
     }
 
-    // 유저 정보만 파라미터로 받아옴
     @Override
+    @Transactional
     public void cartDeleteAll(UserInfo userInfo) {
         UserInfo cartUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
@@ -86,7 +86,7 @@ public class CartServiceImpl implements CartService {
         );
 
         for (CartIdDto deleteDto : cartIdDtoList) {
-            Cart deleteCart = cartRepository.findByCartId(deleteDto.getCartId()).orElseThrow(
+            Cart deleteCart = cartRepository.findByCartIdAndUserInfo(deleteDto.getCartId(),detailUserInfo).orElseThrow(
                     () -> new CustomException.ResourceNotFoundException("저장된 제품 정보를 찾을 수 없습니다.")
             );
 
