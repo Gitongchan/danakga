@@ -415,6 +415,8 @@ public class ProductServiceImpl implements ProductService {
         
         //상품을 지워줌
         productRepository.deleteByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo);
+        
+        //상품 삭제 시 후기도 같이 삭제 -진모-
 
 
         return deleteProduct.getProductId();

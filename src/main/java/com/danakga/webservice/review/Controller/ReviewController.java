@@ -2,6 +2,7 @@ package com.danakga.webservice.review.Controller;
 
 
 import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.review.dto.request.ReqReviewDeleteDto;
 import com.danakga.webservice.review.dto.request.ReqReviewDto;
 import com.danakga.webservice.review.service.ReviewService;
 import com.danakga.webservice.user.model.UserInfo;
@@ -28,11 +29,21 @@ public class ReviewController {
 
     
     /* 후기 수정 */
-    @PostMapping("/review/edit/{re_id}")
+    @PutMapping("/review/edit/{re_id}")
     public ResResultDto reviewEdit(@Valid @RequestBody ReqReviewDto reqReviewDto,
                                    @PathVariable("re_id") Long re_id,
                                    @LoginUser UserInfo userInfo) {
 
         return reviewService.reviewEdit(reqReviewDto, userInfo, re_id);
+    }
+    
+    
+    /* 후기 삭제 상태 변경 */
+    @DeleteMapping("/review/delete/{re_id}")
+    public ResResultDto reviewDelete(@RequestBody ReqReviewDeleteDto reqReviewDeleteDto,
+                                     @PathVariable("re_id") Long re_id,
+                                     @LoginUser UserInfo userInfo) {
+
+        return reviewService.reviewDelete(reqReviewDeleteDto, userInfo, re_id);
     }
 }

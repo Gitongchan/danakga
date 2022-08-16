@@ -5,6 +5,7 @@ import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.orders.repository.OrdersRepository;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
+import com.danakga.webservice.review.dto.request.ReqReviewDeleteDto;
 import com.danakga.webservice.review.dto.request.ReqReviewDto;
 import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.review.model.Review;
@@ -132,5 +133,23 @@ public class ReviewServiceImpl implements ReviewService {
         );
 
         return new ResResultDto(checkReview.getReId(), "후기를 수정 했습니다.");
+    }
+    
+    
+    /* 후기 삭제 상태 변경 */
+    @Override
+    public ResResultDto reviewDelete(ReqReviewDeleteDto reqReviewDeleteDto, UserInfo userInfo, Long re_id) {
+
+        /* 회원정보 -> 상품 -> 주문내역 -> 후기 */
+        
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
+
+        Review checkReview = reviewRepository.findById(re_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("후기를 찾을 수 없습니다."));
+        
+        
+
+        return new ResResultDto(0L, "후기를 삭제 했습니다.");
     }
 }

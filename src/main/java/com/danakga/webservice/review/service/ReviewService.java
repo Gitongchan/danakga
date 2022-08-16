@@ -1,5 +1,6 @@
 package com.danakga.webservice.review.service;
 
+import com.danakga.webservice.review.dto.request.ReqReviewDeleteDto;
 import com.danakga.webservice.review.dto.request.ReqReviewDto;
 import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -16,5 +17,8 @@ public interface ReviewService {
 
     /* 후기 수정 */
     ResResultDto reviewEdit(ReqReviewDto reqReviewDto, UserInfo userInfo, Long re_id);
+    
+    /* 후기 삭제 상태 변경 */
+    ResResultDto reviewDelete(ReqReviewDeleteDto reqReviewDeleteDto, UserInfo userInfo, Long re_id);
 
 }
