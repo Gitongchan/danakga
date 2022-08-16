@@ -11,13 +11,28 @@ public class PageController {
     }
 
     @GetMapping("/index")
-    public String testindex(){
+    public String index2(){
         return "pages/index";
     }
 
     @GetMapping("/register")
-    public String testval(){
+    public String register(){
         return "pages/userRegister";
+    }
+
+    @GetMapping("/id_pw_search")
+    public String id_pw_Search(){
+        return "pages/search-id-pw";
+    }
+
+    @GetMapping("/id_search")
+    public String id_Search(){
+        return "pages/search_id";
+    }
+
+    @GetMapping("/pw_search")
+    public String pw_Search(){
+        return "pages/search_pw";
     }
 
     @GetMapping("/product/main")

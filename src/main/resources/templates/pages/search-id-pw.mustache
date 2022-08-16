@@ -1,0 +1,48 @@
+{{>pages/header1}}
+{{>pages/header2}}
+
+    <!-- Start Breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="breadcrumbs-content">
+                        <h1 class="page-title">계정찾기</h1>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-12">
+                    <ul class="breadcrumb-nav">
+                        <li><a href="/index"><i class="lni lni-home"></i> 홈</a></li>
+                        <li>계정찾기</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Breadcrumbs -->
+
+    <!-- Start Account Login Area -->
+    <div class="account-login section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1 col-12">
+                    <div class="card login-form">
+                    <div class="card-body">
+                            <div class="button">
+                                <button class="btn" id="id_btn" onclick="location.href = '/id_search'">아이디 찾기</button>
+                            </div>
+                            <div class="button">
+                                <button class="btn" id="pw_btn" onclick="location.href = '/pw_search'">패스워드 찾기</button>
+                            </div>
+                            <p class="outer-link">계정이 없으신가요?<a href="/register">회원가입</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Account Login Area -->
+
+    {{>pages/footer1}}
+    <script src="/js/user/id_pw_search.js"></script>
+    {{>pages/footer2}}
