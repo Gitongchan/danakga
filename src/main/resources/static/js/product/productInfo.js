@@ -12,6 +12,7 @@ const pHeart = document.getElementById('heart-count');
 
 const wishButton = document.querySelector('#wish_btn');
 const editBtnAfter = document.querySelector('.product-info');
+const cartButton = document.querySelector('#cart_btn');
 
 const regex= /[^0-9]/gi;
 
@@ -103,37 +104,37 @@ console.log(urlID);
     })();
 
     //구매하기 버튼
-    document.getElementById('buyBtn').addEventListener('click',function (){
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
-        const token = document.querySelector('meta[name="_csrf"]').content;
-        const quant = document.getElementById('quantity');
-
-        if(confirm('바로 주문하시겠습니까?')) {
-            const sum = (quant.options[quant.selectedIndex].value * pPrice.innerText.replace(regex, ""))
-            console.log(`${sum}원 주문완료`);
-            const data = {
-                ordersQuantity: quant.options[quant.selectedIndex].value,
-                ordersPrice: sum,
-            }
-            fetch(`/api/user/orders/${urlID}`,{
-                method : 'POST',
-                headers: {
-                    'header': header,
-                    'X-CSRF-Token': token,
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body : JSON.stringify(data)
-            })
-                .then((res)=>res.json())
-                .then((data)=>{
-                    console.log(data);
-                    if(data.result===1){
-                        alert('주문성공');
-                    }
-                })
-        }
-    })
+    // document.getElementById('buyBtn').addEventListener('click',function (){
+    //     const header = document.querySelector('meta[name="_csrf_header"]').content;
+    //     const token = document.querySelector('meta[name="_csrf"]').content;
+    //     const quant = document.getElementById('quantity');
+    //
+    //     if(confirm('바로 주문하시겠습니까?')) {
+    //         const sum = (quant.options[quant.selectedIndex].value * pPrice.innerText.replace(regex, ""))
+    //         console.log(`${sum}원 주문완료`);
+    //         const data = {
+    //             ordersQuantity: quant.options[quant.selectedIndex].value,
+    //             ordersPrice: sum,
+    //         }
+    //         fetch(`/api/user/orders/${urlID}`,{
+    //             method : 'POST',
+    //             headers: {
+    //                 'header': header,
+    //                 'X-CSRF-Token': token,
+    //                 'Content-Type': 'application/json',
+    //                 'X-Requested-With': 'XMLHttpRequest'
+    //             },
+    //             body : JSON.stringify(data)
+    //         })
+    //             .then((res)=>res.json())
+    //             .then((data)=>{
+    //                 console.log(data);
+    //                 if(data.result===1){
+    //                     alert('주문성공');
+    //                 }
+    //             })
+    //     }
+    // })
 
     wishButton.addEventListener('click', async () => {
         // 찜하기 버튼을 눌렀을 때 동작해야 하는 곳
@@ -162,3 +163,31 @@ console.log(urlID);
             console.log(e);
         }
     })
+
+cartButton.addEventListener('click', async () => {
+    const quantity = document.getElementById('quantity');
+    const quantityValue = quantity.options[quantity.selectedIndex].value;
+    console.log(urlID, quantityValue);
+    if(confirm('장바구니에 해당 상품을 추가하시겠습니까?')){
+        try{
+            const res = await fetch(`/api/user/cart`, {
+                method: 'POST',
+                headers: {
+                    'header': header,
+                    'X-CSRF-Token': token,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify([{productId:urlID, cartAmount: quantityValue}])
+            })
+
+            if(res.ok){
+                alert('장바구니에 상품이 추가되었습니다!');
+            }
+        }catch (e) {
+            alert('장바구니에 상품추가 실패!');
+        }
+    }
+
+
+})
