@@ -53,15 +53,14 @@ public class CommentServiceImpl implements CommentService {
         //return해줄 Dto 객체 생성
         ResCommentListDto resCommentListDto = new ResCommentListDto();
 
+        //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
+        Map<String, Object> commentsMap = new LinkedHashMap<>();
+
+        //대댓글 담을 List<map>
+        List<Map<String, Object>> answersList = new ArrayList<>();
 
         //List 값을 반복문으로 Map에 담아줌
         comments.forEach(comment -> {
-
-            //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
-            Map<String, Object> commentsMap = new LinkedHashMap<>();
-
-            //대댓글 담을 List<map>
-            List<Map<String, Object>> answersList = new ArrayList<>();
 
             int parentNum = comment.getCmId().intValue();
 

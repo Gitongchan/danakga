@@ -422,8 +422,6 @@ public class UserServiceImpl implements UserService {
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
 
-        List<Board_Comment> commentsList = comments.getContent();
-
         //return해줄 dto 객체 생성
         ResCommentListDto resCommentListDto = new ResCommentListDto();
 
@@ -431,7 +429,7 @@ public class UserServiceImpl implements UserService {
         List<Map<String, Object>> data = new ArrayList<>();
 
         //List로 반환된 db 반복문으로 Map으로 get
-        commentsList.forEach(entity -> {
+        comments.forEach(entity -> {
 
             //List<Map>에 당아줄 Map객체 생성 후 put
             Map<String, Object> mapComments = new HashMap<>();
@@ -466,11 +464,13 @@ public class UserServiceImpl implements UserService {
         Map<String,Object> myReviewMap = new LinkedHashMap<>();
 
         checkReview.forEach(review -> {
-            myReviewMap.put("re_id", review.getReId());
-            myReviewMap.put("re_content", review.getReContent());
-            myReviewMap.put("re_created", review.getReCreated());
-            myReviewMap.put("re_score", review.getReScore());
+
+            myReviewMap.put("p_name", review.getProduct().getProductName());
+            myReviewMap.put("p_brand", review.getProduct().getProductBrand());
+            myReviewMap.put("p_price", review.getProduct().getProductPrice());
             myReviewMap.put("re_writer", review.getReWriter());
+            myReviewMap.put("re_score", review.getReScore());
+            myReviewMap.put("re_created", review.getReCreated());
             myReviewMap.put("totalPages", checkReview.getTotalPages());
             myReviewMap.put("totalElements", checkReview.getTotalElements());
         });
