@@ -352,7 +352,7 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
         //deleted 값 변경
-        boardRepository.updateDeleted(bd_id);
+        boardRepository.updateBdDeleted(bd_id);
         
         //댓글과 대댓글 포함해서 삭제 상태 변경
         commentRepository.deleteBoardComment(bd_id);

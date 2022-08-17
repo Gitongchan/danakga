@@ -5,6 +5,7 @@ import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.orders.repository.OrdersRepository;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
+import com.danakga.webservice.review.dto.request.ReqReviewDeleteDto;
 import com.danakga.webservice.review.dto.request.ReqReviewDto;
 import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.review.model.Review;
@@ -20,10 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -41,16 +39,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         final String deleted = "N";
 
-        // 바꿔야 함
         Product checkProduct = productRepository.findById(p_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
 
-        pageable = PageRequest.of(page, 10, Sort.by("r_created").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("reCreated").descending());
         Page<Review> checkReview = reviewRepository.findByProductAndReDeleted(checkProduct, deleted, pageable);
 
-        List<Map<String,Object>> reviewList = new ArrayList<>();
+        List<Map<String, Object>> reviewList = new ArrayList<>();
 
-        Map<String,Object> reviewMap = new LinkedHashMap<>();
+        Map<String, Object> reviewMap = new LinkedHashMap<>();
 
         checkReview.forEach(review -> {
             reviewMap.put("re_id", review.getReId());
@@ -100,8 +97,8 @@ public class ReviewServiceImpl implements ReviewService {
 
         return new ResResultDto(review.getReId(), "후기를 작성 했습니다.");
     }
-    
-    
+
+
     /* 후기 수정 */
     @Override
     public ResResultDto reviewEdit(ReqReviewDto reqReviewDto, UserInfo userInfo, Long re_id) {
@@ -134,19 +131,26 @@ public class ReviewServiceImpl implements ReviewService {
 
         return new ResResultDto(checkReview.getReId(), "후기를 수정 했습니다.");
     }
-    
-    
+
+
     /* 후기 삭제 상태 변경 */
     @Override
-    public ResResultDto reviewDelete(UserInfo userInfo, Long re_id) {
+    public ResResultDto reviewDelete(ReqReviewDeleteDto reqReviewDeleteDto, UserInfo userInfo, Long re_id) {
 
-        
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
+
+        Product checkProduct = productRepository.findById(reqReviewDeleteDto.getProductId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        Orders checkOrders = ordersRepository.findById(reqReviewDeleteDto.getOrderId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
 
         Review checkReview = reviewRepository.findById(re_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("후기를 찾을 수 없습니다."));
 
-        return new ResResultDto(0L, "후기를 삭제 했습니다.");
+        reviewRepository.updateReDeleted(re_id);
+
+        return new ResResultDto(checkReview.getReId(), "후기를 삭제 했습니다.");
     }
 }

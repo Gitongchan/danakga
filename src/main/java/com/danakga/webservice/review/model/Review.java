@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -53,9 +55,10 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "p_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
 
-    //insert시 기본값으로 r_deleted에 "N"값 적용
+    //insert시 기본값으로 re_deleted에 "N"값 적용
     @PrePersist
     public void deleted() {
         this.reDeleted = "N";

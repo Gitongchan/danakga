@@ -324,14 +324,11 @@ public class UserServiceImpl implements UserService {
 
         //회원 조회
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //pagedble로 db 조회
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByUserInfoAndBdType(recentUserInfo, boardType, pageable);
-
-        //page<>를 List로 반환
-        List<Board> myPost = boards.getContent();
 
         //return할 dto 객체 생성
         ResBoardListDto resBoardListDto = new ResBoardListDto();
@@ -340,7 +337,7 @@ public class UserServiceImpl implements UserService {
         List<Map<String, Object>> postList = new ArrayList<>();
 
         //List로 반환된 db 반복문으로 Map으로 get
-        myPost.forEach(entity -> {
+        boards.forEach(entity -> {
 
             //List<Map>에 당아줄 Map객체 생성 후 put
             Map<String, Object> mapPost = new HashMap<>();
@@ -369,7 +366,7 @@ public class UserServiceImpl implements UserService {
 
         //회원 조회
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //삭제 여부 변수
         final String deleted = "N";
@@ -413,7 +410,7 @@ public class UserServiceImpl implements UserService {
 
         //회원 조회
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //삭제 여부 변수
         final String deleted = "N";
@@ -455,6 +452,9 @@ public class UserServiceImpl implements UserService {
     //마이페이지 후기 목록 조회
     @Override
     public ResReviewListDto myReviewList(UserInfo userInfo, Pageable pageable, int page) {
+
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         pageable = PageRequest.of(page, 10, Sort.by("reCreated").descending());
         Page<Review> checkReview = reviewRepository.findByReWriter(userInfo.getUserid(), pageable);

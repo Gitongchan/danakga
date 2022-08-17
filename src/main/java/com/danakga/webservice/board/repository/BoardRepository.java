@@ -31,7 +31,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Transactional
     @Modifying
     @Query("update Board b set b.bdDeleted = 'Y' where b.bdId = :bdId")
-    void updateDeleted(@Param("bdId") Long bd_id);
+    void updateBdDeleted(@Param("bdId") Long bd_id);
 
 
     //전체 기준 게시판 검색
