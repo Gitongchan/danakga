@@ -14,6 +14,7 @@ import com.danakga.webservice.product.repository.ProductFilesRepository;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.product.service.ProductFilesService;
 import com.danakga.webservice.product.service.ProductService;
+import com.danakga.webservice.review.repository.ReviewRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -47,6 +48,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductFilesService productFilesService;
     private final WishRepository wishRepository;
+
+    private final ReviewRepository reviewRepository;
     
     //상품등록
     @Transactional
@@ -371,8 +374,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     //상품삭제
-    @Transactional
     @Override
+    @Transactional
     public Long productDelete(UserInfo userInfo, Long productId) {
 
         UserInfo productDeleteUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_MANAGER).orElseThrow(
@@ -380,41 +383,47 @@ public class ProductServiceImpl implements ProductService {
         );
 
         //상품을 등록한 회사 정보 검증
-       CompanyInfo productDeleteCompanyInfo =companyRepository.findByUserInfo(productDeleteUserInfo).orElseThrow(
-               () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
-       );
+        CompanyInfo productDeleteCompanyInfo =companyRepository.findByUserInfo(productDeleteUserInfo).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
+        );
 
-       //상품번호와 등록환 회사정보 일치하는지 검증
-       Product deleteProduct = productRepository.findByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo).orElseThrow(
+        //상품번호와 등록환 회사정보 일치하는지 검증
+        Product deleteProduct = productRepository.findByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
         );
 
         // 등록된 사진이 있다면 지워줌
         List<ProductFiles> productFilesList = productFilesRepository.findByProduct(deleteProduct);
+
         if(!productFilesList.isEmpty()){
             //db값 담아주기 위한 List
-            List<String> saveFilePath = new ArrayList<>();
+            List<String> saveFileName = new ArrayList<>();
 
             for (ProductFiles productFiles : productFilesList) {
-                saveFilePath.add(productFiles.getPfPath());
+                System.out.println("productFiles.getPfPath() = " + productFiles.getPfPath());
+                saveFileName.add(productFiles.getPfSaveName());
             }
 
             //db에서 파일 정보 제거 + 폴더에서 파일 제거
-            for (String filePath : saveFilePath) {
-                File deleteFile = new File(filePath);
+            for (String fileName : saveFileName) {
+                File deleteFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_files\\" + fileName);
                 if (deleteFile.delete()) {
-                    productFilesRepository.deleteByProductAndPfPath(deleteProduct, filePath);
+                    System.out.println("deleteFile = " + deleteFile.getPath());
+                    productFilesRepository.deleteByProductAndPfSaveName(deleteProduct, fileName);
                 }
             }
+            String deletedThumbFilePath = deleteProduct.getProductPhoto().substring(2);
 
-            File deleteThumbNailFile = new File(deleteProduct.getProductPhoto());
-            if (deleteThumbNailFile.delete()) {
-                System.out.println("썸네일 삭제 완료");
+            File deletedThumbFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\" + deletedThumbFilePath);
+            System.out.println("deletedThumbFile = " + deletedThumbFile.getPath());
+            if(deletedThumbFile.delete()){
+                System.out.println("썸네일 삭제 성공");
             }
+
         }
-        
+
         //상품을 지워줌
-        productRepository.deleteByProductIdAndProductCompanyId(productId,productDeleteCompanyInfo);
+        productRepository.deleteByProductIdAndProductCompanyId(deleteProduct.getProductId(),productDeleteCompanyInfo);
 
 
         return deleteProduct.getProductId();

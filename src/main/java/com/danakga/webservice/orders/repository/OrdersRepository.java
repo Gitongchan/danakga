@@ -1,7 +1,7 @@
 package com.danakga.webservice.orders.repository;
 
-import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.orders.model.Orders;
+import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -21,6 +20,9 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     Optional<Orders> findByUserInfo(UserInfo userinfo);
 
     Optional<Orders> findByOrdersIdAndUserInfo(Long ordersId,UserInfo userInfo);
+
+    /* 후기 작성을 위한 주문 번호, 상품 아이디 조회  -진모- */
+    Optional<Orders> findByOrdersIdAndProduct(Long ordersId, Product product);
 
 
     @Query(

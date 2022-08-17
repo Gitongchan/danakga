@@ -3,6 +3,7 @@ package com.danakga.webservice.user.service;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
+import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -48,5 +49,8 @@ public interface UserService extends UserDetailsService {
 
     //마이페이지 댓글 조회
     ResCommentListDto myCommentsList(UserInfo userInfo, String boardType, Pageable pageable, int page);
+    
+    //마이페이지 후기 목록 조회
+    ResReviewListDto myReviewList(UserInfo userInfo, Pageable pageable, int page);
 
 }
