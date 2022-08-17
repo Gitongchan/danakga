@@ -14,6 +14,7 @@ import com.danakga.webservice.board.service.FilesService;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,15 +46,15 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page) {
 
-        //return할 ListDto 객체 선언
-        ResBoardListDto resBoardListDto = new ResBoardListDto();
-
         //DB 조회를 위한 deleted 값
         final String deleted = "N";
 
         //pageable 값 설정
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
+
         Page<Board> boards;
+
+        List<Map<String,Object>> searchList = new ArrayList<>();
 
         //switch case로 제목, 내용, 작성자, 전체 게시글 목록 검색 조회, default 값은 필수
         switch (category) {
@@ -76,30 +77,26 @@ public class BoardServiceImpl implements BoardService {
             default:
                 boards = null;
         }
-
+        
         if (boards != null) {
-
-            List<Map<String, Object>> searchMap = new ArrayList<>();
 
             boards.forEach(entity -> {
 
-                Map<String, Object> listMap = new HashMap<>();
+                Map<String, Object> searchMap = new HashMap<>();
 
-                listMap.put("bd_id", entity.getBdId());
-                listMap.put("bd_title", entity.getBdTitle());
-                listMap.put("bd_writer", entity.getBdWriter());
-                listMap.put("bd_created", entity.getBdCreated());
-                listMap.put("bd_views", entity.getBdViews());
-                listMap.put("bd_deleted", entity.getBdDeleted());
-                listMap.put("totalElement", boards.getTotalElements());
-                listMap.put("totalPage", boards.getTotalPages());
-                searchMap.add(listMap);
+                searchMap.put("bd_id", entity.getBdId());
+                searchMap.put("bd_title", entity.getBdTitle());
+                searchMap.put("bd_writer", entity.getBdWriter());
+                searchMap.put("bd_created", entity.getBdCreated());
+                searchMap.put("bd_views", entity.getBdViews());
+                searchMap.put("bd_deleted", entity.getBdDeleted());
+                searchMap.put("totalElement", boards.getTotalElements());
+                searchMap.put("totalPage", boards.getTotalPages());
+                searchList.add(searchMap);
             });
-
-            resBoardListDto.setLists(searchMap);
         }
 
-        return resBoardListDto;
+        return new ResBoardListDto(searchList);
     }
 
     //게시판 목록
@@ -111,9 +108,7 @@ public class BoardServiceImpl implements BoardService {
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByBdDeletedAndBdType(deleted, boardType, pageable);
 
-        List<Map<String, Object>> mapPosts = new ArrayList<>();
-
-        ResBoardListDto resBoardListDto = new ResBoardListDto();
+        List<Map<String, Object>> postList = new ArrayList<>();
 
         boards.forEach(entity -> {
             Map<String, Object> postMap = new HashMap<>();
@@ -125,11 +120,10 @@ public class BoardServiceImpl implements BoardService {
             postMap.put("bd_deleted", entity.getBdDeleted());
             postMap.put("totalElement", boards.getTotalElements());
             postMap.put("totalPage", boards.getTotalPages());
-            mapPosts.add(postMap);
+            postList.add(postMap);
         });
-        resBoardListDto.setLists(mapPosts);
 
-        return resBoardListDto;
+        return new ResBoardListDto(postList);
     }
 
     //게시글 조회
@@ -137,11 +131,11 @@ public class BoardServiceImpl implements BoardService {
     public ResBoardPostDto getPost(Long bd_id, HttpServletRequest request, HttpServletResponse response) {
 
         //게시글 존재 여부 확인
-        Board boardWrapper = boardRepository.findById(bd_id)
+        Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
         //게시글의 파일 조회
-        List<Board_Files> files = fileRepository.findByBoard(boardWrapper);
+        List<Board_Files> files = fileRepository.findByBoard(checkBoard);
 
         //조회수 증가, 쿠키로 중복 증가 방지
         //쿠키가 있으면 그 쿠키가 해당 게시글 쿠키인지 확인하고 아니라면 조회수 올리고 setvalue로 해당 게시글의 쿠키 값도 넣어줘야함
@@ -176,9 +170,6 @@ public class BoardServiceImpl implements BoardService {
             response.addCookie(postCookie);
         }
 
-        //값 담아줄 Dto 객체 생성
-        ResBoardPostDto resBoardPostDto = new ResBoardPostDto();
-
         //파일 값 List
         List<Map<String, Object>> fileList = new ArrayList<>();
 
@@ -196,30 +187,26 @@ public class BoardServiceImpl implements BoardService {
         //게시글 정보 담을 Map
         Map<String, Object> postMap = new LinkedHashMap<>();
 
-        postMap.put("bd_id", boardWrapper.getBdId());
-        postMap.put("bd_writer", boardWrapper.getBdWriter());
-        postMap.put("bd_title", boardWrapper.getBdTitle());
-        postMap.put("bd_content", boardWrapper.getBdContent());
-        postMap.put("bd_created", boardWrapper.getBdCreated());
-        postMap.put("bd_modified", boardWrapper.getBdModified());
-        postMap.put("bd_views", boardWrapper.getBdViews());
+        postMap.put("bd_id", checkBoard.getBdId());
+        postMap.put("bd_writer", checkBoard.getBdWriter());
+        postMap.put("bd_title", checkBoard.getBdTitle());
+        postMap.put("bd_content", checkBoard.getBdContent());
+        postMap.put("bd_created", checkBoard.getBdCreated());
+        postMap.put("bd_modified", checkBoard.getBdModified());
+        postMap.put("bd_views", checkBoard.getBdViews());
         postMap.put("files", fileList);
         postList.add(postMap);
 
-        resBoardPostDto.setPost(postList);
-
-        return resBoardPostDto;
+        return new ResBoardPostDto(postList);
     }
 
     //게시글 작성
     @Transactional
     @Override
-    public Long postWrite(ReqBoardDto reqBoardDto,
-                          UserInfo userInfo, List<MultipartFile> files) {
+    public ResResultDto postWrite(ReqBoardDto reqBoardDto, UserInfo userInfo, List<MultipartFile> files) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
-
 
         //들어온 파일이 없다면 게시글만 작성
         //파일이 있다면 게시글 작성 후 파일 업로드
@@ -227,13 +214,13 @@ public class BoardServiceImpl implements BoardService {
             Board board = boardRepository.save(
                     board = Board.builder()
                             .bdType(reqBoardDto.getBdType())
-                            .bdWriter(recentUserInfo.getUserid())
+                            .bdWriter(checkUserInfo.getUserid())
                             .bdTitle(reqBoardDto.getBdTitle())
                             .bdContent(reqBoardDto.getBdContent())
-                            .userInfo(recentUserInfo)
+                            .userInfo(checkUserInfo)
                             .build()
             );
-            return board.getBdId();
+            return new ResResultDto(board.getBdId(), "게시글을 작성 했습니다.");
         } else
             for (MultipartFile multipartFile : files) {
 
@@ -244,32 +231,32 @@ public class BoardServiceImpl implements BoardService {
                     Board board = boardRepository.save(
                             board = Board.builder()
                                     .bdType(reqBoardDto.getBdType())
-                                    .bdWriter(recentUserInfo.getUserid())
+                                    .bdWriter(checkUserInfo.getUserid())
                                     .bdTitle(reqBoardDto.getBdTitle())
                                     .bdContent(reqBoardDto.getBdContent())
-                                    .userInfo(recentUserInfo)
+                                    .userInfo(checkUserInfo)
                                     .build()
                     );
                     if (!filesService.saveFileUpload(files, board).equals(1L)) {
-                        return -2L;
+                        return new ResResultDto(-2L, "게시글 작성에 실패 했습니다(이미지 업로드 오류)");
                     }
-                    return board.getBdId();
+                    return new ResResultDto(board.getBdId(), "게시글을 작성 했습니다.");
                 }
             }
-        return -1L;
+        return new ResResultDto(-1L, "게시글 작성에 실패 했습니다.");
     }
 
 
     //게시글 수정
     @Transactional
     @Override
-    public Long postEdit(Long bd_id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
+    public ResResultDto postEdit(Long bd_id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files) {
 
         //유저 정보, 게시글 정보 조회
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        Board recentBoard = boardRepository.findById(bd_id)
+        Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
         //삭제된 파일이 있는경우 해당 파일의 저장된 파일이름을 받아서 삭제 후 
@@ -289,7 +276,7 @@ public class BoardServiceImpl implements BoardService {
             for (String deleteFile : fileNameList) {
                 File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files\\" + deleteFile);
                 if (deletedFiles.delete()) {
-                    fileRepository.deleteByBoardAndFileSaveName(recentBoard, deleteFile);
+                    fileRepository.deleteByBoardAndFileSaveName(checkBoard, deleteFile);
                 }
             }
         }
@@ -299,18 +286,18 @@ public class BoardServiceImpl implements BoardService {
         //else 파일 같이 들어오면 게시글 수정 후 파일 업로드
         if (CollectionUtils.isEmpty(files)) {
             boardRepository.save(
-                    recentBoard = Board.builder()
-                            .bdId(recentBoard.getBdId())
+                    checkBoard = Board.builder()
+                            .bdId(checkBoard.getBdId())
                             .bdType(reqBoardDto.getBdType())
-                            .bdWriter(recentUserInfo.getUserid())
+                            .bdWriter(checkUserInfo.getUserid())
                             .bdTitle(reqBoardDto.getBdTitle())
                             .bdContent(reqBoardDto.getBdContent())
-                            .bdDeleted(recentBoard.getBdDeleted())
-                            .bdCreated(recentBoard.getBdCreated())
-                            .userInfo(recentUserInfo)
+                            .bdDeleted(checkBoard.getBdDeleted())
+                            .bdCreated(checkBoard.getBdCreated())
+                            .userInfo(checkUserInfo)
                             .build()
             );
-            return recentBoard.getBdId();
+            return new ResResultDto(checkBoard.getBdId(), "게시글을 수정 했습니다.");
 
         } else if (!CollectionUtils.isEmpty(files)) {
 
@@ -322,41 +309,41 @@ public class BoardServiceImpl implements BoardService {
                 //파일 경로 + 파일명으로 파일 있는지 검사 후 삭제
                 if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
                     boardRepository.save(
-                            recentBoard = Board.builder()
-                                    .bdId(recentBoard.getBdId())
+                            checkBoard = Board.builder()
+                                    .bdId(checkBoard.getBdId())
                                     .bdType(reqBoardDto.getBdType())
-                                    .bdWriter(recentUserInfo.getUserid())
+                                    .bdWriter(checkUserInfo.getUserid())
                                     .bdTitle(reqBoardDto.getBdTitle())
                                     .bdContent(reqBoardDto.getBdContent())
-                                    .bdCreated(recentBoard.getBdCreated())
-                                    .bdDeleted(recentBoard.getBdDeleted())
-                                    .userInfo(recentUserInfo)
+                                    .bdCreated(checkBoard.getBdCreated())
+                                    .bdDeleted(checkBoard.getBdDeleted())
+                                    .userInfo(checkUserInfo)
                                     .build()
                     );
-                    if (!filesService.saveFileUpload(files, recentBoard).equals(1L)) {
-                        return -2L;
+                    if (!filesService.saveFileUpload(files, checkBoard).equals(1L)) {
+                        return new ResResultDto(-2L, "게시글 수정에 실패 했습니다(이미지 업로드 오류)");
                     }
-                    return recentBoard.getBdId();
+                    return new ResResultDto(checkBoard.getBdId(), "게시글을 수정 했습니다.");
                 }
             }
         }
-        return -1L;
+        return new ResResultDto(-1L, "게시글 수정에 실패 했습니다.");
     }
 
     //게시글 삭제 여부 변경
     @Transactional
     @Override
-    public Long postDelete(Long bd_id, UserInfo userInfo) {
+    public ResResultDto postDelete(Long bd_id, UserInfo userInfo) {
 
-        Board recentBoard = boardRepository.findById(bd_id)
+        Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
         //deleted 값 변경
         boardRepository.updateBdDeleted(bd_id);
-        
+
         //댓글과 대댓글 포함해서 삭제 상태 변경
         commentRepository.deleteBoardComment(bd_id);
 
-        return recentBoard.getBdId();
+        return new ResResultDto(checkBoard.getBdId(), "게시글을 삭제 했습니다.");
     }
 }
