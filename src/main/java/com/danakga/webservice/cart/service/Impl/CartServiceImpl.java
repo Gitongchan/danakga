@@ -2,6 +2,7 @@ package com.danakga.webservice.cart.service.Impl;
 
 import com.danakga.webservice.cart.dto.request.CartDto;
 import com.danakga.webservice.cart.dto.request.CartIdDto;
+import com.danakga.webservice.cart.dto.response.ResCartDto;
 import com.danakga.webservice.cart.model.Cart;
 import com.danakga.webservice.cart.repository.CartRepository;
 import com.danakga.webservice.cart.service.CartService;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -77,7 +79,6 @@ public class CartServiceImpl implements CartService {
         cartRepository.deleteAllByUserInfo(cartUserInfo);
     }
 
-
     @Override
     @Transactional
     public void MyCartDelete(UserInfo userInfo, List<CartIdDto> cartIdDtoList) {
@@ -92,6 +93,35 @@ public class CartServiceImpl implements CartService {
 
             cartRepository.delete(deleteCart);
         }
+    }
+
+    @Override
+    public List<ResCartDto> cartList(UserInfo userInfo) {
+        UserInfo detailUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("사용자 정보를 찾을 수 없습니다.")
+        );
+        List<Cart> cartList = cartRepository.findByUserInfo(detailUserInfo);
+
+        List<ResCartDto> resCartDtoList = new ArrayList<>();
+
+        cartList.forEach(entity->{
+                ResCartDto listDto = new ResCartDto();
+                listDto.setCartId(entity.getCartId());
+                listDto.setCartAmount(entity.getCartAmount());
+                listDto.setCompanyId(entity.getProductId().getProductCompanyId().getCompanyId());
+                listDto.setCompanyName(entity.getProductId().getProductCompanyId().getCompanyName());
+                listDto.setProductId(entity.getProductId().getProductId());
+                listDto.setProductName(entity.getProductId().getProductName());
+                listDto.setProductPhoto(entity.getProductId().getProductPhoto());
+                listDto.setProductType(entity.getProductId().getProductType());
+                listDto.setProductSubType(entity.getProductId().getProductSubType());
+                listDto.setProductBrand(entity.getProductId().getProductBrand());
+                listDto.setProductPrice(entity.getProductId().getProductPrice());
+                resCartDtoList.add(listDto);
+            }
+        );
+
+        return resCartDtoList;
     }
 
 

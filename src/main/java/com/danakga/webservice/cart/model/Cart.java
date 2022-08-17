@@ -25,11 +25,11 @@ public class Cart {
     private UserInfo userInfo;
 
 
-    @Column(name = "cart_amount") // 기본값 1  개수 세는 역할s
+    @Column(name = "cart_amount") // 기본값 1  개수 세는 역할
     private Integer cartAmount;
 
     @Builder
-    public Cart(Long cartId, Product productId, UserInfo userInfo,  Integer cartAmount ){
+    public Cart(Long cartId, Product productId, UserInfo userInfo,  Integer cartAmount){
         this.cartId = cartId;
         this.productId = productId;
         this.userInfo = userInfo;
