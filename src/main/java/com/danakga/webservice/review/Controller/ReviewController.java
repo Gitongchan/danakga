@@ -19,6 +19,13 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    /* 후기 작성 체크 */
+    @GetMapping("/review/check/{o_id}")
+    public ResResultDto reviewCheck(@PathVariable("o_id") Long o_id) {
+
+        return reviewService.reviewCheck(o_id);
+    }
+
     /* 후기 작성 */
     @PostMapping("/review/write")
     public ResResultDto reviewWrite(@Valid @RequestBody ReqReviewDto reqReviewDto,
