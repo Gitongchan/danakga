@@ -10,6 +10,7 @@ import com.danakga.webservice.board.service.CommentService;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,16 +49,13 @@ public class CommentServiceImpl implements CommentService {
         Page<Board_Comment> comments = commentRepository.commentList(bd_id, deleted1, deleted2, commentStep, pageable);
 
         //Dto에 값을 담아주기 위한 List<Map>
-        List<Map<String, Object>> mapComments = new ArrayList<>();
-
-        //return해줄 Dto 객체 생성
-        ResCommentListDto resCommentListDto = new ResCommentListDto();
-
-        //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
-        Map<String, Object> commentsMap = new LinkedHashMap<>();
+        List<Map<String, Object>> commentList = new ArrayList<>();
 
         //대댓글 담을 List<map>
         List<Map<String, Object>> answersList = new ArrayList<>();
+
+        //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
+        Map<String, Object> commentsMap = new LinkedHashMap<>();
 
         //List 값을 반복문으로 Map에 담아줌
         comments.forEach(comment -> {
@@ -95,17 +93,15 @@ public class CommentServiceImpl implements CommentService {
             commentsMap.put("totalElement", comments.getTotalElements());
             commentsMap.put("totalPage", comments.getTotalPages());
             commentsMap.put("answer", answersList);
-            mapComments.add(commentsMap);
+            commentList.add(commentsMap);
         });
-        //Dto 값 set
-        resCommentListDto.setComments(mapComments);
 
-        return resCommentListDto;
+        return new ResCommentListDto(commentList);
     }
 
     //댓글 작성
     @Override
-    public Long commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id) {
+    public ResResultDto commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id) {
 
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
@@ -122,8 +118,7 @@ public class CommentServiceImpl implements CommentService {
             groupCount = 0;
         }
 
-        //이랬을 때 실패 처리는 어떻게 하는지
-        return commentRepository.save(
+        Board_Comment board_Comment = commentRepository.save(
                 Board_Comment.builder()
                         .cmContent(reqCommentDto.getCmContent())
                         .cmWriter(recentUserInfo.getUserid())
@@ -135,15 +130,16 @@ public class CommentServiceImpl implements CommentService {
                         .board(recentBoard)
                         .userInfo(recentUserInfo)
                         .build()
-        ).getCmId();
+        );
+
+        return new ResResultDto(board_Comment.getCmId(), "댓글을 작성 했습니다.");
     }
 
     //댓글 수정
     @Override
-    public Long commentsEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
+    public ResResultDto commentsEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
 
         /* 회원, 게시글, 댓글 조회 */
-
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
@@ -153,8 +149,8 @@ public class CommentServiceImpl implements CommentService {
         Board_Comment board_Comment = commentRepository.findByBoardAndCmId(recentBoard, cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
-        commentRepository.save(
-                board_Comment = Board_Comment.builder()
+        board_Comment = commentRepository.save(
+                Board_Comment.builder()
                         .cmId(board_Comment.getCmId())
                         .cmContent(reqCommentDto.getCmContent())
                         .cmWriter(recentUserInfo.getUserid())
@@ -164,31 +160,33 @@ public class CommentServiceImpl implements CommentService {
                         .board(recentBoard)
                         .build()
         );
-        return board_Comment.getCmId();
+
+        return new ResResultDto(board_Comment.getCmId(), "댓글을 수정 했습니다.");
     }
 
     //댓글 삭제 여부 변경
     @Override
-    public Long commentsDelete(Long bd_id, Long cm_id, UserInfo userInfo) {
+    public ResResultDto commentsDelete(Long bd_id, Long cm_id, UserInfo userInfo) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        Board recentBoard = boardRepository.findById(bd_id)
+        Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
-        Board_Comment recentComment = commentRepository.findById(cm_id)
+        Board_Comment checkComment = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
         //만약 대댓글이 없으면 바로 삭제를 위해 deleted값을 Y로 변경
         //대댓글이 있으면 content의 값을 "작성자가 삭제한 댓글입니다."로 변경
-        if (recentComment.getCmAnswerNum() == 0) {
+        if (checkComment.getCmAnswerNum() == 0) {
             commentRepository.updateCmDeleted(cm_id);
         } else {
             //대댓글이 있는 경우 상태 값 M으로 변경
             commentRepository.updateCmContent(cm_id);
         }
-        return recentComment.getCmId();
+
+        return new ResResultDto(checkComment.getCmId(), "댓글을 삭제 했습니다.");
     }
 
     //개별 댓글 조회
@@ -198,10 +196,10 @@ public class CommentServiceImpl implements CommentService {
         final String deleted = "N";
         final int answerStep = 1;
 
-        Board_Comment comments = commentRepository.findById(cm_id)
+        Board_Comment checkcomments = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
-        int parentNum = comments.getCmId().intValue();
+        final int parentNum = checkcomments.getCmId().intValue();
 
         //개별 댓글 조회
         List<Board_Comment> answers = commentRepository.eachAnswerList(parentNum, deleted, answerStep);
@@ -210,9 +208,6 @@ public class CommentServiceImpl implements CommentService {
         List<Map<String, Object>> commentList = new ArrayList<>();
 
         List<Map<String, Object>> answerList = new ArrayList<>();
-
-        //return해줄 Dto 객체 생성
-        ResCommentListDto resCommentListDto = new ResCommentListDto();
 
         //map에 댓글 정보 put
         Map<String, Object> commentMap = new LinkedHashMap<>();
@@ -231,19 +226,16 @@ public class CommentServiceImpl implements CommentService {
             answerList.add(answerMap);
         });
 
-        commentMap.put("cm_id", comments.getCmId());
-        commentMap.put("cm_comment", comments.getCmContent());
-        commentMap.put("cm_created", comments.getCmCreated());
-        commentMap.put("cm_deleted", comments.getCmDeleted());
-        commentMap.put("cm_modified", comments.getCmModified());
-        commentMap.put("cm_writer", comments.getCmWriter());
+        commentMap.put("cm_id", checkcomments.getCmId());
+        commentMap.put("cm_comment", checkcomments.getCmContent());
+        commentMap.put("cm_created", checkcomments.getCmCreated());
+        commentMap.put("cm_deleted", checkcomments.getCmDeleted());
+        commentMap.put("cm_modified", checkcomments.getCmModified());
+        commentMap.put("cm_writer", checkcomments.getCmWriter());
         commentMap.put("answers", answerList);
         commentList.add(commentMap);
 
-        //Dto 값 set
-        resCommentListDto.setComments(commentList);
-
-        return resCommentListDto;
+        return new ResCommentListDto(commentList);
     }
 
     /* =============== 대댓글 =============== */
@@ -260,12 +252,12 @@ public class CommentServiceImpl implements CommentService {
 
         Board_Comment recentComment = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
-        
+
         // int형 변환
         final int parentNum = cm_id.intValue();
 
         // depth 최대값
-        int depthCount = commentRepository.maxDepthValue(recentComment.getCmGroup());
+        final int depthCount = commentRepository.maxDepthValue(recentComment.getCmGroup());
 
         Board_Comment writeAnswer = commentRepository.save(
                 Board_Comment.builder()
@@ -290,7 +282,7 @@ public class CommentServiceImpl implements CommentService {
     public Long answerEdit(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id, Long an_id) {
 
         // int형 변환
-        int parentValue = cm_id.intValue();
+        final int parentValue = cm_id.intValue();
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -304,8 +296,8 @@ public class CommentServiceImpl implements CommentService {
         Board_Comment recentAnswer = commentRepository.findByCmParentNumAndCmId(parentValue, an_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("대댓글을 찾을 수 없습니다."));
 
-        commentRepository.save(
-                recentAnswer = Board_Comment.builder()
+        recentAnswer = commentRepository.save(
+                Board_Comment.builder()
                         .cmId(recentAnswer.getCmId())
                         .cmContent(reqCommentDto.getCmContent())
                         .cmWriter(recentUserInfo.getUserid())
@@ -329,7 +321,7 @@ public class CommentServiceImpl implements CommentService {
     public Long answerDelete(UserInfo userInfo, Long bd_id, Long cm_id, Long an_id) {
 
         // int형 변환
-        int parentValue = cm_id.intValue();
+        final int parentValue = cm_id.intValue();
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다."));

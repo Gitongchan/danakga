@@ -23,9 +23,7 @@ public class CommentController {
                                       @Valid @RequestBody ReqCommentDto reqCommentDto,
                                       @PathVariable("bd_id") Long bd_id) {
 
-        Long result = commentService.commentsWrite(userInfo, reqCommentDto, bd_id);
-
-        return new ResResultDto(result, "댓글 작성 성공");
+        return commentService.commentsWrite(userInfo, reqCommentDto, bd_id);
     }
 
     // 댓글 수정
@@ -35,9 +33,7 @@ public class CommentController {
                                      @PathVariable("cm_id") Long cm_id,
                                      @RequestBody ReqCommentDto reqCommentDto) {
 
-        Long result = commentService.commentsEdit(bd_id, cm_id, userInfo, reqCommentDto);
-        return result == -1L ?
-                new ResResultDto(result, "댓글 수정 실패") : new ResResultDto(result, "댓글 수정 성공");
+        return commentService.commentsEdit(bd_id, cm_id, userInfo, reqCommentDto);
     }
 
     // 댓글 삭제 여부 변경
@@ -46,10 +42,7 @@ public class CommentController {
                                        @PathVariable(value = "cm_id") Long cm_id,
                                        @LoginUser UserInfo userInfo) {
 
-        //게시글 삭제 여부 변경 로직 실행
-        Long result = commentService.commentsDelete(bd_id, cm_id, userInfo);
-
-        return new ResResultDto(result, "댓글 삭제 성공");
+        return commentService.commentsDelete(bd_id, cm_id, userInfo);
     }
 
 
