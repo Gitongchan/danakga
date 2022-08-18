@@ -24,7 +24,11 @@ async function myOrdersList(startDate, endDate){
         const data = await res.json();
         for(let i in data){
             console.log(data[i]);
-            if(1){
+            // 후기 있는지 없는지 여부 체크
+            const checkRes = await fetch(`/api/user/review/check/${data[i].ordersId}`);
+            const checkData = await checkRes.json();
+            if(checkData.id === 0){
+                console.log(checkData);
                 orderList.innerHTML += `
                                 <div class="row align-items-center mb-10">
                                     <div class="col-lg-1 col-md-1 col-12">
@@ -55,7 +59,7 @@ async function myOrdersList(startDate, endDate){
                                         ${data[i].orderStatus}
                                     </div>
                                     <div class="col-lg-1 col-md-2 col-12">
-                                        <button class="order_reviewChange">리뷰작성</button>
+                                        <button class="order_review" data-id=${data[i].productId} data-value="${data[i].ordersId}">리뷰작성</button>
                                         <button class="order_change">교환신청</button>
                                         <button class="order_return">반품신청</button>
                                     </div>
@@ -95,7 +99,7 @@ async function myOrdersList(startDate, endDate){
                                         ${data[i].orderStatus}
                                     </div>
                                     <div class="col-lg-1 col-md-2 col-12">
-                                        <button class="order_reviewChange">리뷰수정</button>
+                                        <button class="order_reviewChange" data-id=${data[i].productId} data-value="${data[i].ordersId}">리뷰수정</button>
                                         <button class="order_change">교환신청</button>
                                         <button class="order_return">반품신청</button>
                                     </div>
@@ -103,6 +107,24 @@ async function myOrdersList(startDate, endDate){
 
             `
             }
+        }
+
+        const order_review = document.querySelectorAll('.order_review');
+        for(const button of order_review){
+            button.addEventListener('click', (event) => {
+                console.log(event.target.dataset.value);
+                console.log(event.target.dataset.id);
+                location.replace(`/product/info?productId=${event.target.dataset.id}&orderId=${event.target.dataset.value}`)
+            })
+        }
+
+        const order_reviewChange = document.querySelectorAll('.order_reviewChange');
+        for(const button of order_reviewChange){
+            button.addEventListener('click', (event) => {
+                console.log(event.target.dataset.value);
+                console.log(event.target.dataset.id);
+                location.replace(`/product/info?productId=${event.target.dataset.id}&orderId=${event.target.dataset.value}`)
+            })
         }
     }
 }

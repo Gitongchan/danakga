@@ -5826,13 +5826,13 @@ blockquote span {
 
 .product-details-info .reviews .single-review {
   position: relative;
-  padding-left: 80px;
+  /*padding-left: 80px;*/
   margin-bottom: 30px;
 }
 
 @media (max-width: 767px) {
   .product-details-info .reviews .single-review {
-    padding-left: 60px;
+    /*padding-left: 60px;*/
   }
 }
 

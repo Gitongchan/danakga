@@ -128,7 +128,7 @@
             <div class="row">
                 <div class="col-lg-4 col-12">
                     <div class="single-block give-review">
-                        <h4 class="sum_start">4.5점</h4><span>평점</span>
+                        <h4 class="sum_star">4.5점</h4><span>평점</span>
                         <ul>
                             <li>
                                 <span class="star-5">5 점 - 38</span>
@@ -172,10 +172,9 @@
                             </li>
                         </ul>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn review-btn" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                            리뷰작성
-                        </button>
+                        <div id="review_btn">
+
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-8 col-12">
@@ -183,63 +182,7 @@
                         <div class="reviews">
                             <h4 class="title">작성된 리뷰</h4>
                             <!-- Start Single Review -->
-                            <div class="single-review">
-                                <img src="https://via.placeholder.com/150x150" alt="#">
-                                <div class="review-info">
-                                    <h4>Awesome quality for the price
-                                        <span>Jacob Hammond
-                                            </span>
-                                    </h4>
-                                    <ul class="stars">
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                    </ul>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                        tempor...</p>
-                                </div>
-                            </div>
-                            <!-- End Single Review -->
-                            <!-- Start Single Review -->
-                            <div class="single-review">
-                                <img src="https://via.placeholder.com/150x150" alt="#">
-                                <div class="review-info">
-                                    <h4>My husband love his new...
-                                        <span>Alex Jaza
-                                            </span>
-                                    </h4>
-                                    <ul class="stars">
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star"></i></li>
-                                    </ul>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                        tempor...</p>
-                                </div>
-                            </div>
-                            <!-- End Single Review -->
-                            <!-- Start Single Review -->
-                            <div class="single-review">
-                                <img src="https://via.placeholder.com/150x150" alt="#">
-                                <div class="review-info">
-                                    <h4>I love the built quality...
-                                        <span>Jacob Hammond
-                                            </span>
-                                    </h4>
-                                    <ul class="stars">
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                        <li><i class="lni lni-star-filled"></i></li>
-                                    </ul>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                        tempor...</p>
-                                </div>
+                            <div id="reviews_list_wrap">
                             </div>
                             <!-- End Single Review -->
                         </div>
@@ -266,11 +209,11 @@
                         <div class="form-group">
                             <label for="review-rating">평점</label>
                             <select class="form-control" id="review-rating">
-                                <option>5점</option>
-                                <option>4점</option>
-                                <option>3점</option>
-                                <option>2점</option>
-                                <option>1점</option>
+                                <option value="5">5점</option>
+                                <option value="4">4점</option>
+                                <option value="3">3점</option>
+                                <option value="2">2점</option>
+                                <option value="1">1점</option>
                             </select>
                         </div>
                     </div>
@@ -281,7 +224,7 @@
                 </div>
             </div>
             <div class="modal-footer button">
-                <button type="button" class="btn">작성하기</button>
+                <button type="button" class="btn" id="write_review">작성하기</button>
             </div>
         </div>
     </div>

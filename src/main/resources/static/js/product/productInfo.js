@@ -14,6 +14,20 @@ const wishButton = document.querySelector('#wish_btn');
 const editBtnAfter = document.querySelector('.product-info');
 const cartButton = document.querySelector('#cart_btn');
 
+// 리뷰작성 버튼이 들어갈 곳
+const reviewBtnWrap = document.getElementById('review_btn');
+
+// 별점 관련된 거
+const sum_star = document.querySelector('.sum_star');
+const star_1 = document.querySelector('.star-1');
+const star_2 = document.querySelector('.star-2');
+const star_3 = document.querySelector('.star-3');
+const star_4 = document.querySelector('.star-4');
+const star_5 = document.querySelector('.star-5');
+
+// 리뷰 목록
+const reviewWrap = document.getElementById('reviews_list_wrap');
+
 const regex= /[^0-9]/gi;
 
 function getParameterByName(name) {
@@ -23,8 +37,10 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 const urlID = getParameterByName('productId');
+const orderID = getParameterByName('orderId');
 
 console.log(urlID);
+console.log(orderID);
 
 (async ()=> {
         const res = await fetch(`/api/product/item/${urlID}`);
@@ -101,7 +117,46 @@ console.log(urlID);
                 pContent.innerHTML = data.productContent;
             }
         }
+
+        if(orderID === ''){
+        }else{
+            reviewBtnWrap.innerHTML = `
+                            <button type="button" class="btn review-btn" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                리뷰작성
+                            </button>`
+        }
+
+        await star(urlID, 0);
+        await reviewList(urlID, 0);
     })();
+
+    //리뷰 작성버튼 눌렀을 때
+    const review_btn = document.querySelector('#write_review');
+    review_btn.addEventListener('click', async () => {
+        const reviewRating = document.getElementById('review-rating');
+        const reviewRatingValue = reviewRating.options[reviewRating.selectedIndex].value;
+
+        const text = document.getElementById('review-message');
+        console.log(reviewRatingValue);
+
+        const res = await fetch(`/api/user/review/write`,{
+            method: 'POST',
+                headers: {
+                'header': header,
+                    'X-CSRF-Token': token,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({orderId: orderID, productId: urlID, reviewContent:text.value,reviewScore:reviewRatingValue+""})
+        })
+        if(res.ok){
+            const data = await res.json();
+            alert(data.message);
+        }
+
+    })
+
 
     //구매하기 버튼
     // document.getElementById('buyBtn').addEventListener('click',function (){
@@ -188,6 +243,90 @@ cartButton.addEventListener('click', async () => {
             alert('장바구니에 상품추가 실패!');
         }
     }
-
-
 })
+
+    //-------------------후기 부분 --------------------
+
+    //별점 출력하는 곳
+    async function star(p_id, page){
+        let star1 = 0;
+        let star2 = 0;
+        let star3 = 0;
+        let star4 = 0;
+        let star5 = 0;
+        let startSum = 0;
+        const res = await fetch(`/api/review/reviewList/${p_id}?page=${page}`);
+        if(res.ok){
+            const data = await res.json();
+            // re_content: "별로임..근데 뭐 쓸만은 함ㅋㅋㅋ"
+            // re_created: "2022-08-18T18:58:32.622824"
+            // re_id: 1
+            // re_score: 3
+            // re_writer: "ppwm1111"
+            // totalElements: 1
+            // totalPages: 1
+            for(let i in data.reviewList){
+                console.log(data.reviewList[i]);
+                if(data.reviewList[i].re_score === 1){
+                    star1 += 1;
+                    startSum += data.reviewList[i].re_score;
+                }else if(data.reviewList[i].re_score === 2){
+                    star2 += 1;
+                    startSum += data.reviewList[i].re_score;
+                }else if(data.reviewList[i].re_score === 3){
+                    star3 += 1;
+                    startSum += data.reviewList[i].re_score;
+                }else if(data.reviewList[i].re_score === 4){
+                    star4 += 1;
+                    startSum += data.reviewList[i].re_score;
+                }else if(data.reviewList[i].re_score === 5){
+                    star5 += 1;
+                    startSum += data.reviewList[i].re_score;
+                }
+            }
+            star_1.textContent = `1 점 - ${star1}`;
+            star_2.textContent = `2 점 - ${star2}`;
+            star_3.textContent = `3 점 - ${star3}`;
+            star_4.textContent = `4 점 - ${star4}`;
+            star_5.textContent = `5 점 - ${star5}`;
+
+            sum_star.textContent = `${startSum}점`;
+        }
+    }
+
+    // 리뷰 출력하는 곳
+    async function reviewList(p_id, page){
+        const res = await fetch(`/api/review/reviewList/${p_id}?page=${page}`);
+        if(res.ok) {
+            const data = await res.json();
+            // re_content: "별로임..근데 뭐 쓸만은 함ㅋㅋㅋ"
+            // re_created: "2022-08-18T18:58:32.622824"
+            // re_id: 1
+            // re_score: 3
+            // re_writer: "ppwm1111"
+            // totalElements: 1
+            // totalPages: 1
+
+            for (let i in data.reviewList) {
+                reviewWrap.innerHTML+= `
+                                <div class="single-review">
+                                    <div class="review-info">
+                                        <h4>${data.reviewList[i].re_writer}
+                                            <span>${data.reviewList[i].re_created.split('.')[0]}</span>
+                                        </h4>
+                                        <ul class="stars stars${data.reviewList[i].re_id}">
+                                        </ul>
+                                        <p>${data.reviewList[i].re_content}</p>
+                                    </div>
+                                </div>
+                `;
+                const star_wrap = document.querySelector(`.stars.stars${data.reviewList[i].re_id}`);
+                for(let j = 0; j < data.reviewList[i].re_score; j++){
+                    console.log(j);
+                    star_wrap.innerHTML+=`
+                     <li><i class="lni lni-star-filled"></i></li>
+                    `;
+                }
+            }
+        }
+    }
