@@ -8,14 +8,13 @@
         <div class="row align-items-center">
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="breadcrumbs-content">
-                    <h1 class="page-title">Single Product</h1>
+                    <h1 class="page-title">상품 상세정보</h1>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-12">
                 <ul class="breadcrumb-nav">
-                    <li><a href="index.mustache"><i class="lni lni-home"></i> Home</a></li>
-                    <li><a href="index.mustache">Shop</a></li>
-                    <li>Single Product</li>
+                    <li><a href="/index"><i class="lni lni-home"></i> 홈</a></li>
+                    <li>상품</li>
                 </ul>
             </div>
         </div>
@@ -129,10 +128,10 @@
             <div class="row">
                 <div class="col-lg-4 col-12">
                     <div class="single-block give-review">
-                        <h4>4.5 (Overall)</h4>
+                        <h4 class="sum_start">4.5점</h4><span>평점</span>
                         <ul>
                             <li>
-                                <span>5 stars - 38</span>
+                                <span class="star-5">5 점 - 38</span>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star-filled"></i>
@@ -140,7 +139,7 @@
                                 <i class="lni lni-star-filled"></i>
                             </li>
                             <li>
-                                <span>4 stars - 10</span>
+                                <span class="star-4">4 점 - 10</span>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star-filled"></i>
@@ -148,7 +147,7 @@
                                 <i class="lni lni-star"></i>
                             </li>
                             <li>
-                                <span>3 stars - 3</span>
+                                <span class="star-3">3 점 - 3</span>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star-filled"></i>
@@ -156,7 +155,7 @@
                                 <i class="lni lni-star"></i>
                             </li>
                             <li>
-                                <span>2 stars - 1</span>
+                                <span class="star-2">2 점 - 1</span>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star"></i>
@@ -164,7 +163,7 @@
                                 <i class="lni lni-star"></i>
                             </li>
                             <li>
-                                <span>1 star - 0</span>
+                                <span class="star-1">1 점 - 0</span>
                                 <i class="lni lni-star-filled"></i>
                                 <i class="lni lni-star"></i>
                                 <i class="lni lni-star"></i>
@@ -175,14 +174,14 @@
                         <!-- Button trigger modal -->
                         <button type="button" class="btn review-btn" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
-                            Leave a Review
+                            리뷰작성
                         </button>
                     </div>
                 </div>
                 <div class="col-lg-8 col-12">
                     <div class="single-block">
                         <div class="reviews">
-                            <h4 class="title">Latest Reviews</h4>
+                            <h4 class="title">작성된 리뷰</h4>
                             <!-- Start Single Review -->
                             <div class="single-review">
                                 <img src="https://via.placeholder.com/150x150" alt="#">
@@ -258,51 +257,31 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Leave a Review</h5>
+                <h5 class="modal-title" id="exampleModalLabel">리뷰</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="review-name">Your Name</label>
-                            <input class="form-control" type="text" id="review-name" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="review-email">Your Email</label>
-                            <input class="form-control" type="email" id="review-email" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="review-subject">Subject</label>
-                            <input class="form-control" type="text" id="review-subject" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="review-rating">Rating</label>
+                            <label for="review-rating">평점</label>
                             <select class="form-control" id="review-rating">
-                                <option>5 Stars</option>
-                                <option>4 Stars</option>
-                                <option>3 Stars</option>
-                                <option>2 Stars</option>
-                                <option>1 Star</option>
+                                <option>5점</option>
+                                <option>4점</option>
+                                <option>3점</option>
+                                <option>2점</option>
+                                <option>1점</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="review-message">Review</label>
+                    <label for="review-message">내용</label>
                     <textarea class="form-control" id="review-message" rows="8" required></textarea>
                 </div>
             </div>
             <div class="modal-footer button">
-                <button type="button" class="btn">Submit Review</button>
+                <button type="button" class="btn">작성하기</button>
             </div>
         </div>
     </div>

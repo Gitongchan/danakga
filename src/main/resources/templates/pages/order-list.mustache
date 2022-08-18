@@ -38,16 +38,22 @@
                             <!-- Cart List Title -->
                             <div class="cart-list-title">
                                 <div class="row">
-                                    <div class="col-lg-1 col-md-2 col-12">
+                                    <div class="col-lg-1 col-md-1 col-12">
+                                        <p>주문번호</p>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-12">
                                         <p>회사명</p>
                                     </div>
                                     <div class="col-lg-1 col-md-1 col-12">
                                         <p>브랜드</p>
                                     </div>
-                                    <div class="col-lg-4 col-md-2 col-12">
+                                    <div class="col-lg-3 col-md-2 col-12">
                                         <p>상품명</p>
                                     </div>
-                                    <div class="col-lg-2 col-md-2 col-12">
+                                    <div class="col-lg-1 col-md-1 col-12">
+                                        <p>수량</p>
+                                    </div>
+                                    <div class="col-lg-2 col-md-1 col-12">
                                         <p>가격</p>
                                     </div>
                                     <div class="col-lg-2 col-md-3 col-12">
@@ -60,33 +66,7 @@
                             </div>
                             <!-- End Cart List Title -->
                             <!-- Cart Single List list -->
-                            <div class="cart-single-list">
-                                <div class="row align-items-center mb-10">
-                                    <div class="col-lg-1 col-md-2 col-12">
-                                        <h6 class="product-name">
-                                            회사명
-                                        </h6>
-                                    </div>
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>브랜드명</p>
-                                    </div>
-                                    <div class="col-lg-4 col-md-2 col-12">
-                                        <a href="/product/info?productId=${data[i].productId}">
-                                            <p>상품이름</p>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-2 col-md-3 col-12">
-                                        <p>30000원</p>
-                                    </div>
-                                    <div class="col-lg-2 col-md-3 col-12">
-                                        상품준비중
-                                    </div>
-                                    <div class="col-lg-1 col-md-2 col-12">
-                                        <button class="order_review">리뷰작성</button>
-                                        <button class="order_change">교환신청</button>
-                                        <button class="order_return">반품신청</button>
-                                    </div>
-                                </div>
+                            <div class="cart-single-list" id="orderList">
                             </div>
                             <!-- End Single List -->
                             <div class="text-center">
