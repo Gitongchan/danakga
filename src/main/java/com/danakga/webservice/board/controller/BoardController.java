@@ -27,16 +27,7 @@ public class BoardController {
                                   @Valid @RequestPart(value="keys") ReqBoardDto reqBoardDto,
                                   @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
-        //게시글 작성 로직 실행
-        Long result = boardService.postWrite(reqBoardDto, userInfo, files);
-
-        if(result.equals(-2L)) {
-            return new ResResultDto(result, "게시글 등록 실패 했습니다(이미지 업로드 오류)");
-        } else if(result.equals(-1L)) {
-            return new ResResultDto(result, "게시글 등록 실패 했습니다");
-        } else {
-            return new ResResultDto(result, "게시글을 작성 했습니다.");
-        }
+        return boardService.postWrite(reqBoardDto, userInfo, files);
     }
 
     //게시글 수정
@@ -47,16 +38,7 @@ public class BoardController {
                                  @RequestPart(value = "deletedFiles", required = false) ReqDeletedFileDto reqDeletedFileDto,
                                  @RequestPart(value = "images", required = false) List<MultipartFile> files) {
 
-        //게시글 수정 로직 실행
-        Long result = boardService.postEdit(bd_id, userInfo, reqBoardDto, reqDeletedFileDto, files);
-        
-        if(result.equals(-2L)) {
-            return new ResResultDto(result, "게시글 수정에 실패 했습니다(이미지 업로드 오류)");
-        } else if(result.equals(-1L)) {
-            return new ResResultDto(result, "게시글 수정에 실패 했습니다");
-        } else {
-            return new ResResultDto(result, "게시글을 수정 했습니다.");
-        }
+        return boardService.postEdit(bd_id, userInfo, reqBoardDto, reqDeletedFileDto, files);
     }
 
     //게시글 삭제
@@ -64,10 +46,7 @@ public class BoardController {
     public ResResultDto postDelete(@PathVariable(value = "bd_id") Long bd_id,
                                    @LoginUser UserInfo userInfo) {
 
-        //게시글 삭제 로직 실행
-        Long result = boardService.postDelete(bd_id, userInfo);
-
-        return new ResResultDto(result, "게시글이 삭제되었습니다.");
+        return boardService.postDelete(bd_id, userInfo);
     }
 
 }
