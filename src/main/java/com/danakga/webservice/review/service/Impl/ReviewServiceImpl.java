@@ -84,6 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
 
             return new ResResultDto(checkReview.getReId(), "주문 번호로 작성된 리뷰가 존재합니다.");
         }
+
         Review review = reviewRepository.save(
                 Review.builder()
                         .reWriter(checkUserInfo.getUserid())
@@ -152,5 +153,20 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.updateReDeleted(re_id);
 
         return new ResResultDto(checkReview.getReId(), "후기를 삭제 했습니다.");
+    }
+
+    /* 후기 작성 체크 */
+    @Override
+    public ResResultDto reviewCheck(Long o_id) {
+
+        Orders checkOrders = ordersRepository.findById(o_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
+
+        if(reviewRepository.findByOrders(checkOrders).isEmpty()) {
+
+            return new ResResultDto(0L,"후기를 작성할 수 있습니다.");
+        }
+
+        return new ResResultDto(1L, "이미 후기를 작성 했습니다.");
     }
 }

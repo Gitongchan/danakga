@@ -21,4 +21,7 @@ public interface ReviewService {
     /* 후기 삭제 상태 변경 */
     ResResultDto reviewDelete(ReqReviewDeleteDto reqReviewDeleteDto, UserInfo userInfo, Long re_id);
 
+    /* 후기 작성 체크 */
+    ResResultDto reviewCheck(Long o_id);
+
 }
