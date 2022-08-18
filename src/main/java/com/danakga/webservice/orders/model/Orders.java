@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -30,6 +32,7 @@ public class Orders {
     //주문한 상품 정보
     @ManyToOne
     @JoinColumn(name="orders_product")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
     
     //주문 상태

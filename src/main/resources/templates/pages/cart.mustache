@@ -26,11 +26,19 @@
     <!-- Shopping Cart -->
     <div class="shopping-cart section">
         <div class="container">
-            <div class="scroll-container" id="tools_list">
+            <div class="d-flex w-100">
+                <div id="cart_list">
+                    <button class="card bg-primary mx-1 d-flex justify-content-center align-items-center rounded-pill" id="my_cart_list">내 장바구니</button>
+                </div>
+                <div class="scroll-container w-75" id="tools_list">
+                </div>
             </div>
-            <div class="align-right mt-1 mb-1">
-                <button id="folder_manager">폴더 관리</button>
-                <button id="tool_select_delete">선택 삭제</button>
+            <div class="d-flex justify-content-end">
+                <div class="align-right mt-1 mb-1" id="my_tool_wrap">
+                </div>
+                <div class="align-right mt-1 mb-1" id="my_tool_wrap">
+                    <button id="folder_manager">폴더 관리</button>
+                </div>
             </div>
             <div class="cart-list-head">
                 <!-- Cart List Title -->
@@ -46,7 +54,7 @@
                             <p>수량</p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            <p>합계</p>
+                            <p>가격</p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
                             <p>상세분류</p>
@@ -56,7 +64,9 @@
                         </div>
                     </div>
                 </div>
+                <div>
 
+                </div>
                 <!-- End Cart List Title -->
                 <!-- Cart Single List list -->
                 <div class="cart-single-list">

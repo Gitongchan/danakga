@@ -20,8 +20,8 @@ const loginInfo = document.getElementById('user-info');
             checkID.value = data.id;
             checkName.value = data.userid;
 
-            //찜 갯수 체크
-            const cartRes = await fetch('/api/user/myTool/folder');
+            //장바구니 아이 갯수 체크
+            const cartRes = await fetch('/api/user/cart');
             const cartData = await cartRes.json();
             cart.innerHTML = `
             <a href="/mypage/cart" class="main-btn">

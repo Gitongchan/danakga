@@ -10,6 +10,9 @@ import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
+import com.danakga.webservice.review.dto.response.ResReviewListDto;
+import com.danakga.webservice.review.model.Review;
+import com.danakga.webservice.review.repository.ReviewRepository;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserAdapter;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
@@ -29,10 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private final CompanyRepository companyRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final ReviewRepository reviewRepository;
 
 
     @Override
@@ -297,20 +298,37 @@ public class UserServiceImpl implements UserService {
             return restoreUserInfo.getId();
     }
 
+    @Override
+    public String useridFind(UserInfoDto userInfoDto) {
+        if(userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
+            return findUserInfo.getUserid();
+        }
+        return null;
+    }
+
+    @Override
+    public String passwordFind(UserInfoDto userInfoDto) {
+        if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
+            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
+            return findUserInfo.getPassword();
+        }
+        return null;
+    }
+
+    /**               작성한 게시글, 댓글, 후기 조회 작업 (진모)               **/
+
     //작성한 게시글 목록 조회
     @Override
     public ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
         //회원 조회
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //pagedble로 db 조회
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByUserInfoAndBdType(recentUserInfo, boardType, pageable);
-
-        //page<>를 List로 반환
-        List<Board> myPost = boards.getContent();
 
         //return할 dto 객체 생성
         ResBoardListDto resBoardListDto = new ResBoardListDto();
@@ -319,7 +337,7 @@ public class UserServiceImpl implements UserService {
         List<Map<String, Object>> postList = new ArrayList<>();
 
         //List로 반환된 db 반복문으로 Map으로 get
-        myPost.forEach(entity -> {
+        boards.forEach(entity -> {
 
             //List<Map>에 당아줄 Map객체 생성 후 put
             Map<String, Object> mapPost = new HashMap<>();
@@ -348,7 +366,7 @@ public class UserServiceImpl implements UserService {
 
         //회원 조회
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //삭제 여부 변수
         final String deleted = "N";
@@ -392,7 +410,7 @@ public class UserServiceImpl implements UserService {
 
         //회원 조회
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원이 없습니다."));
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //삭제 여부 변수
         final String deleted = "N";
@@ -401,8 +419,6 @@ public class UserServiceImpl implements UserService {
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
 
-        List<Board_Comment> commentsList = comments.getContent();
-
         //return해줄 dto 객체 생성
         ResCommentListDto resCommentListDto = new ResCommentListDto();
 
@@ -410,7 +426,7 @@ public class UserServiceImpl implements UserService {
         List<Map<String, Object>> data = new ArrayList<>();
 
         //List로 반환된 db 반복문으로 Map으로 get
-        commentsList.forEach(entity -> {
+        comments.forEach(entity -> {
 
             //List<Map>에 당아줄 Map객체 생성 후 put
             Map<String, Object> mapComments = new HashMap<>();
@@ -433,22 +449,34 @@ public class UserServiceImpl implements UserService {
         return resCommentListDto;
     }
 
+    //마이페이지 후기 목록 조회
     @Override
-    public String useridFind(UserInfoDto userInfoDto) {
-        if(userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
-            return findUserInfo.getUserid();
-        }
-        return null;
-    }
+    public ResReviewListDto myReviewList(UserInfo userInfo, Pageable pageable, int page) {
 
-    @Override
-    public String passwordFind(UserInfoDto userInfoDto) {
-        if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
-            return findUserInfo.getPassword();
-        }
-        return null;
-    }
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
+        pageable = PageRequest.of(page, 10, Sort.by("reCreated").descending());
+        Page<Review> checkReview = reviewRepository.findByReWriter(userInfo.getUserid(), pageable);
+
+        List<Map<String,Object>> myReviewList = new ArrayList<>();
+
+        Map<String,Object> myReviewMap = new LinkedHashMap<>();
+
+        checkReview.forEach(review -> {
+
+            myReviewMap.put("p_name", review.getProduct().getProductName());
+            myReviewMap.put("p_brand", review.getProduct().getProductBrand());
+            myReviewMap.put("p_price", review.getProduct().getProductPrice());
+            myReviewMap.put("re_writer", review.getReWriter());
+            myReviewMap.put("re_score", review.getReScore());
+            myReviewMap.put("re_created", review.getReCreated());
+            myReviewMap.put("totalPages", checkReview.getTotalPages());
+            myReviewMap.put("totalElements", checkReview.getTotalElements());
+        });
+
+        myReviewList.add(myReviewMap);
+
+        return new ResReviewListDto(myReviewList);
+    }
 }
