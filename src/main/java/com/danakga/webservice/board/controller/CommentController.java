@@ -55,22 +55,18 @@ public class CommentController {
                                     @RequestBody ReqCommentDto reqCommentDto,
                                     @LoginUser UserInfo userInfo) {
 
-        Long result = commentService.answerWrite(userInfo, reqCommentDto, bd_id, cm_id);
-
-        return new ResResultDto(result, "대댓글 작성 성공");
+        return commentService.answerWrite(userInfo, reqCommentDto, bd_id, cm_id);
     }
 
     // 대댓글 수정
     @PutMapping("/comment/answer/edit/{bd_id}/{cm_id}/{an_id}")
-    public ResResultDto answerEdit(@PathVariable(value = "bd_id") Long bd_id, //게시글 id
-                                   @PathVariable(value = "cm_id") Long cm_id, //댓글 id
-                                   @PathVariable(value = "an_id") Long an_id, //대댓글의 id
+    public ResResultDto answerEdit(@PathVariable(value = "bd_id") Long bd_id,
+                                   @PathVariable(value = "cm_id") Long cm_id,
+                                   @PathVariable(value = "an_id") Long an_id,
                                    @RequestBody ReqCommentDto reqCommentDto,
                                    @LoginUser UserInfo userInfo) {
 
-        Long result = commentService.answerEdit(userInfo, reqCommentDto, bd_id, cm_id, an_id);
-
-        return new ResResultDto(result, "대댓글 수정 성공");
+        return commentService.answerEdit(userInfo, reqCommentDto, bd_id, cm_id, an_id);
     }
     
     
@@ -81,9 +77,7 @@ public class CommentController {
                                      @PathVariable(value = "an_id") Long an_id, //대댓글 id
                                      @LoginUser UserInfo userInfo) {
         
-        Long result = commentService.answerDelete(userInfo, bd_id, cm_id, an_id);
-
-        return new ResResultDto(result, "대댓글 삭제 성공");
+        return commentService.answerDelete(userInfo, bd_id, cm_id, an_id);
     }
 
 }
