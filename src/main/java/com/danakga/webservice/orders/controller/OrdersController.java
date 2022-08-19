@@ -69,7 +69,7 @@ public class OrdersController {
         return result == -1L ?
                 new ResResultDto(result,"더 이상 변경할 수 없는 상태입니다.") : new ResResultDto(result,"상태변경을 성공했습니다.") ;
     }
-    
+
     //일반사용자(구매자) - 주문내역 업데이트
     @PutMapping("api/user/orders/updateStatus/{item}")
     public ResResultDto updateOrdersStatus(@LoginUser UserInfo userInfo, @PathVariable("item") Long ordersId,@RequestBody StatusDto statusDto){

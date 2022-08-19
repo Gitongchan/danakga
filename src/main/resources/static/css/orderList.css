@@ -1,0 +1,37 @@
+.info_wrap{
+    display: table-cell;
+    height: 75px;
+}
+
+.order_review{
+    border: none;
+    background: #0167F3;
+    border-radius: 15px;
+    width: 100%;
+    color:white;
+}
+
+.order_change{
+    border: none;
+    background: #bcd0c7;
+    border-radius: 15px;
+    width: 100%;
+    color:black;
+}
+
+.order_return{
+    border: none;
+    background: #bcd0c7;
+    border-radius: 15px;
+    width: 100%;
+    color:black;
+}
+
+.order_reviewChange{
+    border: none;
+    background: #0167F3;
+    border-radius: 15px;
+    width: 100%;
+    color:white;
+}
+

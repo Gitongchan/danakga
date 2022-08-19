@@ -169,7 +169,7 @@ order_btn.addEventListener('click', async () => {
             if (res.ok) {
                 alert('주문이 완료되었습니다!');
                 //주문내역으로 이동시키기
-                location.replace('/index');
+                location.replace('/user/orderlist');
             }
         }
     }

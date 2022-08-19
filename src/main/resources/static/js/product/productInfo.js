@@ -28,6 +28,9 @@ const star_5 = document.querySelector('.star-5');
 // 리뷰 목록
 const reviewWrap = document.getElementById('reviews_list_wrap');
 
+//리뷰 수정가능 여부 hidden
+const review_hidden = document.getElementById('review_edit');
+
 const regex= /[^0-9]/gi;
 
 function getParameterByName(name) {
@@ -38,9 +41,8 @@ function getParameterByName(name) {
 }
 const urlID = getParameterByName('productId');
 const orderID = getParameterByName('orderId');
+const status = getParameterByName('status');
 
-console.log(urlID);
-console.log(orderID);
 
 (async ()=> {
         const res = await fetch(`/api/product/item/${urlID}`);
@@ -125,13 +127,20 @@ console.log(orderID);
                                     data-bs-target="#exampleModal">
                                 리뷰작성
                             </button>`
+
+            //리뷰 작성버튼 눌렀을 때
+            document.querySelector('#review_btn .btn.review-btn').addEventListener('click', () => {
+                review_hidden.value = '';
+            })
         }
+
+
 
         await star(urlID, 0);
         await reviewList(urlID, 0);
     })();
 
-    //리뷰 작성버튼 눌렀을 때
+    //리뷰 작성버튼 누른후 작성하기 버튼 눌렀을 때
     const review_btn = document.querySelector('#write_review');
     review_btn.addEventListener('click', async () => {
         const reviewRating = document.getElementById('review-rating');
@@ -139,21 +148,53 @@ console.log(orderID);
 
         const text = document.getElementById('review-message');
         console.log(reviewRatingValue);
+        if(review_hidden.value === ''){
+            if(confirm("리뷰 작성 시 구매확정이 되어 교환 및 환불이 어렵습니다.")){
+                const res = await fetch(`/api/user/orders/updateStatus/${orderID}`,{
+                    method: 'PUT',
+                    headers: {
+                        'header': header,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        "Content-Type": "application/json",
+                        'X-CSRF-Token': token
+                    },
+                    body: JSON.stringify({ordersStatus:status, changeOrdersStatus:"구매확정"})
+                })
 
-        const res = await fetch(`/api/user/review/write`,{
-            method: 'POST',
+                const reviewWrite = await fetch(`/api/user/review/write`,{
+                    method: 'POST',
+                    headers: {
+                        'header': header,
+                        'X-CSRF-Token': token,
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({orderId: orderID, productId: urlID, reviewContent:text.value,reviewScore:reviewRatingValue+""})
+                })
+                if(reviewWrite.ok){
+                    alert("리뷰작성이 완료되었습니다!");
+                    location.reload();
+                }
+            }
+
+        }else{
+            const res = await fetch(`/api/user/review/edit/${review_hidden.value}`,{
+                method: 'PUT',
                 headers: {
-                'header': header,
+                    'header': header,
                     'X-CSRF-Token': token,
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({orderId: orderID, productId: urlID, reviewContent:text.value,reviewScore:reviewRatingValue+""})
-        })
-        if(res.ok){
-            const data = await res.json();
-            alert(data.message);
+                },
+                body: JSON.stringify({orderId: orderID, productId: urlID, reviewContent:text.value,reviewScore:reviewRatingValue+""})
+            })
+            if(res.ok){
+                const data = await res.json();
+                alert("리뷰가 수정되었습니다!");
+                location.reload();
+            }
         }
+
 
     })
 
@@ -265,23 +306,30 @@ cartButton.addEventListener('click', async () => {
             // re_writer: "ppwm1111"
             // totalElements: 1
             // totalPages: 1
-            for(let i in data.reviewList){
-                console.log(data.reviewList[i]);
-                if(data.reviewList[i].re_score === 1){
-                    star1 += 1;
-                    startSum += data.reviewList[i].re_score;
-                }else if(data.reviewList[i].re_score === 2){
-                    star2 += 1;
-                    startSum += data.reviewList[i].re_score;
-                }else if(data.reviewList[i].re_score === 3){
-                    star3 += 1;
-                    startSum += data.reviewList[i].re_score;
-                }else if(data.reviewList[i].re_score === 4){
-                    star4 += 1;
-                    startSum += data.reviewList[i].re_score;
-                }else if(data.reviewList[i].re_score === 5){
-                    star5 += 1;
-                    startSum += data.reviewList[i].re_score;
+
+            //모든 상품에 대한 별점 구하기
+            const totalPages = data.reviewList[0].totalPages;
+            for(let i = 0; i < totalPages; i++){
+                const allres = await fetch(`/api/review/reviewList/${p_id}?page=${i}`);
+                const allStar = await allres.json();
+                for(let i in allStar.reviewList){
+                    console.log(allStar.reviewList[i]);
+                    if(allStar.reviewList[i].re_score === 1){
+                        star1 += 1;
+                        startSum += allStar.reviewList[i].re_score;
+                    }else if(allStar.reviewList[i].re_score === 2){
+                        star2 += 1;
+                        startSum += allStar.reviewList[i].re_score;
+                    }else if(allStar.reviewList[i].re_score === 3){
+                        star3 += 1;
+                        startSum += allStar.reviewList[i].re_score;
+                    }else if(allStar.reviewList[i].re_score === 4){
+                        star4 += 1;
+                        startSum += allStar.reviewList[i].re_score;
+                    }else if(allStar.reviewList[i].re_score === 5){
+                        star5 += 1;
+                        startSum += allStar.reviewList[i].re_score;
+                    }
                 }
             }
             star_1.textContent = `1 점 - ${star1}`;
@@ -308,25 +356,92 @@ cartButton.addEventListener('click', async () => {
             // totalPages: 1
 
             for (let i in data.reviewList) {
-                reviewWrap.innerHTML+= `
+                if(data.reviewList[i].re_writer === checkName.value){
+                    reviewWrap.innerHTML+= `
                                 <div class="single-review">
                                     <div class="review-info">
-                                        <h4>${data.reviewList[i].re_writer}
-                                            <span>${data.reviewList[i].re_created.split('.')[0]}</span>
-                                        </h4>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4>${data.reviewList[i].re_writer}
+                                                  <span>${data.reviewList[i].re_created.split('.')[0]}</span>
+                                                </h4>
+                                            </div>
+                                             <div>
+                                                <button type="button" class="btn review-edit-btn" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal" data-value="${data.reviewList[i].re_id}">
+                                                     <i class="lni lni-comments-reply"></i>수정하기
+                                                </button>
+                                                <button class="review-delete" data-value="${data.reviewList[i].re_id}">
+                                                    <i class="lni lni-close"></i>삭제하기
+                                                </button>
+                                            </div>
+                                        </div>
                                         <ul class="stars stars${data.reviewList[i].re_id}">
                                         </ul>
                                         <p>${data.reviewList[i].re_content}</p>
                                     </div>
                                 </div>
                 `;
-                const star_wrap = document.querySelector(`.stars.stars${data.reviewList[i].re_id}`);
-                for(let j = 0; j < data.reviewList[i].re_score; j++){
-                    console.log(j);
-                    star_wrap.innerHTML+=`
+                    const star_wrap = document.querySelector(`.stars.stars${data.reviewList[i].re_id}`);
+                    for(let j = 0; j < data.reviewList[i].re_score; j++){
+                        star_wrap.innerHTML+=`
                      <li><i class="lni lni-star-filled"></i></li>
                     `;
+                    }
+                }else{
+                    reviewWrap.innerHTML+= `
+                                <div class="single-review">
+                                    <div class="review-info">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4>${data.reviewList[i].re_writer}
+                                                  <span>${data.reviewList[i].re_created.split('.')[0]}</span>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <ul class="stars stars${data.reviewList[i].re_id}">
+                                        </ul>
+                                        <p>${data.reviewList[i].re_content}</p>
+                                    </div>
+                                </div>
+                `;
+                    const star_wrap = document.querySelector(`.stars.stars${data.reviewList[i].re_id}`);
+                    for(let j = 0; j < data.reviewList[i].re_score; j++){
+                        star_wrap.innerHTML+=`
+                     <li><i class="lni lni-star-filled"></i></li>
+                    `;
+                    }
                 }
+
+            }
+
+            const reviews_edit = document.querySelectorAll('.btn.review-edit-btn');
+            for(const button of reviews_edit){
+                button.addEventListener('click', async (event) => {
+                        review_hidden.value = event.target.dataset.value;
+                })
+            }
+
+            const reviews_delete = document.querySelectorAll('.review-delete');
+            for(const button of reviews_delete){
+                button.addEventListener('click', async (event) => {
+                    if(confirm('리뷰를 삭제하시겠습니까?')){
+                        const res = await fetch(`/api/user/review/delete/${event.target.dataset.value}`, {
+                            method: 'PUT',
+                            headers: {
+                                'header': header,
+                                'X-CSRF-Token': token,
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({orderId:orderID, productId: urlID})
+                        })
+                        if(res.ok){
+                            alert("리뷰가 삭제되었습니다!");
+                            location.reload();
+                        }
+                    }
+                })
             }
         }
     }
