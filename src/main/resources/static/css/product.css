@@ -83,3 +83,12 @@
     overflow: scroll;
     display: flex;
 }
+
+.review-info button{
+    background: none;
+    border: none;
+}
+
+.review-info button:hover{
+    color: #0167F3;
+}

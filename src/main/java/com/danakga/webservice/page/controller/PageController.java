@@ -39,9 +39,12 @@ public class PageController {
     public String myPageWishList(){
         return "pages/wish-list";
     }
+
+    @GetMapping("/user/orderlist")
+    public String myPageOrderList() { return "pages/order-list"; }
     @GetMapping("/manager/myboard")
     public String mypageManagerBoard(){
-        return "pages/mypageUserBoard";
+        return "pages/mypageManagerBoard";
     }
 
     @GetMapping("/manager/mypage")
