@@ -5,6 +5,7 @@ import com.danakga.webservice.board.dto.request.ReqDeletedFileDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,13 +22,13 @@ public interface BoardService {
     ResBoardPostDto getPost(Long bd_id, HttpServletRequest request, HttpServletResponse response);
 
     //게시글 작성
-    Long postWrite(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
+    ResResultDto postWrite(ReqBoardDto reqBoardWriteDto, UserInfo userInfo, List<MultipartFile> files);
 
     //게시글 수정
-    Long postEdit(Long bd_id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files);
+    ResResultDto postEdit(Long bd_id, UserInfo userInfo, ReqBoardDto reqBoardDto, ReqDeletedFileDto reqDeletedFileDto, List<MultipartFile> files);
 
     //게시글 삭제 여부 변경
-    Long postDelete(Long bd_id, UserInfo userInfo);
+    ResResultDto postDelete(Long bd_id, UserInfo userInfo);
 
     //게시판 검색
     ResBoardListDto boardSearch(Pageable pageable, String category, String content, String boardType, int page);

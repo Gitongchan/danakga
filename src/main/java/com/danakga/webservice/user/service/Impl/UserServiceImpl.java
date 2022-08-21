@@ -355,7 +355,7 @@ public class UserServiceImpl implements UserService {
         });
 
         //dto에 List<Map>값 set
-        resBoardListDto.setLists(postList);
+        resBoardListDto.setSearchList(postList);
 
         return resBoardListDto;
     }
@@ -399,7 +399,7 @@ public class UserServiceImpl implements UserService {
         });
 
         //dto에 List<Map>값 set
-        resBoardListDto.setLists(data);
+        resBoardListDto.setSearchList(data);
 
         return resBoardListDto;
     }
@@ -444,7 +444,7 @@ public class UserServiceImpl implements UserService {
         });
 
         //dto에 값 set
-        resCommentListDto.setComments(data);
+        resCommentListDto.setCommentList(data);
 
         return resCommentListDto;
     }
