@@ -109,6 +109,8 @@ public class PageController {
     @GetMapping("/CompanySignout")
     public String CompanySignout(){return "pages/CompanySignout";}
 
+    @GetMapping("/user/myreview")
+    public String myReview() { return "pages/my-reviewList";}
     @GetMapping("/addproduct")
     public String addProduct(){
         return "pages/addProduct";
