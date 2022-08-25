@@ -2,6 +2,7 @@ package com.danakga.webservice.review.service.Impl;
 
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.orders.model.Orders;
+import com.danakga.webservice.orders.model.OrdersStatus;
 import com.danakga.webservice.orders.repository.OrdersRepository;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
@@ -162,11 +163,15 @@ public class ReviewServiceImpl implements ReviewService {
         Orders checkOrders = ordersRepository.findById(o_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
 
-        if(reviewRepository.findByOrders(checkOrders).isEmpty()) {
+        /* 주문 상태 값 가져옴 */
+        String orderStatus = checkOrders.getOrdersStatus();
 
-            return new ResResultDto(0L,"후기를 작성할 수 있습니다.");
+        /* 구매한 주문번호로 후기를 작성하지 않았거나, 주문 상태가 "구매확정"인 경우에만 후기 작성 가능 */
+        if (reviewRepository.findByOrders(checkOrders).isEmpty() && orderStatus.equals(OrdersStatus.CONFIRM.getStatus())) {
+
+            return new ResResultDto(0L, "후기를 작성할 수 있습니다.");
         }
-
-        return new ResResultDto(1L, "이미 후기를 작성 했습니다.");
+        return new ResResultDto(-1L, "이미 후기를 작성 했거나, 구매 확정을 하지 않았습니다.");
     }
 }
+
