@@ -1,0 +1,68 @@
+.info_wrap{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 75px;
+}
+
+/*배송시작*/
+.sales_start{
+    border: none;
+    background: #0167F3;
+    border-radius: 15px;
+    width: 100%;
+    color:white;
+}
+
+/*주문취소*/
+.sales_cancel{
+    border: none;
+    background: #bcd0c7;
+    border-radius: 15px;
+    width: 100%;
+    color:black;
+}
+
+/*배송완료*/
+.sales_success{
+    border: none;
+    background: #0167F3;
+    border-radius: 15px;
+    width: 100%;
+    color:white;
+}
+
+/*교환신청*/
+.sales_change{
+    border: none;
+    background: #0167F3;
+    border-radius: 15px;
+    width: 100%;
+    color:white;
+}
+
+/*환불완료*/
+.sales_refund{
+    border: none;
+    background: #bcd0c7;
+    border-radius: 15px;
+    width: 100%;
+    color:black;
+}
+
+/*반품신청*/
+.sales_return{
+    border: none;
+    background: #bcd0c7;
+    border-radius: 15px;
+    width: 100%;
+    color:black;
+}
+
+
+#search-date{
+    border: none;
+    background: #0167F3;
+    color:white;
+    padding: 5px 5px;
+}

@@ -68,6 +68,10 @@ public class PageController {
         return "pages/myProductList";
     }
 
+    @GetMapping("/manager/orderList")
+    public String managerOrderList(){
+        return "pages/managerOrder-list";
+    }
     @GetMapping("/product/info")
     public String productInfo(){
         return "pages/product-details";
