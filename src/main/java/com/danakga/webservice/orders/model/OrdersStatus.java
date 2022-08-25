@@ -8,7 +8,7 @@ public enum OrdersStatus {
     //구매확정 일때만 리뷰가능
 
     READY("상품준비중"), CANCEL("주문취소"), EXCHANGE("교환신청") , RETURN("반품신청") ,CONFIRM("구매확정")
-    ,START("배송시작"), FINISH("배송완료"), REFUND("환불완료") , REDELIVERY("교환상품배송");
+    ,REJECT("주문거절"),START("배송시작"), FINISH("배송완료"), REFUND("환불완료") , REDELIVERY("교환상품배송");
 
     private final String status;
 

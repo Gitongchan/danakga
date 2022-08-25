@@ -216,21 +216,28 @@ public class OrdersServiceImpl implements OrdersService {
         Orders orders = ordersRepository.findByOrdersId(ordersId).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("판매내역을 찾을 수 없습니다.")
         );
+        Product product = productRepository.findByProductId(orders.getProduct().getProductId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다.")
+        );
         String inputStatus = orders.getOrdersStatus();
         String trackingNum = statusDto.getOrdersTrackingNum();
+        String changeStatus = statusDto.getChangeOrdersStatus();
         String status = null;
 
         if (inputStatus.equals(OrdersStatus.READY.getStatus()) && trackingNum != null) {
             status = OrdersStatus.START.getStatus(); //배송시작은 운송장 번호 입력하기
-            ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
-        }else if (inputStatus.equals(OrdersStatus.CANCEL.getStatus()) || inputStatus.equals(OrdersStatus.RETURN.getStatus())) {
+            ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),orders.getOrdersId());
+        }else if(inputStatus.equals(OrdersStatus.READY.getStatus()) && changeStatus.equals(OrdersStatus.REJECT.getStatus())){
+            status = OrdersStatus.REJECT.getStatus(); //주문 거절
+            productRepository.updateProductStock(-orders.getOrdersQuantity(),product.getProductId()); //주문 취소시 재고 복구
+        } else if (inputStatus.equals(OrdersStatus.CANCEL.getStatus()) || inputStatus.equals(OrdersStatus.RETURN.getStatus())) {
             status = OrdersStatus.REFUND.getStatus(); //환불
         }else if (inputStatus.equals(OrdersStatus.EXCHANGE.getStatus())) {
             status = OrdersStatus.REDELIVERY.getStatus(); //반품배송
-            ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),ordersId);
+            ordersRepository.updateSalesTrackingNum(trackingNum,updateSalesCompanyInfo.getCompanyId(),orders.getOrdersId());
         }else if (inputStatus.equals(OrdersStatus.START.getStatus())) {
             status = OrdersStatus.FINISH.getStatus(); //배송완료 처리할때는 주문완료 날짜 입력하기
-            ordersRepository.updateSalesFinishedDate(LocalDateTime.now(),updateSalesCompanyInfo.getCompanyId(),ordersId);
+            ordersRepository.updateSalesFinishedDate(LocalDateTime.now(),updateSalesCompanyInfo.getCompanyId(),orders.getOrdersId());
         }else if(inputStatus.equals(OrdersStatus.REDELIVERY.getStatus())){
             status = OrdersStatus.FINISH.getStatus();
         }else{
@@ -238,7 +245,7 @@ public class OrdersServiceImpl implements OrdersService {
         }
         ordersRepository.updateSalesStatus(status,updateSalesCompanyInfo.getCompanyId(),orders.getOrdersId());
 
-        return ordersId;
+        return orders.getOrdersId();
     }
 
     //일반사용자(구매자) - 주문내역 업데이트
@@ -251,12 +258,16 @@ public class OrdersServiceImpl implements OrdersService {
         Orders orders = ordersRepository.findByOrdersId(ordersId).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("판매내역을 찾을 수 없습니다.")
         );
+        Product product = productRepository.findByProductId(orders.getProduct().getProductId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다.")
+        );
         String inputStatus = orders.getOrdersStatus();
         String changeStatus = statusDto.getChangeOrdersStatus();
         String status = null;
 
-        if(inputStatus.equals(OrdersStatus.READY.getStatus())){
+        if(inputStatus.equals(OrdersStatus.READY.getStatus()) && changeStatus.equals(OrdersStatus.CANCEL.getStatus())){
             status = OrdersStatus.CANCEL.getStatus();
+            productRepository.updateProductStock(-orders.getOrdersQuantity(),product.getProductId()); //주문 취소시 재고 복구
         }
         else if (inputStatus.equals(OrdersStatus.FINISH.getStatus())&& changeStatus.equals(OrdersStatus.CONFIRM.getStatus())) {
             status = OrdersStatus.CONFIRM.getStatus(); //구매확정
