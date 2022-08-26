@@ -149,18 +149,7 @@ const status = getParameterByName('status');
         const text = document.getElementById('review-message');
         console.log(reviewRatingValue);
         if(review_hidden.value === ''){
-            if(confirm("리뷰 작성 시 구매확정이 되어 교환 및 환불이 어렵습니다.")){
-                const res = await fetch(`/api/user/orders/updateStatus/${orderID}`,{
-                    method: 'PUT',
-                    headers: {
-                        'header': header,
-                        'X-Requested-With': 'XMLHttpRequest',
-                        "Content-Type": "application/json",
-                        'X-CSRF-Token': token
-                    },
-                    body: JSON.stringify({ordersStatus:status, changeOrdersStatus:"구매확정"})
-                })
-
+            if(confirm("리뷰 작성을 하시겠습니까?")){
                 const reviewWrite = await fetch(`/api/user/review/write`,{
                     method: 'POST',
                     headers: {

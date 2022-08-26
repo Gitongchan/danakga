@@ -5,8 +5,8 @@
     height: 75px;
 }
 
-/*리뷰작성*/
-.order_review{
+/*배송시작*/
+.sales_start{
     border: none;
     background: #0167F3;
     border-radius: 15px;
@@ -15,7 +15,7 @@
 }
 
 /*주문취소*/
-.order_cancel{
+.sales_cancel{
     border: none;
     background: #bcd0c7;
     border-radius: 15px;
@@ -23,16 +23,8 @@
     color:black;
 }
 
-/* 운송장 조회 */
-.order_trackingNum{
-    border: none;
-    background: #0167F3;
-    border-radius: 15px;
-    width: 100%;
-    color:white;
-}
-
-.order_confirm{
+/*배송완료*/
+.sales_success{
     border: none;
     background: #0167F3;
     border-radius: 15px;
@@ -41,7 +33,16 @@
 }
 
 /*교환신청*/
-.order_change{
+.sales_change{
+    border: none;
+    background: #0167F3;
+    border-radius: 15px;
+    width: 100%;
+    color:white;
+}
+
+/*환불완료*/
+.sales_refund{
     border: none;
     background: #bcd0c7;
     border-radius: 15px;
@@ -50,7 +51,7 @@
 }
 
 /*반품신청*/
-.order_return{
+.sales_return{
     border: none;
     background: #bcd0c7;
     border-radius: 15px;
@@ -58,14 +59,6 @@
     color:black;
 }
 
-/*리뷰수정*/
-.order_reviewChange{
-    border: none;
-    background: #0167F3;
-    border-radius: 15px;
-    width: 100%;
-    color:white;
-}
 
 #search-date{
     border: none;
@@ -73,4 +66,3 @@
     color:white;
     padding: 5px 5px;
 }
-

@@ -6,14 +6,14 @@ const pagenation = document.querySelector('.text-center .pagination');
 
 
 (function () {
-    fetch(`/api/user/orders/list?startDate=2022-05-01T00:00&endDate=2322-06-12T22:00&productName=%25&productStock=1&page=0`)
+    fetch(`/api/manager/sales/list?startTime=2022-05-01T00:00&endTime=2322-06-12T22:00&page=0`)
         .then((res) => res.json())
         .then((data) => {
-            renderOrderPagination(data[0].totalPage, data[0].totalElement);
+            renderSalesPagination(data[0].totalPage, data[0].totalElement);
         })
 })();
 
-function renderOrderPagination(currentPage, totalElement) {
+function renderSalesPagination(currentPage, totalElement) {
     pagenation.innerHTML = "";
 
     //총 페이지 수
@@ -90,21 +90,20 @@ function renderOrderPagination(currentPage, totalElement) {
             else if (id === "allprev") selectedPage = 1;
             else if (id === "allnext") selectedPage = total;
             //페이지 그리는 함수
-            else await orderedList(id);
+            else await salesListPaging(id);
 
 
             pagenation.innerHTML = "";
-            renderOrderPagination(selectedPage, totalElement);//페이지네이션 그리는 함수
+            renderSalesPagination(selectedPage, totalElement);//페이지네이션 그리는 함수
         })
     }
-
 }
 
 //페이지 번호 클릭 시 이동하는 곳
-async function orderedList(e) {
+async function salesListPaging(e) {
     if (sDate.value === '' || eDate.value === '') {
-        await myOrdersList(undefined, undefined, e);
+        await salesList(undefined, undefined, e);
     } else {
-        await myOrdersList(sDate.value, eDate.value, e);
+        await salesList(sDate.value, eDate.value, e);
     }
 }
