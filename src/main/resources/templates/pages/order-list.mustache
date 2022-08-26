@@ -2,6 +2,11 @@
 <link rel="stylesheet" href="/css/mypageUser.css">
 <link rel="stylesheet" href="/css/orderList.css">
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 {{>pages/header2}}
 <div class="container">
     <div class="row">
@@ -22,13 +27,16 @@
                     <div class="container">
                         <div class="order_date_wrap d-flex justify-content-between mb-1">
                             <div class="order_date">
-<!--                                <label for="orderdate"></label>-->
-<!--                                <input type="text" name="orderdate" id="orderdate">-->
-<!--                                <button class="order_list_button">조회</button>-->
+                                <input type="text" name="daterange" value="" />
+                                <input type="hidden" value="" id="startDate"/>
+                                <input type="hidden" value="" id="endDate"/>
+                                <button type="button" id="search-date">검색하기</button>
+
+                                <button type="button" id="reset-date">초기화</button>
                             </div>
                             <div>
                                 <select class="form-select" id="order-status" aria-label="select order-status" onchange="changeStatusType()">
-                                    <option value="상품준비중">상품준비중</option>
+                                    <option value="상품준비중">모든상품</option>
 <!--                                    <option value="배송완료">배송완료</option>-->
 <!--                                    <option value="반품신청">반품신청</option>-->
 <!--                                    <option value="교환신청">교환신청</option>-->
@@ -116,7 +124,18 @@
         </section>
     </div>
 </div>
+<script>
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            document.getElementById('startDate').value = start.format('YYYY-MM-DD')+'T00:00';
+            document.getElementById('endDate').value = end.format('YYYY-MM-DD')+'T00:00';
+        });
+    });
+</script>
 {{>pages/footer1}}
+
 <script src="/js/order/orderList.js"></script>
 <script src="/js/order/orderListPagination.js"></script>
 

@@ -5,104 +5,106 @@
 const pagenation = document.querySelector('.text-center .pagination');
 
 
-(function() {
-    fetch(`/api/user/orders/list?startDate=2022-05-01T00:00&endDate=2300-06-14T23:59&productName=%25&productStock=1&page=0`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            renderOrderPagination(data[0].totalPage);
+(function () {
+    fetch(`/api/user/orders/list?startDate=2022-05-01T00:00&endDate=2322-06-12T22:00&productName=%25&productStock=1&page=0`)
+        .then((res) => res.json())
+        .then((data) => {
+            renderOrderPagination(data[0].totalPage, data[0].totalElement);
         })
 })();
 
-function renderOrderPagination(currentPage) {
-    fetch(`/api/user/orders/list?startDate=2022-05-01T00:00&endDate=2300-06-14T23:59&productName=%25&productStock=1&page=0`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            //총 페이지 수
-            const total = Math.ceil(data[0].totalElement/10);
-            //화면에 보여질 페이지 그룹
-            const group = Math.ceil(currentPage/10);
+function renderOrderPagination(currentPage, totalElement) {
+    pagenation.innerHTML = "";
 
-            //마지막 번호
-            let last = group * 10;
-            //만약 마지막 번호가 총 갯수보다 많다면 마지막 번호는 총 개수로
-            if (last > total) last = total;
-            let first = last - (10 - 1) <= 0 ? 1 : last - (10 - 1);
-            let next = last + 1;
-            let prev = first - 1;
+    //총 페이지 수
+    const total = Math.ceil(totalElement / 10);
+    //화면에 보여질 페이지 그룹
+    const group = Math.ceil(currentPage / 10);
 
-            // console.log(`총 페이지 수 : ${total}`);
-            // console.log(`보여질 페이지 그룹 : ${group}`);
-            // console.log(`첫번째 페이지 : ${first}`);
-            // console.log(`마지막 페이지 : ${last}`);
-            // console.log(`다음 페이지 : ${next}`);
-            // console.log(`이전 페이지 : ${prev}`);
+    //마지막 번호
+    let last = group * 10;
+    //만약 마지막 번호가 총 갯수보다 많다면 마지막 번호는 총 개수로
+    if (last > total) last = total;
+    let first = last - (10 - 1) <= 0 ? 1 : last - (10 - 1);
+    let next = last + 1;
+    let prev = first - 1;
 
-            const fragmentPage = document.createDocumentFragment();
-            if (prev > 0) {
-                const allpreli = document.createElement('li');
-                allpreli.classList.add('page-item');
-                allpreli.insertAdjacentHTML("beforeend", `<a class="page-link" id='allprev'>&lt;&lt;</a>`);
+    // console.log(`총 페이지 수 : ${total}`);
+    // console.log(`보여질 페이지 그룹 : ${group}`);
+    // console.log(`첫번째 페이지 : ${first}`);
+    // console.log(`마지막 페이지 : ${last}`);
+    // console.log(`다음 페이지 : ${next}`);
+    // console.log(`이전 페이지 : ${prev}`);
 
-                const preli = document.createElement('li');
-                preli.insertAdjacentHTML("beforeend", `<a class="page-link" id='prev'>&lt;</a>`);
-                preli.classList.add("page-item")
+    const fragmentPage = document.createDocumentFragment();
+    if (prev > 0) {
+        const allpreli = document.createElement('li');
+        allpreli.classList.add('page-item');
+        allpreli.insertAdjacentHTML("beforeend", `<a class="page-link" id='allprev'>&lt;&lt;</a>`);
 
-                fragmentPage.appendChild(allpreli);
-                fragmentPage.appendChild(preli);
-            }
+        const preli = document.createElement('li');
+        preli.insertAdjacentHTML("beforeend", `<a class="page-link" id='prev'>&lt;</a>`);
+        preli.classList.add("page-item")
 
-            for (let i = first; i <= last; i++) {
-                const li = document.createElement("li");
-                li.insertAdjacentHTML("beforeend", `<a class="page-link" id='${i-1}'>${i}</a>`);
-                li.classList.add("page-item")
+        fragmentPage.appendChild(allpreli);
+        fragmentPage.appendChild(preli);
+    }
 
-                fragmentPage.appendChild(li);
-            }
+    for (let i = first; i <= last; i++) {
+        const li = document.createElement("li");
+        li.insertAdjacentHTML("beforeend", `<a class="page-link" id='${i - 1}'>${i}</a>`);
+        li.classList.add("page-item")
 
-            if (last < total) {
-                const allendli = document.createElement('li');
-                allendli.classList.add("page-item")
-                allendli.insertAdjacentHTML("beforeend", `<a class="page-link"  id='allnext'>&gt;&gt;</a>`);
+        fragmentPage.appendChild(li);
+    }
 
-                const endli = document.createElement('li');
-                endli.classList.add("page-item");
-                endli.insertAdjacentHTML("beforeend", `<a  class="page-link" id='next'>&gt;</a>`);
+    if (last < total) {
+        const allendli = document.createElement('li');
+        allendli.classList.add("page-item")
+        allendli.insertAdjacentHTML("beforeend", `<a class="page-link"  id='allnext'>&gt;&gt;</a>`);
 
-                fragmentPage.appendChild(endli);
-                fragmentPage.appendChild(allendli);
-            }
+        const endli = document.createElement('li');
+        endli.classList.add("page-item");
+        endli.insertAdjacentHTML("beforeend", `<a  class="page-link" id='next'>&gt;</a>`);
 
-            pagenation.appendChild(fragmentPage);
-            // 페이지 목록 생성
+        fragmentPage.appendChild(endli);
+        fragmentPage.appendChild(allendli);
+    }
 
-            // document.querySelector(".text-center .pagination li a").classList.remove("active");
-            // document.querySelector(`.text-center .pagination li a#page-${currentPage}`).classList.add("active");
+    pagenation.appendChild(fragmentPage);
+    // 페이지 목록 생성
 
-            const setnum = document.querySelectorAll(".text-center .pagination li a")
-            for (const id of setnum) {
-                id.addEventListener('click', async function(e) {
-                    e.preventDefault();
-                    let item = e.target;
-                    let id = item.id;
-                    let selectedPage = item.innerText;
+    // document.querySelector(".text-center .pagination li a").classList.remove("active");
+    // document.querySelector(`.text-center .pagination li a#page-${currentPage}`).classList.add("active");
 
-                    if (id === "next") selectedPage = next;
-                    else if (id === "prev") selectedPage = prev;
-                    else if (id === "allprev") selectedPage = 1;
-                    else if (id === "allnext") selectedPage = total;
-                    //페이지 그리는 함수
-                    else await orderedList(id);
+    const setnum = document.querySelectorAll(".text-center .pagination li a")
+    for (const id of setnum) {
+        id.addEventListener('click', async function (e) {
+            e.preventDefault();
+            let item = e.target;
+            let id = item.id;
+            let selectedPage = item.innerText;
 
+            if (id === "next") selectedPage = next;
+            else if (id === "prev") selectedPage = prev;
+            else if (id === "allprev") selectedPage = 1;
+            else if (id === "allnext") selectedPage = total;
+            //페이지 그리는 함수
+            else await orderedList(id);
 
 
-                    pagenation.innerHTML = "";
-                    renderOrderPagination(selectedPage);//페이지네이션 그리는 함수
-                })
-            }
+            pagenation.innerHTML = "";
+            renderOrderPagination(selectedPage, totalElement);//페이지네이션 그리는 함수
         })
+    }
+
 }
 
 //페이지 번호 클릭 시 이동하는 곳
-async function orderedList(e){
-    await myOrdersList("","",e);
+async function orderedList(e) {
+    if (sDate.value === '' || eDate.value === '') {
+        await myOrdersList(undefined, undefined, e);
+    } else {
+        await myOrdersList(sDate.value, eDate.value, e);
+    }
 }
