@@ -21,10 +21,13 @@ import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,6 +47,7 @@ public class UserServiceImpl implements UserService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
     private final ReviewRepository reviewRepository;
+    private final JavaMailSender javaMailSender;
 
 
     @Override
@@ -310,8 +314,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public String passwordFind(UserInfoDto userInfoDto) {
         if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
-            return findUserInfo.getPassword();
+
+                // 수신 대상을 담을 ArrayList 생성
+                String toUser = userInfoDto.getEmail();
+
+                // SimpleMailMessage (단순 텍스트 구성 메일 메시지 생성할 때 이용)
+                SimpleMailMessage simpleMessage = new SimpleMailMessage();
+
+                // 수신자 설정
+                simpleMessage.setTo(toUser);
+
+                // 메일 제목
+                simpleMessage.setSubject("임시 비밀번호");
+
+                // 메일 내용
+                simpleMessage.setText("7777");
+
+                // 메일 발송
+                javaMailSender.send(simpleMessage);
+
         }
         return null;
     }
