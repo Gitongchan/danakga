@@ -3,6 +3,8 @@ package com.danakga.webservice.user.repository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
@@ -17,5 +19,10 @@ public interface UserRepository extends JpaRepository<UserInfo,Long> {
 
     Optional<UserInfo> findByEmailAndPhone(String email, String phone);
 
-    Optional<UserInfo> findByUseridAndEmailAndPhone (String userid, String email, String phone);
+    Optional<UserInfo> findByUseridAndEmailAndPhone(String userid, String email, String phone);
+
+    @Modifying
+    @Query("update UserInfo u set u.password = :password where u.id = :id")
+    void updateUserInfoPassword(String password,Long id);
+
 }
