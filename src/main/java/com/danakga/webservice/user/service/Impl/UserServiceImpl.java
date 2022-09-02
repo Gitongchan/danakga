@@ -302,6 +302,7 @@ public class UserServiceImpl implements UserService {
             return restoreUserInfo.getId();
     }
 
+    //id 찾기
     @Override
     public String useridFind(UserInfoDto userInfoDto) {
         if(userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
@@ -311,9 +312,12 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    //pw 찾기
     @Override
-    public String passwordFind(UserInfoDto userInfoDto) {
-        if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
+    public Long passwordFind(UserInfoDto userInfoDto) {
+        userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("가입된 회원 정보가 없습니다.")
+        );
 
                 // 수신 대상을 담을 ArrayList 생성
                 String toUser = userInfoDto.getEmail();
@@ -333,8 +337,7 @@ public class UserServiceImpl implements UserService {
                 // 메일 발송
                 javaMailSender.send(simpleMessage);
 
-        }
-        return null;
+                return 1L;
     }
 
     /**               작성한 게시글, 댓글, 후기 조회 작업 (진모)               **/
