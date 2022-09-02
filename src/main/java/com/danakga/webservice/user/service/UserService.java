@@ -39,7 +39,7 @@ public interface UserService extends UserDetailsService {
     String useridFind(UserInfoDto userInfoDto);
 
     //페스워드 찾기
-    String passwordFind(UserInfoDto userInfoDto);
+    Long passwordFind(UserInfoDto userInfoDto);
 
     //마이페이지 게시글 목록 조회
     ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page);

@@ -21,16 +21,20 @@ import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -44,6 +48,7 @@ public class UserServiceImpl implements UserService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
     private final ReviewRepository reviewRepository;
+    private final JavaMailSender javaMailSender;
 
 
     @Override
@@ -298,6 +303,7 @@ public class UserServiceImpl implements UserService {
             return restoreUserInfo.getId();
     }
 
+    //id 찾기
     @Override
     public String useridFind(UserInfoDto userInfoDto) {
         if(userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
@@ -307,13 +313,57 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    //pw 찾기
     @Override
-    public String passwordFind(UserInfoDto userInfoDto) {
-        if(userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).isPresent()){
-            UserInfo findUserInfo = userRepository.findByEmailAndPhone(userInfoDto.getEmail(),userInfoDto.getPhone()).get();
-            return findUserInfo.getPassword();
+    public Long passwordFind(UserInfoDto userInfoDto) {
+        UserInfo userInfo = userRepository.findByUseridAndEmailAndPhone(userInfoDto.getUserid(),userInfoDto.getEmail(),userInfoDto.getPhone()).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("가입된 회원 정보가 없습니다.")
+        );
+
+        /* 임시 비밀번호 생성 , 업데이트*/
+        char[] charSet = new char[] {
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                '!', '@', '#', '$', '%', '^', '&' };
+
+        StringBuffer sb = new StringBuffer();
+        SecureRandom sr = new SecureRandom();
+        sr.setSeed(new Date().getTime());
+
+        int idx = 0;
+        int len = charSet.length;
+        for (int i=0; i<8; i++) {
+            idx = sr.nextInt(len);    // 강력한 난수를 발생시키기 위해 SecureRandom을 사용
+            sb.append(charSet[idx]);
         }
-        return null;
+
+        String temporaryPW = sb.toString();
+
+        /* 임시 비밀번호 암호화후 업데이트 */
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        userRepository.updateUserInfoPassword(bCryptPasswordEncoder.encode(temporaryPW),userInfo.getId());
+
+
+        /* 메일 발송 */
+
+        // 수신 대상을 담을 ArrayList 생성
+        String toUser = userInfoDto.getEmail();
+        // SimpleMailMessage (단순 텍스트 구성 메일 메시지 생성할 때 이용)
+        SimpleMailMessage simpleMessage = new SimpleMailMessage();
+        // 수신자 설정
+        simpleMessage.setTo(toUser);
+        // 메일 제목
+        simpleMessage.setSubject("다낚아 임시 비밀번호 안내.");
+        // 메일 내용
+        simpleMessage.setText("안녕하세요 다낚아입니다.\n" +
+                "임시 비밀번호는 [" +temporaryPW +"]" + "입니다.\n" +
+                "로그인 이후 비밀번호를 변경해주세요.");
+
+        // 메일 발송
+        javaMailSender.send(simpleMessage);
+
+        return 1L;
     }
 
     /**               작성한 게시글, 댓글, 후기 조회 작업 (진모)               **/
