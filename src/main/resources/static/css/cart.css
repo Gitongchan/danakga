@@ -18,6 +18,18 @@
     padding: 5px;
 }
 
+#cart_select_delete{
+    background: #0167F3;
+    color: white;
+    padding: 5px;
+}
+
+#cart_all_delete{
+    background: #0167F3;
+    color: white;
+    padding: 5px;
+}
+
 #folder_manager{
     background: black;
     color: white;

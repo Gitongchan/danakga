@@ -33,19 +33,19 @@ public class BoardPermitAllController {
     }
 
     //개별 게시글 조회
-    @GetMapping("/post/{id}")
-    public ResBoardPostDto getPost(@PathVariable("id") Long id,
+    @GetMapping("/post/{bd_id}")
+    public ResBoardPostDto getPost(@PathVariable("bd_id") Long bd_id,
                                    HttpServletRequest request, HttpServletResponse response) {
 
-        return boardService.getPost(id, request, response);
+        return boardService.getPost(bd_id, request, response);
     }
 
     //댓글 조회
-    @GetMapping("/post/comments/{id}")
-    public ResCommentListDto commentsList(@PathVariable("id") Long id,
+    @GetMapping("/post/comments/{cm_id}")
+    public ResCommentListDto commentsList(@PathVariable("cm_id") Long cm_id,
                                          Pageable pageable, int page) {
 
-        return commentService.commentsList(id, pageable, page);
+        return commentService.commentsList(cm_id, pageable, page);
     }
 
     //개별 댓글 조회

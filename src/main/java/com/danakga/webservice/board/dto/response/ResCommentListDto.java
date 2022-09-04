@@ -15,5 +15,5 @@ import java.util.Map;
 public class ResCommentListDto {
 
     //댓글 정보
-    private List<Map<String, Object>> comments;
+    private List<Map<String, Object>> commentList;
 }

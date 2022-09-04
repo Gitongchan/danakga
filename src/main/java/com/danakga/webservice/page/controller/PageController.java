@@ -54,9 +54,12 @@ public class PageController {
     public String myPageWishList(){
         return "pages/wish-list";
     }
+
+    @GetMapping("/user/orderlist")
+    public String myPageOrderList() { return "pages/order-list"; }
     @GetMapping("/manager/myboard")
     public String mypageManagerBoard(){
-        return "pages/mypageUserBoard";
+        return "pages/mypageManagerBoard";
     }
 
     @GetMapping("/manager/mypage")
@@ -80,6 +83,10 @@ public class PageController {
         return "pages/myProductList";
     }
 
+    @GetMapping("/manager/orderList")
+    public String managerOrderList(){
+        return "pages/managerOrder-list";
+    }
     @GetMapping("/product/info")
     public String productInfo(){
         return "pages/product-details";
@@ -121,6 +128,8 @@ public class PageController {
     @GetMapping("/CompanySignout")
     public String CompanySignout(){return "pages/CompanySignout";}
 
+    @GetMapping("/user/myreview")
+    public String myReview() { return "pages/my-reviewList";}
     @GetMapping("/addproduct")
     public String addProduct(){
         return "pages/addProduct";

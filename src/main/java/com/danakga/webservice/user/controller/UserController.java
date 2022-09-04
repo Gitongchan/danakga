@@ -5,6 +5,7 @@ import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.service.CompanyService;
+import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.user.dto.request.PasswordDto;
 import com.danakga.webservice.user.dto.request.UpdateUserInfoDto;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
@@ -111,6 +112,7 @@ public class UserController{
 
     /**               작성한 게시글, 댓글 조회 작업 (진모)               **/
 
+
     //마이페이지 게시글 목록 조회
     @GetMapping("/myPostList/{type}")
     public ResBoardListDto myPostList(@LoginUser UserInfo userInfo,
@@ -139,5 +141,14 @@ public class UserController{
                                             int page) {
 
         return userService.myCommentsList(userInfo, boardType, pageable, page);
+    }
+    
+    //마이페이지 후기 목록 조회
+    @GetMapping("/myReviewList")
+    public ResReviewListDto myReviewList(@LoginUser UserInfo userInfo,
+                                         Pageable pageable,
+                                         int page) {
+
+        return userService.myReviewList(userInfo, pageable, page);
     }
 }
