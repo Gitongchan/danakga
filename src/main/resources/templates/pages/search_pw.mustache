@@ -1,4 +1,5 @@
 {{>pages/header1}}
+<
 {{>pages/header2}}
 
     <!-- Start Breadcrumbs -->
@@ -33,15 +34,15 @@
                                 <input class="form-control" type="text" id="reg-id" required>
                             </div>
                             <div class="form-group input-group">
-                                <label for="reg-fn">이메일</label>
+                                <label for="reg-fn">이메일 <span class="sub">*이메일로 임시비밀번호가 전송됩니다.</span></label>
                                 <input class="form-control" type="text" id="reg-email" required>
                             </div>
                             <div class="form-group input-group">
                                 <label for="reg-fn">전화번호</label>
-                                <input class="form-control" type="text" id="reg-phone" required>
+                                <input class="form-control" type="text" id="reg-phone" maxlength="11" required>
                             </div>
                             <div class="button">
-                                <button class="btn" id="search_id">찾기</button>
+                                <button class="btn" id="search_pw">찾기</button>
                             </div>
                         </div>
                     </div>
@@ -52,4 +53,5 @@
     <!-- End Account Login Area -->
 
     {{>pages/footer1}}
+    <script src="/js/user/pw_search.js"></script>
     {{>pages/footer2}}

@@ -48,7 +48,7 @@ public class PermitAllController {
     }
 
     //id찾기
-    @GetMapping("/userid_find")
+    @PostMapping("/userid_find")
     public ResUserIdDto findUserid(@RequestBody UserInfoDto userInfoDto){
         String result = userService.useridFind(userInfoDto);
         System.out.println(result);

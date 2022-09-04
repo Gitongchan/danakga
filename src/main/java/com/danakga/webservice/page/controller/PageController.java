@@ -20,6 +20,16 @@ public class PageController {
         return "pages/userRegister";
     }
 
+    @GetMapping("/findId")
+    public String findId(){
+        return "pages/find-id";
+    }
+
+    @GetMapping("/findPw")
+    public String findPW(){
+        return "pages/find-pw";
+    }
+
     @GetMapping("/id_pw_search")
     public String id_pw_Search(){
         return "pages/search-id-pw";

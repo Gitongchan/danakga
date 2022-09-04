@@ -7,13 +7,13 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="breadcrumbs-content">
-                        <h1 class="page-title">계정찾기</h1>
+                        <h1 class="page-title">찾기결과</h1>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-12">
                     <ul class="breadcrumb-nav">
                         <li><a href="/index"><i class="lni lni-home"></i> 홈</a></li>
-                        <li>아이디 찾기</li>
+                        <li>찾기결과</li>
                     </ul>
                 </div>
             </div>
@@ -27,18 +27,13 @@
             <div class="row">
                 <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1 col-12">
                     <div class="card login-form">
-                        <div class="card-body">
-                            <div class="form-group input-group">
-                                <label for="reg-fn">이메일</label>
-                                <input class="form-control" type="text" name="username" id="search-email" required>
+                    <div class="card-body">
+                            <div>
+                                <h1 class="text-center mb-2">찾기 결과</h1>
+                                <h4>이메일로 발송된 임시비밀번호로 로그인을 해주세요!</h4>
+                                <p> 로그인 후 비밀번호를 꼭 변경해주세요!</p>
                             </div>
-                            <div class="form-group input-group">
-                                <label for="reg-fn">전화번호</label>
-                                <input class="form-control" type="text" name="password" id="search-phone" required>
-                            </div>
-                            <div class="button">
-                                <button class="btn" id="search_id">찾기</button>
-                            </div>
+                            <p class="outer-link">로그인하러가시겠습니까?<a href="/login">로그인</a></p>
                         </div>
                     </div>
                 </div>
@@ -48,5 +43,4 @@
     <!-- End Account Login Area -->
 
     {{>pages/footer1}}
-    <script src="/js/user/id_search.js"></script>
     {{>pages/footer2}}
