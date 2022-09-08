@@ -405,7 +405,7 @@ public class UserServiceImpl implements UserService {
         });
 
         //dto에 List<Map>값 set
-        resBoardListDto.setSearchList(postList);
+        resBoardListDto.setLists(postList);
 
         return resBoardListDto;
     }
@@ -449,7 +449,7 @@ public class UserServiceImpl implements UserService {
         });
 
         //dto에 List<Map>값 set
-        resBoardListDto.setSearchList(data);
+        resBoardListDto.setLists(data);
 
         return resBoardListDto;
     }
@@ -468,9 +468,6 @@ public class UserServiceImpl implements UserService {
         //페이징 db 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
-
-        //return해줄 dto 객체 생성
-        ResCommentListDto resCommentListDto = new ResCommentListDto();
 
         //dto에 담아줄 List<Map> 생성
         List<Map<String, Object>> data = new ArrayList<>();
@@ -493,10 +490,7 @@ public class UserServiceImpl implements UserService {
             data.add(mapComments);
         });
 
-        //dto에 값 set
-        resCommentListDto.setCommentList(data);
-
-        return resCommentListDto;
+        return new ResCommentListDto(data);
     }
 
     //마이페이지 후기 목록 조회
