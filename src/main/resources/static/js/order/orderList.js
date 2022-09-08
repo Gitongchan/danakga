@@ -68,8 +68,8 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
             // 후기 있는지 없는지 여부 체크
             const checkRes = await fetch(`/api/user/review/check/${data[i].ordersId}`);
             const checkData = await checkRes.json();
-            //후기가 없다면 0, 있으면 1
-            if(checkData.id === 0){
+            //후기가 없다면 0, 있으면 -1
+            if(checkData.id === 0 ){
                 orderList.innerHTML += `
                                 <div class="row align-items-center mb-10">
                                     <div class="col-lg-1 col-md-1 col-12">
@@ -156,7 +156,7 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
                 <button class="order_change" data-id="${data[i].ordersId}" data-value="${data[i].orderStatus}">교환신청</button>
                 <button class="order_return" data-id="${data[i].ordersId}" data-value="${data[i].orderStatus}">반품신청</button>
                 `;
-            }else if (data[i].orderStatus === "구매확정" && checkData === 0) {
+            }else if (data[i].orderStatus === "구매확정" && checkData.id === 0) {
                 document.querySelector(`.status_wrap${data[i].ordersId}`).innerHTML+= `
                 <button class="order_review" data-id=${data[i].productId} data-value=${data[i].ordersId}>리뷰작성</button>
                 `;
