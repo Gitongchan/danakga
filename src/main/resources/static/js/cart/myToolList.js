@@ -61,7 +61,7 @@ async function myToolList() {
                         go_pay.push({
                             productId: data[i].myToolProductId,
                             ordersQuantity: data[i].myToolQuantity,
-                            ordersPrice: (+data[i].myToolProductPrice) + data[i].myToolQuantity
+                            ordersPrice: (+data[i].myToolProductPrice) * data[i].myToolQuantity
                         })
                         all_price += (+data[i].myToolProductPrice) * data[i].myToolQuantity;
                         cart_list.innerHTML += `
@@ -203,7 +203,7 @@ async function myCartList() {
             go_pay.push({
                 productId: cartData[i].productId,
                 ordersQuantity: cartData[i].cartAmount,
-                ordersPrice: (+cartData[i].productPrice) + cartData[i].cartAmount
+                ordersPrice: (+cartData[i].productPrice) * cartData[i].cartAmount
             })
             all_price += (+cartData[i].productPrice) * cartData[i].cartAmount;
             cart_list.innerHTML += `
