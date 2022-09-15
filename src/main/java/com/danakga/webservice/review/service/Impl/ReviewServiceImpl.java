@@ -163,11 +163,9 @@ public class ReviewServiceImpl implements ReviewService {
         Orders checkOrders = ordersRepository.findById(o_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
 
-        /* 주문 상태 값 가져옴 */
-        String orderStatus = checkOrders.getOrdersStatus();
-
         /* 구매한 주문번호로 후기를 작성하지 않았거나, 주문 상태가 "구매확정"인 경우에만 후기 작성 가능 */
-        if (reviewRepository.findByOrders(checkOrders).isEmpty() && orderStatus.equals(OrdersStatus.CONFIRM.getStatus())) {
+        if (reviewRepository.findByOrders(checkOrders).isEmpty() &&
+                checkOrders.getOrdersStatus().equals(OrdersStatus.CONFIRM.getStatus())) {
 
             return new ResResultDto(0L, "후기를 작성할 수 있습니다.");
         }

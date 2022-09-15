@@ -154,7 +154,7 @@ public class BoardServiceImpl implements BoardService {
         //oldCookie가 쿠키를 가지고 있으면 oldCookie의 value값에 id가 없다면 조회수 증가
         //그리고 해당 게시글 id에 대한 쿠키를 다시 담아서 보냄
         if (oldCookie != null) {
-            if (!oldCookie.getValue().contains("[" + bd_id.toString() + "]")) {
+            if (!oldCookie.getValue().contains("[" + bd_id + "]")) {
                 boardRepository.updateView(bd_id);
                 oldCookie.setValue(oldCookie.getValue() + "[" + bd_id + "]");
                 oldCookie.setPath("/");
@@ -212,7 +212,7 @@ public class BoardServiceImpl implements BoardService {
         //파일이 있다면 게시글 작성 후 파일 업로드
         if (CollectionUtils.isEmpty(files)) {
             Board board = boardRepository.save(
-                    board = Board.builder()
+                    Board.builder()
                             .bdType(reqBoardDto.getBdType())
                             .bdWriter(checkUserInfo.getUserid())
                             .bdTitle(reqBoardDto.getBdTitle())
@@ -229,7 +229,7 @@ public class BoardServiceImpl implements BoardService {
                 //List에 값이 있으면 saveFileUpload 실행
                 if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
                     Board board = boardRepository.save(
-                            board = Board.builder()
+                            Board.builder()
                                     .bdType(reqBoardDto.getBdType())
                                     .bdWriter(checkUserInfo.getUserid())
                                     .bdTitle(reqBoardDto.getBdTitle())
