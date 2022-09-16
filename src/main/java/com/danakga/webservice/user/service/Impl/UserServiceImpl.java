@@ -380,9 +380,6 @@ public class UserServiceImpl implements UserService {
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.findAllByUserInfoAndBdType(recentUserInfo, boardType, pageable);
 
-        //return할 dto 객체 생성
-        ResBoardListDto resBoardListDto = new ResBoardListDto();
-
         //dto에 담아줄 List<Map> 생성
         List<Map<String, Object>> postList = new ArrayList<>();
 
@@ -404,10 +401,7 @@ public class UserServiceImpl implements UserService {
             postList.add(mapPost);
         });
 
-        //dto에 List<Map>값 set
-        resBoardListDto.setSearchList(postList);
-
-        return resBoardListDto;
+        return new ResBoardListDto(postList);
     }
 
     //마이페이지 댓글의 게시글 조회
@@ -425,11 +419,8 @@ public class UserServiceImpl implements UserService {
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted, pageable);
 
-        //return해줄 dto 객체 생성
-        ResBoardListDto resBoardListDto = new ResBoardListDto();
-
         //dto에 담아줄 List<Map> 생성
-        List<Map<String, Object>> data = new ArrayList<>();
+        List<Map<String, Object>> postList = new ArrayList<>();
 
         //List로 반환된 db 반복문으로 Map으로 get
         boards.forEach(entity -> {
@@ -445,13 +436,10 @@ public class UserServiceImpl implements UserService {
             mapComments.put("totalPage", boards.getTotalPages());
 
             //dto에 담아줄 List<Map>에 담기
-            data.add(mapComments);
+            postList.add(mapComments);
         });
 
-        //dto에 List<Map>값 set
-        resBoardListDto.setSearchList(data);
-
-        return resBoardListDto;
+        return new ResBoardListDto(postList);
     }
 
     //마이페이지 댓글 조회
@@ -469,11 +457,8 @@ public class UserServiceImpl implements UserService {
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
 
-        //return해줄 dto 객체 생성
-        ResCommentListDto resCommentListDto = new ResCommentListDto();
-
         //dto에 담아줄 List<Map> 생성
-        List<Map<String, Object>> data = new ArrayList<>();
+        List<Map<String, Object>> commentList = new ArrayList<>();
 
         //List로 반환된 db 반복문으로 Map으로 get
         comments.forEach(entity -> {
@@ -490,13 +475,10 @@ public class UserServiceImpl implements UserService {
             mapComments.put("totalPage", comments.getTotalPages());
 
             //dto에 담아줄 List<Map>에 담기
-            data.add(mapComments);
+            commentList.add(mapComments);
         });
 
-        //dto에 값 set
-        resCommentListDto.setCommentList(data);
-
-        return resCommentListDto;
+        return new ResCommentListDto(commentList);
     }
 
     //마이페이지 후기 목록 조회

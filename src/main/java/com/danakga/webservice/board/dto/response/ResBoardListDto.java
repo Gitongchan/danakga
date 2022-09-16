@@ -15,6 +15,6 @@ import java.util.Map;
 public class ResBoardListDto {
 
     //게시글 목록
-    private List<Map<String,Object>> searchList;
+    private List<Map<String,Object>> lists;
 
 }

@@ -15,6 +15,6 @@ import java.util.Map;
 public class ResBoardPostDto {
     
     //게시글 정보
-    private List<Map<String, Object>> postList;
+    private List<Map<String, Object>> post;
 
 }
