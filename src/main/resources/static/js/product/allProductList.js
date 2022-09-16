@@ -67,9 +67,6 @@ const manyView = document.getElementById('many-view');
                         <div class="single-product">
                             <div class="product-image">
                                 <img src=${item.productPhoto} alt="#">
-                                    <div class="button">
-                                        <a href="#" class="btn"><i class="lni lni-cart"></i> 장바구니</a>
-                                    </div>
                             </div>
                             <div class="product-info">
                                 <span class="category">${item.productType}</span>
@@ -161,4 +158,11 @@ const manyView = document.getElementById('many-view');
 
         })
 
-
+// 이미지에 장바구니 버튼
+// `
+// <div class="product-image">
+//                                 <img src=${item.productPhoto} alt="#">
+//                                     <div class="button">
+//                                         <a href="#" class="btn"><i class="lni lni-cart"></i> 장바구니</a>
+//                                     </div>
+//                             </div>`

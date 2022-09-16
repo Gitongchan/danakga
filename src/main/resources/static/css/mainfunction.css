@@ -323,6 +323,12 @@ article.main_right_content > div > div{
     color: black;
     margin-bottom: 10px;
 }
+
+#searchBtn{
+    border:none;
+    background: #0167F3;
+    color: #FFF
+}
 /*
     Screen Size
     xs <576px
