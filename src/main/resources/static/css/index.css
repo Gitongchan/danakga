@@ -23,6 +23,24 @@
 .sub{
     font-size: 10px;
 }
+
+/*로그인 버튼*/
+#wishlist > button{
+    border: 1px solid #bcd0c7;
+    background: none;
+    border-radius: 10px;
+    padding: 5px 5px;
+}
+
+/*회원가입 버튼*/
+#cart-items > button{
+    border: 1px solid #bcd0c7;
+    background: #0167F3;
+    border-radius: 10px;
+    padding: 5px 5px;
+    color: #fff;
+}
+
 /*.single-banner img{*/
 /*    width: 100%;*/
 /*}*/

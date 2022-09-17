@@ -13,25 +13,31 @@
 }
 
 #tool_select_delete{
+    border: none;
     background: #0167F3;
     color: white;
-    padding: 5px;
+    padding: 8px;
+    margin-right: 3px;
 }
 
 #cart_select_delete{
+    border: none;
     background: #0167F3;
     color: white;
-    padding: 5px;
+    padding: 8px;
 }
 
 #cart_all_delete{
+    border: none;
     background: #0167F3;
     color: white;
-    padding: 5px;
+    padding: 8px;
+    margin-right: 3px;
 }
 
 #folder_manager{
+    border: none;
     background: black;
     color: white;
-    padding: 5px;
+    padding: 8px;
 }
