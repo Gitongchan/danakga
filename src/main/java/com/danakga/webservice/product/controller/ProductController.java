@@ -91,9 +91,15 @@ public class ProductController {
                                                  @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
                                                  @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
                                                  @RequestParam("productName") String productName,
-                                                 @RequestParam("productStock") Integer productStock,int page) {
+                                                 @RequestParam("productStock") Integer productStock,
+                                                 @RequestParam("productState") String productState,
+                                                 @RequestParam("productType") String productType,
+                                                 @RequestParam("productSubType")String productSubType,
+                                                 @RequestParam("productBrand")String productBrand,
+                                                 @RequestParam("productPrice") Integer productPrice,
+                                                 @RequestParam int page,@RequestParam String sortBy,@RequestParam String sortMethod) {
 
-        return productService.myProductList(userInfo,startDate,endDate,pageable,productName,productStock,page);
+        return productService.myProductList(userInfo,startDate,endDate,pageable,productName,productStock,page,sortBy,sortMethod);
     }
 
 

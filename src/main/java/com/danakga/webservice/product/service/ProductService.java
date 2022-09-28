@@ -28,11 +28,10 @@ public interface ProductService {
                                         int page,String sort,String order);
 
     //내가 등록한 상품 목록 조회
-    List<ResProductListDto> myProductList(@LoginUser UserInfo userInfo,
-                                          LocalDateTime startDate, LocalDateTime endDate,
-                                          Pageable pageable,
-                                          String productName,
-                                          Integer productStock, int page);
+    List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate,
+                                          LocalDateTime endDate, Pageable pageable,
+                                          String productName,Integer productStock,
+                                          int page,String sortBy,String sortMethod);
 
     //개별 상품 조회
     ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response);
