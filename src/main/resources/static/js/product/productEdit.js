@@ -7,13 +7,6 @@ const pStock = document.getElementById('productStock');
 const thumbPhoto = document.querySelector('.main-img');
 const pImgs = document.querySelector('.images');
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
 const urlID = getParameterByName('productId');
 
 (async ()=>{

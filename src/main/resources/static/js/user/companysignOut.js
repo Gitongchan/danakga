@@ -2,8 +2,6 @@ const btn = document.getElementById("signout_btn");
 const pw = document.getElementById("signout_pw");
 
 btn.addEventListener('click',function() {
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
     if(pw.value!==null && pw.value.length >= 8){
         if(confirm('정말로 사업자를 탈퇴하시겠습니까?')){
             fetch(`/api/manager/deleted`, {

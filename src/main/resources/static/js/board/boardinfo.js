@@ -13,12 +13,6 @@ deleteBtn.innerText = "삭제하기";
 btnWrap.appendChild(editBtn);
 btnWrap.appendChild(deleteBtn);
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 const boardID = getParameterByName('boardid').split('?')[0];
 const urlWriter = getParameterByName('bdwriter');
 const boardType = getParameterByName('bdType');

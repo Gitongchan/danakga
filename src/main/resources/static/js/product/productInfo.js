@@ -31,14 +31,6 @@ const reviewWrap = document.getElementById('reviews_list_wrap');
 //리뷰 수정가능 여부 hidden
 const review_hidden = document.getElementById('review_edit');
 
-const regex= /[^0-9]/gi;
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 const urlID = getParameterByName('productId');
 const orderID = getParameterByName('orderId');
 const status = getParameterByName('status');
