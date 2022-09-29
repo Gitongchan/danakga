@@ -92,13 +92,13 @@
                     <div class="col-sm-12 mb-10">
                         <div class="form-group input-group">
                             <label for="productPrice" class="m-auto">가격</label>
-                            <input class="form-control" type="text" id="productPrice">
+                            <input class="form-control" type="number" id="productPrice">
                         </div>
                     </div>
                     <div class="col-sm-12 mb-10">
                         <div class="form-group input-group">
                             <label for="productStock" class="m-auto">재고</label>
-                            <input class="form-control" type="text" id="productStock">
+                            <input class="form-control" type="number" id="productStock">
                         </div>
                     </div>
 
@@ -231,6 +231,27 @@
 
         const price = document.getElementById('productPrice').value;
         const stock = document.getElementById('productStock').value;
+        const productName = document.getElementById('productName').value
+
+        if(productName.trim().length === 0 ){
+            alert("상품명을 적어주세요!")
+            return
+        }
+        if(thumb.files.length === 0 ){
+            alert('썸네일 사진이 필요합니다!')
+            return
+        }
+        if(price <= 0){
+            alert("가격이 올바르지 않습니다!")
+            return
+        }
+        if(stock <= 0){
+            alert("상품 수량이 올바르지 않습니다!")
+            return
+        }
+
+
+
         const productData = {
             productCompanyId: {
                 companyId: document.getElementById('checkCompanyId').value
@@ -238,17 +259,13 @@
             productType: mainType.options[mainType.selectedIndex].value,
             productSubType: subType.options[subType.selectedIndex].value,
             productBrand: brandType.options[brandType.selectedIndex].value,
-            productName: document.getElementById('productName').value,
+            productName: productName,
             productContent: editorData,
-            productPrice: price.trim().length === 0 ? "0" : price,
-            productStock: stock.trim().length === 0 ? "0" : stock,
+            productPrice: price,
+            productStock: stock,
             productViewCount: 0,
             productOrderCount: 0
         }
-
-        console.log(thumb);
-        console.log(input);
-        console.log(productData);
 
         for (let i = 0; i <= input.files.length; i++) {
             formData.append('images', input.files[i]);
