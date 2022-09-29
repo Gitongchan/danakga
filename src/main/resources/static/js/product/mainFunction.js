@@ -1,12 +1,3 @@
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
-
 const searchBtn = document.getElementById('searchBtn');
 const searchText = document.getElementById('searchText');
 searchBtn.addEventListener('click', async (event) => {

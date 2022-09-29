@@ -31,11 +31,8 @@ post_btn.addEventListener('click',sample4_execDaumPostcode);
 
 // 변경버튼 누르면 실행
 const changeOK = document.getElementById('changeOK');
-changeOK.addEventListener('click',function(e) {
+changeOK.addEventListener('click',function(event) {
     event.preventDefault();
-    // api에 요청을 보낼 때 header에 _csrf토큰값을 가져와서 넘김
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
 
     const userData = {
         companyName:companyName.value,

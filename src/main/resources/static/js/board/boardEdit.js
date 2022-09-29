@@ -7,12 +7,6 @@ const delFiles = {
     deletedFiles  : []
 };
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 const urlParams = getParameterByName('boardid').split('?')[0];
 const urlWriter = getParameterByName('bdwriter');
 
@@ -50,12 +44,3 @@ fetch(`/api/board/post/${urlParams}`)
         userid.appendChild(span);
 
     });
-
-
-// {
-//     deletefiles : [
-//         {
-//             "1": "value",
-//         }
-//     ]
-// }

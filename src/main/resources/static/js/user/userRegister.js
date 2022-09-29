@@ -279,7 +279,7 @@ companyTap.addEventListener('click',()=>{
 });
 
 // 사업자 버튼 눌렸을 때 버튼 동작하는 함수
-const companyBtn = function() {
+const companyBtn = function(event) {
     event.preventDefault();
 
     const postData = {
@@ -320,7 +320,7 @@ const companyBtn = function() {
 }
 
 //일반 회원일 때
-uRegisterOK.addEventListener('click',  function () {
+uRegisterOK.addEventListener('click',  function (event) {
     event.preventDefault();
 
     const postData = {

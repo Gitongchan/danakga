@@ -20,14 +20,14 @@ async function myProductList(){
                 tr.classList.add('product-item');
                 tr.innerHTML = `
                         <td class="p-id">${item.productId}</td>
-                        <td class="pname">${item.productName}</td>
+                        <td class="pname"><a href="/product/info?productId=${item.productId}">${item.productName}</a></td>
                         <td class="main-type">${item.productType}</td>
                         <td class="sub-type">${item.productSubType}</td>
                         <td class="price">${item.productPrice}</td>
                         <td class="stock">${item.productStock}</td>
                         <td class="imageYN">${item.productPhoto===""?"N":"Y"}</td>
                         <td><button class="info-delete" id="${item.productId}">삭제</button></td>
-                        <td class="info" id="${item.productId}"><a href="/product/info?productId=${item.productId}">상세정보</a></td>
+                        <td class="info" id="${item.productId}"><a href="/product/edit?productId=${item.productId}">수정하기</a></td>
                 `
 
                 list.appendChild(tr);
