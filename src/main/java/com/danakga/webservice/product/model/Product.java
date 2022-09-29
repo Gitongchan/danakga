@@ -53,7 +53,7 @@ public class Product {
 
     //가격
     @Column(name = "pd_price")
-    private String productPrice;
+    private Integer productPrice;
 
     //재고
     @Column(name = "pd_stock")
@@ -75,7 +75,7 @@ public class Product {
     public Product(Long productId, CompanyInfo productCompanyId, String productType,
                    String productSubType, String productBrand,
                    String productName, String productPhoto, String productContent,
-                   String productPrice, Integer productStock, LocalDateTime productUploadDate,
+                   Integer productPrice, Integer productStock, LocalDateTime productUploadDate,
                    Integer productViewCount, Integer productOrderCount) {
         this.productId = productId;
         this.productCompanyId = productCompanyId;

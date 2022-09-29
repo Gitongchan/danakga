@@ -4,6 +4,7 @@ import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.company.dto.request.PasswordDto;
 import com.danakga.webservice.company.dto.response.ResCompanyInfoDto;
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
+import com.danakga.webservice.company.dto.response.ResSalesHistoryDto;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
@@ -45,6 +46,12 @@ public class CompanyController {
     @GetMapping("")
     public ResCompanyInfoDto companyInfoCheck(@LoginUser UserInfo userInfo){
         return new ResCompanyInfoDto(companyService.companyInfoCheck(userInfo));
+    }
+
+    //판매 내역 조회
+    @GetMapping("/sales-history")
+    public ResSalesHistoryDto salesHistory(@LoginUser UserInfo userInfo){
+        return null;
     }
 
 

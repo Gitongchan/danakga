@@ -33,7 +33,7 @@ public class ResMyToolDetailDto {
     private String myToolProductName;
 
     //가격
-    private String myToolProductPrice;
+    private Integer myToolProductPrice;
 
     //수량
     private int myToolQuantity;

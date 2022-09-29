@@ -9,6 +9,7 @@ import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,11 +29,12 @@ public interface ProductService {
                                         int page,String sort,String order);
 
     //내가 등록한 상품 목록 조회
-    List<ResProductListDto> myProductList(@LoginUser UserInfo userInfo,
-                                          LocalDateTime startDate, LocalDateTime endDate,
-                                          Pageable pageable,
-                                          String productName,
-                                          Integer productStock, int page);
+    List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate,
+                                          LocalDateTime endDate, Pageable pageable,
+                                          String productName, Integer productStock,
+                                          String productType, String productSubType,
+                                          String productBrand, Integer startPrice, Integer endPrice,
+                                          int page,String sortBy,String sortMethod);
 
     //개별 상품 조회
     ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response);

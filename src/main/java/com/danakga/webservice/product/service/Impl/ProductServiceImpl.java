@@ -131,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
 
         if(order.equals("asc"))
             pageable = PageRequest.of(page, 10, Sort.by(sort).ascending());
-        else if(order.equals("des"))
+        else if(order.equals("desc"))
             pageable = PageRequest.of(page, 10, Sort.by(sort).descending());
 
         Page<Product> productPage = productRepository.searchProductList(
@@ -453,8 +453,9 @@ public class ProductServiceImpl implements ProductService {
 
     //내가 등록한 상품 리스트
     @Override
-    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
-                                                 String productName,Integer productStock, int page) {
+    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate,LocalDateTime endDate, Pageable pageable,
+                                                 String productName, Integer productStock, String productType,
+                                                 String productSubType, String productBrand, Integer startPrice,Integer endPrice, int page,String sortBy,String sortMethod) {
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보가 없습니다.")
         );
@@ -462,11 +463,18 @@ public class ProductServiceImpl implements ProductService {
                 () -> new CustomException.ResourceNotFoundException("등록된 회사 정보가 없습니다.")
         );
 
-        pageable = PageRequest.of(page, 10, Sort.by("productId").descending());
+        if(sortMethod.equals("desc")){
+            pageable = PageRequest.of(page, 10, Sort.by(sortBy).descending());
+        }
+        else if(sortMethod.equals("asc")){
+            pageable = PageRequest.of(page, 10, Sort.by(sortBy).ascending());
+        }
 
         Page<Product> productPage = productRepository.searchMyProductList(
-                productName,productStock,
-                startDate,endDate,companyInfo,pageable
+                productName,productStock,productType,productSubType,productBrand,
+                startDate,endDate,
+                startPrice,endPrice,
+                companyInfo,pageable
         );
         List<Product> productList = productPage.getContent();
 

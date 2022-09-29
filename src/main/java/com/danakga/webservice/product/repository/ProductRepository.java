@@ -34,14 +34,21 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     );
 
     //내가 등록한 상품 리스트 검색
-    @Query("Select p from Product p where p.productName like :productName " +
+    @Query("Select p from Product p where p.productName like %:productName% " +
+            "and p.productType like %:productType% " +
+            "and p.productSubType like %:productSubType% " +
+            "and p.productBrand like %:productBrand% " +
             "and p.productStock >= :productStock " +
             "and p.productUploadDate between :startDate and :endDate " +
+            "and p.productPrice between :startPrice and :endPrice " +
             "and p.productCompanyId = :company")
     Page<Product>
     searchMyProductList(
             @Param("productName") String productName, @Param("productStock") Integer productStock,
+            @Param("productType") String productType,@Param("productSubType") String productSubType,
+            @Param("productBrand") String productBrand,
             @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate,
+            @Param("startPrice") Integer startPrice,@Param("endPrice") Integer endPrice,
             @Param("company")CompanyInfo companyInfo,
             Pageable pageable
     );

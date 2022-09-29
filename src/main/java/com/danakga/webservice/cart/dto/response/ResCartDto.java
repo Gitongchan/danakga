@@ -41,7 +41,7 @@ public class ResCartDto {
     private String productBrand;
 
     //가격
-    private String productPrice;
+    private Integer productPrice;
 
 
 }
