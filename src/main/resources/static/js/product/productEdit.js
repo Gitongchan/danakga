@@ -22,6 +22,7 @@ const urlID = getParameterByName('productId');
     if(res.status === 200){
         pName.value = data.productName;
         pMaintype.value = data.productType;
+        changeSubType();
         pSubtype.value = data.productSubType;
         pBrand.value = data.productBrand;
         pPrice.value = data.productPrice;
