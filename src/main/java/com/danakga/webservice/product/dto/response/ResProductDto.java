@@ -38,7 +38,7 @@ public class ResProductDto {
     private String productName;
 
     //가격
-    private String productPrice;
+    private Integer productPrice;
 
     //상품내용
     private String productContent;

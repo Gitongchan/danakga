@@ -30,7 +30,7 @@ public class ResProductListDto {
     private String productPhoto;
 
     //가격
-    private String productPrice;
+    private Integer productPrice;
 
     //재고
     private Integer productStock;

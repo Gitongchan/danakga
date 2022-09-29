@@ -453,8 +453,9 @@ public class ProductServiceImpl implements ProductService {
 
     //내가 등록한 상품 리스트
     @Override
-    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
-                                                 String productName,Integer productStock, int page,String sortBy,String sortMethod) {
+    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate,LocalDateTime endDate, Pageable pageable,
+                                                 String productName, Integer productStock, String productType,
+                                                 String productSubType, String productBrand, Integer startPrice,Integer endPrice, int page,String sortBy,String sortMethod) {
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보가 없습니다.")
         );
@@ -470,8 +471,10 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Page<Product> productPage = productRepository.searchMyProductList(
-                productName,productStock,
-                startDate,endDate,companyInfo,pageable
+                productName,productStock,productType,productSubType,productBrand,
+                startDate,endDate,
+                startPrice,endPrice,
+                companyInfo,pageable
         );
         List<Product> productList = productPage.getContent();
 
