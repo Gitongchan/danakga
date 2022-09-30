@@ -83,7 +83,7 @@ async function myToolList() {
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            <p>${(+data[i].myToolProductPrice) + data[i].myToolQuantity}<span>원</span></p>
+                            <p>${(+data[i].myToolProductPrice) * data[i].myToolQuantity}<span>원</span></p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
                             <p>${data[i].myToolProductSubType}</p>
@@ -96,6 +96,7 @@ async function myToolList() {
                     }
                     cart_price.innerHTML = `${all_price} 원`;
 
+                    // 지우기 버튼
                     const button = document.querySelectorAll('.remove-item');
                     for (const remove of button) {
                         remove.addEventListener('click', async (clicked) => {
@@ -225,7 +226,7 @@ async function myCartList() {
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            <p>${(+cartData[i].productPrice) + cartData[i].cartAmount}<span>원</span></p>
+                            <p>${(+cartData[i].productPrice) * cartData[i].cartAmount}<span>원</span></p>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
                             <p>${cartData[i].productSubType}</p>

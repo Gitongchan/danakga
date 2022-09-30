@@ -44,7 +44,7 @@ const cate_list = document.querySelector('.cate_list.two');
 //상품 정보 담을 곳
 const product_list = document.getElementById('product_list');
 //장바구니 클릭 시
-// const go_cart = document.getElementById('go_cart');
+const go_cart = document.getElementById('go_cart');
 //내 장비 저장
 const save_tool = document.getElementById('save_tool');
 
@@ -758,6 +758,41 @@ window.call = async (data) => {
     }
 
 }
+
+go_cart.addEventListener('click', async ()=>{
+    const cart = [];
+
+    sea_rod_arr.forEach(el => cart.push({productId: el.id, cartAmount: el.quantity }));
+    fresh_rod_arr.forEach(el => cart.push({productId: el.id, cartAmount: el.quantity }));
+    one_throw_rod_arr.forEach(el => cart.push({productId: el.id, cartAmount: el.quantity }));
+    reel_arr.forEach(el => cart.push({productId: el.id, cartAmount: el.quantity }));
+    line_arr.forEach(el => cart.push({productId: el.id, cartAmount: el.quantity }));
+    hook_arr.forEach(el => cart.push({productId: el.id, cartAmount: el.quantity }));
+    all_arr.forEach(el => cart.push({productId: el.id, cartAmount: el.quantity }));
+
+    if(confirm('장바구니에 해당 상품을 추가하시겠습니까?')){
+        try{
+            const res = await fetch(`/api/user/cart`, {
+                method: 'POST',
+                headers: {
+                    'header': header,
+                    'X-CSRF-Token': token,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(cart)
+            })
+
+            if(res.ok){
+                alert('장바구니에 상품이 추가되었습니다!');
+                location.replace('/mypage/cart');
+            }
+        }catch (e) {
+            alert('장바구니에 상품추가 실패!');
+        }
+    }
+});
+
 
 //첫 로딩시 동작하는 곳
 (async function () {
