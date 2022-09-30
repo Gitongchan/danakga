@@ -1,6 +1,6 @@
 {{>pages/header1}}
 <link rel="stylesheet" href="/css/product.css">
-<link rel="stylesheet" href="/css/mypageUser.css">
+<link rel="stylesheet" href="거/css/mypageUser.css">
 <link rel="stylesheet" href="/css/mypageManager.css">
 {{>pages/header2}}
 
@@ -141,10 +141,6 @@
 
     document.querySelector('#productBtn').addEventListener('click', (e) => {
         e.preventDefault();
-        //토큰 값
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
-        const token = document.querySelector('meta[name="_csrf"]').content;
-
         const mainType = document.getElementById('main-type');
         const subType = document.getElementById('sub-type');
         const brandType = document.getElementById('brand-type');
@@ -175,7 +171,7 @@
             return
         }
         if(stock <= 0){
-            alert("상품 수량이 올바르지 않습니다!")
+            alert("재고가 올바르지 않습니다!")
             return
         }
 
@@ -190,8 +186,8 @@
             productBrand: brandType.options[brandType.selectedIndex].value,
             productName: productName,
             productContent: editorData,
-            productPrice: price,
-            productStock: stock,
+            productPrice: Number(price),
+            productStock: Number(stock),
             productViewCount: 0,
             productOrderCount: 0
         }
