@@ -65,7 +65,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     void updateProductView(@Param("productId") Long productId);
 
     //상품별 평점
-    @Query("select Avg(r.reScore) from Review r where r.product = :product Group by r.reScore")
+    @Query("select Avg(r.reScore) from Review r where r.product = :product")
     Double selectProductRating(@Param("product") Product product);
 
     @Transactional
