@@ -64,6 +64,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query("update Product p set p.productViewCount = p.productViewCount + 1 where p.productId =:productId")
     void updateProductView(@Param("productId") Long productId);
 
+    //상품별 평점
+    @Query("select Avg(r.reScore) from Review r where r.product = :product")
+    Double selectProductRating(@Param("product") Product product);
 
     @Transactional
     @Modifying

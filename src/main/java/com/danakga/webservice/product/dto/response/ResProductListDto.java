@@ -47,6 +47,9 @@ public class ResProductListDto {
     //누적구매수
     private Integer productOrderCount;
 
+    // 후기 평균 점수
+    private Double productRating;
+
     private int totalPage;
 
     private long totalElement;
