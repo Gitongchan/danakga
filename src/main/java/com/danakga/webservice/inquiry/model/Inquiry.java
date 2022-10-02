@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,7 +37,10 @@ public class Inquiry {
     private String inDeleted;
 
     @CreationTimestamp
-    private LocalDateTime inCreate;
+    private LocalDateTime inCreated;
+
+    @UpdateTimestamp
+    private LocalDateTime inModified;
 
     @ManyToOne
     @JoinColumn(name = "u_id")
@@ -51,14 +55,15 @@ public class Inquiry {
 
     @Builder
     public Inquiry(Long inId, String inType, String inTitle, String inContent,
-                   int inState, String inDeleted, LocalDateTime inCreate, UserInfo userInfo) {
+                   int inState, String inDeleted, LocalDateTime inCreated, LocalDateTime inModified, UserInfo userInfo) {
         this.inId = inId;
         this.inType = inType;
         this.inTitle = inTitle;
         this.inContent = inContent;
         this.inState = inState;
         this.inDeleted = inDeleted;
-        this.inCreate = inCreate;
+        this.inCreated = inCreated;
+        this.inModified = inModified;
         this.userInfo = userInfo;
     }
 }

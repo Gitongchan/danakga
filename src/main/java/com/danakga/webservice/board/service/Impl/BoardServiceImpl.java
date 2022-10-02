@@ -54,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
 
         Page<Board> boards;
 
-        List<Map<String,Object>> searchList = new ArrayList<>();
+        List<Map<String, Object>> searchList = new ArrayList<>();
 
         //switch case로 제목, 내용, 작성자, 전체 게시글 목록 검색 조회, default 값은 필수
         switch (category) {
@@ -77,7 +77,7 @@ public class BoardServiceImpl implements BoardService {
             default:
                 boards = null;
         }
-        
+
         if (boards != null) {
 
             boards.forEach(entity -> {
@@ -285,8 +285,8 @@ public class BoardServiceImpl implements BoardService {
         //파일 없이 제목, 게시글만 들어오면 그대로 수정
         //else 파일 같이 들어오면 게시글 수정 후 파일 업로드
         if (CollectionUtils.isEmpty(files)) {
-            boardRepository.save(
-                    checkBoard = Board.builder()
+            checkBoard = boardRepository.save(
+                    Board.builder()
                             .bdId(checkBoard.getBdId())
                             .bdType(reqBoardDto.getBdType())
                             .bdWriter(checkUserInfo.getUserid())
@@ -308,8 +308,8 @@ public class BoardServiceImpl implements BoardService {
 
                 //파일 경로 + 파일명으로 파일 있는지 검사 후 삭제
                 if (originFileName.endsWith(".jpg") || originFileName.endsWith(".png") || originFileName.endsWith(".jpeg")) {
-                    boardRepository.save(
-                            checkBoard = Board.builder()
+                    checkBoard = boardRepository.save(
+                            Board.builder()
                                     .bdId(checkBoard.getBdId())
                                     .bdType(reqBoardDto.getBdType())
                                     .bdWriter(checkUserInfo.getUserid())
