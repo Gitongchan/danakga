@@ -59,7 +59,7 @@ public class ResProductDto {
     private Long productWishCount;
 
     // 후기 평균 점수
-    private double productRating;
+    private Double productRating;
 
     //파일
     private List<Map<String,Object>> files;
