@@ -153,6 +153,12 @@ public class OrdersServiceImpl implements OrdersService {
         salesList.forEach(entity->{
             ResSalesListDto listDto = new ResSalesListDto();
                     listDto.setOrdersId(entity.getOrdersId());
+                    listDto.setUserId(entity.getUserInfo().getUserid());
+                    listDto.setUserName(entity.getUserInfo().getName());
+                    listDto.setUserPhone(entity.getUserInfo().getPhone());
+                    listDto.setUserAdrNum(entity.getUserInfo().getUserAdrNum());
+                    listDto.setUserAddress(entity.getUserInfo().getUserStreetAdr() + " " + entity.getUserInfo().getUserDetailAdr());
+
                     listDto.setProductId(entity.getProduct().getProductId());
                     listDto.setProductBrand(entity.getProduct().getProductBrand());
                     listDto.setProductName(entity.getProduct().getProductName());
