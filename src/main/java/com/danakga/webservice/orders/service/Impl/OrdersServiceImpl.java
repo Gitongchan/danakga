@@ -138,7 +138,8 @@ public class OrdersServiceImpl implements OrdersService {
 
     //판매내역
     @Override
-    public List<ResSalesListDto> salesList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ResSalesListDto> salesList(UserInfo userInfo, Pageable pageable, int page, LocalDateTime startDate, LocalDateTime endDate ,
+                                           String ordersStatus,String searchRequirements, String searchWord) {
         UserInfo salesUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다.")
         );
@@ -146,7 +147,39 @@ public class OrdersServiceImpl implements OrdersService {
                 ()->new CustomException.ResourceNotFoundException("사용자의 회사정보를 찾을 수 없습니다.")
         );
         pageable = PageRequest.of(page, 10, Sort.by("ordersId").descending());
-        Page<Orders> salesPage = ordersRepository.salesList(salesCompanyInfo.getCompanyId(),pageable,startDate,endDate);
+
+        String productType = "", productSubType = "", productName = "", productBrand = "", ordersId = "", userName = "", userPhone = "", userId = "";
+
+        switch (searchRequirements) {
+            case "productType":
+                productType = searchWord;
+                break;
+            case "productSubType":
+                productSubType = searchWord;
+                break;
+            case "productName":
+                productName = searchWord;
+                break;
+            case "productBrand":
+                productBrand = searchWord;
+                break;
+            case "ordersId":
+                ordersId = searchWord;
+                break;
+            case "userName":
+                userName = searchWord;
+                break;
+            case "userPhone":
+                userPhone = searchWord;
+                break;
+            case "userId":
+                userId = searchWord;
+                break;
+        }
+
+        Page<Orders> salesPage =
+                ordersRepository.salesList(salesCompanyInfo.getCompanyId(),pageable,startDate,endDate, ordersStatus,productType, productSubType, productName, productBrand, userName, userPhone, userId, ordersId);
+
         List<Orders> salesList = salesPage.getContent();
 
         List<ResSalesListDto> salesListDto = new ArrayList<>();

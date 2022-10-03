@@ -52,10 +52,11 @@ public class OrdersController {
     public List<ResSalesListDto> mySalesList(@LoginUser UserInfo userInfo, Pageable pageable, int page,
                                              @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
                                              @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
-                                             @RequestParam("ordersStatus") String ordersStatus
+                                             @RequestParam("ordersStatus") String ordersStatus,
+                                             @RequestParam("searchRequirements") String searchRequirements,
+                                             @RequestParam("searchWord") String searchWord
     ){
-
-        return ordersService.salesList(userInfo,pageable,page,startTime,endTime);
+        return ordersService.salesList(userInfo,pageable,page,startTime,endTime,ordersStatus,searchRequirements,searchWord);
     }
 
     //판매상세내역
