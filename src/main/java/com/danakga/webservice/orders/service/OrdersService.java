@@ -26,7 +26,8 @@ public interface OrdersService {
 
     //판매내역
     List<ResSalesListDto> salesList(UserInfo userInfo,Pageable pageable,int page,
-                                    LocalDateTime startDate, LocalDateTime endDate);
+                                    LocalDateTime startDate, LocalDateTime endDate,
+                                    String ordersStatus,String searchRequirements, String searchWord);
 
     //판매 상세 내역
     ResSalesDto salesDetail(UserInfo userInfo,Long ordersId);
