@@ -151,4 +151,7 @@ public class PageController {
     }
     @GetMapping("/userchangecompany")
     public  String userchangecompany(){return "pages/userchangecompany";}
+
+    @GetMapping("/admin/index")
+    public  String adminIndex(){return "admin/index";}
 }
