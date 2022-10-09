@@ -5,7 +5,7 @@ searchBtn.addEventListener('click', async (event) => {
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
 
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, searchText.value, "1", "productUploadDate", "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, searchText.value, "1", "productUploadDate", "desc");
 })
 
 
@@ -116,7 +116,7 @@ sea_rod.addEventListener('click', async () => {
 
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "des" +
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "desc" +
         "");
     // if(sea_rod_id.classList.contains('hide')){
     //     sea_rod_id.classList.remove('hide');
@@ -175,7 +175,7 @@ fresh_rod.addEventListener('click', async () => {
 
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "desc");
     // if(fresh_rod_id.classList.contains('hide')){
     //     fresh_rod_id.classList.remove('hide');
     // }else{
@@ -216,7 +216,7 @@ one_throw_rod.addEventListener('click', async () => {
 
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "des" +
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "desc" +
         "");
     // if(one_throw_rod_id.classList.contains('hide')){
     //     one_throw_rod_id.classList.remove('hide');
@@ -275,7 +275,7 @@ reel.addEventListener('click', async () => {
 
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "desc");
     // if(reel_id.classList.contains('hide')){
     //     reel_id.classList.remove('hide');
     // }else{
@@ -338,7 +338,7 @@ line.addEventListener('click', async () => {
 
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "desc");
     // if(line_id.classList.contains('hide')){
     //     line_id.classList.remove('hide');
     // }else{
@@ -407,7 +407,7 @@ hook.addEventListener('click', async () => {
 
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "desc");
     // if(hook_id.classList.contains('hide')){
     //     hook_id.classList.remove('hide');
     // }else{
@@ -429,7 +429,7 @@ all.addEventListener('click', async () => {
 
     const brand_checked = document.querySelector('input[name="brand"]:checked'); // 체크된 값(checked value)
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", "productUploadDate", "desc");
     // if(all_id.classList.contains('hide')){
     //     all_id.classList.remove('hide');
     // }else{
@@ -446,7 +446,7 @@ typeRadios.forEach((el) => el.addEventListener('change', async () => {
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
     //신상품, 최고주문순, 조회최다순 정보 가지고 있는 곳
     const value_checked = document.querySelector('.category_list_wrap ul li.active');
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", value_checked.id, "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", value_checked.id, "desc");
 }))
 
 const brandRadios = document.querySelectorAll('input[type=radio][name="brand"]');
@@ -458,7 +458,7 @@ brandRadios.forEach((el) => el.addEventListener('change', async () => {
     //신상품, 최고주문순, 조회최다순 정보 가지고 있는 곳
     const value_checked = document.querySelector('.category_list_wrap ul li.active');
 
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", value_checked.id, "des");
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, '%', "1", value_checked.id, "desc");
 }))
 
 // 장비 검색해서 뿌려주는 곳 ( 라디오 박스, 바다로드, 민물로드 및 조회순, 최신순 클릭 시 동작 )
@@ -471,7 +471,7 @@ async function searchProduct(type, subtype, brand, name, stock, sort, desc) {
     try {
         const url = `/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=0&sort=${sort}&order=${desc}`;
         const paginationUrl1 = `/api/product/list?productType=${type}&productSubType=${subtype}&productBrand=${brand}&productName=${name}&productStock=${stock}&page=`;
-        const paginationUrl2 = `&sort=${sort}&order=des`;
+        const paginationUrl2 = `&sort=${sort}&order=desc`;
 
         const res = await fetch(encodeURI(url));
         product_list.innerHTML = '';
@@ -479,6 +479,7 @@ async function searchProduct(type, subtype, brand, name, stock, sort, desc) {
         if (res.ok) {
             const data = await res.json();
             if (data.length > 0) {
+                console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     product_list.innerHTML +=
                         `
@@ -703,7 +704,11 @@ view_wrap.forEach((el) => el.addEventListener('click', async () => {
     const type_checked = document.querySelector('input[name="area"]:checked'); // 체크된 값(checked value)
     const text = searchText.value.trim().length === 0 ? '%' : searchText.value;
 
-    await searchProduct(title_value.value, type_checked.value, brand_checked.value, text, "1", el.id, "des");
+    if(el.id=='productLowPrice'){
+        await searchProduct(title_value.value, type_checked.value, brand_checked.value, text, "1", 'productPrice', "asc");
+        return
+    }
+    await searchProduct(title_value.value, type_checked.value, brand_checked.value, text, "1", el.id, "desc");
 }));
 
 
@@ -805,5 +810,5 @@ go_cart.addEventListener('click', async ()=>{
     view_wrap.forEach((ele) => ele.classList.remove('active'));
     document.getElementById(type).classList.add('active');
 
-    await searchProduct(title_value.value, '%', '%', '%', "1", type, "des");
+    await searchProduct(title_value.value, '%', '%', '%', "1", type, "desc");
 })();
