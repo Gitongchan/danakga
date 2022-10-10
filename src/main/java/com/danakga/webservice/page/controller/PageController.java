@@ -67,6 +67,9 @@ public class PageController {
 
     @GetMapping("/user/orderlist")
     public String myPageOrderList() { return "pages/order-list"; }
+
+    @GetMapping("/manager/myOrderlist")
+    public String managerMyOrderList() { return "pages/managerOrder-list"; }
     @GetMapping("/manager/myboard")
     public String mypageManagerBoard(){
         return "pages/mypageManagerBoard";
