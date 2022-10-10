@@ -68,6 +68,11 @@ public class PageController {
     @GetMapping("/user/orderlist")
     public String myPageOrderList() { return "pages/order-list"; }
 
+    @GetMapping("/manager/wishlist")
+    public String managerWishList(){
+        return "pages/managerWish-list";
+    }
+
     @GetMapping("/manager/myOrderlist")
     public String managerMyOrderList() { return "pages/managerOrder-list"; }
     @GetMapping("/manager/myboard")
@@ -85,6 +90,9 @@ public class PageController {
 
     @GetMapping("/mypage/cart")
     public String myPageCart(){return "pages/cart";}
+
+    @GetMapping("/manager/cart")
+    public String managerCart(){return "pages/manager-cart";}
 
     @GetMapping("/manager/companyinfo")
     public String mypageCompany(){
