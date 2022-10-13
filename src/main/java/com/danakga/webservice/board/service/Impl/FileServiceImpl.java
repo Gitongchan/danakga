@@ -24,7 +24,7 @@ public class FileServiceImpl implements FilesService {
     public Long saveFileUpload(List<MultipartFile> files, Board board) {
 
         //파일 저장 경로
-        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+        String savePath = System.getProperty("user.dir") + "//src//main//resources//static//files";
 
         //파일 저장되는 폳더 없으면 생성
         if (!new File(savePath).exists()) {
@@ -47,10 +47,10 @@ public class FileServiceImpl implements FilesService {
             String saveFileName = uuid + "__" + originFileName;
 
             //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-            String filePath = savePath + "\\" + saveFileName;
+            String filePath = savePath + "//" + saveFileName;
             
             //DB에 저장되는 경로
-            String dbFilePath = "..\\files\\" + saveFileName;
+            String dbFilePath = "../files/" + saveFileName;
             
             //.transferTo 사용하여 파일경로에 파일명으로 저장
             try {
