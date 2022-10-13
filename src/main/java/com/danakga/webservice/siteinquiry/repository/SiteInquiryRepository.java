@@ -14,7 +14,7 @@ public interface SiteInquiryRepository extends JpaRepository<SiteInquiry, Long> 
     /* 문의 사항 삭제 여부 변경 */
     @Transactional
     @Modifying
-    @Query("update SiteInquiry si set si.inDeleted = 'Y' where si.inId = :inId")
+    @Query("update SiteInquiry si set si.sinDeleted = 'Y' where si.sinId = :inId")
     void updateInDeleted(@Param("inId") Long in_id);
     
     /* 문의 사항 목록 조회 */
