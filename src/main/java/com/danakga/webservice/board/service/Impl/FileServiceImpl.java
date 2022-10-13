@@ -39,8 +39,8 @@ public class FileServiceImpl implements FilesService {
         // multipartfile : files  files에서 더 꺼낼게 없을 때 까지 multipartfile에 담아줌
         for (MultipartFile multipartFile : files) {
 
-            //파일명 소문자로 추출
-            String originFileName = multipartFile.getOriginalFilename().toLowerCase();
+            //파일명 소문자로 추출, 원본 파일명 공백 제거
+            String originFileName = multipartFile.getOriginalFilename().toLowerCase().replace(" ", "");
 
             //UUID로 파일명 중복되지 않게 유일한 식별자 + 확장자로 저장
             UUID uuid = UUID.randomUUID();
