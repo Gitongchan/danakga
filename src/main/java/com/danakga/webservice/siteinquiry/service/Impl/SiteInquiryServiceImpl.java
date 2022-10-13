@@ -27,7 +27,7 @@ import java.util.Map;
 public class SiteInquiryServiceImpl implements SiteInquiryService {
 
     private final UserRepository userRepository;
-    private final SiteInquiryRepository inquiryRepository;
+    private final SiteInquiryRepository siteInquiryRepository;
 
     /* 문의사항 목록 */
     @Override
@@ -35,30 +35,48 @@ public class SiteInquiryServiceImpl implements SiteInquiryService {
 
         final String deleted = "N";
 
-        pageable = PageRequest.of(page, 10, Sort.by("inCreated").descending());
-        Page<SiteInquiry> siteInquiry = inquiryRepository.findAllBySinDeleted(pageable, deleted);
+        pageable = PageRequest.of(page, 10, Sort.by("sinCreated").descending());
+        Page<SiteInquiry> siteInquiry = siteInquiryRepository.findAllBySinDeleted(pageable, deleted);
 
-        List<Map<String, Object>> inquiryList = new ArrayList<>();
+        List<Map<String, Object>> siteInquiryList = new ArrayList<>();
 
         siteInquiry.forEach(entity -> {
-            Map<String,Object> inquiryMap = new LinkedHashMap<>();
-            inquiryMap.put("sin_id", entity.getSinId());
-            inquiryMap.put("sin_userid", entity.getUserInfo().getUserid());
-            inquiryMap.put("sin_title", entity.getSinTitle());
-            inquiryMap.put("sin_created", entity.getSinCreated());
-            inquiryMap.put("sin_state", entity.getSinState());
-            inquiryMap.put("totalPage", siteInquiry.getTotalPages());
-            inquiryMap.put("totalElement", siteInquiry.getTotalPages());
-            inquiryList.add(inquiryMap);
+            Map<String,Object> siteInquiryMap = new LinkedHashMap<>();
+            siteInquiryMap.put("sin_id", entity.getSinId());
+            siteInquiryMap.put("sin_type", entity.getSinType());
+            siteInquiryMap.put("sin_userid", entity.getUserInfo().getUserid());
+            siteInquiryMap.put("sin_title", entity.getSinTitle());
+            siteInquiryMap.put("sin_created", entity.getSinCreated());
+            siteInquiryMap.put("sin_state", entity.getSinState());
+            siteInquiryMap.put("totalPage", siteInquiry.getTotalPages());
+            siteInquiryMap.put("totalElement", siteInquiry.getTotalPages());
+            siteInquiryList.add(siteInquiryMap);
         });
 
-        return new ResSiteInquiryDto(inquiryList);
+        return new ResSiteInquiryDto(siteInquiryList);
     }
 
     /* 문의사항 조회 */
     @Override
     public ResSiteInquiryDto siteInquiryPost(Long sin_id) {
-        return null;
+
+        SiteInquiry checkSiteInquiry = siteInquiryRepository.findById(sin_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
+
+        List<Map<String,Object>> postList = new ArrayList<>();
+
+        Map<String, Object> postMap = new LinkedHashMap<>();
+
+        postMap.put("sin_id", checkSiteInquiry.getSinId());
+        postMap.put("sin_type", checkSiteInquiry.getSinType());
+        postMap.put("sin_userid", checkSiteInquiry.getUserInfo().getUserid());
+        postMap.put("sin_title", checkSiteInquiry.getSinTitle());
+        postMap.put("sin_content", checkSiteInquiry.getSinContent());
+        postMap.put("sin_created", checkSiteInquiry.getSinCreated());
+
+        postList.add(postMap);
+
+        return new ResSiteInquiryDto(postList);
     }
 
     /* 문의사항 작성 */
@@ -68,7 +86,7 @@ public class SiteInquiryServiceImpl implements SiteInquiryService {
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        SiteInquiry siteInquiry = inquiryRepository.save(
+        SiteInquiry siteInquiry = siteInquiryRepository.save(
                 SiteInquiry.builder()
                         .sinType(reqInquiryDto.getSinType())
                         .sinTitle(reqInquiryDto.getSinContent())
@@ -88,10 +106,10 @@ public class SiteInquiryServiceImpl implements SiteInquiryService {
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        SiteInquiry checkSiteInquiry = inquiryRepository.findById(sin_id)
+        SiteInquiry checkSiteInquiry = siteInquiryRepository.findById(sin_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의 사항을 찾을 수 없습니다."));
 
-        checkSiteInquiry = inquiryRepository.save(
+        checkSiteInquiry = siteInquiryRepository.save(
                 SiteInquiry.builder()
                         .sinId(checkSiteInquiry.getSinId())
                         .sinType(reqInquiryDto.getSinType())
@@ -114,10 +132,10 @@ public class SiteInquiryServiceImpl implements SiteInquiryService {
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        SiteInquiry checkSiteInquiry = inquiryRepository.findById(sin_id)
+        SiteInquiry checkSiteInquiry = siteInquiryRepository.findById(sin_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의 사항을 찾을 수 없습니다."));
 
-        inquiryRepository.updateInDeleted(checkSiteInquiry.getSinId());
+        siteInquiryRepository.updateInDeleted(checkSiteInquiry.getSinId());
 
         return new ResResultDto(checkSiteInquiry.getSinId(), "문의 사항을 삭제 했습니다.");
     }

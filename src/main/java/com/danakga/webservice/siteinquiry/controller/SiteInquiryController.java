@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class SiteInquiryController {
 
-    private final SiteInquiryService inquiryService;
+    private final SiteInquiryService siteInquiryService;
 
     /* 문의 사항 작성 */
     @PostMapping("/siteInquiry/write")
     public ResResultDto siteInquiryWrite(@LoginUser UserInfo userInfo,
                                          @RequestBody ReqSiteInquiryDto reqInquiryDto) {
 
-        return inquiryService.siteInquiryWrite(userInfo, reqInquiryDto);
+        return siteInquiryService.siteInquiryWrite(userInfo, reqInquiryDto);
     }
 
     /* 문의사항 수정 */
@@ -29,7 +29,7 @@ public class SiteInquiryController {
                                         @RequestBody ReqSiteInquiryDto reqInquiryDto,
                                         @PathVariable Long sin_id) {
 
-        return inquiryService.siteInquiryEdit(userInfo, reqInquiryDto, sin_id);
+        return siteInquiryService.siteInquiryEdit(userInfo, reqInquiryDto, sin_id);
     }
     
     /* 문의사항 삭제 상태 변경 */
@@ -37,6 +37,6 @@ public class SiteInquiryController {
     public ResResultDto siteInquiryDelete(@LoginUser UserInfo userInfo,
                                           @PathVariable Long sin_id) {
 
-        return inquiryService.siteInquiryDelete(userInfo, sin_id);
+        return siteInquiryService.siteInquiryDelete(userInfo, sin_id);
     }
 }

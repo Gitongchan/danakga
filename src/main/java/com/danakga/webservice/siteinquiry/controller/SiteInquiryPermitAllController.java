@@ -14,18 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/siteInquiry")
 public class SiteInquiryPermitAllController {
 
-    private final SiteInquiryService inquiryService;
+    private final SiteInquiryService siteInquiryService;
 
     /* 문의사항 목록 */
     @GetMapping("/list")
     public ResSiteInquiryDto siteInquiryList(Pageable pageable, int page) {
 
-        return inquiryService.siteInquiryList(pageable, page);
+        return siteInquiryService.siteInquiryList(pageable, page);
     }
     
     /* 문의사항 조회 */
     @GetMapping("/post/{sin_id}")
     public ResSiteInquiryDto siteInquiryPost(@PathVariable("sin_id") Long sin_id) {
-        return null;
+
+        return siteInquiryService.siteInquiryPost(sin_id);
     }
 }
