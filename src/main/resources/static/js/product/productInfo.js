@@ -31,14 +31,6 @@ const reviewWrap = document.getElementById('reviews_list_wrap');
 //리뷰 수정가능 여부 hidden
 const review_hidden = document.getElementById('review_edit');
 
-const regex= /[^0-9]/gi;
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 const urlID = getParameterByName('productId');
 const orderID = getParameterByName('orderId');
 const status = getParameterByName('status');
@@ -250,28 +242,30 @@ const status = getParameterByName('status');
     })
 
 cartButton.addEventListener('click', async () => {
-    const quantity = document.getElementById('quantity');
-    const quantityValue = quantity.options[quantity.selectedIndex].value;
-    console.log(urlID, quantityValue);
-    if(confirm('장바구니에 해당 상품을 추가하시겠습니까?')){
-        try{
-            const res = await fetch(`/api/user/cart`, {
-                method: 'POST',
-                headers: {
-                    'header': header,
-                    'X-CSRF-Token': token,
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify([{productId:urlID, cartAmount: quantityValue}])
-            })
+    const quantity = document.getElementById('quantity').value;
+    if(quantity > 0){
+        if(confirm('장바구니에 해당 상품을 추가하시겠습니까?')){
+            try{
+                const res = await fetch(`/api/user/cart`, {
+                    method: 'POST',
+                    headers: {
+                        'header': header,
+                        'X-CSRF-Token': token,
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify([{productId:urlID, cartAmount: Number(quantity)}])
+                })
 
-            if(res.ok){
-                alert('장바구니에 상품이 추가되었습니다!');
+                if(res.ok){
+                    alert('장바구니에 상품이 추가되었습니다!');
+                }
+            }catch (e) {
+                alert('장바구니에 상품추가 실패!');
             }
-        }catch (e) {
-            alert('장바구니에 상품추가 실패!');
         }
+    }else{
+        alert("잘못입력된 수량입니다.")
     }
 })
 

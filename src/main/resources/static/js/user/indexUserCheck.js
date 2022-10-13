@@ -3,7 +3,6 @@ const token = document.querySelector('meta[name="_csrf"]').content;
 const header = document.querySelector('meta[name="_csrf_header"]').content;
 
 //로그인 안되어있다면 로그인, 회원가입 > 로그인 되어있다면 내정보|로그아웃
-
 const checkID = document.getElementById('checkUserId');
 const checkCompany = document.getElementById('checkCompanyId');
 const checkName = document.getElementById('checkName');
@@ -11,6 +10,13 @@ const checkName = document.getElementById('checkName');
 const cart = document.getElementById('cart-items');
 const wish = document.getElementById('wishlist');
 const loginInfo = document.getElementById('user-info');
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 (async function() {
     try {

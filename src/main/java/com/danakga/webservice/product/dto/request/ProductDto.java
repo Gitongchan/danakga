@@ -37,7 +37,7 @@ public class ProductDto {
     private String productContent;
     
     //가격
-    private String productPrice;
+    private Integer productPrice;
     
     //재고
     private Integer productStock;

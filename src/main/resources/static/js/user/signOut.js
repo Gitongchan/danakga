@@ -6,8 +6,6 @@ const pw = document.getElementById("signout_pw");
 //         <button>로그아웃</button>
 // </form>
 btn.addEventListener('click',function() {
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
     if(pw.value!==null && pw.value.length >= 8){
         if(confirm('정말로 탈퇴하시겠습니까?')){
             fetch(`/api/user/user_deleted`, {

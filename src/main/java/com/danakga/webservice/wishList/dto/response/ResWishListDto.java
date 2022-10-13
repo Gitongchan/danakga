@@ -32,7 +32,7 @@ public class ResWishListDto {
     private String productName;
 
     //상품 가격
-    private String productPrice;
+    private Integer productPrice;
 
     //위시리스트 등록 날짜
     private LocalDateTime wishDate;

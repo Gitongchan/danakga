@@ -30,7 +30,7 @@ public class ResProductListDto {
     private String productPhoto;
 
     //가격
-    private String productPrice;
+    private Integer productPrice;
 
     //재고
     private Integer productStock;
@@ -46,6 +46,9 @@ public class ResProductListDto {
 
     //누적구매수
     private Integer productOrderCount;
+
+    // 후기 평균 점수
+    private Double productRating;
 
     private int totalPage;
 

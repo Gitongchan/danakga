@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -45,11 +46,25 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     @Query(
             value = "select o from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
-                    "and o.ordersDate between :startDate and :endDate"
+                    "and o.ordersDate between :startDate and :endDate " +
+                    "and o.ordersStatus like %:ordersStatus% " +
+                    "and o.product.productType like %:productType% " +
+                    "and o.product.productSubType like %:productSubType% " +
+                    "and o.product.productName like %:productName% " +
+                    "and o.product.productBrand like %:productBrand% " +
+                    "and o.userInfo.name like %:userName% " +
+                    "and o.userInfo.phone like %:userPhone% " +
+                    "and o.userInfo.userid like %:userId% " +
+                    "and concat(o.ordersId,'') like %:ordersId%"
     )
     Page<Orders> salesList(@Param("companyId")Long companyInfo, Pageable pageable,
-                           @Param("startDate")LocalDateTime startDate,
-                           @Param("endDate")LocalDateTime endDate);
+                           @Param("startDate")LocalDateTime startDate,@Param("endDate")LocalDateTime endDate,
+                           @Param("ordersStatus")String ordersStatus,
+                           @Param("productType")String productType,@Param("productSubType") String productSubType,
+                           @Param("productName")String productName,@Param("productBrand") String productBrand,
+                           @Param("userName") String userName, @Param("userPhone")String userPhone,@Param("userId") String userId,
+                           @Param("ordersId") String ordersId
+                           );
 
     //운송장번호 업데이트
     @Modifying

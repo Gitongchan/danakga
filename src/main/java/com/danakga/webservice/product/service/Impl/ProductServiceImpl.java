@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductFilesService productFilesService;
     private final WishRepository wishRepository;
 
-    private final ReviewRepository reviewRepository;
+
     
     //상품등록
     @Transactional
@@ -131,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
 
         if(order.equals("asc"))
             pageable = PageRequest.of(page, 10, Sort.by(sort).ascending());
-        else if(order.equals("des"))
+        else if(order.equals("desc"))
             pageable = PageRequest.of(page, 10, Sort.by(sort).descending());
 
         Page<Product> productPage = productRepository.searchProductList(
@@ -142,7 +142,20 @@ public class ProductServiceImpl implements ProductService {
 
         List<ResProductListDto> productListDto = new ArrayList<>();
 
+
+
         productList.forEach(entity->{
+            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+                    ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            ) ;
+
+            double productRating; // 상품 평점
+            if(productRepository.selectProductRating(productInfo) == null){
+                productRating = 0;
+            }else{
+                productRating = Math.round(productRepository.selectProductRating(productInfo)*10)/10.0;
+            }
+
             ResProductListDto listDto = new ResProductListDto();
             listDto.setProductId(entity.getProductId());
             listDto.setProductBrand(entity.getProductBrand());
@@ -158,6 +171,7 @@ public class ProductServiceImpl implements ProductService {
             listDto.setProductUploadDate(entity.getProductUploadDate());
             listDto.setTotalPage(productPage.getTotalPages());
             listDto.setTotalElement(productPage.getTotalElements());
+            listDto.setProductRating(productRating);
             productListDto.add(listDto);
         });
         return productListDto;
@@ -178,6 +192,17 @@ public class ProductServiceImpl implements ProductService {
         List<ResProductListDto> productListDto = new ArrayList<>();
 
         productList.forEach(entity->{
+            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+                    ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            ) ;
+
+            double productRating; // 상품 평점
+            if(productRepository.selectProductRating(productInfo) == null){
+                productRating = 0;
+            }else{
+                productRating = Math.round(productRepository.selectProductRating(productInfo)*10)/10.0;
+            }
+
             ResProductListDto listDto = new ResProductListDto();
             listDto.setProductId(entity.getProductId());
             listDto.setProductBrand(entity.getProductBrand());
@@ -190,6 +215,7 @@ public class ProductServiceImpl implements ProductService {
             listDto.setProductViewCount(entity.getProductViewCount());
             listDto.setProductOrderCount(entity.getProductOrderCount());
             listDto.setProductUploadDate(entity.getProductUploadDate());
+            listDto.setProductRating(productRating);
             listDto.setTotalPage(productPage.getTotalPages());
             listDto.setTotalElement(productPage.getTotalElements());
             productListDto.add(listDto);
@@ -213,6 +239,7 @@ public class ProductServiceImpl implements ProductService {
         CompanyInfo companyInfo = companyRepository.findByCompanyId(companyId).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
         ); //상품을 등록한 회사정보
+
 
         //조회수 증가, 쿠키로 중복 증가 방지
         //쿠키가 있으면 그 쿠키가 해당 게시글 쿠키인지 확인하고 아니라면 조회수 올리고 setvalue로 해당 게시글의 쿠키 값도 넣어줘야함
@@ -250,7 +277,16 @@ public class ProductServiceImpl implements ProductService {
         List<Map<String, Object>> mapFiles = new ArrayList<>();
 
         Long productWishCount = wishRepository.countByProductId(productInfo);
-        ResProductDto resProductDto = new ResProductDto(productInfo,companyInfo,productWishCount);
+
+        double productRating; // 상품 평점
+        if(productRepository.selectProductRating(productInfo) == null){
+            productRating = 0;
+        }else{
+            productRating = Math.round(productRepository.selectProductRating(productInfo)*10)/10.0;
+        }
+
+
+        ResProductDto resProductDto = new ResProductDto(productInfo,companyInfo,productWishCount,productRating);
 
         files.forEach(entity->{
             Map<String, Object> filesMap = new HashMap<>();
@@ -453,8 +489,9 @@ public class ProductServiceImpl implements ProductService {
 
     //내가 등록한 상품 리스트
     @Override
-    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable,
-                                                 String productName,Integer productStock, int page) {
+    public List<ResProductListDto> myProductList(UserInfo userInfo, LocalDateTime startDate,LocalDateTime endDate, Pageable pageable,
+                                                 String productName, Integer productStock, String productType,
+                                                 String productSubType, String productBrand, Integer startPrice,Integer endPrice, int page,String sortBy,String sortMethod) {
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 () -> new CustomException.ResourceNotFoundException("사용자 정보가 없습니다.")
         );
@@ -462,17 +499,35 @@ public class ProductServiceImpl implements ProductService {
                 () -> new CustomException.ResourceNotFoundException("등록된 회사 정보가 없습니다.")
         );
 
-        pageable = PageRequest.of(page, 10, Sort.by("productId").descending());
+        if(sortMethod.equals("desc")){
+            pageable = PageRequest.of(page, 10, Sort.by(sortBy).descending());
+        }
+        else if(sortMethod.equals("asc")){
+            pageable = PageRequest.of(page, 10, Sort.by(sortBy).ascending());
+        }
 
         Page<Product> productPage = productRepository.searchMyProductList(
-                productName,productStock,
-                startDate,endDate,companyInfo,pageable
+                productName,productStock,productType,productSubType,productBrand,
+                startDate,endDate,
+                startPrice,endPrice,
+                companyInfo,pageable
         );
         List<Product> productList = productPage.getContent();
 
         List<ResProductListDto> productListDto = new ArrayList<>();
 
         productList.forEach(entity->{
+            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+                    ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            ) ;
+
+            double productRating; // 상품 평점
+            if(productRepository.selectProductRating(productInfo) == null){
+                productRating = 0;
+            }else{
+                productRating = Math.round(productRepository.selectProductRating(productInfo)*10)/10.0;
+            }
+
             ResProductListDto listDto = new ResProductListDto();
             listDto.setProductId(entity.getProductId());
             listDto.setProductBrand(entity.getProductBrand());
@@ -485,6 +540,7 @@ public class ProductServiceImpl implements ProductService {
             listDto.setProductViewCount(entity.getProductViewCount());
             listDto.setProductOrderCount(entity.getProductOrderCount());
             listDto.setProductUploadDate(entity.getProductUploadDate());
+            listDto.setProductRating(productRating);
             listDto.setTotalPage(productPage.getTotalPages());
             listDto.setTotalElement(productPage.getTotalElements());
             productListDto.add(listDto);

@@ -1,5 +1,3 @@
-
-
 document.querySelector('#search_id').addEventListener('click', async () => {
     const email = document.querySelector('#search-email').value;
     const phone = document.querySelector('#search-phone').value;
