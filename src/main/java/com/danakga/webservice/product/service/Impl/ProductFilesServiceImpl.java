@@ -47,7 +47,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
         for(MultipartFile multipartFile : files) {
 
             //파일명 소문자로 추출
-            String originFileName = multipartFile.getOriginalFilename().toLowerCase();
+            String originFileName = multipartFile.getOriginalFilename().toLowerCase().replace(" ", "");
 
             //UUID로 파일명 중복되지 않게 유일한 식별자 + 확장자로 저장
             UUID uuid = UUID.randomUUID();
@@ -83,7 +83,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
 
         String thumbNailPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail";
 
-        String originFileName = thumb.getOriginalFilename().toLowerCase();
+        String originFileName = thumb.getOriginalFilename().toLowerCase().replace(" ", "");;
 
         //UUID로 파일명 중복되지 않게 유일한 식별자 + 확장자로 저장
         UUID uuid = UUID.randomUUID();
