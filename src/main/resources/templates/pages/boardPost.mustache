@@ -1,5 +1,5 @@
 {{>pages/header1}}
-<link rel="stylesheet" href="/static/css/board.css">
+<link rel="stylesheet" href="/css/board.css">
 {{>pages/header2}}
 <div class="container">
     <form class="row" id="boardform" enctype="multipart/form-data">
@@ -61,17 +61,25 @@
         const editorData = editor.getData();
         const formData = new FormData();
         const bType = document.getElementById('type');
+        const boardTitle = document.getElementById('board_Title').value;
 
         let input = document.querySelector('input[type="file"]')
         const boardData = {
             bdType: bType.options[bType.selectedIndex].value,
-            bdTitle: document.getElementById('board_Title').value,
+            bdTitle: boardTitle,
             bdViews: 0,
             bdContent : editorData
         }
 
-        console.log(boardData);
-        console.log(input.files);
+        if(boardTitle.trim().length <= 0 ){
+            alert("제목을 입력해주세요.")
+            return
+        }
+
+        if(editorData.trim().length <= 0){
+            alert("내용을 입력해주세요!")
+            return
+        }
 
         for(let i=0;i <=input.files.length; i++){
             formData.append('images', input.files[i]);
@@ -82,7 +90,6 @@
         );
 
         // data.files.forEach((file) => formData.append("files", file));
-
         fetch("/api/user/post/write", {
             method: "POST",
             headers: {
@@ -102,7 +109,7 @@
                     }
                 })
                 .then(data => {
-                    if(boardData.bdType=="자유게시판"){
+                    if(boardData.bdType==="자유게시판"){
                         location.replace('/board/basic');
                     }else{
                         location.replace('/board/qa');
@@ -113,5 +120,5 @@
     } );
 
 </script>
-<script src="/static/js/board/boardFilePreview.js"></script>
+<script src="/js/board/boardFilePreview.js"></script>
 {{>pages/footer2}}

@@ -114,3 +114,24 @@
     color:white;
     box-shadow : 5px 5px 10px -5px;
 }
+
+.meta-info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.meta-info > li > button:first-child{
+    border: 1px solid #bcd0c7;
+    background: rgb(1, 103, 243);
+    border-radius: 10px;
+    padding: 5px 5px;
+    color: #fff;
+}
+
+.meta-info > li > button:last-child{
+    border: 1px solid #bcd0c7;
+    background: #FF7867;
+    border-radius: 10px;
+    padding: 5px 5px;
+    color: #fff;
+}
