@@ -4,9 +4,10 @@ const content = document.getElementById('post-inner');
 const content_img = document.getElementById('post-img');
 const userid = document.getElementById('userID');
 const span = document.createElement('span');
-const btnWrap = document.createElement('div');
+const btnWrap = document.createElement('li');
 const editBtn = document.createElement('button');
 const deleteBtn = document.createElement('button');
+const metaInfo = document.querySelector('.meta-info')
 
 editBtn.innerText = "수정하기";
 deleteBtn.innerText = "삭제하기";
@@ -34,12 +35,12 @@ const boardType = getParameterByName('bdType');
                             const deleteButton = document.createElement('button');
                             divImg.classList.add(`current-img`);
                             img.classList.add(`img-item`);
-                            img.src= data[0].files[i].file_path;
+                            img.src= data.post[0].files[i].file_path;
                             divImg.appendChild(img);
                             content_img.appendChild(divImg);
                         }
 
-                        userid.after(btnWrap);
+                    metaInfo.appendChild(btnWrap);
                         content.innerHTML += data.post[0].bd_content;
                         title.innerText = data.post[0].bd_title;
                         span.innerText= data.post[0].bd_writer;
@@ -77,7 +78,7 @@ deleteBtn.addEventListener('click',()=>{
         })
             .then((res)=>res.json())
             .then((data)=>{
-                if(boardType == 'free'){
+                if(boardType === 'free'){
                     location.replace('/board/basic');
                 }else{
                     location.replace('/board/qa');
