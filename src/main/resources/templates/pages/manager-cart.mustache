@@ -1,0 +1,119 @@
+    {{>pages/header1}}
+    <link rel="stylesheet" href="/css/cart.css">
+
+    {{>pages/header2}}
+
+
+    <!-- Start Breadcrumbs -->
+    <div class="container">
+        <div class="row">
+            <section class="mypage_sidebar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light" id="my-page-nav">
+                    <button class="navbar-toggler" id="NAVtoggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span>목록보기</span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            {{>pages/mypageManagerNAV}}
+                        </ul>
+                    </div>
+                </nav>
+            </section>
+        </div>
+    </div>
+    <!-- End Breadcrumbs -->
+
+    <!-- Shopping Cart -->
+    <div class="shopping-cart section">
+        <div class="container">
+            <div class="d-flex w-100">
+                <div id="cart_list">
+                    <button class="card bg-primary mx-1 d-flex justify-content-center align-items-center rounded-pill" id="my_cart_list">내 장바구니</button>
+                </div>
+                <div class="scroll-container w-75" id="tools_list">
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <div class="align-right mt-1 mb-1" id="my_tool_wrap">
+                </div>
+                <div class="align-right mt-1 mb-1" id="my_tool_wrap">
+                    <button id="folder_manager">폴더 관리</button>
+                </div>
+            </div>
+            <div class="cart-list-head">
+                <!-- Cart List Title -->
+                <div class="cart-list-title">
+                    <div class="row">
+                        <div class="col-lg-1 col-md-1 col-12">
+                            <p>선택</p>
+                        </div>
+                        <div class="col-lg-4 col-md-3 col-12">
+                            <p>상품명</p>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-12">
+                            <p>수량</p>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-12">
+                            <p>가격</p>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-12">
+                            <p>상세분류</p>
+                        </div>
+                        <div class="col-lg-1 col-md-2 col-12">
+                            <p>삭제</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+
+                </div>
+                <!-- End Cart List Title -->
+                <!-- Cart Single List list -->
+                <div class="cart-single-list">
+                </div>
+                <!-- End Single List list -->
+
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <!-- Total Amount -->
+                    <div class="total-amount">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-6 col-12">
+<!--                                <div class="left">-->
+<!--                                    <div class="coupon">-->
+<!--                                        <form action="#" target="_blank">-->
+<!--                                            <input name="Coupon" placeholder="Enter Your Coupon">-->
+<!--                                            <div class="button">-->
+<!--                                                <button class="btn">Apply Coupon</button>-->
+<!--                                            </div>-->
+<!--                                        </form>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-12">
+                                <div class="right">
+                                    <ul>
+                                        <li>총 합계<span id="cart_price">0</span></li>
+                                    </ul>
+                                    <div class="button">
+                                        <a href="javascript:void(0)" class="btn" id="order_btn">주문하기</a>
+                                        <a href="/product/main?type=productUploadDate" class="btn btn-alt">더 쇼핑하기</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/ End Total Amount -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ End Shopping Cart -->
+
+    {{>pages/footer1}}
+    <!--  이곳에 페이지 별 js 로드시키기-->
+    <!--  예시 : <script src="/js/dummydata.js"></script> -->
+    <script src="/js/cart/myToolList.js"></script>
+
+    {{>pages/footer2}}

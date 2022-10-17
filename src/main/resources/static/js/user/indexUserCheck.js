@@ -29,26 +29,15 @@ function getParameterByName(name) {
             //장바구니 아이 갯수 체크
             const cartRes = await fetch('/api/user/cart');
             const cartData = await cartRes.json();
-            cart.innerHTML = `
-            <a href="/mypage/cart" class="main-btn">
-                                  <i class="lni lni-cart"></i>
-                                  <span class="total-items">${cartData.length}</span>
-                                </a>
-            `
 
             //찜 갯수 체크
             const wishRes = await fetch('/api/user/wish/0');
             const wishData = await wishRes.json();
-            wish.innerHTML = `
-                <a href="/user/wishlist">
-                    <i class="lni lni-heart"></i>
-                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
-                </a>
-            `
 
 
             const mRes = await fetch('/api/manager');
                 if(mRes.status === 200){
+
                     const mData = await mRes.json();
                     checkCompany.value = mData.companyId;
                     loginInfo.innerHTML = `
@@ -68,7 +57,36 @@ function getParameterByName(name) {
                           </li>
                         </ul>
                     `
+
+
+                    wish.innerHTML = `
+                <a href="/manager/wishlist">
+                    <i class="lni lni-heart"></i>
+                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
+                </a>
+            `
+                    cart.innerHTML = `
+            <a href="/manager/cart" class="main-btn">
+                                  <i class="lni lni-cart"></i>
+                                  <span class="total-items">${cartData.length}</span>
+                                </a>
+            `
+
                 }else{
+                    cart.innerHTML = `
+            <a href="/mypage/cart" class="main-btn">
+                                  <i class="lni lni-cart"></i>
+                                  <span class="total-items">${cartData.length}</span>
+                                </a>
+            `
+
+                    wish.innerHTML = `
+                <a href="/user/wishlist">
+                    <i class="lni lni-heart"></i>
+                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
+                </a>
+            `
+
                     loginInfo.innerHTML = `
                         <div class="user">
                             <i class="lni lni-user"></i>                    
