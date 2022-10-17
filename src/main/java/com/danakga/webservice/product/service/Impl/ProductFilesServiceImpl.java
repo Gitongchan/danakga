@@ -57,7 +57,6 @@ public class ProductFilesServiceImpl implements ProductFilesService {
             String filepath = savePath + "//" + saveFileName;
             String dbFilePath = "../product_files/" + saveFileName;
 
-            System.out.println(filepath);
             try {
                 multipartFile.transferTo(new File(filepath));
             } catch (IOException e) {

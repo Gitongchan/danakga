@@ -1,4 +1,4 @@
-package com.danakga.webservice.siteinquiry.dto.response;
+package com.danakga.webservice.siteqna.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResSiteInquiryDto {
+public class ResSiteQnADto {
 
-    private List<Map<String,Object>> sinList;
+    private List<Map<String,Object>> sqList;
 }

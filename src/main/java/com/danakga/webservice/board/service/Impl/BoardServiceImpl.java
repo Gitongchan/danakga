@@ -10,7 +10,7 @@ import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.CommentRepository;
 import com.danakga.webservice.board.repository.FileRepository;
 import com.danakga.webservice.board.service.BoardService;
-import com.danakga.webservice.board.service.FilesService;
+import com.danakga.webservice.board.service.BoardFileService;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -37,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final FileRepository fileRepository;
-    private final FilesService filesService;
+    private final BoardFileService boardFilesService;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
@@ -237,7 +237,7 @@ public class BoardServiceImpl implements BoardService {
                                     .userInfo(checkUserInfo)
                                     .build()
                     );
-                    if (!filesService.saveFileUpload(files, board).equals(1L)) {
+                    if (!boardFilesService.saveFileUpload(files, board).equals(1L)) {
                         return new ResResultDto(-2L, "게시글 작성에 실패 했습니다(이미지 업로드 오류)");
                     }
                     return new ResResultDto(board.getBdId(), "게시글을 작성 했습니다.");
@@ -320,7 +320,7 @@ public class BoardServiceImpl implements BoardService {
                                     .userInfo(checkUserInfo)
                                     .build()
                     );
-                    if (!filesService.saveFileUpload(files, checkBoard).equals(1L)) {
+                    if (!boardFilesService.saveFileUpload(files, checkBoard).equals(1L)) {
                         return new ResResultDto(-2L, "게시글 수정에 실패 했습니다(이미지 업로드 오류)");
                     }
                     return new ResResultDto(checkBoard.getBdId(), "게시글을 수정 했습니다.");

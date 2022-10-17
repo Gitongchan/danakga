@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface FilesService {
+public interface BoardFileService {
 
     //파일 저장
     Long saveFileUpload(List<MultipartFile> files, Board board);
