@@ -18,18 +18,18 @@ public class SiteQnAController {
     /* 문의 사항 작성 */
     @PostMapping("/siteQnA/write")
     public ResResultDto siteQnAWrite(@LoginUser UserInfo userInfo,
-                                     @RequestBody ReqSiteQnADto reqInquiryDto) {
+                                     @RequestBody ReqSiteQnADto reqSieQnADto) {
 
-        return siteQnAService.siteQnAWrite(userInfo, reqInquiryDto);
+        return siteQnAService.siteQnAWrite(userInfo, reqSieQnADto);
     }
 
     /* 문의사항 수정 */
     @PutMapping("/siteQnA/edit/{sq_id}")
     public ResResultDto siteQnAEdit(@LoginUser UserInfo userInfo,
-                                    @RequestBody ReqSiteQnADto reqInquiryDto,
+                                    @RequestBody ReqSiteQnADto reqSieQnADto,
                                     @PathVariable Long sq_id) {
 
-        return siteQnAService.siteQnAEdit(userInfo, reqInquiryDto, sq_id);
+        return siteQnAService.siteQnAEdit(userInfo, reqSieQnADto, sq_id);
     }
     
     /* 문의사항 삭제 상태 변경 */

@@ -81,16 +81,16 @@ public class SiteQnAServiceImpl implements SiteQnAService {
 
     /* 문의사항 작성 */
     @Override
-    public ResResultDto siteQnAWrite(UserInfo userInfo, ReqSiteQnADto reqInquiryDto) {
+    public ResResultDto siteQnAWrite(UserInfo userInfo, ReqSiteQnADto reqSieQnADto) {
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
         SiteQnA siteInquiry = siteQnARepository.save(
                 SiteQnA.builder()
-                        .sqType(reqInquiryDto.getSqType())
-                        .sqTitle(reqInquiryDto.getSqContent())
-                        .sqContent(reqInquiryDto.getSqContent())
+                        .sqType(reqSieQnADto.getSqType())
+                        .sqTitle(reqSieQnADto.getSqContent())
+                        .sqContent(reqSieQnADto.getSqContent())
                         .userInfo(recentUserInfo)
                         .build()
         );
@@ -101,7 +101,7 @@ public class SiteQnAServiceImpl implements SiteQnAService {
     /* 문의사항 수정 */
     @Transactional
     @Override
-    public ResResultDto siteQnAEdit(UserInfo userInfo, ReqSiteQnADto reqInquiryDto, Long sq_id) {
+    public ResResultDto siteQnAEdit(UserInfo userInfo, ReqSiteQnADto reqSieQnADto, Long sq_id) {
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -112,9 +112,9 @@ public class SiteQnAServiceImpl implements SiteQnAService {
         checkSiteInquiry = siteQnARepository.save(
                 SiteQnA.builder()
                         .sqId(checkSiteInquiry.getSqId())
-                        .sqType(reqInquiryDto.getSqType())
-                        .sqTitle(reqInquiryDto.getSqTitle())
-                        .sqContent(reqInquiryDto.getSqContent())
+                        .sqType(reqSieQnADto.getSqType())
+                        .sqTitle(reqSieQnADto.getSqTitle())
+                        .sqContent(reqSieQnADto.getSqContent())
                         .sqCreated(checkSiteInquiry.getSqCreated())
                         .sqDeleted(checkSiteInquiry.getSqDeleted())
                         .userInfo(recentUserInfo)

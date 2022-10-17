@@ -15,10 +15,10 @@ public interface SiteQnAService {
     ResSiteQnADto siteQnAPost(Long sq_id);
 
     /* 문의사항 작성 */
-    ResResultDto siteQnAWrite(UserInfo userInfo, ReqSiteQnADto reqInquiryDto);
+    ResResultDto siteQnAWrite(UserInfo userInfo, ReqSiteQnADto reqSieQnADto);
 
     /* 문의사항 수정 */
-    ResResultDto siteQnAEdit(UserInfo userInfo, ReqSiteQnADto reqInquiryDto, Long sq_id);
+    ResResultDto siteQnAEdit(UserInfo userInfo, ReqSiteQnADto reqSieQnADto, Long sq_id);
 
     /* 문의사항 삭제 상태 변경 */
     ResResultDto siteQnADelete(UserInfo userInfo, Long sq_id);
