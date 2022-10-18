@@ -11,6 +11,12 @@ const cart = document.getElementById('cart-items');
 const wish = document.getElementById('wishlist');
 const loginInfo = document.getElementById('user-info');
 
+// navbar
+const myShopManagement = document.querySelector('#nav');
+const shopHTML = `<li class="nav-item">
+                                    <a href="/manager/shop" aria-label="Toggle navigation">상점관리</a>
+                                </li>`
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -72,6 +78,8 @@ function getParameterByName(name) {
                                 </a>
             `
 
+
+                    myShopManagement.insertAdjacentHTML('beforeend',shopHTML)
                 }else{
                     cart.innerHTML = `
             <a href="/mypage/cart" class="main-btn">
