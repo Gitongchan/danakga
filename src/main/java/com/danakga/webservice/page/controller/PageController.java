@@ -5,164 +5,232 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+
+    // ------------------공통부분------------------
     @GetMapping("/")
-    public String index(){
+    public String index() {
         return "pages/index";
     }
 
     @GetMapping("/index")
-    public String index2(){
+    public String index2() {
         return "pages/index";
     }
 
     @GetMapping("/register")
-    public String register(){
+    public String register() {
         return "pages/userRegister";
     }
 
     @GetMapping("/findId")
-    public String findId(){
+    public String findId() {
         return "pages/find-id";
     }
 
     @GetMapping("/findPw")
-    public String findPW(){
+    public String findPW() {
         return "pages/find-pw";
     }
 
     @GetMapping("/id_pw_search")
-    public String id_pw_Search(){
+    public String id_pw_Search() {
         return "pages/search-id-pw";
     }
 
     @GetMapping("/id_search")
-    public String id_Search(){
+    public String id_Search() {
         return "pages/search_id";
     }
 
     @GetMapping("/pw_search")
-    public String pw_Search(){
+    public String pw_Search() {
         return "pages/search_pw";
     }
 
     @GetMapping("/product/main")
-    public String mainFunction(){
+    public String mainFunction() {
         return "pages/mainfunction";
     }
 
-    @GetMapping("/user/mypage")
-    public String mypageUser(){
-        return "pages/mypageUser";
+    @GetMapping("/board/basic") //자유  게시판 조회
+    public String basicBoardList() {
+        return "pages/basic-boardlist";
     }
 
-    @GetMapping("/user/myboard")
-    public String mypageUserBoard(){
-        return "pages/mypageUserBoard";
+    @GetMapping("/board/qa") //문의 게시판 조회
+    public String qaBoardList() {
+        return "pages/qa-boardlist";
     }
 
-    @GetMapping("/user/wishlist")
-    public String myPageWishList(){
-        return "pages/wish-list";
+    @GetMapping("/board/post") //작성
+    public String boardEdition() {
+        return "pages/boardPost";
     }
 
-    @GetMapping("/user/orderlist")
-    public String myPageOrderList() { return "pages/order-list"; }
-
-    @GetMapping("/manager/wishlist")
-    public String managerWishList(){
-        return "pages/managerWish-list";
+    @GetMapping("/board/info") //게시글 상세조회
+    public String boardInfo() {
+        return "pages/boardInfo";
     }
 
-    @GetMapping("/manager/myOrderlist")
-    public String managerMyOrderList() { return "pages/managerOrder-list"; }
-    @GetMapping("/manager/myboard")
-    public String mypageManagerBoard(){
-        return "pages/mypageManagerBoard";
+    @GetMapping("/board/edit") //게시글 수정
+    public String boardEdit() {
+        return "pages/boardEdit";
     }
 
-    @GetMapping("/manager/mypage")
-    public String mypageManager(){return "pages/mypageManager";}
-    @GetMapping("/product/myTools")
-    public String mytools(){return "pages/myTools";}
-
-    @GetMapping("/mypage/myFolder")
-    public String myFolder(){return "pages/myFolder";}
-
-    @GetMapping("/mypage/cart")
-    public String myPageCart(){return "pages/cart";}
-
-    @GetMapping("/manager/cart")
-    public String managerCart(){return "pages/manager-cart";}
-
-    @GetMapping("/manager/companyinfo")
-    public String mypageCompany(){
-        return "pages/mypageManagerInfo";
+    @GetMapping("/board/faq") //자주묻는질문
+    public String boardFAQ() {
+        return "pages/faq";
     }
 
-    @GetMapping("/manager/myproductlist")
-    public String productList(){
-        return "pages/myProductList";
-    }
-
-    @GetMapping("/manager/orderList")
-    public String managerOrderList(){
-        return "pages/managerOrder-list";
-    }
     @GetMapping("/product/info")
-    public String productInfo(){
+    public String productInfo() {
         return "pages/product-details";
     }
 
-    @GetMapping("/product/edit")
-    public String productEdit(){
-        return "pages/edit-product";
+    @GetMapping("/product/myTools")
+    public String mytools() {
+        return "pages/myTools";
     }
 
-    @GetMapping("/board/basic") //자유  게시판 조회
-    public String basicBoardList(){return "pages/basic-boardlist";}
+    @GetMapping("/mypage/myFolder")
+    public String myFolder() {
+        return "pages/myFolder";
+    }
 
-    @GetMapping("/board/qa") //문의 게시판 조회
-    public String qaBoardList(){return "pages/qa-boardlist";}
+    @GetMapping("/manager/myFolder")
+    public String mypageManagerFolder() {
+        return "pages/myFolder";
+    }
 
-    @GetMapping("/board/post") //작성
-    public String boardEdition(){return "pages/boardPost";}
+    // ------------------유저부분------------------
 
-    @GetMapping("/board/info") //게시글 상세조회
-    public String boardInfo(){return "pages/boardInfo";}
+    @GetMapping("/user/mypage")
+    public String mypageUser() {
+        return "pages/user/mypageUser";
+    }
 
-    @GetMapping("/board/edit") //게시글 수정
-    public String boardEdit(){return "pages/boardEdit";}
+    @GetMapping("/user/orderlist")
+    public String myPageOrderList() {
+        return "pages/user/mypageUserOrderList";
+    }
 
-    @GetMapping("/board/faq") //자주묻는질문
-    public String boardFAQ(){return "pages/faq";}
+    @GetMapping("/user/wishlist")
+    public String myPageWishList() {
+        return "pages/user/mypageUserWishList";
+    }
+
+    @GetMapping("/mypage/cart")
+    public String myPageCart() {
+        return "pages/user/mypageUserCart";
+    }
+
+
+    @GetMapping("/user/myreview")
+    public String myReview() {
+        return "pages/user/mypageUserReviewList";
+    }
+
+    @GetMapping("/user/myboard")
+    public String mypageUserBoard() {
+        return "pages/user/mypageUserBoard";
+    }
+
+    @GetMapping("/user/changeCompany")
+    public String myPageUserChangeCompany() {
+        return "pages/user/mypageUserChangeCompany";
+    }
+
 
     @GetMapping("/user/edit")
-    public String myPageEdit(){
-        return "pages/mypageUserEdit";
+    public String myPageEdit() {
+        return "pages/user/mypageUserEdit";
     }
 
     @GetMapping("/user/signout")
-    public String signOut(){
-        return "pages/userSignout";
+    public String signOut() {
+        return "pages/user/mypageUserSignOut";
     }
 
-    @GetMapping("/CompanySignout")
-    public String CompanySignout(){return "pages/CompanySignout";}
 
-    @GetMapping("/user/myreview")
-    public String myReview() { return "pages/my-reviewList";}
-    @GetMapping("/addproduct")
-    public String addProduct(){
-        return "pages/addProduct";
+
+    // ------------------사업자 부분(유저기능 사용)------------------
+    @GetMapping("/manager/mypage")
+    public String mypageManager() {
+        return "pages/manager/mypageManager";
     }
 
-    @GetMapping("/product/grid")
-    public String productgrid(){
-        return "pages/product-grids";
+    @GetMapping("/manager/orderList")
+    public String managerOrderList() {
+        return "pages/manager/mypageManagerOrderList";
     }
-    @GetMapping("/userchangecompany")
-    public  String userchangecompany(){return "pages/userchangecompany";}
+
+    @GetMapping("/manager/wishlist")
+    public String managerWishList() {
+        return "pages/manager/mypageManagerWishList";
+    }
+
+    @GetMapping("/manager/cart")
+    public String managerCart() {
+        return "pages/manager/mypageManagerCart";
+    }
+
+    @GetMapping("/manager/myreview")
+    public String managerReview() {
+        return "pages/manager/mypageManagerReviewList";
+    }
+
+    @GetMapping("/manager/myboard")
+    public String mypageManagerBoard() {
+        return "pages/manager/mypageManagerBoard";
+    }
+
+
+
+
+    // --------------------상점 부분---------------------
+    @GetMapping("/shop")
+    public String mypageShop() {
+        return "pages/manager/mypageShopInfo";
+    }
+
+    @GetMapping("/shop/addProduct")
+    public String addProduct() {
+        return "pages/manager/mypageShopAddProduct";
+    }
+
+    @GetMapping("/shop/productList")
+    public String productList() {
+        return "pages/manager/mypageShopProductList";
+    }
+
+    @GetMapping("/shop/orderList")
+    public String managerSalesList() {
+        return "pages/manager/mypageShopOrderList";
+    }
+
+    @GetMapping("/shop/signOut")
+    public String CompanySignout() {
+        return "pages/manager/mypageShopSignOut";
+    }
+
+
+    @GetMapping("/shop/product/edit")
+    public String productEdit() {
+        return "pages/manager/mypageShopEditProduct";
+    }
+
+
+    // ------------------어드민------------------
 
     @GetMapping("/admin/index")
-    public  String adminIndex(){return "admin/index";}
+    public String adminIndex() {
+        return "admin/index";
+    }
+
+
+    //잡
+    @GetMapping("/product/grid")
+    public String productgrid() {
+        return "pages/product-grids";
+    }
 }

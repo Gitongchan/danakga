@@ -11,6 +11,12 @@ const cart = document.getElementById('cart-items');
 const wish = document.getElementById('wishlist');
 const loginInfo = document.getElementById('user-info');
 
+// navbar
+const myShopManagement = document.querySelector('#nav');
+const shopHTML = `<li class="nav-item">
+                                    <a href="/shop" aria-label="Toggle navigation">상점관리</a>
+                                </li>`
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -34,12 +40,45 @@ function getParameterByName(name) {
             const wishRes = await fetch('/api/user/wish/0');
             const wishData = await wishRes.json();
 
+            loginInfo.innerHTML = `
+                        <div class="user">
+                            <i class="lni lni-user"></i>                    
+                          ${data.userid}님! 안녕하세요!
+                        </div>
+                        <ul class="user-login">
+                          <li>
+                            <a href="/user/mypage">내정보</a>
+                          </li>
+                          <li>
+                          <form method="POST" action="/api/user/logout">
+                                <input type="hidden" name="_csrf" value="${token}">
+                                <button>로그아웃</button>
+                          </form>
+                          </li>
+                        </ul>
+                    `
+
+
+            wish.innerHTML = `
+                <a href="/manager/wishlist">
+                    <i class="lni lni-heart"></i>
+                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
+                </a>
+            `
+            cart.innerHTML = `
+            <a href="/manager/cart" class="main-btn">
+                                  <i class="lni lni-cart"></i>
+                                  <span class="total-items">${cartData.length}</span>
+                                </a>
+            `
 
             const mRes = await fetch('/api/manager');
                 if(mRes.status === 200){
 
                     const mData = await mRes.json();
                     checkCompany.value = mData.companyId;
+
+
                     loginInfo.innerHTML = `
                         <div class="user">
                             <i class="lni lni-user"></i>                    
@@ -58,53 +97,7 @@ function getParameterByName(name) {
                         </ul>
                     `
 
-
-                    wish.innerHTML = `
-                <a href="/manager/wishlist">
-                    <i class="lni lni-heart"></i>
-                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
-                </a>
-            `
-                    cart.innerHTML = `
-            <a href="/manager/cart" class="main-btn">
-                                  <i class="lni lni-cart"></i>
-                                  <span class="total-items">${cartData.length}</span>
-                                </a>
-            `
-
-                }else{
-                    cart.innerHTML = `
-            <a href="/mypage/cart" class="main-btn">
-                                  <i class="lni lni-cart"></i>
-                                  <span class="total-items">${cartData.length}</span>
-                                </a>
-            `
-
-                    wish.innerHTML = `
-                <a href="/user/wishlist">
-                    <i class="lni lni-heart"></i>
-                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
-                </a>
-            `
-
-                    loginInfo.innerHTML = `
-                        <div class="user">
-                            <i class="lni lni-user"></i>                    
-                          ${data.userid}님! 안녕하세요!
-                        </div>
-                        <ul class="user-login">
-                          <li>
-                            <a href="/user/mypage">내정보</a>
-                          </li>
-                          <li>
-                          <form method="POST" action="/api/user/logout">
-                                <input type="hidden" name="_csrf" value="${token}">
-                                <button>로그아웃</button>
-                          </form>
-                            
-                          </li>
-                        </ul>
-                    `
+                    myShopManagement.insertAdjacentHTML('beforeend',shopHTML)
                 }
         }
     }
