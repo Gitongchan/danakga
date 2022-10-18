@@ -87,6 +87,20 @@ public class PageController {
         return "pages/product-details";
     }
 
+    @GetMapping("/product/myTools")
+    public String mytools() {
+        return "pages/myTools";
+    }
+
+    @GetMapping("/mypage/myFolder")
+    public String myFolder() {
+        return "pages/myFolder";
+    }
+
+    @GetMapping("/manager/myFolder")
+    public String mypageManagerFolder() {
+        return "pages/myFolder";
+    }
 
     // ------------------유저부분------------------
 
@@ -95,40 +109,35 @@ public class PageController {
         return "pages/user/mypageUser";
     }
 
+    @GetMapping("/user/orderlist")
+    public String myPageOrderList() {
+        return "pages/user/mypageUserOrderList";
+    }
+
+    @GetMapping("/user/wishlist")
+    public String myPageWishList() {
+        return "pages/user/mypageUserWishList";
+    }
+
+    @GetMapping("/mypage/cart")
+    public String myPageCart() {
+        return "pages/user/mypageUserCart";
+    }
+
+
+    @GetMapping("/user/myreview")
+    public String myReview() {
+        return "pages/user/mypageUserReviewList";
+    }
+
     @GetMapping("/user/myboard")
     public String mypageUserBoard() {
         return "pages/user/mypageUserBoard";
     }
 
-    @GetMapping("/user/wishlist")
-    public String myPageWishList() {
-        return "pages/user/wish-list";
-    }
-
-    @GetMapping("/user/orderlist")
-    public String myPageOrderList() {
-        return "pages/user/order-list";
-    }
-
-    @GetMapping("/product/myTools")
-    public String mytools() {
-        return "pages/user/myTools";
-    }
-
-    @GetMapping("/mypage/myFolder")
-    public String myFolder() {
-        return "pages/user/myFolder";
-    }
-
-    @GetMapping("/mypage/cart")
-    public String myPageCart() {
-        return "pages/user/cart";
-    }
-
-
-    @GetMapping("/userchangecompany")
-    public String userchangecompany() {
-        return "pages/user/userchangecompany";
+    @GetMapping("/user/changeCompany")
+    public String myPageUserChangeCompany() {
+        return "pages/user/mypageUserChangeCompany";
     }
 
 
@@ -139,24 +148,35 @@ public class PageController {
 
     @GetMapping("/user/signout")
     public String signOut() {
-        return "pages/user/userSignout";
-    }
-
-    @GetMapping("/user/myreview")
-    public String myReview() {
-        return "pages/user/my-reviewList";
+        return "pages/user/mypageUserSignOut";
     }
 
 
-    // ------------------사업자 부분------------------
+
+    // ------------------사업자 부분(유저기능 사용)------------------
+    @GetMapping("/manager/mypage")
+    public String mypageManager() {
+        return "pages/manager/mypageManager";
+    }
+
+    @GetMapping("/manager/orderList")
+    public String managerOrderList() {
+        return "pages/manager/mypageManagerOrderList";
+    }
+
     @GetMapping("/manager/wishlist")
     public String managerWishList() {
-        return "pages/manager/managerWish-list";
+        return "pages/manager/mypageManagerWishList";
     }
 
-    @GetMapping("/manager/myOrderlist")
-    public String managerMyOrderList() {
-        return "pages/manager/managerOrder-list";
+    @GetMapping("/manager/cart")
+    public String managerCart() {
+        return "pages/manager/mypageManagerCart";
+    }
+
+    @GetMapping("/manager/myreview")
+    public String managerReview() {
+        return "pages/manager/mypageManagerReviewList";
     }
 
     @GetMapping("/manager/myboard")
@@ -164,44 +184,39 @@ public class PageController {
         return "pages/manager/mypageManagerBoard";
     }
 
-    @GetMapping("/manager/mypage")
-    public String mypageManager() {
-        return "pages/manager/mypageManager";
+
+
+
+    // --------------------상점 부분---------------------
+    @GetMapping("/shop")
+    public String mypageShop() {
+        return "pages/manager/mypageShopInfo";
     }
 
-    @GetMapping("/manager/cart")
-    public String managerCart() {
-        return "pages/manager/manager-cart";
-    }
-
-    @GetMapping("/manager/companyinfo")
-    public String mypageCompany() {
-        return "pages/manager/mypageManagerInfo";
-    }
-
-    @GetMapping("/manager/myproductlist")
-    public String productList() {
-        return "pages/manager/myProductList";
-    }
-
-    @GetMapping("/manager/orderList")
-    public String managerOrderList() {
-        return "pages/manager/managerOrder-list";
-    }
-
-    @GetMapping("/addproduct")
+    @GetMapping("/shop/addProduct")
     public String addProduct() {
-        return "pages/manager/addProduct";
+        return "pages/manager/mypageShopAddProduct";
     }
 
-    @GetMapping("/product/edit")
-    public String productEdit() {
-        return "pagesmanager/edit-product";
+    @GetMapping("/shop/productList")
+    public String productList() {
+        return "pages/manager/mypageShopProductList";
     }
 
-    @GetMapping("/CompanySignout")
+    @GetMapping("/shop/orderList")
+    public String managerSalesList() {
+        return "pages/manager/mypageShopOrderList";
+    }
+
+    @GetMapping("/shop/signOut")
     public String CompanySignout() {
-        return "pages/manager/CompanySignout";
+        return "pages/manager/mypageShopSignOut";
+    }
+
+
+    @GetMapping("/shop/product/edit")
+    public String productEdit() {
+        return "pages/manager/mypageShopEditProduct";
     }
 
 
