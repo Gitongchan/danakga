@@ -2,6 +2,12 @@
 <link rel="stylesheet" href="/css/product.css">
 <link rel="stylesheet" href="/css/mypageUser.css">
 <link rel="stylesheet" href="/css/mypageManager.css">
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 {{>pages/header2}}
 
 <div class="container">
@@ -18,8 +24,58 @@
                 </div>
             </nav>
             <article class="product-list">
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="d-flex align-items-center w-17">
+                        <span class="w-50 align-center">상품종류</span>
+                        <select class="form-select" aria-label="select order-status">
+                            <option value="상품준비중">모든상품</option>
+                            <!--                                    <option value="배송완료">배송완료</option>-->
+                            <!--                                    <option value="반품신청">반품신청</option>-->
+                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center w-17">
+                        <span class="w-50 align-center">세부종류</span>
+                        <select class="form-select" aria-label="select order-status">
+                            <option value="상품준비중">모든상품</option>
+                            <!--                                    <option value="배송완료">배송완료</option>-->
+                            <!--                                    <option value="반품신청">반품신청</option>-->
+                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center w-17">
+                        <span class="w-50 align-center">브랜드</span>
+                        <select class="form-select" aria-label="select order-status">
+                            <option value="상품준비중">모든상품</option>
+                            <!--                                    <option value="배송완료">배송완료</option>-->
+                            <!--                                    <option value="반품신청">반품신청</option>-->
+                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center w-17">
+                        <span class="w-50 align-center">정렬종류</span>
+                        <select class="form-select" aria-label="select order-status">
+                            <option value="상품준비중">모든상품</option>
+                            <!--                                    <option value="배송완료">배송완료</option>-->
+                            <!--                                    <option value="반품신청">반품신청</option>-->
+                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        </select>
+                    </div>
+                    <div class="order_date_wrap d-flex align-items-center">
+                        <div class="order_date">
+                            <input type="text" name="daterange" value="" />
+                            <input type="hidden" value="" id="startDate"/>
+                            <input type="hidden" value="" id="endDate"/>
+                            <button type="button" id="search-date">검색하기</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="product-list-header">
-                    <div class="align-right">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <span class="w-25 align-center">상품명</span>
+                                <input class="form-control" type="text" placeholder="상품명을 입력하세요" required />
+                        </div>
                         <button class="btn" id="product-listBtn">조회</button>
                     </div>
                 </div>
@@ -53,10 +109,20 @@
 
     </div>
 </div>
+<script>
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            document.getElementById('startDate').value = start.format('YYYY-MM-DD')+'T00:00';
+            document.getElementById('endDate').value = end.format('YYYY-MM-DD')+'T00:00';
+        });
+    });
+</script>
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
-<script src="/js/product/myProductList.js"></script>
-<script src="/js/product/myProduct-pagination.js"></script>
+
+<script src="/js/product/shopProductList.js"></script>
 
 {{>pages/footer2}}
