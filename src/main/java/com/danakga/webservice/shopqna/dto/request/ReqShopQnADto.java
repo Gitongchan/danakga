@@ -1,4 +1,4 @@
-package com.danakga.webservice.siteqna.dto.request;
+package com.danakga.webservice.shopqna.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 @ToString
-public class ReqSiteQnADto {
+public class ReqShopQnADto {
 
     @NotBlank(message = "유형은 필수로 선택해야 합니다.")
     private String sqType;

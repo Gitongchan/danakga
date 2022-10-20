@@ -1,4 +1,4 @@
-package com.danakga.webservice.siteqna.model;
+package com.danakga.webservice.shopqna.model;
 
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AccessLevel;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SiteQnA {
+public class ShopQnA {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sin_id")
@@ -54,7 +54,7 @@ public class SiteQnA {
     }
 
     @Builder
-    public SiteQnA(Long sqId, String sqType, String sqTitle, String sqContent,
+    public ShopQnA(Long sqId, String sqType, String sqTitle, String sqContent,
                    int sqState, String sqDeleted, LocalDateTime sqCreated, LocalDateTime sqModified, UserInfo userInfo) {
         this.sqId = sqId;
         this.sqType = sqType;
