@@ -1,4 +1,4 @@
-package com.danakga.webservice.siteinquiry.model;
+package com.danakga.webservice.shopqna.model;
 
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AccessLevel;
@@ -14,33 +14,33 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SiteInquiry {
+public class ShopQnA {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sin_id")
-    private Long sinId;
+    private Long sqId;
 
     @Column(name = "sin_type")
-    private String sinType;
+    private String sqType;
 
     @Column(name = "sin_title")
-    private String sinTitle;
+    private String sqTitle;
 
     @Column(name = "sin_content")
-    private String sinContent;
+    private String sqContent;
 
     //0은 답변x, 1은 답변o
     @Column(name = "sin_state")
-    private int sinState;
+    private int sqState;
 
     @Column(name = "sin_deleted")
-    private String sinDeleted;
+    private String sqDeleted;
 
     @CreationTimestamp
-    private LocalDateTime sinCreated;
+    private LocalDateTime sqCreated;
 
     @UpdateTimestamp
-    private LocalDateTime sinModified;
+    private LocalDateTime sqModified;
 
     @ManyToOne
     @JoinColumn(name = "u_id")
@@ -49,21 +49,21 @@ public class SiteInquiry {
     //답변, 삭제여부 기본 값 설정
     @PrePersist
     public void state() {
-        this.sinState = 0;
-        this.sinDeleted = "N";
+        this.sqState = 0;
+        this.sqDeleted = "N";
     }
 
     @Builder
-    public SiteInquiry(Long sinId, String sinType, String sinTitle, String sinContent,
-                       int sinState, String sinDeleted, LocalDateTime sinCreated, LocalDateTime sinModified, UserInfo userInfo) {
-        this.sinId = sinId;
-        this.sinType = sinType;
-        this.sinTitle = sinTitle;
-        this.sinContent = sinContent;
-        this.sinState = sinState;
-        this.sinDeleted = sinDeleted;
-        this.sinCreated = sinCreated;
-        this.sinModified = sinModified;
+    public ShopQnA(Long sqId, String sqType, String sqTitle, String sqContent,
+                   int sqState, String sqDeleted, LocalDateTime sqCreated, LocalDateTime sqModified, UserInfo userInfo) {
+        this.sqId = sqId;
+        this.sqType = sqType;
+        this.sqTitle = sqTitle;
+        this.sqContent = sqContent;
+        this.sqState = sqState;
+        this.sqDeleted = sqDeleted;
+        this.sqCreated = sqCreated;
+        this.sqModified = sqModified;
         this.userInfo = userInfo;
     }
 }

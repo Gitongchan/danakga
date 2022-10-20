@@ -1,4 +1,4 @@
-package com.danakga.webservice.siteinquiry.dto.request;
+package com.danakga.webservice.shopqna.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,15 +11,15 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 @ToString
-public class ReqSiteInquiryDto {
+public class ReqShopQnADto {
 
     @NotBlank(message = "유형은 필수로 선택해야 합니다.")
-    private String sinType;
+    private String sqType;
 
     @NotBlank(message = "제목은 필수로 입력해야 합니다.")
-    private String sinTitle;
+    private String sqTitle;
 
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
-    private String sinContent;
+    private String sqContent;
 
 }

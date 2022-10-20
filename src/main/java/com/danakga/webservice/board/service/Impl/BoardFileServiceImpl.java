@@ -3,7 +3,7 @@ package com.danakga.webservice.board.service.Impl;
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.FileRepository;
-import com.danakga.webservice.board.service.FilesService;
+import com.danakga.webservice.board.service.BoardFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FileServiceImpl implements FilesService {
+public class BoardFileServiceImpl implements BoardFileService {
 
      private final FileRepository fileRepository;
 
