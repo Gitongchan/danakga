@@ -7308,6 +7308,10 @@ fieldset:disabled .btn {
     width: 17% !important
 }
 
+.w-30 {
+    width: 30% !important
+
+}
 .w-25 {
     width: 25% !important
 }

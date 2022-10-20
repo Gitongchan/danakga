@@ -27,46 +27,64 @@
                 <div class="d-flex justify-content-between mb-3">
                     <div class="d-flex align-items-center w-17">
                         <span class="w-50 align-center">상품종류</span>
-                        <select class="form-select" aria-label="select order-status">
-                            <option value="상품준비중">모든상품</option>
-                            <!--                                    <option value="배송완료">배송완료</option>-->
-                            <!--                                    <option value="반품신청">반품신청</option>-->
-                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        <select class="form-select" id="main-type" aria-label="select order-status" onchange="changeSubType()">
+                            <option value="%25">상관없음</option>
+                            <option value="바다로드">바다로드</option>
+                            <option value="민물로드">민물로드</option>
+                            <option value="원투낚시">원투낚시</option>
+                            <option value="릴/용품">릴/용품</option>
+                            <option value="라인/용품">라인/용품</option>
+                            <option value="바늘/훅">바늘/훅</option>
                         </select>
                     </div>
                     <div class="d-flex align-items-center w-17">
                         <span class="w-50 align-center">세부종류</span>
-                        <select class="form-select" aria-label="select order-status">
-                            <option value="상품준비중">모든상품</option>
-                            <!--                                    <option value="배송완료">배송완료</option>-->
-                            <!--                                    <option value="반품신청">반품신청</option>-->
-                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        <select class="form-select" id="sub-type" aria-label="select order-status">
+                            <option value="%25">상관없음</option>
+                            <option value="인쇼어">인쇼어</option>
+                            <option value="라이트지깅">라이트지깅</option>
+                            <option value="볼락/락피쉬">볼락/락피쉬</option>
+                            <option value="지깅로드">지깅로드</option>
+                            <option value="선상캐스트로드">선상캐스트로드</option>
+                            <option value="외수질/침선">외수질/침선</option>
+                            <option value="타이라바">타이라바</option>
+                            <option value="좌대용">좌대용</option>
+                            <option value="두족류">두족류</option>
                         </select>
                     </div>
                     <div class="d-flex align-items-center w-17">
                         <span class="w-50 align-center">브랜드</span>
-                        <select class="form-select" aria-label="select order-status">
-                            <option value="상품준비중">모든상품</option>
-                            <!--                                    <option value="배송완료">배송완료</option>-->
-                            <!--                                    <option value="반품신청">반품신청</option>-->
-                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        <select class="form-select" id="brand-type" aria-label="select order-status">
+                            <option value="%25">상관없음</option>
+                            <option value="시마노">시마노</option>
+                            <option value="바낙스">바낙스</option>
+                            <option value="청룡조구">청룡조구</option>
+                            <option value="아부가르시아">아부가르시아</option>
+                            <option value="다이와">다이와</option>
+                            <option value="해동조구사">해동조구사</option>
+                            <option value="키우라">키우라</option>
+                            <option value="용성">용성</option>
+                            <option value="은성사">은성사</option>
+                            <option value="가마가츠">가마가츠</option>
                         </select>
                     </div>
                     <div class="d-flex align-items-center w-17">
-                        <span class="w-50 align-center">정렬종류</span>
-                        <select class="form-select" aria-label="select order-status">
-                            <option value="상품준비중">모든상품</option>
-                            <!--                                    <option value="배송완료">배송완료</option>-->
-                            <!--                                    <option value="반품신청">반품신청</option>-->
-                            <!--                                    <option value="교환신청">교환신청</option>-->
+                        <span class="w-50 align-center">정렬타입</span>
+                        <select class="form-select" id="category-type" aria-label="select order-status">
+                            <option value="productName" selected>상품명</option>
+                            <option value="productStock">재고수</option>
+                            <option value="productType">상품종류</option>
+                            <option value="productSubType">세부종류</option>
+                            <option value="productBrand">브랜드</option>
+                            <option value="productUploadDate">등록일</option>
                         </select>
                     </div>
+
                     <div class="order_date_wrap d-flex align-items-center">
                         <div class="order_date">
                             <input type="text" name="daterange" value="" />
                             <input type="hidden" value="" id="startDate"/>
                             <input type="hidden" value="" id="endDate"/>
-                            <button type="button" id="search-date">검색하기</button>
                         </div>
                     </div>
                 </div>
@@ -74,7 +92,20 @@
                     <div class="d-flex justify-content-between">
                         <div class="d-flex align-items-center">
                             <span class="w-25 align-center">상품명</span>
-                                <input class="form-control" type="text" placeholder="상품명을 입력하세요" required />
+                            <input class="form-control" type="text" id="productName" placeholder="상품명을 입력하세요" required />
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="w-30 align-center">가격범위</span>
+                            <input class="form-control" type="number" id="startPrice" placeholder="최소가격을 적어주세요" required />
+                            ~
+                            <input class="form-control" type="number" id="endPrice" placeholder="최대가격을 적어주세요" required />
+                        </div>
+                        <div class="d-flex align-items-center w-17">
+                            <span class="w-50 align-center">정렬종류</span>
+                            <select class="form-select" id="sort-type" aria-label="select order-status">
+                                <option value="des" selected>오름차순</option>
+                                <option value="asc">내림차순</option>
+                            </select>
                         </div>
                         <button class="btn" id="product-listBtn">조회</button>
                     </div>
@@ -114,10 +145,15 @@
         $('input[name="daterange"]').daterangepicker({
             opens: 'left'
         }, function(start, end, label) {
-            document.getElementById('startDate').value = start.format('YYYY-MM-DD')+'T00:00';
-            document.getElementById('endDate').value = end.format('YYYY-MM-DD')+'T00:00';
+            startDate = start.format('YYYY-MM-DD')+'T00:00';
+            endDate = end.format('YYYY-MM-DD')+'T00:00';
         });
     });
+
+
+
+    var startDate = today.toISOString().substring(0,11)+'00:00';
+    var endDate = today.toISOString().substring(0,11)+'23:59';
 </script>
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
