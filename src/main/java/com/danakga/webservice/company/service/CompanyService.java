@@ -2,6 +2,7 @@ package com.danakga.webservice.company.service;
 
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
+import com.danakga.webservice.company.dto.response.ResRevenueDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.user.dto.request.UserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
@@ -22,4 +23,7 @@ public interface CompanyService {
 
     //사업자 회사 정보 조회
     CompanyInfo companyInfoCheck(UserInfo userInfo);
+
+    //기간별 판매금액 조회 (수익금)
+    ResRevenueDto revenueDto(UserInfo userInfo,String stateByPeriod);
 }
