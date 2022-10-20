@@ -1,6 +1,6 @@
-package com.danakga.webservice.shopqna.repository;
+package com.danakga.webservice.qna.repository;
 
-import com.danakga.webservice.shopqna.model.ShopQnA;
+import com.danakga.webservice.qna.model.QnA;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,15 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface ShopQnARepository extends JpaRepository<ShopQnA, Long> {
+public interface QnARepository extends JpaRepository<QnA, Long> {
 
     /* 문의 사항 삭제 여부 변경 */
     @Transactional
     @Modifying
-    @Query("update ShopQnA sq set sq.sqDeleted = 'Y' where sq.sqId = :sqId")
-    void updateInDeleted(@Param("sqId") Long sq_id);
+    @Query("update QnA q set q.qDeleted = 'Y' where q.qId = :qId")
+    void updateInDeleted(@Param("qId") Long q_id);
     
     /* 문의 사항 목록 조회 */
-    Page<ShopQnA> findAllBySqDeleted(Pageable pageable, String deleted);
+    Page<QnA> findAllByQDeleted(Pageable pageable, String deleted);
 
 }

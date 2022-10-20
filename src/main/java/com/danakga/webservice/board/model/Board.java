@@ -18,6 +18,7 @@ public class Board {
     @Column(name = "bd_id")
     private Long bdId;
 
+    // "자유게시판", "견적 게시판"
     @Column(name= "bd_type")
     private String bdType;
 
