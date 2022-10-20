@@ -63,13 +63,13 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
         //     ,START("배송시작"), FINISH("배송완료"), REFUND("환불완료") , REDELIVERY("교환상품배송");
 
         const data = await res.json();
-        console.log(data);
         for(let i in data){
             // 후기 있는지 없는지 여부 체크
             const checkRes = await fetch(`/api/user/review/check/${data[i].ordersId}`);
             const checkData = await checkRes.json();
-            //후기가 없다면 0, 있으면 -1
-            if(checkData.id === 0 ){
+            console.log(checkData);
+            //후기를 작성할 수 있다면 0, 후기를 작성할 수 없다면 -1
+            if(checkData.id === -1 ){
                 orderList.innerHTML += `
                                 <div class="row align-items-center mb-10">
                                     <div class="col-lg-1 col-md-1 col-12">

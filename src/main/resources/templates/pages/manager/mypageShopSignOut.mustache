@@ -1,0 +1,45 @@
+{{>pages/header1}}
+<link rel="stylesheet" href="/css/mypageUser.css">
+
+{{>pages/header2}}
+
+<!-- Cotainer는 그렇게 양쪽 여백을 주게 되어있고  fluid 뭐시기는 여백 없음-->
+<div class="container">
+    <div class="row">
+        <section class="mypage_sidebar">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" id="my-page-nav">
+                <button class="navbar-toggler" id="NAVtoggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span>목록보기</span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        {{>pages/manager/mypageShopNAV}}
+                    </ul>
+                </div>
+            </nav>
+            <article class="mypage_signout">
+                <div class="signout_box">
+                    <form id="signout_form">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="signout_pw">사업자 비밀번호*</label>
+                                    <input class="form-control" name="password" type="password" id="signout_pw"  placeholder="비밀번호를 입력하세요!"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="button">
+                        <button class="btn" id="signout_btn">탈퇴하기</button>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </div>
+</div>
+
+{{>pages/footer1}}
+<!--  이곳에 페이지 별 js 로드시키기-->
+<!--  예시 : <script src="/js/dummydata.js"></script> -->
+<script src="/js/user/companysignOut.js"></script>
+{{>pages/footer2}}

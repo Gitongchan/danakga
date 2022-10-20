@@ -57,10 +57,13 @@ const manyView = document.getElementById('many-view');
         })
 
     //주문순
+    //productRating
     fetch('/api/product/main-page/list/productOrderCount?page=0')
         .then((res) => res.json())
         .then((data) => {
             for (const item of data) {
+
+                console.log(data)
                 orderItem.innerHTML += `
                     <div class="col-lg-3 col-md-6 col-12">
                         <!-- Start Single Product -->
@@ -74,12 +77,12 @@ const manyView = document.getElementById('many-view');
                                     <a href="/product/info?productId=${item.productId}">${item.productName}</a>
                                 </h4>
                                 <ul class="review">
-                                    <li><i class="lni lni-star-filled"></i></li>
-                                    <li><i class="lni lni-star-filled"></i></li>
-                                    <li><i class="lni lni-star-filled"></i></li>
-                                    <li><i class="lni lni-star-filled"></i></li>
-                                    <li><i class="lni lni-star"></i></li>
-                                    <li><span>4.0 점</span></li>
+                                    <li><i class="lni lni-star star-1"></i></li>
+                                    <li><i class="lni lni-star star-2"></i></li>
+                                    <li><i class="lni lni-star star-3"></i></li>
+                                    <li><i class="lni lni-star star-4"></i></li>
+                                    <li><i class="lni lni-star star-5"></i></li>
+                                    <li><span>${item.productRating}점</span></li>
                                 </ul>
                                 <div class="price">
                                     <span>${item.productPrice}원</span>
@@ -88,6 +91,12 @@ const manyView = document.getElementById('many-view');
                         </div>
                         <!-- End Single Product -->
                     </div>`
+
+                for(let i=1; i <= item.productRating; i++){
+                    document.querySelector(`.star-${i}`).classList.remove('lni-star')
+                    document.querySelector(`.star-${i}`).classList.add('lni-star-filled')
+                }
+
             }
 
             orderCount.innerHTML+= `<h4 class="list-title">주문 최다 순</h4>`;

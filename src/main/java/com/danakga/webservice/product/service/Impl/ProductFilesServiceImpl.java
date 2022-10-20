@@ -31,7 +31,7 @@ public class ProductFilesServiceImpl implements ProductFilesService {
         Long pf_id = null;
 
         //파일 저장 경로
-        String savePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_files";
+        String savePath = System.getProperty("user.dir") + "//src//main//resources//static//product_files";
 
         //파일 저장되는 폳더 없으면 생성
         if(!new File(savePath).exists()) {
@@ -47,17 +47,16 @@ public class ProductFilesServiceImpl implements ProductFilesService {
         for(MultipartFile multipartFile : files) {
 
             //파일명 소문자로 추출
-            String originFileName = multipartFile.getOriginalFilename().toLowerCase();
+            String originFileName = multipartFile.getOriginalFilename().toLowerCase().replace(" ", "");
 
             //UUID로 파일명 중복되지 않게 유일한 식별자 + 확장자로 저장
             UUID uuid = UUID.randomUUID();
             String saveFileName = uuid + "__" + originFileName;
 
             //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-            String filepath = savePath + "\\" + saveFileName;
-            String dbFilePath = "..\\product_files" + "\\" + saveFileName;
+            String filepath = savePath + "//" + saveFileName;
+            String dbFilePath = "../product_files/" + saveFileName;
 
-            System.out.println(filepath);
             try {
                 multipartFile.transferTo(new File(filepath));
             } catch (IOException e) {
@@ -81,9 +80,9 @@ public class ProductFilesServiceImpl implements ProductFilesService {
     @Override
     public String thumbFile(MultipartFile thumb) {
 
-        String thumbNailPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail";
+        String thumbNailPath = System.getProperty("user.dir") + "//src//main//resources//static//product_thumbNail";
 
-        String originFileName = thumb.getOriginalFilename().toLowerCase();
+        String originFileName = thumb.getOriginalFilename().toLowerCase().replace(" ", "");;
 
         //UUID로 파일명 중복되지 않게 유일한 식별자 + 확장자로 저장
         UUID uuid = UUID.randomUUID();
@@ -99,8 +98,8 @@ public class ProductFilesServiceImpl implements ProductFilesService {
         }
 
         //File로 저장 경로와 저장 할 파일명 합쳐서 transferTo() 사용하여 업로드하려는 파일을 해당 경로로 저장
-        String filepath = thumbNailPath + "\\" + saveFileName;
-        String dbFilePath = "..\\product_thumbNail" + "\\" + saveFileName;
+        String filepath = thumbNailPath + "//" + saveFileName;
+        String dbFilePath = "../product_thumbNail/" + saveFileName;
 
         System.out.println(filepath);
         try {

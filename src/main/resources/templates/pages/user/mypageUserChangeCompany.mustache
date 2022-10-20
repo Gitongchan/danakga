@@ -1,0 +1,114 @@
+{{>pages/header1}}
+
+<!-- 메타정보 넣기-->
+<meta name="description" content="사업자 회원가입" />
+<meta name="keywords" content="정보 변경, 다낚아 회원가입">
+
+
+<link rel="stylesheet" href="/css/mypageUser.css">
+{{>pages/header2}}
+
+<div class="container">
+    <div class="row">
+        <section class="mypage_sidebar">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" id="my-page-nav">
+                <button class="navbar-toggler" id="NAVtoggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span>목록보기</span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        {{>pages/user/mypageUserNAV}}
+                    </ul>
+                </div>
+            </nav>
+            <article class="mypage_article">
+                <h3>사업자 정보 등록</h3>
+                <hr>
+                <label class="col-sm-2 control-label">아이디</label>
+                <span id="userId"></span> <!-- 아이디 값 불러오기 -->
+                <hr>
+                <label class="col-sm-2 control-label">이메일</label>
+                <span id="userEmail"></span>
+                <hr>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="companyName">회사명*</label>
+                        <input class="form-control" name="companyName" type="text" id="companyName"
+                        onkeyup="regeisterCheck.companyName()" oninput="buttoncheck()" placeholder="회사명을 입력해주세요." required="">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="companyNum">회사번호*</label>
+                        <input class="form-control" name="companyNum" type="text" id="companyNum"
+                               onkeyup="regeisterCheck.companyName()" oninput="buttoncheck()" placeholder="회사 번호를 입력해주세요." required="">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="sample4_postcode">회사 우편번호</label>
+                        <input type="text" class="form-control col-sm-8 col-8" id="sample4_postcode" placeholder="회사 우편번호"
+                               readonly required>
+                        <div class="button">
+                            <button class="btn" id="postCode">우편번호 찾기</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="sample4_roadAddress">회사 도로명주소</label>
+                        <input type="text" class="form-control" id="sample4_roadAddress" placeholder="회사 도로명주소" readonly
+                               required><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="sample4_jibunAddress">지번주소</label>
+                        <input type="text" class="form-control" id="sample4_jibunAddress" placeholder="회사 지번주소" readonly
+                               required>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <span id="guide" style="color:#999;display:none"></span>
+                        <label for="sample4_detailAddress">상세주소*</label>
+                        <input type="text" class="form-control" id="sample4_detailAddress" placeholder="회사 상세주소">
+                        <!--                                    <input type="text" class="form-control" id="sample4_extraAddress" placeholder="참고항목">-->
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <span id="guide" style="color:#999;display:none"></span>
+                        <label for="companyBankName">회사 은행*</label>
+                        <input type="text" class="form-control" id="companyBankName" placeholder="회사 은행">
+                        <!--                                    <input type="text" class="form-control" id="sample4_extraAddress" placeholder="참고항목">-->
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <span id="guide" style="color:#999;display:none"></span>
+                        <label for="companyBankNum">회사 은행 계좌번호*</label>
+                        <input type="text" class="form-control" id="companyBankNum" placeholder="회사 계좌번호"
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                    </div>
+                </div>
+
+                <div class="button" id="changeOK">
+                    <button type="button" class="btn">등록하기</button>
+                </div>
+            </article>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+{{>pages/footer1}}
+<!--  이곳에 페이지 별 js 로드시키기-->
+<!--  예시 : <script src="/js/dummydata.js"></script> -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/js/addressFind.js"></script>
+<script src="/js/user/changeUser.js"></script>
+
+{{>pages/footer2}}

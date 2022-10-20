@@ -7,7 +7,7 @@ document.getElementById('product-listBtn').addEventListener('click',async functi
 });
 
 async function myProductList(){
-    const res = await fetch('/api/manager/product/list?startDate=2022-05-01T01:30&endDate=2100-06-14T17:30&productName=%25&productStock=1&page=0')
+    const res = await fetch('/api/manager/product/list?startDate=2022-05-01T01:30&endDate=2100-06-14T17:30&productName=%25&productStock=1&productType=%25&productSubType=%25&productBrand=%25&startPrice=0&endPrice=999999&sortBy=productUploadDate&sortMethod=des&page=0')
     const data = await res.json();
     console.log(data);
 
