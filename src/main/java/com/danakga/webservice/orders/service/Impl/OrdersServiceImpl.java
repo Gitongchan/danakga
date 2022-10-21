@@ -1,5 +1,7 @@
 package com.danakga.webservice.orders.service.Impl;
 
+import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.orders.dto.ResRevenueDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
@@ -24,10 +26,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -324,4 +329,17 @@ public class OrdersServiceImpl implements OrdersService {
         return ordersId;
     }
 
+
+    @Override
+    public ResRevenueDto revenueDto(UserInfo userInfo, String stateByPeriod,LocalDateTime startDate, LocalDateTime endDate) {
+        UserInfo comUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다.")
+        );
+
+        if(Objects.equals(stateByPeriod, "day")){
+
+        }
+
+        return null;
+    }
 }

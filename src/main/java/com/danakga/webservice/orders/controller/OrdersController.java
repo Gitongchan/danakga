@@ -1,22 +1,23 @@
 package com.danakga.webservice.orders.controller;
 
-        import com.danakga.webservice.annotation.LoginUser;
-        import com.danakga.webservice.orders.dto.request.OrdersDto;
-        import com.danakga.webservice.orders.dto.request.StatusDto;
-        import com.danakga.webservice.orders.dto.response.ResOrdersDto;
-        import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
-        import com.danakga.webservice.orders.dto.response.ResSalesDto;
-        import com.danakga.webservice.orders.dto.response.ResSalesListDto;
-        import com.danakga.webservice.orders.service.OrdersService;
-        import com.danakga.webservice.user.model.UserInfo;
-        import com.danakga.webservice.util.responseDto.ResResultDto;
-        import lombok.RequiredArgsConstructor;
-        import org.springframework.data.domain.Pageable;
-        import org.springframework.format.annotation.DateTimeFormat;
-        import org.springframework.web.bind.annotation.*;
+import com.danakga.webservice.annotation.LoginUser;
+import com.danakga.webservice.orders.dto.ResRevenueDto;
+import com.danakga.webservice.orders.dto.request.OrdersDto;
+import com.danakga.webservice.orders.dto.request.StatusDto;
+import com.danakga.webservice.orders.dto.response.ResOrdersDto;
+import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
+import com.danakga.webservice.orders.dto.response.ResSalesDto;
+import com.danakga.webservice.orders.dto.response.ResSalesListDto;
+import com.danakga.webservice.orders.service.OrdersService;
+import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.util.responseDto.ResResultDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
-        import java.time.LocalDateTime;
-        import java.util.List;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -79,6 +80,15 @@ public class OrdersController {
         Long result = ordersService.updateOrdersStatus(userInfo,ordersId,statusDto);
         return result == -1L ?
                 new ResResultDto(result,"더 이상 변경할 수 없는 상태입니다.") : new ResResultDto(result,"상태변경을 성공했습니다.") ;
+    }
+
+    //기간별 수익 (기간별 판매 금액)
+    @GetMapping("/statistics/revenue")
+    public ResRevenueDto revenueDto(@LoginUser UserInfo userInfo, @RequestParam String stateByPeriod,
+                                    @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+                                    @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime)
+    {
+        return new ResRevenueDto();
     }
 
 }

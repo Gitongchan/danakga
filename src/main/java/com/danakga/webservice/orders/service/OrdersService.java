@@ -1,5 +1,6 @@
 package com.danakga.webservice.orders.service;
 
+import com.danakga.webservice.orders.dto.ResRevenueDto;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.request.StatusDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersDto;
@@ -37,6 +38,9 @@ public interface OrdersService {
 
     //판매내역 상태 업데이트
     Long updateOrdersStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);
+
+    //기간별 판매금액 조회 (수익금)
+    ResRevenueDto revenueDto(UserInfo userInfo, String stateByPeriod,LocalDateTime startDate, LocalDateTime endDate);
 
     
 }

@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface OrdersRepository extends JpaRepository<Orders,Long>{
@@ -102,4 +103,35 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
                     "where o.ordersId = (select o.ordersId from Orders o join o.product p where o.userInfo = :userInfo and o.ordersId = :ordersId)"
     )
     void updateOrdersStatus(@Param("userInfo") UserInfo userInfo,@Param("ordersStatus") String ordersStatus,@Param("ordersId") Long ordersId);
+
+    //일별 판매 수익금 조회
+    @Query(
+            value = "select function('date_format',o.ordersDate,'%Y/%m/%d') as date,sum(o.ordersPrice * o.ordersQuantity) as price " +
+                    "from Orders o join o.product p join p.productCompanyId c " +
+                    "where c.companyId = :companyId " +
+                    "group by date " +
+                    "having date between :startDate and :endDate"
+
+    )
+    List<Orders> dailySalesList(@Param("companyId")Long companyId,
+                            @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+
+
+    //주별 판매 수익금 조회
+    @Query(
+            nativeQuery = true,
+            value = "SELECT" +
+                    "DATE_FORMAT(DATE_SUB(orders_date, INTERVAL (DAYOFWEEK(orders_date)-1) DAY), '%Y/%m/%d') as start," +
+                    "DATE_FORMAT(DATE_SUB(orders_date, INTERVAL (DAYOFWEEK(orders_date)-7) DAY), '%Y/%m/%d') as end," +
+                    "DATE_FORMAT(orders_date, '%Y%U') AS week," +
+                    "sum(orders_price*orders_quantity) AS price" +
+                    "FROM orders" +
+                    "GROUP BY WEEK" +
+                    "HAVING start BETWEEN :startDate AND :endDate" +
+                    "ORDER BY WEEK ASC;"
+    )
+    List<Orders> weeklySalesList(@Param("companyId")Long companyId,
+                                @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+
+
 }

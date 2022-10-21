@@ -1,4 +1,4 @@
-package com.danakga.webservice.company.dto.response;
+package com.danakga.webservice.orders.dto;
 
 public class ResRevenueDto {
 
