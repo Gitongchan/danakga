@@ -29,7 +29,12 @@ let productPaging = ''
 let today = new Date();
 
 
-document.getElementById('product-listBtn').addEventListener('click',async function () {
+
+let startDate = today.toISOString().substring(0,11)+'00:00';
+let endDate = today.toISOString().substring(0,11)+'23:59';
+
+
+document.getElementById('product-listBtn').addEventListener('click', function () {
     if(startPrice.value > endPrice.value){
         alert("가격범위를 다시 설정해주세요!")
         return
