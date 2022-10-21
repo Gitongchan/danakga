@@ -1,4 +1,4 @@
- // orderStatus: "주문취소"
+    // orderStatus: "주문취소"
     // ordersDate: "2022-08-19T16:01:15.566133"
     // ordersId: 11
     // ordersPrice: 16
@@ -8,6 +8,11 @@
     // productName: "시마노4번"
     // totalElement: 11
     // totalPage: 2
+    // userAddress: "~~~~",
+    // userAdrNum: "01833"
+    // userId: "ppwm111"
+    // userName: "유병진"
+    // userPhone: "01082383333"
 
     //상품 준비중일때는 사업자는 배송시작,주문거절 / 일반사용자는 주문취소만 가능
     //주문취소,반품신청일때 사업자는 "환불완료" 처리만 가능
@@ -75,18 +80,27 @@
                                         <div class="col-lg-1 col-md-1 col-12">
                                             <p>${data[i].productBrand}</p>
                                         </div>
-                                        <div class="col-lg-3 col-md-3 col-12">
+                                        <div class="col-lg-2 col-md-2 col-12">
                                             <a href="/product/info?productId=${data[i].productId}">
                                                 <p>${data[i].productName}</p>
                                             </a>
                                         </div>
+                                        <div class="col-lg-1 col-md-1 col-12">
+                                            <p>${data[i].userName}</p>
+                                        </div>
+                                        <div class="col-lg-1 col-md-1 col-12">
+                                            <p>${data[i].userId}</p>
+                                        </div>
                                         <div class="col-lg-2 col-md-1 col-12">
+                                            <p>${data[i].userAddress}</p>
+                                        </div>
+                                        <div class="col-lg-1 col-md-1 col-12">
                                             <p>${data[i].ordersQuantity}</p>
                                         </div>
-                                        <div class="col-lg-2 col-md-2 col-12">
+                                        <div class="col-lg-1 col-md-1 col-12">
                                             <p>${data[i].ordersPrice}원</p>
                                         </div>
-                                        <div class="col-lg-2 col-md-3 col-12">
+                                        <div class="col-lg-1 col-md-2 col-12">
                                             ${data[i].orderStatus}
                                         </div>
                                         <div class="col-lg-1 col-md-2 col-12 info_wrap btnWrap${data[i].ordersId}">
