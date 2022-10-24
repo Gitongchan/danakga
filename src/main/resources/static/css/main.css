@@ -6419,8 +6419,8 @@ blockquote span {
   color: #0167F3;
 }
 
+/* 변경함 */
 .shopping-cart {
-  background-color: #f9f9f9;
 }
 
 .shopping-cart .total-amount .right ul li {

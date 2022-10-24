@@ -189,33 +189,38 @@ public class PageController {
 
     // --------------------상점 부분---------------------
     @GetMapping("/shop")
-    public String mypageShop() {
+    public String shop() {
         return "pages/manager/mypageShopInfo";
     }
 
     @GetMapping("/shop/addProduct")
-    public String addProduct() {
+    public String shopAddProduct() {
         return "pages/manager/mypageShopAddProduct";
     }
 
     @GetMapping("/shop/productList")
-    public String productList() {
+    public String shopProductList() {
         return "pages/manager/mypageShopProductList";
     }
 
     @GetMapping("/shop/orderList")
-    public String managerSalesList() {
+    public String shopOrderList() {
         return "pages/manager/mypageShopOrderList";
     }
 
+    @GetMapping("/shop/statistics")
+    public String shopStatistics() {
+        return "pages/manager/mypageShopStatistics";
+    }
+
     @GetMapping("/shop/signOut")
-    public String CompanySignout() {
+    public String shopSignOut() {
         return "pages/manager/mypageShopSignOut";
     }
 
 
     @GetMapping("/shop/product/edit")
-    public String productEdit() {
+    public String shopEditProduct() {
         return "pages/manager/mypageShopEditProduct";
     }
 

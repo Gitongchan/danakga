@@ -67,10 +67,14 @@
     color:white;
 }
 
-#search-date{
+#search-orderList{
     border: none;
     background: #0167F3;
     color:white;
     padding: 5px 5px;
+}
+
+#search-orderList:hover{
+    background: #004dab;
 }
 
