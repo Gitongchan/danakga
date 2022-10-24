@@ -17,6 +17,9 @@ public class Answer {
     @Column(name = "a_id")
     private Long aId;
 
+    @Column(name = "a_writer")
+    private String aWriter;
+
     @Column(name = "a_content")
     private String aContent;
 
@@ -30,12 +33,19 @@ public class Answer {
     @JoinColumn(name = "q_id")
     private QnA qna;
 
+    @PrePersist
+    public void status() {
+        this.aDeleted = "N";
+    }
+
     @Builder
-    public Answer(Long aId, String aContent, String aDeleted, LocalDateTime aCreated, QnA qna) {
+    public Answer(Long aId, String aContent, String aDeleted, LocalDateTime aCreated,
+                  String aWriter,QnA qna) {
         this.aId = aId;
         this.aContent = aContent;
         this.aDeleted = aDeleted;
         this.aCreated = aCreated;
+        this.aWriter = aWriter;
         this.qna = qna;
     }
 }

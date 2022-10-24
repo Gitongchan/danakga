@@ -22,6 +22,11 @@ public class QnA {
     private Long qId;
     
     // 가게, 사이트 문의사항 구분 추가하기
+    @Column(name = "q_sort")
+    private int qSort;
+
+    @Column(name = "q_writer")
+    private String qWriter;
 
     @Column(name = "q_type")
     private String qType;
@@ -55,16 +60,18 @@ public class QnA {
 
     //답변, 삭제여부 기본 값 설정
     @PrePersist
-    public void state() {
+    public void status() {
         this.qState = 0;
         this.qDeleted = "N";
     }
 
     @Builder
-    public QnA(Long qId, String qType, String qTitle, String qContent,
-               int qState, String qDeleted, LocalDateTime qCreated, LocalDateTime qModified,
+    public QnA(Long qId, String qType, String qTitle, String qContent, String qWriter,
+               int qSort, int qState, String qDeleted, LocalDateTime qCreated, LocalDateTime qModified,
                UserInfo userInfo, Product product) {
         this.qId = qId;
+        this.qSort = qSort;
+        this.qWriter = qWriter;
         this.qType = qType;
         this.qTitle = qTitle;
         this.qContent = qContent;
