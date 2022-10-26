@@ -1,5 +1,6 @@
 package com.danakga.webservice.orders.repository;
 
+import com.danakga.webservice.orders.dto.response.ResDailyRevenueDto;
 import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
@@ -9,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -104,20 +103,19 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     )
     void updateOrdersStatus(@Param("userInfo") UserInfo userInfo,@Param("ordersStatus") String ordersStatus,@Param("ordersId") Long ordersId);
 
+
     //일별 판매 수익금 조회
     @Query(
-            value = "select function('date_format',o.ordersDate,'%Y/%m/%d') as date,sum(o.ordersPrice * o.ordersQuantity) as price " +
+            value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
+                    "function('date_format',o.ordersDate,'%Y-%m-%d'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
-                    "group by date " +
-                    "having date between :startDate and :endDate"
-
+                    "group by o.ordersDate"
     )
-    List<Orders> dailySalesList(@Param("companyId")Long companyId,
-                            @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+    List<ResDailyRevenueDto> dailySalesList(@Param("companyId")Long companyId);
 
 
-    //주별 판매 수익금 조회
+  /*  //주별 판매 수익금 조회
     @Query(
             nativeQuery = true,
             value = "SELECT" +
@@ -133,5 +131,15 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     List<Orders> weeklySalesList(@Param("companyId")Long companyId,
                                 @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
 
+    // 월별 판매 수익금 조회
+    @Query(
+            value = "select function('date_format',o.ordersDate,'%Y/%m/%d') as date,sum(o.ordersPrice * o.ordersQuantity) as price " +
+                    "from Orders o join o.product p join p.productCompanyId c " +
+                    "where c.companyId = :companyId " +
+                    "group by date " +
+                    "having date between :startDate and :endDate"
 
+    )
+    List<Orders> monthlySalesList(@Param("companyId")Long companyId,
+                                @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);*/
 }

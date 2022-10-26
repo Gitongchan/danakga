@@ -2,7 +2,6 @@ package com.danakga.webservice.company.service;
 
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
-import com.danakga.webservice.orders.dto.ResRevenueDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.user.model.UserInfo;
 

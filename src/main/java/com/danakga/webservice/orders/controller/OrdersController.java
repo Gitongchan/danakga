@@ -1,7 +1,7 @@
 package com.danakga.webservice.orders.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.orders.dto.ResRevenueDto;
+import com.danakga.webservice.orders.dto.response.ResDailyRevenueDto;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.request.StatusDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersDto;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -83,12 +82,12 @@ public class OrdersController {
     }
 
     //기간별 수익 (기간별 판매 금액)
-    @GetMapping("/statistics/revenue")
-    public ResRevenueDto revenueDto(@LoginUser UserInfo userInfo, @RequestParam String stateByPeriod,
-                                    @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
-                                    @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime)
+    @GetMapping("api/manager/sales/statistics/revenue")
+    public  List<ResDailyRevenueDto> revenueDto(@LoginUser UserInfo userInfo, @RequestParam String stateByPeriod,
+                                                @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                                                @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate)
     {
-        return new ResRevenueDto();
+        return ordersService.saleRevenue(userInfo,stateByPeriod,startDate,endDate);
     }
 
 }
