@@ -106,11 +106,11 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
 
     //일별 판매 수익금 조회
     @Query(
-            value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
+            value = "select new com.danakga.webservice.orders.dto.response.ResDailyRevenueDto(" +
                     "function('date_format',o.ordersDate,'%Y-%m-%d'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
-                    "group by o.ordersDate"
+                    "group by function('date_format',o.ordersDate,'%Y-%m-%d')"
     )
     List<ResDailyRevenueDto> dailySalesList(@Param("companyId")Long companyId);
 
