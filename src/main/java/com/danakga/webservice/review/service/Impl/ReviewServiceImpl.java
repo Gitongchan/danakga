@@ -79,6 +79,11 @@ public class ReviewServiceImpl implements ReviewService {
         Orders checkOrders = ordersRepository.findByOrdersIdAndProduct(reqReviewDto.getOrderId(), checkProduct)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
 
+        /* 구매확정 후 리뷰 작성 가능 */
+        if(!checkOrders.getOrdersStatus().equals(OrdersStatus.CONFIRM.getStatus())) {
+            return new ResResultDto(-1L,"구매 확정 후 후기를 작성할 수 있습니다.");
+        }
+
         //null이 아니면 exception, else이면 리뷰 작성
         if (reviewRepository.findByOrders(checkOrders).isPresent()) {
             Review checkReview = reviewRepository.findByOrders(checkOrders).get();
