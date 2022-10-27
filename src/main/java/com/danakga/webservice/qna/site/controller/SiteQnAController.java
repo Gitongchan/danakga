@@ -24,19 +24,19 @@ public class SiteQnAController {
     }
 
     /* 사이트 문의사항 수정 */
-    @PutMapping("/siteQnA/edit/{sq_id}")
+    @PutMapping("/siteQnA/edit/{siteQ_id}")
     public ResResultDto siteQnAEdit(@LoginUser UserInfo userInfo,
                                 @RequestBody ReqSiteQnADto reqQnADto,
-                                @PathVariable Long sq_id) {
+                                @PathVariable Long siteQ_id) {
 
-        return siteQnAService.siteQnAEdit(userInfo, reqQnADto, sq_id);
+        return siteQnAService.siteQnAEdit(userInfo, reqQnADto, siteQ_id);
     }
     
     /* 사이트 문의사항 삭제 상태 변경 */
-    @PutMapping("/siteQnA/delete/{sq_id}")
+    @PutMapping("/siteQnA/delete/{siteQ_id}")
     public ResResultDto siteQnADelete(@LoginUser UserInfo userInfo,
-                                      @PathVariable Long sq_id) {
+                                      @PathVariable Long siteQ_id) {
 
-        return siteQnAService.siteQnADelete(userInfo, sq_id);
+        return siteQnAService.siteQnADelete(userInfo, siteQ_id);
     }
 }
