@@ -337,7 +337,7 @@ cartButton.addEventListener('click', async () => {
             // re_writer: "ppwm1111"
             // totalElements: 1
             // totalPages: 1
-
+            console.log(data);
             for (let i in data.reviewList) {
                 if(data.reviewList[i].re_writer === checkName.value){
                     reviewWrap.innerHTML+= `
