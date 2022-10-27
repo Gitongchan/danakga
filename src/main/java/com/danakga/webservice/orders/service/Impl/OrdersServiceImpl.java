@@ -326,7 +326,8 @@ public class OrdersServiceImpl implements OrdersService {
 
 
     @Override
-    public List<ResDailyRevenueDto> saleRevenue(UserInfo userInfo, String stateByPeriod, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<ResDailyRevenueDto> saleRevenue(UserInfo userInfo, String stateByPeriod,
+                                                String startDate, String endDate) {
         UserInfo comUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다.")
         );
@@ -337,7 +338,7 @@ public class OrdersServiceImpl implements OrdersService {
         List<ResDailyRevenueDto> salesPriceList = null;
         switch (stateByPeriod) {
             case "daily":
-                salesPriceList = ordersRepository.dailySalesList(companyInfo.getCompanyId());
+                salesPriceList = ordersRepository.dailySalesList(companyInfo.getCompanyId(),startDate,endDate);
                 break;
             case "weekly":
                // salesPriceList = ordersRepository.weeklySalesList(companyInfo.getCompanyId(),startDate,endDate);

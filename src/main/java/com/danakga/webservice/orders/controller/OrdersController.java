@@ -11,6 +11,7 @@ import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.orders.service.OrdersService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -84,8 +85,8 @@ public class OrdersController {
     //기간별 수익 (기간별 판매 금액)
     @GetMapping("api/manager/sales/statistics/revenue")
     public  List<ResDailyRevenueDto> revenueDto(@LoginUser UserInfo userInfo, @RequestParam String stateByPeriod,
-                                                @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-                                                @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate)
+                                                @RequestParam("startTime") String startDate,
+                                                @RequestParam("endTime") String endDate)
     {
         return ordersService.saleRevenue(userInfo,stateByPeriod,startDate,endDate);
     }

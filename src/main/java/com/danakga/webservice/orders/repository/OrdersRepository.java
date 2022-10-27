@@ -110,12 +110,15 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
                     "function('date_format',o.ordersDate,'%Y-%m-%d'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
+                    "and function('date_format',o.ordersDate,'%Y-%m-%d') BETWEEN :startDate AND :endDate " +
                     "group by function('date_format',o.ordersDate,'%Y-%m-%d')"
     )
-    List<ResDailyRevenueDto> dailySalesList(@Param("companyId")Long companyId);
+    List<ResDailyRevenueDto> dailySalesList(@Param("companyId")Long companyId,
+                                            @Param("startDate")String startDate,@Param("endDate")String endDate);
 
 
-  /*  //주별 판매 수익금 조회
+    /*
+    //주별 판매 수익금 조회
     @Query(
             nativeQuery = true,
             value = "SELECT" +
@@ -131,6 +134,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     List<Orders> weeklySalesList(@Param("companyId")Long companyId,
                                 @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
 
+
     // 월별 판매 수익금 조회
     @Query(
             value = "select function('date_format',o.ordersDate,'%Y/%m/%d') as date,sum(o.ordersPrice * o.ordersQuantity) as price " +
@@ -141,5 +145,6 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
 
     )
     List<Orders> monthlySalesList(@Param("companyId")Long companyId,
-                                @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);*/
+                                @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+                                */
 }
