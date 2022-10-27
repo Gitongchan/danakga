@@ -1,8 +1,8 @@
-package com.danakga.webservice.qna.controller.answer.shop;
+package com.danakga.webservice.qna.shop.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
-import com.danakga.webservice.qna.service.AnswerService;
+import com.danakga.webservice.qna.site.dto.request.ReqSiteAnswerDto;
+import com.danakga.webservice.qna.site.service.SiteAnswerService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/manager")
 public class ShopAnswerController {
 
-    private final AnswerService answerService;
+    private final SiteAnswerService answerService;
 
+    /* 가게 문의사항 답변 작성 */
     @PostMapping("/shopAnswer/write")
     public ResResultDto shopAnswerWrite(@LoginUser UserInfo userInfo,
-                                        @RequestBody ReqAnswerDto reqAnswerDto) {
+                                        @RequestBody ReqSiteAnswerDto reqAnswerDto) {
 
-        return answerService.shopAnswerWrite(userInfo, reqAnswerDto);
+        return answerService.siteAnswerWrite(userInfo, reqAnswerDto);
     }
 }
