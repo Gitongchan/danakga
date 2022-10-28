@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResDailyRevenueDto {
+public class ResRevenueDto {
 
     //날짜
     private String date;

@@ -1,15 +1,11 @@
 package com.danakga.webservice.orders.service.Impl;
 
-import com.danakga.webservice.orders.dto.response.ResDailyRevenueDto;
+import com.danakga.webservice.orders.dto.response.*;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.request.StatusDto;
-import com.danakga.webservice.orders.dto.response.ResOrdersDto;
-import com.danakga.webservice.orders.dto.response.ResOrdersListDto;
-import com.danakga.webservice.orders.dto.response.ResSalesDto;
-import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.orders.model.OrdersStatus;
 import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.orders.repository.OrdersRepository;
@@ -326,8 +322,8 @@ public class OrdersServiceImpl implements OrdersService {
 
 
     @Override
-    public List<ResDailyRevenueDto> saleRevenue(UserInfo userInfo, String stateByPeriod,
-                                                String startDate, String endDate) {
+    public List<ResRevenueDto> saleRevenue(UserInfo userInfo, String stateByPeriod,
+                                           String startDate, String endDate) {
         UserInfo comUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("유저 정보를 찾을 수 없습니다.")
         );
@@ -335,16 +331,16 @@ public class OrdersServiceImpl implements OrdersService {
                 ()->new CustomException.ResourceNotFoundException("회사 정보를 찾을 수 없습니다.")
         );
 
-        List<ResDailyRevenueDto> salesPriceList = null;
+        List<ResRevenueDto> salesPriceList = new ArrayList<>();
         switch (stateByPeriod) {
             case "daily":
                 salesPriceList = ordersRepository.dailySalesList(companyInfo.getCompanyId(),startDate,endDate);
                 break;
             case "weekly":
-               // salesPriceList = ordersRepository.weeklySalesList(companyInfo.getCompanyId(),startDate,endDate);
+                salesPriceList = ordersRepository.weeklySalesList(companyInfo.getCompanyId(),startDate,endDate);
                 break;
             case "monthly":
-               // salesPriceList = ordersRepository.monthlySalesList(companyInfo.getCompanyId(),startDate,endDate);
+                salesPriceList = ordersRepository.monthlySalesList(companyInfo.getCompanyId(),startDate,endDate);
                 break;
         }
 

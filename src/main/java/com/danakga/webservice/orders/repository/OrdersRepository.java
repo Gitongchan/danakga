@@ -1,6 +1,6 @@
 package com.danakga.webservice.orders.repository;
 
-import com.danakga.webservice.orders.dto.response.ResDailyRevenueDto;
+import com.danakga.webservice.orders.dto.response.ResRevenueDto;
 import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
@@ -106,45 +106,42 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
 
     //일별 판매 수익금 조회
     @Query(
-            value = "select new com.danakga.webservice.orders.dto.response.ResDailyRevenueDto(" +
+            value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
                     "function('date_format',o.ordersDate,'%Y-%m-%d'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
                     "and function('date_format',o.ordersDate,'%Y-%m-%d') BETWEEN :startDate AND :endDate " +
                     "group by function('date_format',o.ordersDate,'%Y-%m-%d')"
     )
-    List<ResDailyRevenueDto> dailySalesList(@Param("companyId")Long companyId,
-                                            @Param("startDate")String startDate,@Param("endDate")String endDate);
+    List<ResRevenueDto> dailySalesList(@Param("companyId")Long companyId,
+                                       @Param("startDate")String startDate, @Param("endDate")String endDate);
 
 
-    /*
+
     //주별 판매 수익금 조회
     @Query(
-            nativeQuery = true,
-            value = "SELECT" +
-                    "DATE_FORMAT(DATE_SUB(orders_date, INTERVAL (DAYOFWEEK(orders_date)-1) DAY), '%Y/%m/%d') as start," +
-                    "DATE_FORMAT(DATE_SUB(orders_date, INTERVAL (DAYOFWEEK(orders_date)-7) DAY), '%Y/%m/%d') as end," +
-                    "DATE_FORMAT(orders_date, '%Y%U') AS week," +
-                    "sum(orders_price*orders_quantity) AS price" +
-                    "FROM orders" +
-                    "GROUP BY WEEK" +
-                    "HAVING start BETWEEN :startDate AND :endDate" +
-                    "ORDER BY WEEK ASC;"
+            value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
+                    "function('date_format',o.ordersDate,'%Y-%u'),sum(o.ordersPrice * o.ordersQuantity)) " +
+                    "from Orders o join o.product p join p.productCompanyId c " +
+                    "where c.companyId = :companyId " +
+                    "and function('date_format',o.ordersDate,'%Y-%u') BETWEEN :startDate AND :endDate " +
+                    "group by function('date_format',o.ordersDate,'%Y-%u')"
     )
-    List<Orders> weeklySalesList(@Param("companyId")Long companyId,
-                                @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+    List<ResRevenueDto> weeklySalesList(@Param("companyId")Long companyId,
+                                        @Param("startDate")String startDate, @Param("endDate")String endDate);
 
 
     // 월별 판매 수익금 조회
     @Query(
-            value = "select function('date_format',o.ordersDate,'%Y/%m/%d') as date,sum(o.ordersPrice * o.ordersQuantity) as price " +
+            value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
+                    "function('date_format',o.ordersDate,'%Y-%m'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
-                    "group by date " +
-                    "having date between :startDate and :endDate"
+                    "and function('date_format',o.ordersDate,'%Y-%m') BETWEEN :startDate AND :endDate " +
+                    "group by function('date_format',o.ordersDate,'%Y-%m')"
 
     )
-    List<Orders> monthlySalesList(@Param("companyId")Long companyId,
-                                @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
-                                */
+    List<ResRevenueDto> monthlySalesList(@Param("companyId")Long companyId,
+                                @Param("startDate")String startDate, @Param("endDate")String endDate);
+
 }

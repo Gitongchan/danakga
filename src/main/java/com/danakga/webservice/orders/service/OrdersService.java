@@ -1,6 +1,6 @@
 package com.danakga.webservice.orders.service;
 
-import com.danakga.webservice.orders.dto.response.ResDailyRevenueDto;
+import com.danakga.webservice.orders.dto.response.ResRevenueDto;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.request.StatusDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersDto;
@@ -9,7 +9,6 @@ import com.danakga.webservice.orders.dto.response.ResSalesDto;
 import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,9 +40,9 @@ public interface OrdersService {
     Long updateOrdersStatus(UserInfo userInfo,Long ordersId,StatusDto statusDto);
 
     //기간별 판매금액 조회 (수익금)
-    List<ResDailyRevenueDto> saleRevenue(UserInfo userInfo, String stateByPeriod,
-                                         String startDate,
-                                         String endDate);
+    List<ResRevenueDto> saleRevenue(UserInfo userInfo, String stateByPeriod,
+                                    String startDate,
+                                    String endDate);
 
     
 }

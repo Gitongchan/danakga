@@ -1,7 +1,7 @@
 package com.danakga.webservice.orders.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.orders.dto.response.ResDailyRevenueDto;
+import com.danakga.webservice.orders.dto.response.ResRevenueDto;
 import com.danakga.webservice.orders.dto.request.OrdersDto;
 import com.danakga.webservice.orders.dto.request.StatusDto;
 import com.danakga.webservice.orders.dto.response.ResOrdersDto;
@@ -11,7 +11,6 @@ import com.danakga.webservice.orders.dto.response.ResSalesListDto;
 import com.danakga.webservice.orders.service.OrdersService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -84,9 +83,9 @@ public class OrdersController {
 
     //기간별 수익 (기간별 판매 금액)
     @GetMapping("api/manager/sales/statistics/revenue")
-    public  List<ResDailyRevenueDto> revenueDto(@LoginUser UserInfo userInfo, @RequestParam String stateByPeriod,
-                                                @RequestParam("startTime") String startDate,
-                                                @RequestParam("endTime") String endDate)
+    public  List<ResRevenueDto> revenueDto(@LoginUser UserInfo userInfo, @RequestParam String stateByPeriod,
+                                           @RequestParam("startTime") String startDate,
+                                           @RequestParam("endTime") String endDate)
     {
         return ordersService.saleRevenue(userInfo,stateByPeriod,startDate,endDate);
     }
