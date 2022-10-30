@@ -7304,6 +7304,14 @@ fieldset:disabled .btn {
     border-width: 5px !important
 }
 
+.w-17 {
+    width: 17% !important
+}
+
+.w-30 {
+    width: 30% !important
+
+}
 .w-25 {
     width: 25% !important
 }
