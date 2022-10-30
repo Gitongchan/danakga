@@ -1,4 +1,4 @@
-package com.danakga.webservice.qna.site.dto.response;
+package com.danakga.webservice.qna.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResSiteQnADto {
+public class ResQnADto {
 
-    private List<Map<String,Object>> sqList;
+    private List<Map<String,Object>> qList;
 }
