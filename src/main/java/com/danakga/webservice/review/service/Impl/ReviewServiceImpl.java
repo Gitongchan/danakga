@@ -48,14 +48,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         List<Map<String, Object>> reviewList = new ArrayList<>();
 
-        Map<String, Object> reviewMap = new LinkedHashMap<>();
+        checkReview.forEach(entity -> {
 
-        checkReview.forEach(review -> {
-            reviewMap.put("re_id", review.getReId());
-            reviewMap.put("re_content", review.getReContent());
-            reviewMap.put("re_created", review.getReCreated());
-            reviewMap.put("re_score", review.getReScore());
-            reviewMap.put("re_writer", review.getReWriter());
+            Map<String, Object> reviewMap = new LinkedHashMap<>();
+
+            reviewMap.put("re_id", entity.getReId());
+            reviewMap.put("re_content", entity.getReContent());
+            reviewMap.put("re_created", entity.getReCreated());
+            reviewMap.put("re_score", entity.getReScore());
+            reviewMap.put("re_writer", entity.getReWriter());
             reviewMap.put("totalPages", checkReview.getTotalPages());
             reviewMap.put("totalElements", checkReview.getTotalElements());
 
