@@ -1,7 +1,7 @@
 package com.danakga.webservice.qna.service;
 
-import com.danakga.webservice.qna.site.dto.request.ReqQnADto;
-import com.danakga.webservice.qna.site.dto.response.ResQnADto;
+import com.danakga.webservice.qna.dto.request.ReqQnADto;
+import com.danakga.webservice.qna.dto.response.ResQnADto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import org.springframework.data.domain.Pageable;

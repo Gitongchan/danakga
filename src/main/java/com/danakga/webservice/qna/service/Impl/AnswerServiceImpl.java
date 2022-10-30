@@ -2,7 +2,7 @@ package com.danakga.webservice.qna.service.Impl;
 
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
-import com.danakga.webservice.qna.service.SiteAnswerService;
+import com.danakga.webservice.qna.service.ShopAnswerService;
 import com.danakga.webservice.qna.model.Answer;
 import com.danakga.webservice.qna.model.QnA;
 import com.danakga.webservice.qna.repository.AnswerRepository;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AnswerServiceImpl implements SiteAnswerService {
+public class AnswerServiceImpl implements ShopAnswerService {
 
     private final UserRepository userRepository;
     private final QnARepository qnaRepository;
@@ -24,7 +24,7 @@ public class AnswerServiceImpl implements SiteAnswerService {
 
     /* 가게 문의사항 답변 작성 */
     @Override
-    public ResResultDto siteAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto) {
+    public ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto) {
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -45,7 +45,7 @@ public class AnswerServiceImpl implements SiteAnswerService {
         );
 
         /* 문의사항 답변 상태 변경 (작성 완료) */
-        qnaRepository.updateSiteQnAState(recentQnA.getQId());
+        qnaRepository.updateQnAState(recentQnA.getQId());
 
         return new ResResultDto(answer.getAId(),"답변을 작성 했습니다.");
     }

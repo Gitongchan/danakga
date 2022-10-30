@@ -15,16 +15,16 @@ public interface QnARepository extends JpaRepository<QnA, Long> {
     @Transactional
     @Modifying
     @Query("update QnA q set q.qDeleted = 'Y' where q.qId = :qId")
-    void updateSiteQnADeleted(@Param("qId") Long q_id);
+    void updateQnADeleted(@Param("qId") Long q_id);
 
     /* 문의사항 답변 상태 변경 (작성 완료) */
     @Transactional
     @Modifying
     @Query("update QnA q set q.qState = 1 where q.qId =:qId")
-    void updateSiteQnAState(@Param("qId") Long q_id);
+    void updateQnAState(@Param("qId") Long q_id);
     
     
     /* 문의 사항 목록 조회 */
-    Page<QnA> findBySiteQDeleted(Pageable pageable, String deleted);
+    Page<QnA> findByQDeleted(Pageable pageable, String deleted);
 
 }

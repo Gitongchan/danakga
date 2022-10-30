@@ -1,6 +1,6 @@
 package com.danakga.webservice.qna.controller;
 
-import com.danakga.webservice.qna.site.dto.response.ResQnADto;
+import com.danakga.webservice.qna.dto.response.ResQnADto;
 import com.danakga.webservice.qna.service.QnAService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -1,11 +1,10 @@
 package com.danakga.webservice.qna.service.Impl;
 
 import com.danakga.webservice.exception.CustomException;
-import com.danakga.webservice.qna.site.dto.request.ReqQnADto;
-import com.danakga.webservice.qna.site.dto.response.ResQnADto;
-import com.danakga.webservice.qna.site.model.SiteQnA;
-import com.danakga.webservice.qna.site.service.SiteQnAService;
+import com.danakga.webservice.qna.dto.request.ReqQnADto;
+import com.danakga.webservice.qna.dto.response.ResQnADto;
 import com.danakga.webservice.qna.model.QnA;
+import com.danakga.webservice.qna.service.QnAService;
 import com.danakga.webservice.qna.repository.QnARepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -26,19 +25,19 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class QnAServiceImpl implements SiteQnAService {
+public class QnAServiceImpl implements QnAService {
 
     private final UserRepository userRepository;
     private final QnARepository qnaRepository;
 
     /* 문의사항 목록 */
     @Override
-    public ResQnADto siteQnAList(Pageable pageable, int page) {
+    public ResQnADto qnaList(Pageable pageable, int page) {
 
         final String deleted = "N";
 
         pageable = PageRequest.of(page, 10, Sort.by("siteQCreated").descending());
-        Page<QnA> QnA = qnaRepository.findBySiteQDeleted(pageable, deleted);
+        Page<QnA> QnA = qnaRepository.findByQDeleted(pageable, deleted);
 
         List<Map<String, Object>> qnaList = new ArrayList<>();
 
@@ -62,7 +61,7 @@ public class QnAServiceImpl implements SiteQnAService {
 
     /* 문의사항 조회 */
     @Override
-    public ResQnADto siteQnAPost(Long q_id) {
+    public ResQnADto qnaPost(Long q_id) {
 
         QnA checkQnA = qnaRepository.findById(q_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
@@ -86,7 +85,7 @@ public class QnAServiceImpl implements SiteQnAService {
     /* 문의사항 작성 */
     @Transactional
     @Override
-    public ResResultDto siteQnAWrite(UserInfo userInfo, ReqQnADto reqQnADto) {
+    public ResResultDto qnaWrite(UserInfo userInfo, ReqQnADto reqQnADto) {
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -107,7 +106,7 @@ public class QnAServiceImpl implements SiteQnAService {
     /* 문의사항 수정 */
     @Transactional
     @Override
-    public ResResultDto siteQnAEdit(UserInfo userInfo, ReqQnADto reqQnADto, Long q_id) {
+    public ResResultDto qnaEdit(UserInfo userInfo, ReqQnADto reqQnADto, Long q_id) {
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -133,7 +132,7 @@ public class QnAServiceImpl implements SiteQnAService {
     /* 문의사항 삭제 상태 변경 */
     @Transactional
     @Override
-    public ResResultDto siteQnADelete(UserInfo userInfo, Long q_id) {
+    public ResResultDto qnaDelete(UserInfo userInfo, Long q_id) {
 
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -142,7 +141,7 @@ public class QnAServiceImpl implements SiteQnAService {
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의 사항을 찾을 수 없습니다."));
 
         /* 문의사항 삭제 상태 변경 (삭제) */
-        qnaRepository.updateSiteQnADeleted(checkQnA.getQId());
+        qnaRepository.updateQnADeleted(checkQnA.getQId());
 
         return new ResResultDto(checkQnA.getQId(), "문의 사항을 삭제 했습니다.");
     }

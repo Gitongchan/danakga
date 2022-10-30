@@ -1,7 +1,7 @@
 package com.danakga.webservice.qna.controller;
 
 import com.danakga.webservice.annotation.LoginUser;
-import com.danakga.webservice.qna.site.dto.request.ReqQnADto;
+import com.danakga.webservice.qna.dto.request.ReqQnADto;
 import com.danakga.webservice.qna.service.QnAService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
