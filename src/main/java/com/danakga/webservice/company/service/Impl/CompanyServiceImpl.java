@@ -178,4 +178,5 @@ public class CompanyServiceImpl implements CompanyService {
             );
             return comUserInfo.getId();
     }
+
 }

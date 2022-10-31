@@ -48,14 +48,15 @@ public class ReviewServiceImpl implements ReviewService {
 
         List<Map<String, Object>> reviewList = new ArrayList<>();
 
-        Map<String, Object> reviewMap = new LinkedHashMap<>();
+        checkReview.forEach(entity -> {
 
-        checkReview.forEach(review -> {
-            reviewMap.put("re_id", review.getReId());
-            reviewMap.put("re_content", review.getReContent());
-            reviewMap.put("re_created", review.getReCreated());
-            reviewMap.put("re_score", review.getReScore());
-            reviewMap.put("re_writer", review.getReWriter());
+            Map<String, Object> reviewMap = new LinkedHashMap<>();
+
+            reviewMap.put("re_id", entity.getReId());
+            reviewMap.put("re_content", entity.getReContent());
+            reviewMap.put("re_created", entity.getReCreated());
+            reviewMap.put("re_score", entity.getReScore());
+            reviewMap.put("re_writer", entity.getReWriter());
             reviewMap.put("totalPages", checkReview.getTotalPages());
             reviewMap.put("totalElements", checkReview.getTotalElements());
 
@@ -78,6 +79,11 @@ public class ReviewServiceImpl implements ReviewService {
 
         Orders checkOrders = ordersRepository.findByOrdersIdAndProduct(reqReviewDto.getOrderId(), checkProduct)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
+
+        /* 구매확정 후 리뷰 작성 가능 */
+        if(!checkOrders.getOrdersStatus().equals(OrdersStatus.CONFIRM.getStatus())) {
+            return new ResResultDto(-1L,"구매 확정 후 후기를 작성할 수 있습니다.");
+        }
 
         //null이 아니면 exception, else이면 리뷰 작성
         if (reviewRepository.findByOrders(checkOrders).isPresent()) {
