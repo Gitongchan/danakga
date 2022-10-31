@@ -49,4 +49,10 @@ public class AnswerServiceImpl implements ShopAnswerService {
 
         return new ResResultDto(answer.getAId(),"답변을 작성 했습니다.");
     }
+
+    /* 가게 문의사항 답변 수정 */
+    @Override
+    public ResResultDto shopAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long q_id) {
+        return null;
+    }
 }

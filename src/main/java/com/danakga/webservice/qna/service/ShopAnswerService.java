@@ -8,4 +8,7 @@ public interface ShopAnswerService {
 
     /* 가게 문의사항 답변 작성 */
     ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto);
+    
+    /* 가게 문의사항 답변 수정 */
+    ResResultDto shopAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long q_id);
 }
