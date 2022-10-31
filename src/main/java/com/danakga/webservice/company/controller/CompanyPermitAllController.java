@@ -1,11 +1,13 @@
 package com.danakga.webservice.company.controller;
 
 import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
+import com.danakga.webservice.company.dto.response.ResProductByCompanyDto;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.user.dto.response.ResDupliCheckDto;
 import com.danakga.webservice.user.service.UserService;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -35,5 +37,16 @@ public class CompanyPermitAllController {
             return result == -1L ?
                     new ResResultDto(result,"사업자 등록 실패.") : new ResResultDto(result,"사업자 등록 성공.");
         }
+    }
+
+    //상점 품목 조회 - 일반사용자 측에서
+    @GetMapping("/inquire/{companyName}")
+    public ResProductByCompanyDto productByCompany(@PathVariable("companyName") String companyName,
+                                                   @RequestParam String sortBy,@RequestParam String sortMethod,
+                                                   @RequestParam String productName,@RequestParam int productStock,
+                                                   Pageable pageable,
+                                                   int page
+    ){
+        return companyService.productByCompanyDto(companyName,sortBy,sortMethod,productName,productStock,pageable,page);
     }
 }

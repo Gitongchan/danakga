@@ -238,4 +238,10 @@ public class PageController {
     public String productgrid() {
         return "pages/product-grids";
     }
+
+    //---접근 오류 페이지 ---
+    @GetMapping("/accessDenied")
+    public String accessDenied(){
+        return "errors/403";
+    }
 }
