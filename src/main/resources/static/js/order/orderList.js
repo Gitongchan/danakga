@@ -49,7 +49,7 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
         // productBrand: "시마노"
         // productId: 14
         // productName: "카본라인1"
-        // totalElement: 4
+        // totalElement: 4정
         // totalPage: 1
 
         //상품 준비중일때는 사업자는 배송시작,주문거절 / 일반사용자는 주문취소만 가능
@@ -231,7 +231,7 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
                 const res = await fetch(`/api/user/orders/list/detail/${event.target.dataset.id}`);
                 if(res.ok){
                     const data = await res.json();
-                    if(confirm("주문을 취소하시겠습니까?")){
+                    if(confirm("구매를 확정하시겠습니까?")){
                         const res = await fetch(`/api/user/orders/updateStatus/${event.target.dataset.id}`,{
                             method: 'PUT',
                             headers: {
@@ -276,7 +276,7 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
                     const data = await res.json();
                     if (confirm("교환신청을 진행하시겠습니까?")) {
                         // 상태 변경
-                        const res = await fetch(`/api/user/orders/updateStatus/${event.target.dataset.id}`, {
+                        const response = await fetch(`/api/user/orders/updateStatus/${event.target.dataset.id}`, {
                             method: 'PUT',
                             headers: {
                                 'header': header,
@@ -287,7 +287,7 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
                             body: JSON.stringify({ordersTrackingNum:data.ordersTrackingNum, changeOrdersStatus: "교환신청"})
                         })
 
-                        if (res.ok) {
+                        if (response.ok) {
                             alert("교환신청이 완료되었습니다!");
                             location.reload();
                         }
@@ -304,8 +304,6 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
                 console.log(event.target.dataset.id);
                 //상품상태
                 console.log(event.target.dataset.value);
-                if(res.ok) {
-                    const data = await res.json();
                     if (confirm("반품신청을 하시겠습니까?")) {
                         const res = await fetch(`/api/user/orders/updateStatus/${event.target.dataset.id}`, {
                             method: 'PUT',
@@ -315,7 +313,10 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
                                 "Content-Type": "application/json",
                                 'X-CSRF-Token': token
                             },
-                            body: JSON.stringify({ordersTrackingNum:data.ordersTrackingNum, changeOrdersStatus: "반품신청"})
+                            body: JSON.stringify({
+                                ordersTrackingNum: data.ordersTrackingNum,
+                                changeOrdersStatus: "반품신청"
+                            })
                         })
 
                         if (res.ok) {
@@ -323,7 +324,6 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
                             location.reload();
                         }
                     }
-                }
             })
         }
     }
