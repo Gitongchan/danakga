@@ -198,10 +198,10 @@ public class CompanyServiceImpl implements CompanyService {
         );
 
         if(sortMethod.equals("desc")){
-            pageable = PageRequest.of(page, 21, Sort.by(sortBy).descending());
+            pageable = PageRequest.of(page, 9, Sort.by(sortBy).descending());
         }
         else if(sortMethod.equals("asc")){
-            pageable = PageRequest.of(page, 21, Sort.by(sortBy).ascending());
+            pageable = PageRequest.of(page, 9, Sort.by(sortBy).ascending());
         }
 
         Page<Product> productByCompanyPage = companyRepository.searchProductByCompanyList(

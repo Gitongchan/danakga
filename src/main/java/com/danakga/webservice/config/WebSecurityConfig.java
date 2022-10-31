@@ -1,7 +1,9 @@
 package com.danakga.webservice.config;
 
+import com.danakga.webservice.user.handler.CustomAccessDeniedHandler;
 import com.danakga.webservice.user.handler.CustomAuthFailureHandler;
 import com.danakga.webservice.user.handler.CustomAuthSuccessHandler;
+import com.danakga.webservice.user.handler.CustomAuthenticationEntryPoint;
 import com.danakga.webservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +29,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.exceptionHandling()
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
         http.authorizeRequests()
                 .antMatchers("/api/user/**").authenticated()
                 .antMatchers("/api/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+                .antMatchers("/shop/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
                 .antMatchers("/page/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
                 .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll() //다른 요청은 모두 허용
