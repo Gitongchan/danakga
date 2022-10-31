@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 @ToString
 public class ReqAnswerDto {
 
-    private Long aId;
+    private Long answerId;
 
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
-    private String aContent;
+    private String answerContent;
 }

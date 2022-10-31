@@ -14,5 +14,5 @@ import java.util.Map;
 @NoArgsConstructor
 public class ResQnADto {
 
-    private List<Map<String,Object>> qList;
+    private List<Map<String,Object>> qnaList;
 }

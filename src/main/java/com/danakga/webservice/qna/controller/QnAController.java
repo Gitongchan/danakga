@@ -15,7 +15,7 @@ public class QnAController {
 
     private final QnAService qnaService;
 
-    /* 사이트 문의사항 작성 */
+    /* 문의사항 작성 */
     @PostMapping("/QnA/write")
     public ResResultDto qnaWrite(@LoginUser UserInfo userInfo,
                                  @RequestBody ReqQnADto reqQnADto) {
@@ -23,7 +23,7 @@ public class QnAController {
         return qnaService.qnaWrite(userInfo, reqQnADto);
     }
 
-    /* 사이트 문의사항 수정 */
+    /* 문의사항 수정 */
     @PutMapping("/QnA/edit/{q_id}")
     public ResResultDto qnaEdit(@LoginUser UserInfo userInfo,
                                 @RequestBody ReqQnADto reqQnADto,
@@ -32,7 +32,7 @@ public class QnAController {
         return qnaService.qnaEdit(userInfo, reqQnADto, q_id);
     }
     
-    /* 사이트 문의사항 삭제 상태 변경 */
+    /* 문의사항 삭제 상태 변경 */
     @PutMapping("/QnA/delete/{q_id}")
     public ResResultDto qnaDelete(@LoginUser UserInfo userInfo,
                                   @PathVariable Long q_id) {

@@ -36,7 +36,7 @@ public class QnAServiceImpl implements QnAService {
 
         final String deleted = "N";
 
-        pageable = PageRequest.of(page, 10, Sort.by("siteQCreated").descending());
+        pageable = PageRequest.of(page, 10, Sort.by("qCreated").descending());
         Page<QnA> QnA = qnaRepository.findByQDeleted(pageable, deleted);
 
         List<Map<String, Object>> qnaList = new ArrayList<>();
@@ -87,16 +87,16 @@ public class QnAServiceImpl implements QnAService {
     @Override
     public ResResultDto qnaWrite(UserInfo userInfo, ReqQnADto reqQnADto) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
         QnA qna = qnaRepository.save(
                 QnA.builder()
-                        .qType(reqQnADto.getQType())
-                        .qTitle(reqQnADto.getQContent())
+                        .qType(reqQnADto.getQnaType())
+                        .qTitle(reqQnADto.getQnaContent())
                         .qWriter(userInfo.getUserid())
-                        .qContent(reqQnADto.getQContent())
-                        .userInfo(recentUserInfo)
+                        .qContent(reqQnADto.getQnaContent())
+                        .userInfo(checkUserInfo)
                         .build()
         );
 
@@ -117,9 +117,9 @@ public class QnAServiceImpl implements QnAService {
         checkQnA = qnaRepository.save(
                 QnA.builder()
                         .qId(checkQnA.getQId())
-                        .qType(reqQnADto.getQType())
-                        .qTitle(reqQnADto.getQTitle())
-                        .qContent(reqQnADto.getQContent())
+                        .qType(reqQnADto.getQnaType())
+                        .qTitle(reqQnADto.getQnaTitle())
+                        .qContent(reqQnADto.getQnaContent())
                         .qCreated(checkQnA.getQCreated())
                         .qDeleted(checkQnA.getQDeleted())
                         .userInfo(recentUserInfo)
@@ -134,7 +134,7 @@ public class QnAServiceImpl implements QnAService {
     @Override
     public ResResultDto qnaDelete(UserInfo userInfo, Long q_id) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
         QnA checkQnA = qnaRepository.findById(q_id)

@@ -14,12 +14,12 @@ import javax.validation.constraints.NotBlank;
 public class ReqQnADto {
 
     @NotBlank(message = "유형은 필수로 선택해야 합니다.")
-    private String qType;
+    private String qnaType;
 
     @NotBlank(message = "제목은 필수로 입력해야 합니다.")
-    private String qTitle;
+    private String qnaTitle;
 
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
-    private String qContent;
+    private String qnaContent;
 
 }

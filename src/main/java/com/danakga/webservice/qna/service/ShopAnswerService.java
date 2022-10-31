@@ -1,6 +1,7 @@
 package com.danakga.webservice.qna.service;
 
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
+import com.danakga.webservice.qna.dto.request.ReqQnADto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 
@@ -10,5 +11,5 @@ public interface ShopAnswerService {
     ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto);
     
     /* 가게 문의사항 답변 수정 */
-    ResResultDto shopAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long q_id);
+    ResResultDto shopAnswerEdit(UserInfo userInfo, ReqQnADto reqQnADto, Long q_id);
 }

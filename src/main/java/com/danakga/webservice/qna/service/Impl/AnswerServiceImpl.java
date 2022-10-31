@@ -2,6 +2,7 @@ package com.danakga.webservice.qna.service.Impl;
 
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
+import com.danakga.webservice.qna.dto.request.ReqQnADto;
 import com.danakga.webservice.qna.service.ShopAnswerService;
 import com.danakga.webservice.qna.model.Answer;
 import com.danakga.webservice.qna.model.QnA;
@@ -29,7 +30,7 @@ public class AnswerServiceImpl implements ShopAnswerService {
         UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        QnA recentQnA = qnaRepository.findById(reqAnswerDto.getAId())
+        QnA recentQnA = qnaRepository.findById(reqAnswerDto.getAnswerId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의 사항을 찾을 수 없습니다."));
 
         if(recentUserInfo.getRole().equals(UserRole.ROLE_USER) && recentUserInfo.getRole().equals(UserRole.ROLE_ADMIN)) {
@@ -39,7 +40,7 @@ public class AnswerServiceImpl implements ShopAnswerService {
         Answer answer = answerRepository.save(
                 Answer.builder()
                         .aWriter(recentUserInfo.getUserid())
-                        .aContent(reqAnswerDto.getAContent())
+                        .aContent(reqAnswerDto.getAnswerContent())
                         .QnA(recentQnA)
                         .build()
         );
@@ -52,7 +53,26 @@ public class AnswerServiceImpl implements ShopAnswerService {
 
     /* 가게 문의사항 답변 수정 */
     @Override
-    public ResResultDto shopAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long q_id) {
-        return null;
+    public ResResultDto shopAnswerEdit(UserInfo userInfo, ReqQnADto reqQnADto, Long q_id) {
+
+        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원 정보를 찾을 수 없습니다."));
+
+        QnA checkQnA = qnaRepository.findById(q_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
+
+        checkQnA = qnaRepository.save(
+                QnA.builder()
+                        .qId(checkQnA.getQId())
+                        .qTitle(reqQnADto.getQnaTitle())
+                        .qType(reqQnADto.getQnaType())
+                        .qContent(reqQnADto.getQnaContent())
+                        .qCreated(checkQnA.getQCreated())
+                        .qDeleted(checkQnA.getQDeleted())
+                        .userInfo(recentUserInfo)
+                        .build()
+        );
+
+        return new ResResultDto(checkQnA.getQId(),"문의사항을 수정 했습니다.");
     }
 }
