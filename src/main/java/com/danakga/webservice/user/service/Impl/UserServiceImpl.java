@@ -493,9 +493,9 @@ public class UserServiceImpl implements UserService {
 
         List<Map<String,Object>> myReviewList = new ArrayList<>();
 
-        Map<String,Object> myReviewMap = new LinkedHashMap<>();
-
         checkReview.forEach(review -> {
+
+            Map<String,Object> myReviewMap = new LinkedHashMap<>();
 
             myReviewMap.put("p_name", review.getProduct().getProductName());
             myReviewMap.put("p_brand", review.getProduct().getProductBrand());
@@ -505,9 +505,10 @@ public class UserServiceImpl implements UserService {
             myReviewMap.put("re_created", review.getReCreated());
             myReviewMap.put("totalPages", checkReview.getTotalPages());
             myReviewMap.put("totalElements", checkReview.getTotalElements());
-        });
 
-        myReviewList.add(myReviewMap);
+            myReviewList.add(myReviewMap);
+
+        });
 
         return new ResReviewListDto(myReviewList);
     }
