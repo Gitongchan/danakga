@@ -321,7 +321,7 @@ cartButton.addEventListener('click', async () => {
             star_4.textContent = `4 점 - ${star4}`;
             star_5.textContent = `5 점 - ${star5}`;
 
-            sum_star.textContent = `${startSum}점`;
+            sum_star.textContent = `${startSum / (star1 + star2 + star3 + star4 + star5)}점`;
         }
     }
 
