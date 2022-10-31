@@ -49,4 +49,6 @@ public class ProductPermitAllController {
     ) {
         return productService.productInfo(id,request,response);
     }
+
+
 }

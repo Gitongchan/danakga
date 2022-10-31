@@ -2,25 +2,36 @@ package com.danakga.webservice.company.service.Impl;
 
 import com.danakga.webservice.company.dto.request.CompanyInfoDto;
 import com.danakga.webservice.company.dto.request.CompanyUserInfoDto;
+import com.danakga.webservice.company.dto.response.ResProductByCompanyDto;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.company.service.CompanyService;
 import com.danakga.webservice.exception.CustomException;
+import com.danakga.webservice.product.dto.response.ResProductListDto;
+import com.danakga.webservice.product.model.Product;
+import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     //업체명 중복 체크
     @Override
@@ -177,6 +188,69 @@ public class CompanyServiceImpl implements CompanyService {
 
             );
             return comUserInfo.getId();
+    }
+
+    @Override
+    public ResProductByCompanyDto productByCompanyDto(String companyName, String sortBy, String sortMethod,
+                                                      String productName, int productStock,Pageable pageable, int page) {
+        CompanyInfo checkCompanyInfo = companyRepository.findByCompanyName(companyName).orElseGet(
+                ()->CompanyInfo.builder().build()
+        );
+
+        if(sortMethod.equals("desc")){
+            pageable = PageRequest.of(page, 9, Sort.by(sortBy).descending());
+        }
+        else if(sortMethod.equals("asc")){
+            pageable = PageRequest.of(page, 9, Sort.by(sortBy).ascending());
+        }
+
+        Page<Product> productByCompanyPage = companyRepository.searchProductByCompanyList(
+                companyName,productName,productStock,pageable
+        );
+
+        List<Product> productByCompanyList = productByCompanyPage.getContent();
+
+        List<ResProductListDto> productListDto = new ArrayList<>();
+
+        productByCompanyList.forEach(entity-> {
+            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+                    () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            );
+            double productRating; // 상품 평점
+            if(productRepository.selectProductRating(productInfo) == null){
+                productRating = 0;
+            }else{
+                productRating = Math.round(productRepository.selectProductRating(productInfo)*10)/10.0;
+            }
+            ResProductListDto listDto = new ResProductListDto();
+            listDto.setProductId(entity.getProductId());
+            listDto.setProductBrand(entity.getProductBrand());
+            listDto.setProductType(entity.getProductType());
+            listDto.setProductSubType(entity.getProductSubType());
+            listDto.setProductName(entity.getProductName());
+            listDto.setProductPhoto(entity.getProductPhoto());
+            listDto.setProductPrice(entity.getProductPrice());
+            listDto.setProductStock(entity.getProductStock());
+            listDto.setProductViewCount(entity.getProductViewCount());
+            listDto.setProductOrderCount(entity.getProductOrderCount());
+            listDto.setProductUploadDate(entity.getProductUploadDate());
+            listDto.setProductRating(productRating);
+            listDto.setTotalPage(productByCompanyPage.getTotalPages());
+            listDto.setTotalElement(productByCompanyPage.getTotalElements());
+            productListDto.add(listDto);
+        });
+
+        ResProductByCompanyDto resProductByCompanyDto = new ResProductByCompanyDto();
+        resProductByCompanyDto.setCompanyName(checkCompanyInfo.getCompanyName());
+        resProductByCompanyDto.setCompanyNum(checkCompanyInfo.getCompanyNum());
+        resProductByCompanyDto.setCompanyBankName(checkCompanyInfo.getCompanyBankName());
+        resProductByCompanyDto.setCompanyBankNum(checkCompanyInfo.getCompanyBanknum());
+        resProductByCompanyDto.setCompanyStreetAdr(checkCompanyInfo.getCompanyStreetAdr());
+        resProductByCompanyDto.setCompanyDetailAdr(checkCompanyInfo.getCompanyDetailAdr());
+        resProductByCompanyDto.setProductListDto(productListDto);
+
+
+        return resProductByCompanyDto;
     }
 
 }
