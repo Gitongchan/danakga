@@ -1,5 +1,5 @@
 const pName = document.getElementById('p-title');
-const pCompany = document.getElementById('p-company');
+const pCompany = document.getElementById('companyName');
 const pPrice = document.getElementById('p-price');
 const pBrand = document.getElementById('brand-type-text');
 const pMaintype = document.getElementById('main-type-text');
@@ -72,7 +72,11 @@ const status = getParameterByName('status');
                 pName.innerText = data.productName;
                 pViews.textContent = data.productViewCount==="0" ? 0 : data.productViewCount;
                 pHeart.textContent = data.productWishCount==="0" ? 0 : data.productWishCount;
-                pCompany.innerText = data.companyName;
+                pCompany.innerHTML = `
+                <i class="lni lni-tag"></i> 회사명:
+                            <a href="/product/grid?shopName=${data.companyName}">
+                                <span id="p-company">${data.companyName}</span>
+                            </a>`
                 pBrand.innerText = "브랜드 : " + (data.productBrand === "" ? "브랜드 없음" : data.productBrand);
                 pMaintype.innerText = "메인종류 : " + data.productType;
                 pSubtype.innerText = "세부종류 : " + data.productSubType;
@@ -103,7 +107,11 @@ const status = getParameterByName('status');
                 pName.innerText = data.productName;
                 pViews.textContent = data.productViewCount==="0" ? 0 : data.productViewCount;
                 pHeart.textContent = data.productWishCount==="0" ? 0 : data.productWishCount;
-                pCompany.innerText = data.companyName;
+                pCompany.innerHTML = `
+                <i class="lni lni-tag"></i> 회사명:
+                            <a href="/product/grid?shopName=${data.companyName}">
+                                <span id="p-company">${data.companyName}</span>
+                            </a>`
                 pBrand.innerText = "브랜드 : " + (data.productBrand === "" ? "브랜드 없음" : data.productBrand);
                 pMaintype.innerText = "메인종류 : " + data.productType;
                 pSubtype.innerText = "세부종류 : " + data.productSubType;

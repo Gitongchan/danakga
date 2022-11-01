@@ -1,28 +1,56 @@
 const $gridProductList = document.querySelector('#gridProductList');
+const $shopName = document.querySelector('#shopName');
+const pagenation = document.querySelector('.text-center .pagination');
+const $gridProductSearchBtn = document.querySelector('#gridProductSearchBtn');
+const $sortMethod = document.querySelector('#sortMethod');
+const $sortType = document.querySelector('#sortType');
 
 // URL 설정
-let productUrl = '';
+let gridUrl = '';
 let paging = ''
-let productPaging = ''
+let gridPaging = ''
 
 const shopName = getParameterByName('shopName').split('?')[0];
 
 // productUrl = `/api/company/inquire/${shopName}?sortBy=productPrice&sortMethod=desc&productName=%25&productStock=0&`
+$gridProductSearchBtn.addEventListener('click', () => {
+    const searchText = document.querySelector('#searchText').value.trim();
+    setURL(shopName, $sortMethod.value, $sortType.value, searchText ? searchText : '%25', 0);
+    console.log(gridPaging);
+    gridProductList(gridPaging);
+})
+
+$sortMethod.addEventListener('change', () =>{
+    const searchText = document.querySelector('#searchText').value.trim();
+    setURL(shopName, $sortMethod.value, $sortType.value, searchText ? searchText : '%25', 0);
+    gridProductList(gridPaging);
+})
+
+$sortType.addEventListener('change', () =>{
+    const searchText = document.querySelector('#searchText').value.trim();
+    setURL(shopName, $sortMethod.value, $sortType.value, searchText ? searchText : '%25', 0);
+    gridProductList(gridPaging);
+})
 
 function setURL(shopName, sortBy, sortMethod, productName, page) {
-    productUrl = `/api/company/inquire/${shopName}?sortBy=${sortBy}&sortMethod=${sortMethod}&productName=${productName}&productStock=0&`
+    gridUrl = `/api/company/inquire/${shopName}?sortBy=${sortBy}&sortMethod=${sortMethod}&productName=${productName}&productStock=0&`
     paging = `page=${page}`
-    productPaging = productUrl + paging
+    gridPaging = gridUrl + paging
 }
 
 
 const gridProductList = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
+    console.log(data);
 
-    for(const item of data.productListDto){
-        console.log(item)
-        $gridProductList.innerHTML += `
+    $gridProductList.innerHTML = "";
+    pagenation.innerHTML = "";
+    if(res.ok){
+        renderPagination(url, data.productListDto[0].totalPage)
+        for(const item of data.productListDto){
+            console.log(item)
+            $gridProductList.innerHTML += `
                     <div class="col-lg-4 col-md-6 col-12">
                         <!-- Start Single Product -->
                         <div class="single-product">
@@ -51,11 +79,13 @@ const gridProductList = async (url) => {
                     </div>`
 
 
-        for(let i=1; i <= item.productRating; i++){
-            document.querySelector(`.star-${i}_${item.productId}`).classList.remove('lni-star')
-            document.querySelector(`.star-${i}_${item.productId}`).classList.add('lni-star-filled')
+            for(let i=1; i <= item.productRating; i++){
+                document.querySelector(`.star-${i}_${item.productId}`).classList.remove('lni-star')
+                document.querySelector(`.star-${i}_${item.productId}`).classList.add('lni-star-filled')
+            }
         }
     }
+
 }
 
 // 페이징 번호 생성 하는 곳
@@ -66,7 +96,7 @@ function renderPagination(url, currentPage) {
             pagenation.innerHTML = "";
 
             //총 페이지 수
-            const total = Math.ceil(data[0].totalElement/10);
+            const total = Math.ceil(data.productListDto[0].totalElement/10);
             //화면에 보여질 페이지 그룹
             const group = Math.ceil(currentPage/10);
 
@@ -149,7 +179,11 @@ function renderPagination(url, currentPage) {
 
 //페이지 번호 클릭 시 이동하는 곳
 function onList(e){
-    myProductList(productUrl + `page=${e}`)
+    gridProductList(gridUrl + `page=${e}`)
 }
 
-gridProductList();
+(function (){
+    $shopName.textContent = shopName;
+    setURL(shopName, 'productPrice','desc','%25',0)
+    gridProductList(gridPaging);
+})();
