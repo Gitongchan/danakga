@@ -32,12 +32,12 @@ public class QnAServiceImpl implements QnAService {
 
     /* 문의사항 목록 */
     @Override
-    public ResQnADto qnaList(Pageable pageable, int page) {
+    public ResQnADto qnaList(Pageable pageable, int q_sort, int page) {
 
         final String deleted = "N";
 
         pageable = PageRequest.of(page, 10, Sort.by("qCreated").descending());
-        Page<QnA> QnA = qnaRepository.findByQDeleted(pageable, deleted);
+        Page<QnA> QnA = qnaRepository.findByQDeletedAndQSort(pageable, deleted, q_sort);
 
         List<Map<String, Object>> qnaList = new ArrayList<>();
 
@@ -45,12 +45,12 @@ public class QnAServiceImpl implements QnAService {
 
             Map<String,Object> qnaMap = new LinkedHashMap<>();
 
-            qnaMap.put("siteQ_id", entity.getQId());
-            qnaMap.put("siteQ_type", entity.getQType());
-            qnaMap.put("siteQ_userid", entity.getUserInfo().getUserid());
-            qnaMap.put("siteQ_title", entity.getQTitle());
-            qnaMap.put("siteQ_created", entity.getQCreated());
-            qnaMap.put("siteQ_state", entity.getQState());
+            qnaMap.put("q_id", entity.getQId());
+            qnaMap.put("q_type", entity.getQType());
+            qnaMap.put("q_userid", entity.getUserInfo().getUserid());
+            qnaMap.put("q_title", entity.getQTitle());
+            qnaMap.put("q_created", entity.getQCreated());
+            qnaMap.put("q_state", entity.getQState());
             qnaMap.put("totalPage", QnA.getTotalPages());
             qnaMap.put("totalElement", QnA.getTotalPages());
             qnaList.add(qnaMap);
@@ -83,6 +83,7 @@ public class QnAServiceImpl implements QnAService {
     }
 
     /* 문의사항 작성 */
+    /* dto qSort 0 = 사이트, 1 = 가게 */
     @Transactional
     @Override
     public ResResultDto qnaWrite(UserInfo userInfo, ReqQnADto reqQnADto) {
@@ -92,6 +93,7 @@ public class QnAServiceImpl implements QnAService {
 
         QnA qna = qnaRepository.save(
                 QnA.builder()
+                        .qSort(reqQnADto.getQnaSort())
                         .qType(reqQnADto.getQnaType())
                         .qTitle(reqQnADto.getQnaContent())
                         .qWriter(userInfo.getUserid())
@@ -108,7 +110,7 @@ public class QnAServiceImpl implements QnAService {
     @Override
     public ResResultDto qnaEdit(UserInfo userInfo, ReqQnADto reqQnADto, Long q_id) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
         QnA checkQnA = qnaRepository.findById(q_id)
@@ -117,12 +119,13 @@ public class QnAServiceImpl implements QnAService {
         checkQnA = qnaRepository.save(
                 QnA.builder()
                         .qId(checkQnA.getQId())
+                        .qSort(reqQnADto.getQnaSort())
                         .qType(reqQnADto.getQnaType())
                         .qTitle(reqQnADto.getQnaTitle())
                         .qContent(reqQnADto.getQnaContent())
                         .qCreated(checkQnA.getQCreated())
                         .qDeleted(checkQnA.getQDeleted())
-                        .userInfo(recentUserInfo)
+                        .userInfo(checkUserInfo)
                         .build()
         );
 

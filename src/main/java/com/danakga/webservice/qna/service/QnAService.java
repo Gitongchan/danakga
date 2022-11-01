@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 public interface QnAService {
     
     /* 문의사항 목록 */
-    ResQnADto qnaList(Pageable pageable, int page);
+    ResQnADto qnaList(Pageable pageable, int q_sort, int page);
 
     /* 문의사항 조회 */
     ResQnADto qnaPost(Long q_id);

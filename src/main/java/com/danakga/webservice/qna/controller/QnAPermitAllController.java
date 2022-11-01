@@ -17,10 +17,12 @@ public class QnAPermitAllController {
     private final QnAService qnaService;
 
     /* 사이트 문의사항 목록 */
-    @GetMapping("/list")
-    public ResQnADto qnaList(Pageable pageable, int page) {
+    /* 0 = 사이트, 1 = 가게 조회 할 수 있도록  */
+    @GetMapping("/list/{q_sort}")
+    public ResQnADto qnaList(Pageable pageable, int page,
+                             @PathVariable("q_sort") int q_sort) {
 
-        return qnaService.qnaList(pageable, page);
+        return qnaService.qnaList(pageable, q_sort, page);
     }
     
     /* 사이트 문의사항 조회 */

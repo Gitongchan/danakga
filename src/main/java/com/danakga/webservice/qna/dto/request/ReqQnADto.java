@@ -22,4 +22,6 @@ public class ReqQnADto {
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
     private String qnaContent;
 
+    private int qnaSort;
+
 }

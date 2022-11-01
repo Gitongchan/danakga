@@ -25,6 +25,6 @@ public interface QnARepository extends JpaRepository<QnA, Long> {
     
     
     /* 문의 사항 목록 조회 */
-    Page<QnA> findByQDeleted(Pageable pageable, String deleted);
+    Page<QnA> findByQDeletedAndQSort(Pageable pageable, String deleted, int q_sort);
 
 }

@@ -8,7 +8,7 @@ import com.danakga.webservice.util.responseDto.ResResultDto;
 public interface ShopAnswerService {
 
     /* 가게 문의사항 답변 작성 */
-    ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto);
+    ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long q_id);
     
     /* 가게 문의사항 답변 수정 */
     ResResultDto shopAnswerEdit(UserInfo userInfo, ReqQnADto reqQnADto, Long q_id);

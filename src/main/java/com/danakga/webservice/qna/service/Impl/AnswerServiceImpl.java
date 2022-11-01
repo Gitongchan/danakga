@@ -25,21 +25,21 @@ public class AnswerServiceImpl implements ShopAnswerService {
 
     /* 가게 문의사항 답변 작성 */
     @Override
-    public ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto) {
+    public ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long q_id) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        QnA recentQnA = qnaRepository.findById(reqAnswerDto.getAnswerId())
+        QnA recentQnA = qnaRepository.findById(q_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의 사항을 찾을 수 없습니다."));
 
-        if(recentUserInfo.getRole().equals(UserRole.ROLE_USER) && recentUserInfo.getRole().equals(UserRole.ROLE_ADMIN)) {
+        if(checkUserInfo.getRole().equals(UserRole.ROLE_USER) && checkUserInfo.getRole().equals(UserRole.ROLE_ADMIN)) {
             return new ResResultDto(-1L, "가게 매니저만 작성할 수 있습니다.");
         }
 
         Answer answer = answerRepository.save(
                 Answer.builder()
-                        .aWriter(recentUserInfo.getUserid())
+                        .aWriter(checkUserInfo.getUserid())
                         .aContent(reqAnswerDto.getAnswerContent())
                         .QnA(recentQnA)
                         .build()
@@ -55,7 +55,7 @@ public class AnswerServiceImpl implements ShopAnswerService {
     @Override
     public ResResultDto shopAnswerEdit(UserInfo userInfo, ReqQnADto reqQnADto, Long q_id) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("등록된 회원 정보를 찾을 수 없습니다."));
 
         QnA checkQnA = qnaRepository.findById(q_id)
@@ -69,7 +69,7 @@ public class AnswerServiceImpl implements ShopAnswerService {
                         .qContent(reqQnADto.getQnaContent())
                         .qCreated(checkQnA.getQCreated())
                         .qDeleted(checkQnA.getQDeleted())
-                        .userInfo(recentUserInfo)
+                        .userInfo(checkUserInfo)
                         .build()
         );
 

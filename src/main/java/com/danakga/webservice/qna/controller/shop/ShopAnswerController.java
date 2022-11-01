@@ -17,19 +17,20 @@ public class ShopAnswerController {
     private final ShopAnswerService shopAnswerService;
 
     /* 가게 문의사항 답변 작성 */
-    @PostMapping("/shopAnswer/write")
+    @PostMapping("/shopAnswer/write/{q_id}")
     public ResResultDto shopAnswerWrite(@LoginUser UserInfo userInfo,
-                                        @RequestBody ReqAnswerDto reqAnswerDto) {
+                                        @RequestBody ReqAnswerDto reqAnswerDto,
+                                        @PathVariable("q_id") Long q_id) {
 
-        return shopAnswerService.shopAnswerWrite(userInfo, reqAnswerDto);
+        return shopAnswerService.shopAnswerWrite(userInfo, reqAnswerDto, q_id);
     }
     
     /* 가게 문의사항 답변 수정 */
     @PostMapping("/shopAnswer/edit/{q_id}")
     public ResResultDto shopAnswerEdit(@LoginUser UserInfo userInfo,
                                        @RequestBody ReqQnADto reqQnADto,
-                                       @PathVariable("q_id") Long p_id) {
+                                       @PathVariable("q_id") Long q_id) {
 
-        return shopAnswerService.shopAnswerEdit(userInfo, reqQnADto, p_id);
+        return shopAnswerService.shopAnswerEdit(userInfo, reqQnADto, q_id);
     }
 }
