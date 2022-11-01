@@ -41,6 +41,12 @@
     color: #fff;
 }
 
+.pagination {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
 /*.single-banner img{*/
 /*    width: 100%;*/
 /*}*/
