@@ -25,7 +25,7 @@ const manyView = document.getElementById('many-view');
                 `
             }
             indexsmall.innerHTML =`
-            <img src=${data[7].productPhoto} id="small_img"alt="#"/>
+            <img src=${data[7].productPhoto} id="small_img" alt="#"/>
                 <div class="content">
                     <h2>
                         <span>신규</span>
@@ -100,7 +100,7 @@ const manyView = document.getElementById('many-view');
             }
 
             orderCount.innerHTML+= `<h4 class="list-title">주문 최다 순</h4>`;
-            for(let o = 0;o < 3; o++){
+            for(let o = 0; o < 3; o++){
                 orderCount.innerHTML+=` 
                     <!-- Start Single List -->
                     <div class="single-list">
