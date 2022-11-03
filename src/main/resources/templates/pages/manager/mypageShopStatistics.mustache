@@ -5,6 +5,8 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 {{>pages/header2}}
@@ -35,46 +37,19 @@
                                 <button type="button" id="reset-date">초기화</button>
                             </div>
                             <div>
-                                <select class="form-select" id="order-status" aria-label="select order-status" onchange="changeStatusType()">
-                                    <option value="상품준비중">모든상품</option>
-<!--                                    <option value="배송완료">배송완료</option>-->
-<!--                                    <option value="반품신청">반품신청</option>-->
-<!--                                    <option value="교환신청">교환신청</option>-->
+                                <select class="form-select" aria-label="select order-status">
+                                    <option value="daily">일</option>
+                                    <option value="week">주</option>
+                                    <option value="month">월</option>
+                                    <option value="year">년</option>
                                 </select>
                             </div>
                         </div>
                             <!-- Cart List Title -->
                             <div class="cart-list-title">
                                 <div class="row">
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>주문번호</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>회사명</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>브랜드</p>
-                                    </div>
-                                    <div class="col-lg-3 col-md-2 col-12">
-                                        <p>상품명</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>수량</p>
-                                    </div>
-                                    <div class="col-lg-2 col-md-1 col-12">
-                                        <p>가격</p>
-                                    </div>
-                                    <div class="col-lg-2 col-md-3 col-12">
-                                        <p>진행상태</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-2 col-12">
-                                        <p>상세</p>
-                                    </div>
+                                    <canvas id="myChart" width="400" height="100"></canvas>
                                 </div>
-                            </div>
-                            <!-- End Cart List Title -->
-                            <!-- Cart Single List list -->
-                            <div class="cart-single-list" id="orderList">
                             </div>
                             <!-- End Single List -->
                             <div class="text-center">
@@ -136,7 +111,6 @@
 </script>
 {{>pages/footer1}}
 
-<script src="/js/order/orderList.js"></script>
-<script src="/js/order/orderListPagination.js"></script>
+<script src="/js/company/shopStatistics.js"></script>
 
 {{>pages/footer2}}
