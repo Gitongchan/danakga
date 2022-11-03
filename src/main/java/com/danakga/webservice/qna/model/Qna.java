@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class QnA {
+public class Qna {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "q_id")
@@ -66,7 +66,7 @@ public class QnA {
     }
 
     @Builder
-    public QnA(Long qId, int qSort, String qType, String qTitle, String qContent, String qWriter,
+    public Qna(Long qId, int qSort, String qType, String qTitle, String qContent, String qWriter,
                int qState, String qDeleted, LocalDateTime qCreated, LocalDateTime qModified,
                UserInfo userInfo, CompanyInfo companyInfo) {
         this.qId = qId;

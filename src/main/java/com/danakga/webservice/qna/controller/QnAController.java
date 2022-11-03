@@ -16,6 +16,7 @@ public class QnAController {
     private final QnAService qnaService;
 
     /* 문의사항 작성 */
+    /* 가게 아이디값을 어디서 받아올지 생각 */
     @PostMapping("/QnA/write")
     public ResResultDto qnaWrite(@LoginUser UserInfo userInfo,
                                  @RequestBody ReqQnADto reqQnADto) {

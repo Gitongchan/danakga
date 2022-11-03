@@ -2,7 +2,6 @@ package com.danakga.webservice.qna.controller.shop;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
-import com.danakga.webservice.qna.dto.request.ReqQnADto;
 import com.danakga.webservice.qna.service.ShopAnswerService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
@@ -26,11 +25,21 @@ public class ShopAnswerController {
     }
     
     /* 가게 문의사항 답변 수정 */
-    @PostMapping("/shopAnswer/edit/{q_id}")
+    @PutMapping("/shopAnswer/edit/{q_id}/{a_id}")
     public ResResultDto shopAnswerEdit(@LoginUser UserInfo userInfo,
-                                       @RequestBody ReqQnADto reqQnADto,
-                                       @PathVariable("q_id") Long q_id) {
+                                       @RequestBody ReqAnswerDto reqAnswerDto,
+                                       @PathVariable("q_id") Long q_id,
+                                       @PathVariable("a_id") Long a_id) {
 
-        return shopAnswerService.shopAnswerEdit(userInfo, reqQnADto, q_id);
+        return shopAnswerService.shopAnswerEdit(userInfo, reqAnswerDto, q_id, a_id);
+    }
+
+    /* 가게 문의사항 답변 삭제 */
+    @PutMapping("/shopAnswer/delete/{q_id}/{a_id}")
+    public ResResultDto shopAnswerDelete(@LoginUser UserInfo userInfo,
+                                         @PathVariable("q_id") Long q_id,
+                                         @PathVariable("a_id") Long a_id) {
+        
+        return shopAnswerService.shopAnswerDelete(userInfo, q_id, a_id);
     }
 }

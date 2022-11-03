@@ -15,38 +15,38 @@ import java.time.LocalDateTime;
 public class Answer {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "a_id")
-    private Long aId;
+    @Column(name = "an_id")
+    private Long anId;
 
-    @Column(name = "a_writer")
-    private String aWriter;
+    @Column(name = "an_writer")
+    private String anWriter;
 
-    @Column(name = "a_content")
-    private String aContent;
+    @Column(name = "an_content")
+    private String anContent;
 
-    @Column(name = "a_deleted")
-    private String aDeleted;
+    @Column(name = "an_deleted")
+    private String anDeleted;
 
     @CreationTimestamp
-    private LocalDateTime aCreated;
+    private LocalDateTime anCreated;
 
     @ManyToOne
     @JoinColumn(name = "q_id")
-    private QnA QnA;
+    private Qna qna;
 
     @PrePersist
     public void status() {
-        this.aDeleted = "N";
+        this.anDeleted = "N";
     }
 
     @Builder
-    public Answer(Long aId, String aContent, String aDeleted, LocalDateTime aCreated,
-                  String aWriter, QnA QnA) {
-        this.aId = aId;
-        this.aContent = aContent;
-        this.aDeleted = aDeleted;
-        this.aCreated = aCreated;
-        this.aWriter = aWriter;
-        this.QnA = QnA;
+    public Answer(Long anId, String anContent, String anDeleted, LocalDateTime anCreated,
+                  String anWriter, Qna qna) {
+        this.anId = anId;
+        this.anContent = anContent;
+        this.anDeleted = anDeleted;
+        this.anCreated = anCreated;
+        this.anWriter = anWriter;
+        this.qna = qna;
     }
 }
