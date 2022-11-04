@@ -16,30 +16,33 @@ public class ShopAnswerController {
     private final ShopAnswerService shopAnswerService;
 
     /* 가게 문의사항 답변 작성 */
-    @PostMapping("/shopAnswer/write/{q_id}")
+    @PostMapping("/shop_answer/write/{c_id}/{qn_id}")
     public ResResultDto shopAnswerWrite(@LoginUser UserInfo userInfo,
                                         @RequestBody ReqAnswerDto reqAnswerDto,
-                                        @PathVariable("q_id") Long q_id) {
+                                        @PathVariable("c_id") Long c_id,
+                                        @PathVariable("qn_id") Long qn_id) {
 
-        return shopAnswerService.shopAnswerWrite(userInfo, reqAnswerDto, q_id);
+        return shopAnswerService.shopAnswerWrite(userInfo, reqAnswerDto, c_id, qn_id);
     }
     
     /* 가게 문의사항 답변 수정 */
-    @PutMapping("/shopAnswer/edit/{q_id}/{a_id}")
+    @PutMapping("/shop_answer/edit/{c_id}/{qn_id}/{an_id}")
     public ResResultDto shopAnswerEdit(@LoginUser UserInfo userInfo,
                                        @RequestBody ReqAnswerDto reqAnswerDto,
-                                       @PathVariable("q_id") Long q_id,
-                                       @PathVariable("a_id") Long a_id) {
+                                       @PathVariable("c_id") Long c_id,
+                                       @PathVariable("qn_id") Long qn_id,
+                                       @PathVariable("an_id") Long an_id) {
 
-        return shopAnswerService.shopAnswerEdit(userInfo, reqAnswerDto, q_id, a_id);
+        return shopAnswerService.shopAnswerEdit(userInfo, reqAnswerDto, c_id, qn_id, an_id);
     }
 
     /* 가게 문의사항 답변 삭제 */
-    @PutMapping("/shopAnswer/delete/{q_id}/{a_id}")
+    @PutMapping("/shop_answer/delete/{c_id}/{qn_id}/{an_id}")
     public ResResultDto shopAnswerDelete(@LoginUser UserInfo userInfo,
-                                         @PathVariable("q_id") Long q_id,
-                                         @PathVariable("a_id") Long a_id) {
+                                         @PathVariable("c_id") Long c_id,
+                                         @PathVariable("qn_id") Long qn_id,
+                                         @PathVariable("an_id") Long an_id) {
         
-        return shopAnswerService.shopAnswerDelete(userInfo, q_id, a_id);
+        return shopAnswerService.shopAnswerDelete(userInfo, c_id, qn_id, an_id);
     }
 }

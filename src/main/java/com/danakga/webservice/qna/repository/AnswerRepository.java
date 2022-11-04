@@ -16,8 +16,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     /* 문의사항 답변 조회 */
     Optional<Answer> findByAnIdAndQna(Long an_id, Qna qna);
     
-    /* 문의사항 답변 조회 */
-    List<Answer> findByAnDeleted(String deleted);
+    /* 문의사항 답변 조회 (삭제 상태로 변경 후 사용) */
+    List<Answer> findByAnDeletedAndQna(String deleted, Qna qna);
 
     /* 가게 문의사항 답변 삭제 상태 변경 */
     @Transactional
