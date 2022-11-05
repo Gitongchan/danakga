@@ -12,7 +12,7 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResQnADto {
+public class ResQnaDto {
 
-    private List<Map<String,Object>> qList;
+    private List<Map<String,Object>> qnaList;
 }

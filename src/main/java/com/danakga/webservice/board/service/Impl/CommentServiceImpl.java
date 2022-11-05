@@ -104,10 +104,10 @@ public class CommentServiceImpl implements CommentService {
     public ResResultDto commentsWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id) {
 
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        Board recentBoard = boardRepository.findById(bd_id)
+        Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
         // null값 비교를 위해 Integer 사용
@@ -121,14 +121,14 @@ public class CommentServiceImpl implements CommentService {
         Board_Comment board_Comment = commentRepository.save(
                 Board_Comment.builder()
                         .cmContent(reqCommentDto.getCmContent())
-                        .cmWriter(recentUserInfo.getUserid())
+                        .cmWriter(checkUserInfo.getUserid())
                         .cmGroup(groupCount + 1)
                         .cmStep(0)
                         .cmDepth(0)
                         .cmAnswerNum(0)
                         .cmParentNum(0)
-                        .board(recentBoard)
-                        .userInfo(recentUserInfo)
+                        .board(checkBoard)
+                        .userInfo(checkUserInfo)
                         .build()
         );
 
@@ -140,24 +140,24 @@ public class CommentServiceImpl implements CommentService {
     public ResResultDto commentsEdit(Long bd_id, Long cm_id, UserInfo userInfo, ReqCommentDto reqCommentDto) {
 
         /* 회원, 게시글, 댓글 조회 */
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        Board recentBoard = boardRepository.findById(bd_id)
+        Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
-        Board_Comment board_Comment = commentRepository.findByBoardAndCmId(recentBoard, cm_id)
+        Board_Comment board_Comment = commentRepository.findByBoardAndCmId(checkBoard, cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
         board_Comment = commentRepository.save(
                 Board_Comment.builder()
                         .cmId(board_Comment.getCmId())
                         .cmContent(reqCommentDto.getCmContent())
-                        .cmWriter(recentUserInfo.getUserid())
+                        .cmWriter(checkUserInfo.getUserid())
                         .cmDeleted(board_Comment.getCmDeleted())
                         .cmCreated(board_Comment.getCmCreated())
-                        .userInfo(recentUserInfo)
-                        .board(recentBoard)
+                        .userInfo(checkUserInfo)
+                        .board(checkBoard)
                         .build()
         );
 
@@ -196,10 +196,10 @@ public class CommentServiceImpl implements CommentService {
         final String deleted = "N";
         final int answerStep = 1;
 
-        Board_Comment checkcomments = commentRepository.findById(cm_id)
+        Board_Comment checkComments = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
-        final int parentNum = checkcomments.getCmId().intValue();
+        final int parentNum = checkComments.getCmId().intValue();
 
         //개별 댓글 조회
         List<Board_Comment> answers = commentRepository.eachAnswerList(parentNum, deleted, answerStep);
@@ -226,12 +226,12 @@ public class CommentServiceImpl implements CommentService {
             answerList.add(answerMap);
         });
 
-        commentMap.put("cm_id", checkcomments.getCmId());
-        commentMap.put("cm_comment", checkcomments.getCmContent());
-        commentMap.put("cm_created", checkcomments.getCmCreated());
-        commentMap.put("cm_deleted", checkcomments.getCmDeleted());
-        commentMap.put("cm_modified", checkcomments.getCmModified());
-        commentMap.put("cm_writer", checkcomments.getCmWriter());
+        commentMap.put("cm_id", checkComments.getCmId());
+        commentMap.put("cm_comment", checkComments.getCmContent());
+        commentMap.put("cm_created", checkComments.getCmCreated());
+        commentMap.put("cm_deleted", checkComments.getCmDeleted());
+        commentMap.put("cm_modified", checkComments.getCmModified());
+        commentMap.put("cm_writer", checkComments.getCmWriter());
         commentMap.put("answers", answerList);
         commentList.add(commentMap);
 
@@ -244,31 +244,31 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResResultDto answerWrite(UserInfo userInfo, ReqCommentDto reqCommentDto, Long bd_id, Long cm_id) {
 
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        Board recentBoard = boardRepository.findById(bd_id)
+        Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글 정보를 찾을 수 없습니다."));
 
-        Board_Comment recentComment = commentRepository.findById(cm_id)
+        Board_Comment checkComment = commentRepository.findById(cm_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
 
         // int형 변환
         final int parentNum = cm_id.intValue();
 
         // depth 최대값
-        final int depthCount = commentRepository.maxDepthValue(recentComment.getCmGroup());
+        final int depthCount = commentRepository.maxDepthValue(checkComment.getCmGroup());
 
         Board_Comment writeAnswer = commentRepository.save(
                 Board_Comment.builder()
                         .cmContent(reqCommentDto.getCmContent())
-                        .cmWriter(recentUserInfo.getUserid())
-                        .cmGroup(recentComment.getCmGroup())
+                        .cmWriter(checkUserInfo.getUserid())
+                        .cmGroup(checkComment.getCmGroup())
                         .cmStep(1)
                         .cmDepth(depthCount + 1)
                         .cmParentNum(parentNum)
-                        .board(recentBoard)
-                        .userInfo(recentUserInfo)
+                        .board(checkBoard)
+                        .userInfo(checkUserInfo)
                         .build()
         );
         //댓글의 AnswerNum 증가
