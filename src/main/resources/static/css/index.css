@@ -47,6 +47,22 @@
     justify-content: center;
 }
 
+.product-image img{
+    width: 290px;
+    height: 290px !important;
+}
+
+.main-img img {
+    width: 600px;
+    height: 400px !important;
+
+}
+
+.single-banner img{
+    width: 630px;
+    height: 300px !important;
+}
+
 /*.single-banner img{*/
 /*    width: 100%;*/
 /*}*/
