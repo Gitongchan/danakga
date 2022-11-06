@@ -2,7 +2,7 @@ package com.danakga.webservice.qna.controller.shop;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
-import com.danakga.webservice.qna.service.ShopAnswerService;
+import com.danakga.webservice.qna.service.AnswerService;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/manager")
 public class ShopAnswerController {
 
-    private final ShopAnswerService shopAnswerService;
+    private final AnswerService shopAnswerService;
 
     /* 가게 문의사항 답변 작성 */
     @PostMapping("/shop_answer/write/{c_id}/{qn_id}")
