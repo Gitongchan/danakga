@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<UserInfo,Long> {
             "and u.phone like %:userPhone% " +
             "and u.userid like %:userId% " +
             "and u.role = :userRole " +
-            "and u.userEnabled = :userEnabled")
+            "and u.userEnabled <= :userEnabled")
     Page<UserInfo> findAllUserInfo(UserRole userRole,
                                    String userName,String userEmail,String userPhone,
                                    String userId,boolean userEnabled,Pageable pageable);

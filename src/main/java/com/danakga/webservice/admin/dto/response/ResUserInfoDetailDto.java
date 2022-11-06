@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -22,6 +24,8 @@ public class ResUserInfoDetailDto {
     private String userStreetAdr;
     private String userLotAdr;
     private String userDetailAdr;
+    private LocalDateTime userDeletedDate;
+
 
 
     public ResUserInfoDetailDto(UserInfo userInfo) {
@@ -35,5 +39,6 @@ public class ResUserInfoDetailDto {
         this.userStreetAdr = userInfo.getUserStreetAdr();
         this.userLotAdr = userInfo.getUserLotAdr();
         this.userDetailAdr = userInfo.getUserDetailAdr();
+        this.userDeletedDate = userInfo.getUserDeletedDate();
     }
 }

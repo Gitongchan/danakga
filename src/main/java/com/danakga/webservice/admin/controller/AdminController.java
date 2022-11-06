@@ -39,13 +39,13 @@ public class AdminController {
     //사업자 목록
     @GetMapping("/members/managerList")
     public List<ResManagerInfoDto> managerList(@LoginUser UserInfo userInfo,
-                                        @RequestParam String userEnabled,
+                                        @RequestParam String userEnabled, @RequestParam String companyEnabled,
                                         @RequestParam String searchRequirements , @RequestParam String searchWord,
                                         @RequestParam String sortMethod, @RequestParam String sortBy,
                                         Pageable pageable ,
                                         @RequestParam int page){
 
-        return adminService.findManagerInfoList(userInfo,UserRole.ROLE_MANAGER,userEnabled,searchRequirements,searchWord,sortMethod,sortBy,pageable ,page);
+        return adminService.findManagerInfoList(userInfo,UserRole.ROLE_MANAGER,userEnabled,companyEnabled,searchRequirements,searchWord,sortMethod,sortBy,pageable ,page);
     }
     
     //일반 사용자 상세 정보

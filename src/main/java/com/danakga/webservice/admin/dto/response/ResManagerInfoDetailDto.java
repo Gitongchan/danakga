@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,6 +25,8 @@ public class ResManagerInfoDetailDto {
     private String userStreetAdr;
     private String userLotAdr;
     private String userDetailAdr;
+    private boolean userEnabled;
+    private LocalDateTime userDeletedDate;
 
     //사업자등록번호
     private Long companyId;
@@ -48,6 +52,12 @@ public class ResManagerInfoDetailDto {
     //회사 계좌
     private String companyBanknum;
 
+    //사업자 탈퇴 여부
+    private boolean companyEnabled;
+
+    //사업자 탈퇴 날짜
+    private LocalDateTime companyDeletedDate;
+
 
 
 
@@ -62,6 +72,9 @@ public class ResManagerInfoDetailDto {
         this.userStreetAdr = companyInfo.getUserInfo().getUserStreetAdr();
         this.userLotAdr = companyInfo.getUserInfo().getUserLotAdr();
         this.userDetailAdr = companyInfo.getUserInfo().getUserDetailAdr();
+        this.userEnabled = companyInfo.getUserInfo().isUserEnabled();
+        this.userDeletedDate = companyInfo.getUserInfo().getUserDeletedDate();
+        
 
         //회사 정보
         this.companyId = companyInfo.getCompanyId();
@@ -72,5 +85,7 @@ public class ResManagerInfoDetailDto {
         this.companyStreetAdr = companyInfo.getCompanyStreetAdr();
         this.companyDetailAdr = companyInfo.getCompanyDetailAdr();
         this.companyBanknum = companyInfo.getCompanyBanknum();
+        this.companyEnabled = companyInfo.isCompanyEnabled();
+        this.companyDeletedDate = companyInfo.getCompanyDeletedDate();
     }
 }

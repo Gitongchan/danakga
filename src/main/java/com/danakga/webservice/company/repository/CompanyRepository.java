@@ -38,11 +38,12 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
             "where u.name like %:userName% " +
             "and u.userid like %:userId% " +
             "and u.role = :userRole " +
-            "and u.userEnabled = :userEnabled " +
+            "and u.userEnabled <= :userEnabled " +
+            "and c.companyEnabled <= :companyEnabled " +
             "and c.companyName like %:companyName% " +
             "and c.companyNum like %:companyNum%")
     Page<CompanyInfo> findAllManagerInfo(UserRole userRole,
-                                      String userName,String userId ,boolean userEnabled,
+                                      String userName,String userId ,boolean userEnabled,boolean companyEnabled,
                                       String companyName,String companyNum,Pageable pageable);
 
 

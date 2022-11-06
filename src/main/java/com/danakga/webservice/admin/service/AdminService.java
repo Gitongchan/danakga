@@ -14,7 +14,7 @@ public interface AdminService {
     List<ResUserInfoDto> findUserInfoList(UserInfo userInfo, UserRole userRole,String userEnabled , String searchRequirements , String searchWord,
                                           String sortMethod, String sortBy, Pageable pageable  , int page);
 
-    List<ResManagerInfoDto> findManagerInfoList(UserInfo userInfo, UserRole userRole, String userEnabled , String searchRequirements , String searchWord,
+    List<ResManagerInfoDto> findManagerInfoList(UserInfo userInfo, UserRole userRole, String userEnabled,String companyEnabled , String searchRequirements , String searchWord,
                                              String sortMethod, String sortBy,Pageable pageable , int page);
 
     ResUserInfoDetailDto findUserInfoDetail(UserInfo userInfo,String userId);

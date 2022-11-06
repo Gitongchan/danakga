@@ -29,6 +29,7 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     
+    //일반 사용자 목록
     @Override
     public List<ResUserInfoDto> findUserInfoList(UserInfo userInfo, UserRole userRole,String userEnabled ,String searchRequirements , String searchWord,
                                                  String sortMethod, String sortBy,Pageable pageable ,int page) {
@@ -74,14 +75,16 @@ public class AdminServiceImpl implements AdminService {
                 listDto.setName(entity.getName());
                 listDto.setPhone(entity.getPhone());
                 listDto.setUserEnabled(entity.isUserEnabled());
+                listDto.setUserDeletedDate(entity.getUserDeletedDate());
                 userInfoListDto.add(listDto);
         });
 
         return userInfoListDto;
     }
 
+    //사업자 목록 조회
     @Override
-    public List<ResManagerInfoDto> findManagerInfoList(UserInfo userInfo, UserRole userRole, String userEnabled, String searchRequirements, String searchWord, String sortMethod, String sortBy, Pageable pageable, int page) {
+    public List<ResManagerInfoDto> findManagerInfoList(UserInfo userInfo, UserRole userRole, String userEnabled,String companyEnabled, String searchRequirements, String searchWord, String sortMethod, String sortBy, Pageable pageable, int page) {
         userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
         );
@@ -111,7 +114,7 @@ public class AdminServiceImpl implements AdminService {
             pageable = PageRequest.of(page, 50, Sort.by(sortBy).ascending());
         }
 
-        Page<CompanyInfo> companyInfoPage = companyRepository.findAllManagerInfo(userRole,userName,userId,Boolean.parseBoolean(userEnabled),companyName,companyNum,pageable);
+        Page<CompanyInfo> companyInfoPage = companyRepository.findAllManagerInfo(userRole,userName,userId,Boolean.parseBoolean(userEnabled),Boolean.parseBoolean(companyEnabled),companyName,companyNum,pageable);
 
         List<CompanyInfo> companyInfoList = companyInfoPage.getContent();
 
@@ -124,9 +127,11 @@ public class AdminServiceImpl implements AdminService {
             listDto.setName(entity.getUserInfo().getName());
             listDto.setPhone(entity.getUserInfo().getPhone());
             listDto.setUserEnabled(entity.getUserInfo().isUserEnabled());
+            listDto.setUserDeletedDate(entity.getUserInfo().getUserDeletedDate());
             listDto.setCompanyId(entity.getCompanyId());
             listDto.setCompanyName(entity.getCompanyName());
             listDto.setCompanyNum(entity.getCompanyNum());
+            listDto.setCompanyDeletedDate(entity.getCompanyDeletedDate());
             companyInfoListDto.add(listDto);
         });
         return companyInfoListDto;
