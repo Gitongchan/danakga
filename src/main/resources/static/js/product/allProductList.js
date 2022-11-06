@@ -25,7 +25,7 @@ const manyView = document.getElementById('many-view');
                 `
             }
             indexsmall.innerHTML =`
-            <img src=${data[7].productPhoto} id="small_img"alt="#"/>
+            <img src=${data[7].productPhoto} id="small_img" alt="#"/>
                 <div class="content">
                     <h2>
                         <span>신규</span>
@@ -77,11 +77,11 @@ const manyView = document.getElementById('many-view');
                                     <a href="/product/info?productId=${item.productId}">${item.productName}</a>
                                 </h4>
                                 <ul class="review">
-                                    <li><i class="lni lni-star star-1"></i></li>
-                                    <li><i class="lni lni-star star-2"></i></li>
-                                    <li><i class="lni lni-star star-3"></i></li>
-                                    <li><i class="lni lni-star star-4"></i></li>
-                                    <li><i class="lni lni-star star-5"></i></li>
+                                    <li><i class="lni lni-star star-1_${item.productId}"></i></li>
+                                    <li><i class="lni lni-star star-2_${item.productId}"></i></li>
+                                    <li><i class="lni lni-star star-3_${item.productId}"></i></li>
+                                    <li><i class="lni lni-star star-4_${item.productId}"></i></li>
+                                    <li><i class="lni lni-star star-5_${item.productId}"></i></li>
                                     <li><span>${item.productRating}점</span></li>
                                 </ul>
                                 <div class="price">
@@ -93,14 +93,14 @@ const manyView = document.getElementById('many-view');
                     </div>`
 
                 for(let i=1; i <= item.productRating; i++){
-                    document.querySelector(`.star-${i}`).classList.remove('lni-star')
-                    document.querySelector(`.star-${i}`).classList.add('lni-star-filled')
+                    document.querySelector(`.star-${i}_${item.productId}`).classList.remove('lni-star')
+                    document.querySelector(`.star-${i}_${item.productId}`).classList.add('lni-star-filled')
                 }
 
             }
 
             orderCount.innerHTML+= `<h4 class="list-title">주문 최다 순</h4>`;
-            for(let o = 0;o < 3; o++){
+            for(let o = 0; o < 3; o++){
                 orderCount.innerHTML+=` 
                     <!-- Start Single List -->
                     <div class="single-list">

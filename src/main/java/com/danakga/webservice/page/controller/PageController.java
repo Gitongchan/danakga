@@ -224,6 +224,10 @@ public class PageController {
         return "pages/manager/mypageShopEditProduct";
     }
 
+    @GetMapping("/product/grid")
+    public String productGrid() {
+        return "pages/product-grids";
+    }
 
     // ------------------어드민------------------
 
@@ -234,10 +238,7 @@ public class PageController {
 
 
     //잡
-    @GetMapping("/product/grid")
-    public String productgrid() {
-        return "pages/product-grids";
-    }
+
 
     //---접근 오류 페이지 ---
     @GetMapping("/accessDenied")
