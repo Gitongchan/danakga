@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService {
     public UserInfo userInfoCheck(UserInfo userInfo) {
 
         if(userRepository.findById(userInfo.getId()).isPresent()) {
-            return  userRepository.findById(userInfo.getId()).get();
+            return userRepository.findById(userInfo.getId()).get();
         }
         return null;
     }

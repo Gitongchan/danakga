@@ -1,7 +1,9 @@
 package com.danakga.webservice.admin.service.Impl;
 
 
+import com.danakga.webservice.admin.dto.response.ResManagerInfoDetailDto;
 import com.danakga.webservice.admin.dto.response.ResManagerInfoDto;
+import com.danakga.webservice.admin.dto.response.ResUserInfoDetailDto;
 import com.danakga.webservice.admin.dto.response.ResUserInfoDto;
 import com.danakga.webservice.admin.service.AdminService;
 import com.danakga.webservice.company.model.CompanyInfo;
@@ -128,6 +130,32 @@ public class AdminServiceImpl implements AdminService {
             companyInfoListDto.add(listDto);
         });
         return companyInfoListDto;
+    }
+
+    //일반 사용자 상세 조회
+    @Override
+    public ResUserInfoDetailDto findUserInfoDetail(UserInfo userInfo, String userId) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+        UserInfo checkUserInfo = userRepository.findByUseridAndRole(userId,UserRole.ROLE_USER).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사용자를 찾을 수 없습니다.")
+        );
+        return new ResUserInfoDetailDto(checkUserInfo);
+    }
+
+    //사업자 상세 조회
+    @Override
+    public ResManagerInfoDetailDto findManagerInfoDetail(UserInfo userInfo, String companyName) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+        CompanyInfo checkCompanyInfo = companyRepository.findByCompanyName(companyName).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사업자 정보를 찾을 수 없습니다.")
+        );
+
+
+        return new ResManagerInfoDetailDto(checkCompanyInfo);
     }
 
 }

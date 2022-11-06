@@ -44,4 +44,6 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
     Page<CompanyInfo> findAllManagerInfo(UserRole userRole,
                                       String userName,String userId ,boolean userEnabled,
                                       String companyName,String companyNum,Pageable pageable);
+
+
 }

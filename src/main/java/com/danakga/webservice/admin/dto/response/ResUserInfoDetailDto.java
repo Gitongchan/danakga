@@ -3,12 +3,15 @@ package com.danakga.webservice.admin.dto.response;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
 public class ResUserInfoDetailDto {
-    private Long id;
     private String userid;
     private String password;
     private String email;
@@ -22,7 +25,6 @@ public class ResUserInfoDetailDto {
 
 
     public ResUserInfoDetailDto(UserInfo userInfo) {
-        this.id = userInfo.getId();
         this.userid = userInfo.getUserid();
         this.password = userInfo.getPassword();
         this.email = userInfo.getEmail();
