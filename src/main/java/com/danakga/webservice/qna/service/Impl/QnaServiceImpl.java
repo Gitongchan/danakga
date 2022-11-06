@@ -142,7 +142,7 @@ public class QnaServiceImpl implements QnaService {
                             .build()
             );
 
-            return new ResResultDto(qna.getQnId(), "문의사항을 작성 했습니다.");
+            return new ResResultDto(qna.getQnId(), "사이트 문의사항을 작성 했습니다.");
         }
 
         /* 가게 문의사항 작성 */
@@ -164,7 +164,7 @@ public class QnaServiceImpl implements QnaService {
                         .build()
         );
 
-        return new ResResultDto(qna.getQnId(), "문의사항을 작성 했습니다.");
+        return new ResResultDto(qna.getQnId(), "가게 문의사항을 작성 했습니다.");
     }
     
     /* 문의사항 수정 */

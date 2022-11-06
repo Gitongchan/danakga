@@ -19,6 +19,7 @@ public class Answer {
     @Column(name = "an_id")
     private Long anId;
 
+    /* 관리자 아이디 or 회사명 */
     @Column(name = "an_writer")
     private String anWriter;
 

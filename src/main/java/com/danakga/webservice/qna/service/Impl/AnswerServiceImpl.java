@@ -43,13 +43,10 @@ public class AnswerServiceImpl implements AnswerService {
         Qna checkQna = qnaRepository.findById(qn_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의 사항을 찾을 수 없습니다."));
 
-        /* 회원, 관리자, 해당 가게의 매니저가 아닌 경우 작성 불가 */
-        if(!checkUserInfo.getRole().equals(UserRole.ROLE_USER) && !checkUserInfo.getRole().equals(UserRole.ROLE_ADMIN)
-                && !checkQna.getCompanyInfo().getCompanyId().equals(checkCompanyInfo.getCompanyId())) {
-            
-            return new ResResultDto(-1L, "가게 매니저만 작성할 수 있습니다.");
+        /* 가게 아이디 값이 일치하고, 매니저인 경우에만 작성 가능 */
+        if(checkUserInfo.getRole().equals(UserRole.ROLE_MANAGER)
+                && checkQna.getCompanyInfo().getCompanyId().equals(checkCompanyInfo.getCompanyId())) {
 
-        }
             Answer answer = answerRepository.save(
                     Answer.builder()
                             .anWriter(checkCompanyInfo.getCompanyName())
@@ -62,6 +59,8 @@ public class AnswerServiceImpl implements AnswerService {
             qnaRepository.updateQnaCompleteState(checkQna.getQnId());
 
             return new ResResultDto(answer.getAnId(),"답변을 작성 했습니다.");
+        }
+        return new ResResultDto(-1L, "가게 매니저만 작성할 수 있습니다.");
     }
 
     /* 가게 문의사항 답변 수정 */
@@ -80,25 +79,23 @@ public class AnswerServiceImpl implements AnswerService {
         Answer checkAnswer = answerRepository.findByAnIdAndQna(an_id, checkQna)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("답변을 찾을 수 없습니다."));
 
-        /* 회원, 관리자, 해당 가게의 매니저가 아닌 경우 수정 불가 */
-        if(!checkUserInfo.getRole().equals(UserRole.ROLE_USER) && !checkUserInfo.getRole().equals(UserRole.ROLE_ADMIN)
-                && !checkCompanyInfo.getCompanyId().equals(checkQna.getCompanyInfo().getCompanyId())) {
+        /* 가게 아이디 값이 일치하고, 매니저인 경우에만 작성 가능 */
+        if(checkUserInfo.getRole().equals(UserRole.ROLE_MANAGER)
+                && checkQna.getCompanyInfo().getCompanyId().equals(checkCompanyInfo.getCompanyId())) {
 
-            return new ResResultDto(-1L, "가게 매니저만 수정할 수 있습니다.");
+            checkAnswer = answerRepository.save(
+                    Answer.builder()
+                            .anId(checkAnswer.getAnId())
+                            .anWriter(checkUserInfo.getUserid())
+                            .anContent(reqAnswerDto.getAnswerContent())
+                            .anCreated(checkAnswer.getAnCreated())
+                            .anDeleted(checkAnswer.getAnDeleted())
+                            .qna(checkQna)
+                            .build()
+            );
+            return new ResResultDto(checkAnswer.getAnId(),"답변을 수정 했습니다.");
         }
-
-        checkAnswer = answerRepository.save(
-                Answer.builder()
-                        .anId(checkAnswer.getAnId())
-                        .anWriter(checkUserInfo.getUserid())
-                        .anContent(reqAnswerDto.getAnswerContent())
-                        .anCreated(checkAnswer.getAnCreated())
-                        .anDeleted(checkAnswer.getAnDeleted())
-                        .qna(checkQna)
-                        .build()
-        );
-
-        return new ResResultDto(checkAnswer.getAnId(),"답변을 수정 했습니다.");
+        return new ResResultDto(-1L, "가게 매니저만 수정할 수 있습니다.");
     }
 
     /* 가게 문의사항 답변 삭제 */
@@ -119,25 +116,25 @@ public class AnswerServiceImpl implements AnswerService {
         Answer checkAnswer = answerRepository.findByAnIdAndQna(an_id, checkQna)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("답변을 찾을 수 없습니다."));
 
-        /* 회원, 관리자, 해당 가게의 매니저가 아닌 경우 삭제 불가 */
-        if(!checkUserInfo.getRole().equals(UserRole.ROLE_USER) && !checkUserInfo.getRole().equals(UserRole.ROLE_ADMIN)
-                && !checkCompanyInfo.getCompanyId().equals(checkQna.getCompanyInfo().getCompanyId())) {
+        if(checkUserInfo.getRole().equals(UserRole.ROLE_MANAGER)
+                && checkQna.getCompanyInfo().getCompanyId().equals(checkCompanyInfo.getCompanyId())) {
 
-            return new ResResultDto(-1L, "가게 매니저만 수정할 수 있습니다.");
+            /* 답변 삭제 상태로 변경 */
+            answerRepository.updateAnswerDeleted(checkAnswer.getAnId());
+
+            /* 삭제 상태로 변경 후 답변이 아예 없는 경우 문의사항을 다시 답변 대기 상태로 변경 */
+            List<Answer> stateAnswer = answerRepository.findByAnDeletedAndQna(deleted, checkQna);
+
+            if(stateAnswer.isEmpty()) {
+                qnaRepository.updateQnaStandByState(checkQna.getQnId());
+            }
+
+            return new ResResultDto(checkAnswer.getAnId(), "답변을 삭제 했습니다.");
         }
-
-        /* 답변 삭제 상태로 변경 */
-        answerRepository.updateAnswerDeleted(checkAnswer.getAnId());
-        
-        /* 삭제 상태로 변경 후 답변이 아예 없는 경우 문의사항을 다시 답변 대기 상태로 변경 */
-        List<Answer> stateAnswer = answerRepository.findByAnDeletedAndQna(deleted, checkQna);
-
-        if(stateAnswer.isEmpty()) {
-            qnaRepository.updateQnaStandByState(checkQna.getQnId());
-        }
-
-        return new ResResultDto(checkAnswer.getAnId(), "답변을 삭제 했습니다.");
+        return new ResResultDto(-1L, "가게 매니저만 삭제할 수 있습니다.");
     }
+
+
 
 
 
@@ -154,24 +151,25 @@ public class AnswerServiceImpl implements AnswerService {
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
 
         /* 사이트 관리자가 아닌 경우 작성 불가 */
-        if(!checkUserInfo.getRole().equals(UserRole.ROLE_USER) && !checkUserInfo.getRole().equals(UserRole.ROLE_MANAGER)) {
-            return new ResResultDto(-1L, "사이트 관리자만 작성할 수 있습니다.");
+        if(checkUserInfo.getRole().equals(UserRole.ROLE_ADMIN)) {
+
+            Answer answer = answerRepository.save(
+                    Answer.builder()
+                            .anWriter(userInfo.getUserid())
+                            .anContent(reqAnswerDto.getAnswerContent())
+                            .qna(checkQna)
+                            .build()
+            );
+
+            /* 문의사항 답변 상태 변경 (작성 완료) */
+            qnaRepository.updateQnaCompleteState(checkQna.getQnId());
+
+            return new ResResultDto(answer.getAnId(), "답변을 작성 했습니다.");
         }
-
-        Answer answer = answerRepository.save(
-                Answer.builder()
-                        .anWriter(userInfo.getUserid())
-                        .anContent(reqAnswerDto.getAnswerContent())
-                        .qna(checkQna)
-                        .build()
-        );
-
-        /* 문의사항 답변 상태 변경 (작성 완료) */
-        qnaRepository.updateQnaCompleteState(checkQna.getQnId());
-
-        return new ResResultDto(answer.getAnId(), "답변을 작성 했습니다.");
+        return new ResResultDto(-1L, "사이트 관리자만 작성할 수 있습니다.");
     }
 
+    /* 사이트 문의사항 답변 수정 */
     @Override
     public ResResultDto siteAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long qn_id, Long an_id) {
 
@@ -184,25 +182,26 @@ public class AnswerServiceImpl implements AnswerService {
         Answer checkAnswer = answerRepository.findByAnIdAndQna(qn_id, checkQna)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("답변을 찾을 수 없습니다."));
 
-        /* 사이트 관리자가 아닌 경우 작성 불가 */
-        if(!checkUserInfo.getRole().equals(UserRole.ROLE_USER) && !checkUserInfo.getRole().equals(UserRole.ROLE_MANAGER)) {
-            return new ResResultDto(-1L, "사이트 관리자만 수정할 수 있습니다.");
+        /* 사이트 관리자가 아닌 경우 수정 불가 */
+        if(checkUserInfo.getRole().equals(UserRole.ROLE_ADMIN)) {
+
+            checkAnswer = answerRepository.save(
+                    Answer.builder()
+                            .anId(checkAnswer.getAnId())
+                            .anWriter(checkUserInfo.getUserid())
+                            .anContent(reqAnswerDto.getAnswerContent())
+                            .anCreated(checkAnswer.getAnCreated())
+                            .anDeleted(checkAnswer.getAnDeleted())
+                            .qna(checkQna)
+                            .build()
+            );
+
+            return new ResResultDto(checkAnswer.getAnId(), "답변을 수정 했습니다.");
         }
-
-        checkAnswer = answerRepository.save(
-                Answer.builder()
-                        .anId(checkAnswer.getAnId())
-                        .anWriter(checkUserInfo.getUserid())
-                        .anContent(reqAnswerDto.getAnswerContent())
-                        .anCreated(checkAnswer.getAnCreated())
-                        .anDeleted(checkAnswer.getAnDeleted())
-                        .qna(checkQna)
-                        .build()
-        );
-
-        return new ResResultDto(checkAnswer.getAnId(), "답변을 수정 했습니다.");
+        return new ResResultDto(-1L, "사이트 관리자만 수정할 수 있습니다.");
     }
 
+    /* 사이트 문의사항 답변 삭제 */
     @Override
     public ResResultDto siteAnswerDelete(UserInfo userInfo, Long qn_id, Long an_id) {
 
@@ -217,21 +216,21 @@ public class AnswerServiceImpl implements AnswerService {
         Answer checkAnswer = answerRepository.findByAnIdAndQna(an_id, checkQna)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("답변을 찾을 수 없습니다."));
 
-        /* 사이트 관리자가 아닌 경우 작성 불가 */
-        if(!checkUserInfo.getRole().equals(UserRole.ROLE_USER) && !checkUserInfo.getRole().equals(UserRole.ROLE_MANAGER)) {
-            return new ResResultDto(-1L, "사이트 관리자만 삭제할 수 있습니다.");
+        /* 사이트 관리자가 아닌 경우 삭제 불가 */
+        if (checkUserInfo.getRole().equals(UserRole.ROLE_ADMIN)) {
+
+            /* 답변 삭제 상태로 변경 */
+            answerRepository.updateAnswerDeleted(checkAnswer.getAnId());
+
+            /* 삭제 상태로 변경 후 답변이 아예 없는 경우 문의사항을 다시 답변 대기 상태로 변경 */
+            List<Answer> stateAnswer = answerRepository.findByAnDeletedAndQna(deleted, checkQna);
+
+            if (stateAnswer.isEmpty()) {
+                qnaRepository.updateQnaStandByState(checkQna.getQnId());
+            }
+
+            return new ResResultDto(checkAnswer.getAnId(), "답변을 삭제 했습니다.");
         }
-
-        /* 답변 삭제 상태로 변경 */
-        answerRepository.updateAnswerDeleted(checkAnswer.getAnId());
-
-        /* 삭제 상태로 변경 후 답변이 아예 없는 경우 문의사항을 다시 답변 대기 상태로 변경 */
-        List<Answer> stateAnswer = answerRepository.findByAnDeletedAndQna(deleted, checkQna);
-
-        if(stateAnswer.isEmpty()) {
-            qnaRepository.updateQnaStandByState(checkQna.getQnId());
-        }
-
-        return new ResResultDto(0L, "답변을 삭제 했습니다.");
+        return new ResResultDto(-1L, "사이트 관리자만 삭제할 수 있습니다.");
     }
 }
