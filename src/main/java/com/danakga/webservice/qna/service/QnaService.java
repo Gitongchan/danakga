@@ -9,7 +9,10 @@ import org.springframework.data.domain.Pageable;
 public interface QnaService {
     
     /* 문의사항 목록 */
-    ResQnaDto qnaList(Pageable pageable, Integer q_sort, int page, Long c_id);
+    ResQnaDto qnaList(Pageable pageable, Integer q_sort, int page, Long p_id);
+
+    /* 가게 문의사항 전체 목록 */
+    ResQnaDto companyQnaList(Pageable pageable, int page, Long c_id);
 
     /* 문의사항 조회 */
     ResQnaDto qnaPost(Long qn_id);
@@ -18,9 +21,9 @@ public interface QnaService {
     ResResultDto qnaWrite(UserInfo userInfo, ReqQnaDto reqQnaDto, Long c_id);
 
     /* 문의사항 수정 */
-    ResResultDto qnaEdit(UserInfo userInfo, ReqQnaDto reqQnaDto, Long qn_id);
+    ResResultDto qnaEdit(UserInfo userInfo, ReqQnaDto reqQnaDto, Long p_id, Long qn_id);
 
     /* 문의사항 삭제 상태 변경 */
-    ResResultDto qnaDelete(UserInfo userInfo, Long qn_id);
+    ResResultDto qnaDelete(UserInfo userInfo, Long p_id, Long qn_id);
 
 }
