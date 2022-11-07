@@ -91,6 +91,10 @@ public class PageController {
     public String boardEdit() {
         return "pages/boardEdit";
     }
+    @GetMapping("/qnaboard/edit") //게시글 수정
+    public String qnaBoardEdit() {
+        return "pages/qnaBoardEdit";
+    }
 
     @GetMapping("/board/faq") //자주묻는질문
     public String boardFAQ() {

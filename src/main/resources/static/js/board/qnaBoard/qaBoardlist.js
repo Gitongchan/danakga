@@ -23,7 +23,7 @@ async function qnaList(page){
         tr.innerHTML =
             `<td>${item.qn_id}</td>
                  <td>${item.qn_type}</a></td>
-                 <td><a href="/qnaboard/info?qnId=${item.qn_id}&urlWriter=${item.qn_userid}">${item.qn_title}</a></td>
+                 <td><a href="/qnaboard/info?qnId=${item.qn_id}&userId=${item.qn_userid}">${item.qn_title}</a></td>
                  <td>${item.qn_userid}</td>
                  <td>${item.qn_created.split('.')[0]}</td>`
 

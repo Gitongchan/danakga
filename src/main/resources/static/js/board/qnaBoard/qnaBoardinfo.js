@@ -1,7 +1,7 @@
 
 const title = document.getElementById('post-title');
 const content = document.getElementById('post-inner');
-const userid = document.getElementById('userID');
+const id = document.getElementById('userID');
 const span = document.createElement('span');
 const btnWrap = document.createElement('li');
 const editBtn = document.createElement('button');
@@ -14,16 +14,15 @@ btnWrap.appendChild(editBtn);
 btnWrap.appendChild(deleteBtn);
 
 const qnId = getParameterByName('qnId').split('?')[0];
-const urlWriter = getParameterByName('urlWriter');
+const userId = getParameterByName('userId');
 
-console.log(qnId, urlWriter);
 (async function() {
     try {
         const res = await fetch('/api/user')
         const data = await res.json();
 
         if(res.status === 200){
-            if(data.userid === urlWriter){
+            if(data.userid === userId){
                 fetch(`/api/qna/post/${qnId}`)
                     .then((res)=>res.json())
                     .then((data)=> {
@@ -32,7 +31,7 @@ console.log(qnId, urlWriter);
                         content.innerHTML += data.qnaList[0].qn_content;
                         title.innerText = data.qnaList[0].qn_title;
                         span.innerText= data.qnaList[0].qn_userid;
-                        userid.appendChild(span);
+                        id.appendChild(span);
                     });
             }
             else{
@@ -46,12 +45,12 @@ console.log(qnId, urlWriter);
 })();
 
 editBtn.addEventListener('click',()=>{
-    location.replace(`/board/edit?boardid=${boardID}&bdwriter=${urlWriter}`)
+    location.replace(`/qnaboard/edit?qnId=${qnId}&userid=${userId}`)
 })
 
 deleteBtn.addEventListener('click',()=>{
     if(confirm('게시글을 삭제하시겠습니까?')) {
-        fetch(`/api/user/post/delete/${boardID}`,{
+        fetch(`/api/user/post/delete/${qnId}`,{
             method : "PUT",
             headers: {
                 'header': header,
@@ -76,6 +75,6 @@ const check = () => {
             content.innerHTML += data.qnaList[0].qn_content;
             title.innerText = data.qnaList[0].qn_title;
             span.innerText= data.qnaList[0].qn_userid;
-            userid.appendChild(span);
+            id.appendChild(span);
         });
 }
