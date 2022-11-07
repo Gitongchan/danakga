@@ -37,6 +37,10 @@ public class CompanyController {
     @PutMapping("/update")
     public ResResultDto companyUpdate(@LoginUser UserInfo userInfo,@RequestBody CompanyInfoDto companyInfoDto){
         Long result = companyService.companyUpdate(userInfo,companyInfoDto);
+        //회사명 중복 체크
+        if(companyService.companyNameCheck(companyInfoDto.getCompanyName()).equals(-1)){
+            return new ResResultDto(-2L,"사업자 등록 실패, 이미 사용되고있는 회사명입니다");
+        }
         return result == -1L ?
                 new ResResultDto(result,"회사정보 수정 실패.") : new ResResultDto(result,"회사정보 수정 성공.");
     }
@@ -46,6 +50,8 @@ public class CompanyController {
     public ResCompanyInfoDto companyInfoCheck(@LoginUser UserInfo userInfo){
         return new ResCompanyInfoDto(companyService.companyInfoCheck(userInfo));
     }
+
+
 
 
 

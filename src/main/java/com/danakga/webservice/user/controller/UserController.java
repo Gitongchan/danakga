@@ -68,7 +68,7 @@ public class UserController{
 
     }
 
-    //사업자 회원 가입
+    //사업자 회원 가입 유저 -> 사업자
     @PostMapping("/company_register")
     public ResResultDto companyRegister(@LoginUser UserInfo userInfo ,
                                         UserInfoDto userInfoDto, @RequestBody CompanyInfoDto companyInfoDto){
