@@ -7,9 +7,11 @@ import com.danakga.webservice.user.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
@@ -23,6 +25,12 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
     Optional<CompanyInfo> findByUserInfoAndCompanyEnabled(UserInfo userInfo,boolean enabled);
 
     Optional<CompanyInfo> findByCompanyId(Long companyId);
+
+    //사업자 이용 중지
+    @Modifying
+    @Query("update CompanyInfo c set c.companyEnabled = :companyEnabled, c.companyDeletedDate = :companyDeletedDate " +
+            "where c.companyId = :companyId")
+    void updateCompanyEnabled(boolean companyEnabled,LocalDateTime companyDeletedDate,Long companyId);
 
     //상품 리스트 검색
     @Query("Select p from Product p join p.productCompanyId c " +

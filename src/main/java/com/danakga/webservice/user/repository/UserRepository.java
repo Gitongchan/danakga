@@ -29,6 +29,10 @@ public interface UserRepository extends JpaRepository<UserInfo,Long> {
     @Query("update UserInfo u set u.password = :password where u.id = :id")
     void updateUserInfoPassword(String password,Long id);
 
+    //사용자 권한 변경
+    @Modifying
+    @Query("update UserInfo u set u.role = :role where u.id = :id")
+    void updateUserRole(UserRole role,Long id);
     
     //어드민 - 일반 유저 목록 조회
     @Query(value="select u from UserInfo u where u.name like %:userName% " +

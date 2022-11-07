@@ -19,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,6 +163,49 @@ public class AdminServiceImpl implements AdminService {
 
 
         return new ResManagerInfoDetailDto(checkCompanyInfo);
+    }
+
+    //회원 정지 - 로그인 불가
+    @Transactional
+    @Override
+    public Long stopUsing(UserInfo userInfo, String userId) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+        UserInfo checkUserInfo = userRepository.findByUserid(userId).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("삭제할 사용자를 찾을 수 없습니다.")
+        );
+        
+        //정지할 사용자가 사업자면 사업자 이용 중지 같이해줌
+        if(checkUserInfo.getRole().equals(UserRole.ROLE_MANAGER)){
+            //일반 사용자로 권한 변경
+            userRepository.updateUserRole(UserRole.ROLE_USER,checkUserInfo.getId());
+
+            CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(checkUserInfo).orElseThrow(
+                    ()-> new CustomException.ResourceNotFoundException("사업자 정보를 찾을 수 없습니다.")
+            );
+
+            companyRepository.updateCompanyEnabled(false,LocalDateTime.now(),deleteCompanyInfo.getCompanyId());
+        }
+
+        userRepository.save(
+                UserInfo.builder()
+                        .id(checkUserInfo.getId()) //로그인 유저 키값을 받아옴
+                        .userid(checkUserInfo.getUserid()) //그대로 유지
+                        .password(checkUserInfo.getPassword())
+                        .name(checkUserInfo.getName())
+                        .phone(checkUserInfo.getPhone())
+                        .email(checkUserInfo.getEmail())
+                        .role(checkUserInfo.getRole())
+                        .userAdrNum(checkUserInfo.getUserAdrNum())
+                        .userStreetAdr(checkUserInfo.getUserStreetAdr())
+                        .userLotAdr(checkUserInfo.getUserLotAdr())
+                        .userDetailAdr(checkUserInfo.getUserDetailAdr())
+                        .userDeletedDate(LocalDateTime.now()) //현재시간
+                        .userEnabled(false)//사용자 이용 중지
+                        .build()
+        );
+        return userInfo.getId();
     }
 
 }

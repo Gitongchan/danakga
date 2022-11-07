@@ -148,45 +148,16 @@ public class CompanyServiceImpl implements CompanyService {
         if(!bCryptPasswordEncoder.matches(password,comUserInfo.getPassword())) {
             return -2L; //비밀번호 확인 실패시
         }
+            //일반 사용자로 권한 변경
+            userRepository.updateUserRole(UserRole.ROLE_USER,comUserInfo.getId());
 
-            userRepository.save(
-                    UserInfo.builder()
-                            .id(comUserInfo.getId()) //로그인 유저 키값을 받아옴
-                            //유저의 정보는 그대로 유지
-                            .userid(comUserInfo.getUserid())
-                            .password(comUserInfo.getPassword())
-                            .name(comUserInfo.getName())
-                            .phone(comUserInfo.getPhone())
-                            .email(comUserInfo.getEmail())
-                            .userAdrNum(comUserInfo.getUserAdrNum())
-                            .userLotAdr(comUserInfo.getUserLotAdr())
-                            .userStreetAdr(comUserInfo.getUserStreetAdr())
-                            .userDetailAdr(comUserInfo.getUserDetailAdr())
-                            .userEnabled(comUserInfo.isUserEnabled())
-                            .role(UserRole.ROLE_USER)
-                            .build()
+            CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(comUserInfo).orElseThrow(
+                    ()-> new CustomException.ResourceNotFoundException("사업자 정보를 찾을 수 없습니다.")
             );
-
-            CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(comUserInfo).orElseGet(
-                    ()->CompanyInfo.builder().build()
-            );
-            companyRepository.save(
-                    CompanyInfo.builder()
-                            .companyId(deleteCompanyInfo.getCompanyId())
-                            .userInfo(comUserInfo)
-                            .companyName(deleteCompanyInfo.getCompanyName())
-                            .companyNum(deleteCompanyInfo.getCompanyNum())
-                            .companyAdrNum(deleteCompanyInfo.getCompanyAdrNum())
-                            .companyLotAdr(deleteCompanyInfo.getCompanyLotAdr())
-                            .companyStreetAdr(deleteCompanyInfo.getCompanyStreetAdr())
-                            .companyDetailAdr(deleteCompanyInfo.getCompanyDetailAdr())
-                            .companyBankName(deleteCompanyInfo.getCompanyBankName())
-                            .companyBanknum(deleteCompanyInfo.getCompanyBanknum())
-                            .companyEnabled(false)
-                            .companyDeletedDate(LocalDateTime.now())
-                            .build()
-
-            );
+            
+            //사업자 탈퇴 처리
+            companyRepository.updateCompanyEnabled(false,LocalDateTime.now(),deleteCompanyInfo.getCompanyId());
+            
             return comUserInfo.getId();
     }
 

@@ -20,4 +20,7 @@ public interface AdminService {
     ResUserInfoDetailDto findUserInfoDetail(UserInfo userInfo,String userId);
 
     ResManagerInfoDetailDto findManagerInfoDetail(UserInfo userInfo, String userId);
+
+    //사용자 정지
+    Long stopUsing(UserInfo userInfo,String userId);
 }
