@@ -7,8 +7,9 @@
             <div class="form-group">
                 <label for="type"></label>
                 <select class="form-select" id="type" aria-label="select value">
-                    <option value="자유게시판" selected>자유</option>
-                    <option value="정보게시판">정보</option>
+                    <option value="회원문의" selected>회원문의</option>
+                    <option value="불편사항">불편사항</option>
+                    <option value="기타문의">기타문의</option>
                 </select>
             </div>
         </div>
@@ -21,10 +22,6 @@
         <div id="col-sm-12">
             <label for="editor"></label>
             <textarea name="boardinfo" id="editor" ></textarea>
-        </div>
-        <h3>업로드 할 파일</h3>
-        <input type="file" id="file-input" multiple />
-        <div id="image-preview" class="detail-inner">
         </div>
         <div class="align-center">
             <div class="button">
@@ -54,24 +51,19 @@
     // Assuming there is a <button id="submit">Submit</button> in your application.
     document.querySelector( '#submit' ).addEventListener( 'click', (e) => {
         e.preventDefault();
-        //토큰 값
-        const header = document.querySelector('meta[name="_csrf_header"]').content;
-        const token = document.querySelector('meta[name="_csrf"]').content;
         //텍스트 에디터에서 값 가져옴
         const editorData = editor.getData();
-        const formData = new FormData();
-        const bType = document.getElementById('type');
-        const boardTitle = document.getElementById('board_Title').value;
+        const qnaType = document.getElementById('type');
+        const qnaTitle = document.getElementById('board_Title').value;
 
-        let input = document.querySelector('input[type="file"]')
         const boardData = {
-            bdType: bType.options[bType.selectedIndex].value,
-            bdTitle: boardTitle,
-            bdViews: 0,
-            bdContent : editorData
+            qnaType: qnaType.value,
+            qnaTitle: qnaTitle,
+            qnaContent : editorData,
+            qnaSort: 0
         }
 
-        if(boardTitle.trim().length <= 0 ){
+        if(qnaTitle.trim().length <= 0 ){
             alert("제목을 입력해주세요.")
             return
         }
@@ -81,24 +73,15 @@
             return
         }
 
-        for(let i=0;i <=input.files.length; i++){
-            formData.append('images', input.files[i]);
-        }
-        formData.append(
-                "keys",
-                new Blob([JSON.stringify(boardData)], { type: "application/json" })
-        );
-
-        // data.files.forEach((file) => formData.append("files", file));
-        fetch("/api/user/post/write", {
+        console.log(boardData);
+        fetch("/api/user/qna/site_write", {
             method: "POST",
             headers: {
                 'header': header,
-                'processData': false,
-                'contentType':false,
+                "Content-Type": "application/json",
                 'X-CSRF-Token': token
             },
-            body: formData
+            body: JSON.stringify(boardData)
         })
                 .then(res => {
                     if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
@@ -109,16 +92,11 @@
                     }
                 })
                 .then(data => {
-                    if(boardData.bdType==="자유게시판"){
-                        location.replace('/board/basic');
-                    }else{
-                        location.replace('/board/data');
-                    }
+                    location.replace('/board/qa');
                 })
                 .catch(error => console.log(error))
         // ...
     } );
 
 </script>
-<script src="/js/board/boardFilePreview.js"></script>
 {{>pages/footer2}}

@@ -37,7 +37,7 @@ public class CartServiceImpl implements CartService {
         );
 
         for (CartDto cartDto : cartDtoList) {
-            Product productInfo = productRepository.findByProductId(cartDto.getProductId()).orElseThrow(
+            Product productInfo = productRepository.findByProductIdAndCompanyEnabled(cartDto.getProductId()).orElseThrow(
                     () -> new CustomException.ResourceNotFoundException("상품 아이디를 찾을 수 없습니다 : " + cartDto.getProductId())
             );
    

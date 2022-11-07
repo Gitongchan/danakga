@@ -31,7 +31,9 @@ public class CompanyPermitAllController {
 
         //중복 id,email 검증
         if(idCheckResult.equals(-1)||emailCheckResult.equals(-1)) {
-            return new ResResultDto(-1L,"회원가입 실패, 아이디,이메일을 다시 확인하세요.");
+            return new ResResultDto(-2L,"회원가입 실패, 아이디,이메일을 다시 확인하세요.");
+        }else if(companyService.companyNameCheck(companyUserInfoDto.getCompanyName()).equals(-1)){
+            return new ResResultDto(-3L,"사업자 등록 실패, 이미 사용되고있는 회사명입니다");
         }else{
             Long result = companyService.companyRegister(companyUserInfoDto);
             return result == -1L ?

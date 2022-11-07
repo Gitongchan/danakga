@@ -37,9 +37,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Integer companyNameCheck(String companyName) {
         if (companyRepository.findByCompanyName(companyName).isPresent()) {
-            return -1; //같은 이메일 존재할 때
+            return -1; //같은 이름 존재 할때
         }
-        return 1; // 같은 이메일 없을 때
+        return 1; // 같은 이름 없을 때
     }
 
     //사업자 회원 등록
@@ -51,7 +51,6 @@ public class CompanyServiceImpl implements CompanyService {
         String rawPassword = companyUserInfoDto.getPassword();
         companyUserInfoDto.setPassword(bCryptPasswordEncoder.encode(rawPassword));
 
-            System.out.println("실행됨");
             UserInfo singUpUserInfo =
                     userRepository.save(
                             UserInfo.builder()
@@ -98,8 +97,9 @@ public class CompanyServiceImpl implements CompanyService {
         if(companyRepository.findByUserInfo(checkUserInfo).isEmpty()){
             return -1L;
         }
-            CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(checkUserInfo).orElseGet(
-                    ()->CompanyInfo.builder().build()
+
+        CompanyInfo updateCompanyInfo = companyRepository.findByUserInfo(checkUserInfo).orElseThrow(
+                    ()->new CustomException.ResourceNotFoundException("사용자 정보를 찾을수 없습니다")
             );
             companyRepository.save(
                     CompanyInfo.builder()
@@ -193,8 +193,8 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public ResProductByCompanyDto productByCompanyDto(String companyName, String sortBy, String sortMethod,
                                                       String productName, int productStock,Pageable pageable, int page) {
-        CompanyInfo checkCompanyInfo = companyRepository.findByCompanyName(companyName).orElseGet(
-                ()->CompanyInfo.builder().build()
+        CompanyInfo checkCompanyInfo = companyRepository.findByCompanyNameAndCompanyEnabled(companyName,true).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사업자 정보를 찾을 수 없습니다.")
         );
 
         if(sortMethod.equals("desc")){
@@ -213,7 +213,7 @@ public class CompanyServiceImpl implements CompanyService {
         List<ResProductListDto> productListDto = new ArrayList<>();
 
         productByCompanyList.forEach(entity-> {
-            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+            Product productInfo = productRepository.findByProductIdAndCompanyEnabled(entity.getProductId()).orElseThrow(
                     () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
             );
             double productRating; // 상품 평점

@@ -3,21 +3,11 @@
 
 {{>pages/header2}}
 
-<h3 class="align-center mt-20">문의게시판</h3>
+<h3 class="align-center mt-20">1:1문의</h3>
 <div class="container mt-10" id="board-wrap">
     <div class="row">
-        <div class="input-group mb-3 col-sm-12" >
-            <div class="col-1">
-                <select class="form-select" id="type" aria-label="select value">
-                    <option value="전체" selected>전체</option>
-                    <option value="제목">제목</option>
-                    <option value="내용">내용</option>
-                    <option value="작성자" >작성자</option>
-                </select>
-            </div>
-            <input type="text" class="form-control" placeholder="Search" id="search">
-            <button class="btn btn-success" type="submit" id="searchbtn">검색</button>
-            <button type="button" class="btn btn-primary" onclick="location.href='/board/post'">게시글 작성</button>
+        <div class="mb-3 col-sm-12 align-right" >
+            <button type="button" class="btn btn-primary" onclick="location.href='/board/qnaPost'">게시글 작성</button>
         </div>
     </div>
 
@@ -25,18 +15,18 @@
         <table class="table table-striped table-hover" id="boardtable">
             <colgroup>
                 <col width="10%"/>
-                <col width="50%"/>
                 <col width="10%"/>
-                <col width="20%"/>
+                <col width="40%"/>
+                <col width="10%"/>
                 <col width="10%"/>
             </colgroup>
             <thead>
             <tr>
                 <th>번호</th>
+                <th>문의종류</th>
                 <th>글제목</th>
                 <th>작성자</th>
-                <th>시간</th>
-                <th>조회수</th>
+                <th>작성시간</th>
             </tr>
             </thead>
             <tbody id="boardlist">
@@ -54,11 +44,7 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
-<script src="/js/board/qaBoardlist.js"></script>
-<script src="/js/board/qaPagination.js"></script>
-<script src="/js/board/searchPagination.js"></script>
-<script src="/js/board/boardSearch.js"></script>
-
+<script src="/js/board/qnaBoard/qaBoardlist.js"></script>
 {{>pages/footer2}}
 
 

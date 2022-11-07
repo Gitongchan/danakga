@@ -145,14 +145,14 @@ public class QnaServiceImpl implements QnaService {
 
         Map<String, Object> qnaMap = new LinkedHashMap<>();
 
-            qnaMap.put("q_id", checkQna.getQnId());
-            qnaMap.put("q_type", checkQna.getQnType());
-            qnaMap.put("q_userid", checkQna.getUserInfo().getUserid());
-            qnaMap.put("q_title", checkQna.getQnTitle());
-            qnaMap.put("q_content", checkQna.getQnContent());
-            qnaMap.put("q_created", checkQna.getQnCreated());
-            qnaMap.put("q_state", checkQna.getQnState());
-            qnaMap.put("q_sort", checkQna.getQnSort());
+            qnaMap.put("qn_id", checkQna.getQnId());
+            qnaMap.put("qn_type", checkQna.getQnType());
+            qnaMap.put("qn_userid", checkQna.getUserInfo().getUserid());
+            qnaMap.put("qn_title", checkQna.getQnTitle());
+            qnaMap.put("qn_content", checkQna.getQnContent());
+            qnaMap.put("qn_created", checkQna.getQnCreated());
+            qnaMap.put("qn_state", checkQna.getQnState());
+            qnaMap.put("qn_sort", checkQna.getQnSort());
 
             qnaList.add(qnaMap);
 
@@ -175,7 +175,7 @@ public class QnaServiceImpl implements QnaService {
                     Qna.builder()
                             .qnSort(reqQnaDto.getQnaSort())
                             .qnType(reqQnaDto.getQnaType())
-                            .qnTitle(reqQnaDto.getQnaContent())
+                            .qnTitle(reqQnaDto.getQnaTitle())
                             .qnWriter(userInfo.getUserid())
                             .qnContent(reqQnaDto.getQnaContent())
                             .userInfo(checkUserInfo)

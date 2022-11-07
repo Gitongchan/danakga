@@ -145,7 +145,7 @@ public class ProductServiceImpl implements ProductService {
 
 
         productList.forEach(entity->{
-            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+            Product productInfo = productRepository.findByProductIdAndCompanyEnabled(entity.getProductId()).orElseThrow(
                     ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
             ) ;
 
@@ -192,7 +192,7 @@ public class ProductServiceImpl implements ProductService {
         List<ResProductListDto> productListDto = new ArrayList<>();
 
         productList.forEach(entity->{
-            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+            Product productInfo = productRepository.findByProductIdAndCompanyEnabled(entity.getProductId()).orElseThrow(
                     ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
             ) ;
 
@@ -228,7 +228,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResProductDto productInfo(Long productId, HttpServletRequest request, HttpServletResponse response) {
 
-        Product productInfo = productRepository.findByProductId(productId).orElseThrow(
+        Product productInfo = productRepository.findByProductIdAndCompanyEnabled(productId).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
         ) ;  //상품정보
 
@@ -517,7 +517,7 @@ public class ProductServiceImpl implements ProductService {
         List<ResProductListDto> productListDto = new ArrayList<>();
 
         productList.forEach(entity->{
-            Product productInfo = productRepository.findByProductId(entity.getProductId()).orElseThrow(
+            Product productInfo = productRepository.findByProductIdAndCompanyEnabled(entity.getProductId()).orElseThrow(
                     ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
             ) ;
 
