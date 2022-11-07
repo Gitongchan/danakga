@@ -3,6 +3,8 @@ package com.danakga.webservice.board.model;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -42,6 +44,7 @@ public class Board {
     //한명의 유저는 여러 게시글 작성 가능 board(many), user(one)
     @ManyToOne
     @JoinColumn(name = "u_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserInfo userInfo;
 
     @CreationTimestamp
