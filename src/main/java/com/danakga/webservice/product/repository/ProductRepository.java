@@ -21,11 +21,12 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     void updateProductMainPhoto(@Param("productMainPhoto") String productPhoto,@Param("productId") Long productId);
 
     //상품 리스트 검색
-    @Query("Select p from Product p where p.productType like %:productType% " +
+    @Query("Select p from Product p join p.productCompanyId c where p.productType like %:productType% " +
             "and p.productSubType like %:productSubType% " +
             "and p.productBrand like %:productBrand% " +
             "and p.productName like %:productName% " +
-            "and p.productStock >= :productStock")
+            "and p.productStock >= :productStock " +
+            "and c.companyEnabled = true")
     Page<Product>
     searchProductList(
             @Param("productType") String productType, @Param("productSubType") String productSubType
@@ -54,7 +55,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     );
 
 
-    Optional<Product> findByProductId(Long productId);
+    @Query("select p from Product p join p.productCompanyId c " +
+            "where p.productId = :productId and c.companyEnabled = true")
+    Optional<Product> findByProductIdAndCompanyEnabled(Long productId);
 
     Optional<Product> findByProductIdAndProductCompanyId(Long productId,CompanyInfo companyInfo);
 

@@ -36,7 +36,7 @@ public class WishServiceImpl implements WishService {
         UserInfo wishUserInfo = userRepository.findById(userInfo.getId()).orElseThrow( // 객체의 아이디 값을 조회
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
-        Product productInfo = productRepository.findByProductId(productId).orElseThrow( // 파라미터로 long 타입을 갖기 때문
+        Product productInfo = productRepository.findByProductIdAndCompanyEnabled(productId).orElseThrow( // 파라미터로 long 타입을 갖기 때문
                 ()->new CustomException.ResourceNotFoundException("상품 아이디를 찾을 수 없습니다")
         );
         if(wishRepository.findByUserInfoAndProductId(wishUserInfo,productInfo).isEmpty()){
@@ -111,7 +111,7 @@ public class WishServiceImpl implements WishService {
         UserInfo wishUserInfo = userRepository.findById(userInfo.getId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("로그인 사용자를 찾을 수 없습니다")
         );
-        Product productInfo = productRepository.findByProductId(productId).orElseThrow( // 파라미터로 long 타입을 갖기 때문
+        Product productInfo = productRepository.findByProductIdAndCompanyEnabled(productId).orElseThrow( // 파라미터로 long 타입을 갖기 때문
                 ()->new CustomException.ResourceNotFoundException("상품 아이디를 찾을 수 없습니다")
         );
 
