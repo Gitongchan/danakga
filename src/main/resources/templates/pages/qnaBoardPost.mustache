@@ -53,17 +53,17 @@
         e.preventDefault();
         //텍스트 에디터에서 값 가져옴
         const editorData = editor.getData();
-        const bType = document.getElementById('type');
-        const boardTitle = document.getElementById('board_Title').value;
+        const qnaType = document.getElementById('type');
+        const qnaTitle = document.getElementById('board_Title').value;
 
         const boardData = {
-            qnaType: bType.options[bType.selectedIndex].value,
-            qnaTitle: boardTitle,
+            qnaType: qnaType.value,
+            qnaTitle: qnaTitle,
             qnaContent : editorData,
             qnaSort: 0
         }
 
-        if(boardTitle.trim().length <= 0 ){
+        if(qnaTitle.trim().length <= 0 ){
             alert("제목을 입력해주세요.")
             return
         }
@@ -73,15 +73,15 @@
             return
         }
 
-        // data.files.forEach((file) => formData.append("files", file));
-        fetch("/qna/site_write", {
+        console.log(boardData);
+        fetch("/api/user/qna/site_write", {
             method: "POST",
             headers: {
                 'header': header,
-                'ContentType': 'application/json',
+                "Content-Type": "application/json",
                 'X-CSRF-Token': token
             },
-            body: boardData
+            body: JSON.stringify(boardData)
         })
                 .then(res => {
                     if (res.status === 200 || res.status === 201) { // 성공을 알리는 HTTP 상태 코드면
