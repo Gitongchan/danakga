@@ -50,7 +50,7 @@ editBtn.addEventListener('click',()=>{
 
 deleteBtn.addEventListener('click',()=>{
     if(confirm('게시글을 삭제하시겠습니까?')) {
-        fetch(`/api/user/post/delete/${qnId}`,{
+        fetch(`/api/user/qna/site_delete/${qnId}`,{
             method : "PUT",
             headers: {
                 'header': header,
@@ -61,9 +61,7 @@ deleteBtn.addEventListener('click',()=>{
         })
             .then((res)=>res.json())
             .then((data)=>{
-                if(boardType === 'free'){
-                    location.replace('/board/basic');
-                }
+                location.replace('/board/qa?type=문의게시판');
             })
     }
 })
