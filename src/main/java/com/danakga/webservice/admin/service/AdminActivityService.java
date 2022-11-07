@@ -9,13 +9,13 @@ import org.springframework.data.domain.Pageable;
 public interface AdminActivityService {
 
     /* 관리자 게시판 목록 */
-    ResBoardListDto adminBoardListDto(UserInfo userInfo, String sort, Pageable pageable, int page);
+    ResBoardListDto adminBoardListDto(UserInfo userInfo, String sort, String type, Pageable pageable, int page);
     
     /* 관리자 게시판 조회 */
     ResBoardPostDto adminBoardPost(UserInfo userInfo, Long bd_id);
 
     /* 관리자 게시판 검색 */
-    ResBoardListDto adminBoardSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String content);
+    ResBoardListDto adminBoardSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String type, String content);
 
     /* 게시글 삭제 */
     ResResultDto adminPostDelete(UserInfo userInfo, Long bd_id);

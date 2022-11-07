@@ -162,17 +162,4 @@ public class AdminServiceImpl implements AdminService {
 
         return new ResManagerInfoDetailDto(checkCompanyInfo);
     }
-
-    
-    //회원 정지 - 로그인 불가
-    @Override
-    public Long stopUsing(UserInfo userInfo, String userId) {
-        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
-                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
-        );
-
-
-        return null;
-    }
-
 }

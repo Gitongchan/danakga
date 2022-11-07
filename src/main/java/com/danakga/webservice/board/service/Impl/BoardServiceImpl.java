@@ -82,7 +82,7 @@ public class BoardServiceImpl implements BoardService {
 
             boards.forEach(entity -> {
 
-                Map<String, Object> searchMap = new HashMap<>();
+                Map<String, Object> searchMap = new LinkedHashMap<>();
 
                 searchMap.put("bd_id", entity.getBdId());
                 searchMap.put("bd_title", entity.getBdTitle());

@@ -32,13 +32,13 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     /* 관리자 게시판 목록 */
     /* sort == deleted N, Y */
     @Override
-    public ResBoardListDto adminBoardListDto(UserInfo userInfo, String sort, Pageable pageable, int page) {
+    public ResBoardListDto adminBoardListDto(UserInfo userInfo, String sort, String type, Pageable pageable, int page) {
 
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
-        Page<Board> checkBoard = boardRepository.findByBdDeleted(sort, pageable);
+        Page<Board> checkBoard = boardRepository.findAllByBdDeletedAndBdType(sort, type, pageable);
 
         List<Map<String,Object>> adminBoardList = new ArrayList<>();
 
@@ -107,9 +107,55 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     /* 관리자 게시판 검색 */
 
     @Override
-    public ResBoardListDto adminBoardSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String content) {
+    public ResBoardListDto adminBoardSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String type, String content) {
 
-        return new ResBoardListDto();
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        Page<Board> checkBoard;
+
+        List<Map<String, Object>> adminSearchList = new ArrayList<>();
+        
+        switch (category) {
+            case "제목" : // 게시글 제목
+                checkBoard = boardRepository.SearchBoardTitle(sort, content, type, pageable);
+                break;
+            case "내용" :
+                checkBoard = boardRepository.SearchBoardContent(sort, content, type, pageable);
+                break;
+            case "작성자" :
+                checkBoard = boardRepository.SearchBoardWriter(sort, content, type, pageable);
+                break;
+            case "전체" :
+                if(content.equals("")) {
+                    checkBoard = boardRepository.findAllByBdDeletedAndBdType(sort, type, pageable);
+                } else {
+                    checkBoard = boardRepository.searchBoard(content, sort, type, pageable);
+                }
+                break;
+            default:
+                checkBoard = null;
+        }
+
+        if(checkBoard != null) {
+
+            checkBoard.forEach(entity -> {
+
+                Map<String, Object> adminSearchMap = new LinkedHashMap<>();
+
+                adminSearchMap.put("bd_id", entity.getBdId());
+                adminSearchMap.put("bd_type", entity.getBdType());
+                adminSearchMap.put("bd_title", entity.getBdTitle());
+                adminSearchMap.put("bd_writer", entity.getBdWriter());
+                adminSearchMap.put("bd_created", entity.getBdCreated());
+                adminSearchMap.put("bd_views", entity.getBdViews());
+                adminSearchMap.put("bd_deleted", entity.getBdDeleted());
+                adminSearchMap.put("totalElement", checkBoard.getTotalElements());
+                adminSearchMap.put("totalPage", checkBoard.getTotalPages());
+                adminSearchList.add(adminSearchMap);
+            });
+        }
+        return new ResBoardListDto(adminSearchList);
     }
 
     /* 게시글 삭제 */

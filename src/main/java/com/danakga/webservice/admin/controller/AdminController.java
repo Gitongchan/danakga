@@ -63,12 +63,4 @@ public class AdminController {
         return adminService.findManagerInfoDetail(userInfo,companyName);
     }
 
-    //회원 이용 정지
-    @PutMapping("/members/user/{userId}")
-    public ResResultDto stopUsing(@LoginUser UserInfo userInfo , @PathVariable String userId){
-
-        Long result = adminService.stopUsing(userInfo,userId);
-        return new ResResultDto(result,userId + "회원을 이용 정지 시켰습니다" );
-    }
-
 }

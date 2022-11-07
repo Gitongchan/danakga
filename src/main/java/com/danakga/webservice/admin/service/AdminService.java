@@ -21,6 +21,4 @@ public interface AdminService {
     ResUserInfoDetailDto findUserInfoDetail(UserInfo userInfo,String userId);
 
     ResManagerInfoDetailDto findManagerInfoDetail(UserInfo userInfo, String userId);
-
-    Long stopUsing(UserInfo userInfo,String userId);
 }

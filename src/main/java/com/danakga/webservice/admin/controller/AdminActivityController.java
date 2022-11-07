@@ -19,12 +19,13 @@ public class AdminActivityController {
 
     /* 관리자 게시판 목록 */
     /* sort == deleted N, Y */
-    @GetMapping("/boardList/{sort}")
+    @GetMapping("/boardList/{sort}/{type}")
     public ResBoardListDto adminBoardList(@LoginUser UserInfo userInfo,
                                           Pageable pageable, int page,
-                                          @PathVariable("sort") String sort) {
+                                          @PathVariable("sort") String sort,
+                                          @PathVariable("type") String type) {
 
-        return adminActivityService.adminBoardListDto(userInfo, sort, pageable, page);
+        return adminActivityService.adminBoardListDto(userInfo, sort, type, pageable, page);
     }
     
     /* 관리자 게시글 조회 */
@@ -36,14 +37,19 @@ public class AdminActivityController {
     }
     
     /* 관리자 게시판 검색 */
-    @GetMapping("/boardSearch/{category}/{sort}/{content}")
+    @GetMapping({"/boardSearch/{category}/{sort}/{type}/{content}", "/boardSearch/{category}/{sort}/{type}"})
     public ResBoardListDto adminBoardSearch(@LoginUser UserInfo userInfo,
                                             Pageable pageable, int page,
                                             @PathVariable("category") String category,
                                             @PathVariable("sort") String sort,
-                                            @PathVariable("content") String content) {
+                                            @PathVariable("type") String type,
+                                            @PathVariable(value = "content", required = false) String content) {
 
-        return adminActivityService.adminBoardSearch(userInfo, pageable, page, category, sort, content);
+        if(content == null) {
+            content = "";
+        }
+
+        return adminActivityService.adminBoardSearch(userInfo, pageable, page, category, sort, type, content);
     }
 
     /* 게시글 삭제 */
