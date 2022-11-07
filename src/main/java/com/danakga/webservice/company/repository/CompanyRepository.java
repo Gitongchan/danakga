@@ -3,6 +3,7 @@ package com.danakga.webservice.company.repository;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
+import com.danakga.webservice.user.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +34,19 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
             @Param("companyName") String companyName,
             @Param("productName") String productName, @Param("productStock") Integer productStock, Pageable pageable
     );
+
+    //어드민 - 사업자 유저 목록 조회
+    @Query(value="select c from CompanyInfo c join c.userInfo u " +
+            "where u.name like %:userName% " +
+            "and u.userid like %:userId% " +
+            "and u.role = :userRole " +
+            "and u.userEnabled <= :userEnabled " +
+            "and c.companyEnabled <= :companyEnabled " +
+            "and c.companyName like %:companyName% " +
+            "and c.companyNum like %:companyNum%")
+    Page<CompanyInfo> findAllManagerInfo(UserRole userRole,
+                                      String userName,String userId ,boolean userEnabled,boolean companyEnabled,
+                                      String companyName,String companyNum,Pageable pageable);
+
+
 }

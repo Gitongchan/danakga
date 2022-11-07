@@ -3,6 +3,8 @@ package com.danakga.webservice.qna.service.Impl;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
+import com.danakga.webservice.product.model.Product;
+import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
 import com.danakga.webservice.qna.service.AnswerService;
 import com.danakga.webservice.qna.model.Answer;
@@ -24,6 +26,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
+    private final ProductRepository productRepository;
     private final QnaRepository qnaRepository;
     private final AnswerRepository answerRepository;
 
@@ -32,12 +35,15 @@ public class AnswerServiceImpl implements AnswerService {
 
     /* 가게 문의사항 답변 작성 */
     @Override
-    public ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long c_id, Long qn_id) {
+    public ResResultDto productAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long p_id, Long qn_id) {
 
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        CompanyInfo checkCompanyInfo = companyRepository.findById(c_id)
+        Product checkProduct = productRepository.findById(p_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다."));
+
+        CompanyInfo checkCompanyInfo = companyRepository.findByUserInfo(checkUserInfo)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
         Qna checkQna = qnaRepository.findById(qn_id)
@@ -65,12 +71,12 @@ public class AnswerServiceImpl implements AnswerService {
 
     /* 가게 문의사항 답변 수정 */
     @Override
-    public ResResultDto shopAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long c_id, Long qn_id, Long an_id) {
+    public ResResultDto productAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long p_id, Long qn_id, Long an_id) {
 
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        CompanyInfo checkCompanyInfo = companyRepository.findById(c_id)
+        CompanyInfo checkCompanyInfo = companyRepository.findByUserInfo(checkUserInfo)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
         Qna checkQna = qnaRepository.findById(qn_id)
@@ -100,14 +106,14 @@ public class AnswerServiceImpl implements AnswerService {
 
     /* 가게 문의사항 답변 삭제 */
     @Override
-    public ResResultDto shopAnswerDelete(UserInfo userInfo, Long c_id, Long qn_id, Long an_id) {
+    public ResResultDto productAnswerDelete(UserInfo userInfo, Long p_id, Long qn_id, Long an_id) {
 
         final String deleted = "N";
 
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        CompanyInfo checkCompanyInfo = companyRepository.findById(c_id)
+        CompanyInfo checkCompanyInfo = companyRepository.findByUserInfo(checkUserInfo)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
         Qna checkQna = qnaRepository.findById(qn_id)
