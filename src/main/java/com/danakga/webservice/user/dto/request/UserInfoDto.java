@@ -1,9 +1,8 @@
 package com.danakga.webservice.user.dto.request;
 
-import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
+
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

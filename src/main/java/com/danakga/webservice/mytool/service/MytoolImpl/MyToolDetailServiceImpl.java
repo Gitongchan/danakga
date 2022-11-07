@@ -51,7 +51,7 @@ public class MyToolDetailServiceImpl implements MyToolDetailService {
             myToolDetailRepository.deleteAllByMyToolFolder(myToolFolder);
         }
         for (DetailSaveDto saveDto : detailSaveDto) {
-            Product myToolProduct = productRepository.findByProductId(saveDto.getProductId()).orElseThrow(
+            Product myToolProduct = productRepository.findByProductIdAndCompanyEnabled(saveDto.getProductId()).orElseThrow(
                     () -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
             );
 
