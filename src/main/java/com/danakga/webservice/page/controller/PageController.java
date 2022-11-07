@@ -72,6 +72,11 @@ public class PageController {
         return "pages/boardPost";
     }
 
+    @GetMapping("/board/qnaPost") //작성
+    public String qnaBoardPost() {
+        return "pages/qnaBoardPost";
+    }
+
     @GetMapping("/board/info") //게시글 상세조회
     public String boardInfo() {
         return "pages/boardInfo";

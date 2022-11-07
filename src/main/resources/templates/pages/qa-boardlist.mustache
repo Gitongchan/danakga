@@ -3,7 +3,7 @@
 
 {{>pages/header2}}
 
-<h3 class="align-center mt-20">문의게시판</h3>
+<h3 class="align-center mt-20">1:1문의</h3>
 <div class="container mt-10" id="board-wrap">
     <div class="row">
         <div class="input-group mb-3 col-sm-12" >
@@ -17,7 +17,7 @@
             </div>
             <input type="text" class="form-control" placeholder="Search" id="search">
             <button class="btn btn-success" type="submit" id="searchbtn">검색</button>
-            <button type="button" class="btn btn-primary" onclick="location.href='/board/post'">게시글 작성</button>
+            <button type="button" class="btn btn-primary" onclick="location.href='/board/qnaPost'">게시글 작성</button>
         </div>
     </div>
 
@@ -54,8 +54,8 @@
 {{>pages/footer1}}
 <!--  이곳에 페이지 별 js 로드시키기-->
 <!--  예시 : <script src="/js/dummydata.js"></script> -->
-<script src="/js/board/qaBoardlist.js"></script>
-<script src="/js/board/qaPagination.js"></script>
+<script src="/js/board/qnaBoard/qaBoardlist.js"></script>
+<script src="/js/board/qnaBoard/qaPagination.js"></script>
 <script src="/js/board/searchPagination.js"></script>
 <script src="/js/board/boardSearch.js"></script>
 
