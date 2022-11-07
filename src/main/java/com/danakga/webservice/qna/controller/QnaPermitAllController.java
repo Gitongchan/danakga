@@ -17,14 +17,22 @@ public class QnaPermitAllController {
     private final QnaService qnaService;
 
     /* 문의사항 목록 */
-    /* /list/{q_sort}/{c_id} 가게 문의사항 목록 --- /list/{q_sort} 사이트, 전체 가게 문의사항 목록*/
+    /* /list/{q_sort}/{p_id} 상품 문의사항 목록 --- /list/site/{q_sort} 사이트, 전체 가게 문의사항 목록*/
     /* 0 = 사이트, 1 = 가게 */
-    @GetMapping({"/list/company/{c_id}", "/list/site/{q_sort}"})
+    @GetMapping({"/list/product/{p_id}", "/list/site/{q_sort}"})
     public ResQnaDto qnaList(Pageable pageable, int page,
                              @PathVariable(value = "q_sort", required = false) Integer q_sort,
-                             @PathVariable(value = "c_id", required = false) Long c_id) {
+                             @PathVariable(value = "p_id", required = false) Long p_id) {
 
-        return qnaService.qnaList(pageable, q_sort, page, c_id);
+        return qnaService.qnaList(pageable, q_sort, page, p_id);
+    }
+    
+    /* 가게 문의사항 전체 목록 */
+    @GetMapping("/list/company/{c_id}")
+    public ResQnaDto companyQnaList(Pageable pageable, int page,
+                                    @PathVariable(value = "c_id") Long c_id) {
+
+        return qnaService.companyQnaList(pageable, page, c_id);
     }
     
     /* 문의사항 조회 */

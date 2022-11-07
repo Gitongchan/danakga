@@ -1,6 +1,7 @@
 package com.danakga.webservice.qna.model;
 
 import com.danakga.webservice.company.model.CompanyInfo;
+import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -58,6 +59,10 @@ public class Qna {
     @JoinColumn(name = "c_id")
     private CompanyInfo companyInfo;
 
+    @ManyToOne
+    @JoinColumn(name = "p_id")
+    private Product product;
+
     //답변, 삭제여부 기본 값 설정
     @PrePersist
     public void status() {
@@ -68,7 +73,7 @@ public class Qna {
     @Builder
     public Qna(Long qnId, Integer qnSort, String qnType, String qnTitle, String qnContent, String qnWriter,
                int qnState, String qnDeleted, LocalDateTime qnCreated, LocalDateTime qnModified,
-               UserInfo userInfo, CompanyInfo companyInfo) {
+               UserInfo userInfo, CompanyInfo companyInfo, Product product) {
         this.qnId = qnId;
         this.qnSort = qnSort;
         this.qnWriter = qnWriter;
@@ -81,5 +86,6 @@ public class Qna {
         this.qnModified = qnModified;
         this.userInfo = userInfo;
         this.companyInfo = companyInfo;
+        this.product = product;
     }
 }

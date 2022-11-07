@@ -1,4 +1,4 @@
-package com.danakga.webservice.qna.controller.site;
+package com.danakga.webservice.qna.controller.siteanswer;
 
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;

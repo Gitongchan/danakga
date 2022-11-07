@@ -1,6 +1,7 @@
 package com.danakga.webservice.qna.repository;
 
 import com.danakga.webservice.company.model.CompanyInfo;
+import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.qna.model.Qna;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 public interface QnaRepository extends JpaRepository<Qna, Long> {
@@ -30,11 +33,16 @@ public interface QnaRepository extends JpaRepository<Qna, Long> {
     @Modifying
     @Query("update Qna q set q.qnState = 0 where q.qnId =:qnId")
     void updateQnaStandByState(@Param("qnId") Long qn_id);
+
+    /* 상품 문의사항 조회 */
+    Optional<Qna> findByProductAndQnId(Product product, Long qn_id);
     
     /* 사이트 문의사항 목록 조회 */
     Page<Qna> findByQnDeletedAndQnSort(Pageable pageable, String deleted, int q_sort);
 
-    /* 가게 문의사항 목록 조회 */
-    Page<Qna> findByQnDeletedAndCompanyInfo(String deleted, CompanyInfo companyInfo, Pageable pageable);
+    Page<Qna> findByCompanyInfo(CompanyInfo companyInfo, Pageable pageable);
+
+    /* 상품 문의사항 목록 조회 */
+    Page<Qna> findByQnDeletedAndProduct(String deleted, Product product, Pageable pageable);
 
 }
