@@ -8,7 +8,7 @@ import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.CommentRepository;
-import com.danakga.webservice.board.repository.FileRepository;
+import com.danakga.webservice.board.repository.BoardFileRepository;
 import com.danakga.webservice.board.service.BoardService;
 import com.danakga.webservice.board.service.BoardFileService;
 import com.danakga.webservice.exception.CustomException;
@@ -36,7 +36,7 @@ import java.util.*;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
-    private final FileRepository fileRepository;
+    private final BoardFileRepository fileRepository;
     private final BoardFileService boardFilesService;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
@@ -334,6 +334,9 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public ResResultDto postDelete(Long bd_id, UserInfo userInfo) {
+
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
         Board checkBoard = boardRepository.findById(bd_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
