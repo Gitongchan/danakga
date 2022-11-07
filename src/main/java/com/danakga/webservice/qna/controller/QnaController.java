@@ -17,7 +17,7 @@ public class QnaController {
 
     /* 문의사항 작성 */
     /* /qna/write/{c_id} 가게 문의사항 작성 --- /qna/write 사이트 문의사항 작성 */
-    @PostMapping({"/qna/company_write/{c_id}", "/qna/site_write"})
+    @PostMapping({"/qna/product_write/{c_id}", "/qna/site_write"})
     public ResResultDto qnaWrite(@LoginUser UserInfo userInfo,
                                  @RequestBody ReqQnaDto reqQnaDto,
                                  @PathVariable(value = "c_id", required = false) Long c_id) {

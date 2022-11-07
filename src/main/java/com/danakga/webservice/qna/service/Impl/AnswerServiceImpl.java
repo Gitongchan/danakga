@@ -32,7 +32,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     /* 가게 문의사항 답변 작성 */
     @Override
-    public ResResultDto shopAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long c_id, Long qn_id) {
+    public ResResultDto productAnswerWrite(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long c_id, Long qn_id) {
 
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -65,7 +65,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     /* 가게 문의사항 답변 수정 */
     @Override
-    public ResResultDto shopAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long c_id, Long qn_id, Long an_id) {
+    public ResResultDto productAnswerEdit(UserInfo userInfo, ReqAnswerDto reqAnswerDto, Long c_id, Long qn_id, Long an_id) {
 
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
@@ -100,7 +100,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     /* 가게 문의사항 답변 삭제 */
     @Override
-    public ResResultDto shopAnswerDelete(UserInfo userInfo, Long c_id, Long qn_id, Long an_id) {
+    public ResResultDto productAnswerDelete(UserInfo userInfo, Long c_id, Long qn_id, Long an_id) {
 
         final String deleted = "N";
 
