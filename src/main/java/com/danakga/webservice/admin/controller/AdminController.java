@@ -8,6 +8,7 @@ import com.danakga.webservice.admin.service.AdminService;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
@@ -62,5 +63,12 @@ public class AdminController {
         return adminService.findManagerInfoDetail(userInfo,companyName);
     }
 
+    //회원 이용 정지
+    @PutMapping("/members/user/{userId}")
+    public ResResultDto stopUsing(@LoginUser UserInfo userInfo , @PathVariable String userId){
+
+        Long result = adminService.stopUsing(userInfo,userId);
+        return new ResResultDto(result,userId + "회원을 이용 정지 시켰습니다" );
+    }
 
 }
