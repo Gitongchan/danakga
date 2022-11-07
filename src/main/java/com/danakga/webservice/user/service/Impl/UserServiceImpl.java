@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService {
     public UserInfo userInfoCheck(UserInfo userInfo) {
 
         if(userRepository.findById(userInfo.getId()).isPresent()) {
-            return  userRepository.findById(userInfo.getId()).get();
+            return userRepository.findById(userInfo.getId()).get();
         }
         return null;
     }
@@ -373,12 +373,12 @@ public class UserServiceImpl implements UserService {
     public ResBoardListDto myPostList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
         //회원 조회
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //pagedble로 db 조회
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
-        Page<Board> boards = boardRepository.findAllByUserInfoAndBdType(recentUserInfo, boardType, pageable);
+        Page<Board> boards = boardRepository.findAllByUserInfoAndBdType(checkUserInfo, boardType, pageable);
 
         //dto에 담아줄 List<Map> 생성
         List<Map<String, Object>> postList = new ArrayList<>();
@@ -409,7 +409,7 @@ public class UserServiceImpl implements UserService {
     public ResBoardListDto myCommentsPost(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
         //회원 조회
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //삭제 여부 변수
@@ -417,7 +417,7 @@ public class UserServiceImpl implements UserService {
 
         //게시판 목록을 불러오기 위한 List
         pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
-        Page<Board> boards = boardRepository.myCommentsPost(recentUserInfo.getUserid(), boardType, deleted, pageable);
+        Page<Board> boards = boardRepository.myCommentsPost(checkUserInfo.getUserid(), boardType, deleted, pageable);
 
         //dto에 담아줄 List<Map> 생성
         List<Map<String, Object>> postList = new ArrayList<>();
@@ -447,7 +447,7 @@ public class UserServiceImpl implements UserService {
     public ResCommentListDto myCommentsList(UserInfo userInfo, String boardType, Pageable pageable, int page) {
 
         //회원 조회
-        UserInfo recentUserInfo = userRepository.findById(userInfo.getId())
+        UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원을 찾을 수 없습니다."));
 
         //삭제 여부 변수
@@ -455,7 +455,7 @@ public class UserServiceImpl implements UserService {
 
         //페이징 db 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
-        Page<Board_Comment> comments = commentRepository.myCommentsList(recentUserInfo.getUserid(), boardType, deleted, pageable);
+        Page<Board_Comment> comments = commentRepository.myCommentsList(checkUserInfo.getUserid(), boardType, deleted, pageable);
 
         //dto에 담아줄 List<Map> 생성
         List<Map<String, Object>> commentList = new ArrayList<>();

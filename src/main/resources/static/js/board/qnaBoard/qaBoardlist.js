@@ -4,20 +4,41 @@
 // 다음 버튼 : 화면에 그려진 마지막 페이지 + 1
 const pagenation = document.querySelector('#board-wrap .text-center .pagination');
 
-(function() {
-    fetch(`/api/board/list/문의게시판?page=0`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            renderPagination(data.lists[0].totalPage);
-        })
-})();
+const tablelist = document.getElementById("boardlist");
+
+async function qnaList(page){
+    const res = await fetch(`/api/qna/list/site/0?page=${page}`)
+    const data = await res.json();
+
+    if(!res.ok){
+        alert('조회 실패!');
+    return null;
+    }
+
+    tablelist.innerHTML = '';
+    renderPagination(data.qnaList[0].totalPage);
+
+    for(const item of data.qnaList){
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+            `<td>${item.qn_id}</td>
+                 <td>${item.qn_type}</a></td>
+                 <td><a href="/qnaboard/info?qnId=${item.qn_id}&userId=${item.qn_userid}">${item.qn_title}</a></td>
+                 <td>${item.qn_userid}</td>
+                 <td>${item.qn_created.split('.')[0]}</td>`
+
+        tablelist.appendChild(tr);
+    }
+}
 
 function renderPagination(currentPage) {
-    fetch(`/api/board/list/문의게시판?page=0`)
+    fetch(`/api/qna/list/site/0?page=0`)
         .then((res)=>res.json())
         .then((data)=>{
+            pagenation.innerHTML = "";
+
             //총 페이지 수
-            const total = Math.ceil(data.lists[0].totalElement/10);
+            const total = Math.ceil(data.qnaList[0].totalElement/10);
             //화면에 보여질 페이지 그룹
             const group = Math.ceil(currentPage/10);
 
@@ -92,9 +113,6 @@ function renderPagination(currentPage) {
                     //페이지 그리는 함수
                     else onList(id);
 
-
-
-                    pagenation.innerHTML = "";
                     renderPagination(selectedPage);//페이지네이션 그리는 함수
 
                 })
@@ -104,21 +122,9 @@ function renderPagination(currentPage) {
 
 //페이지 번호 클릭 시 이동하는 곳
 function onList(e){
-    fetch(`/api/board/list/문의게시판?page=${e}`)
-        .then((res)=>res.json())
-        .then((data)=>{
-            tablelist.innerHTML="";
-            for(let i=0; i<data.lists.length; i++){
-                console.log(data.lists[i]);
-                const tr = document.createElement('tr');
-                tr.innerHTML =
-                    `<td>${data.lists[i].bd_id}</td>
-                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
-                 <td>${data.lists[i].bd_writer}</td>
-                 <td>${data.lists[i].bd_created.split('.')[0]}</td>
-                 <td>${data.lists[i].bd_views}</td>`
-
-                tablelist.appendChild(tr);
-            }
-        })
+    qnaList(e);
 }
+
+(function (){
+    qnaList(0);
+})();

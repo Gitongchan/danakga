@@ -57,6 +57,11 @@ public class PageController {
         return "pages/basic-boardlist";
     }
 
+    @GetMapping("/board/data") //정보 게시판 조회
+    public String dataBoardList() {
+        return "pages/data-boardlist";
+    }
+
     @GetMapping("/board/qa") //문의 게시판 조회
     public String qaBoardList() {
         return "pages/qa-boardlist";
@@ -67,14 +72,28 @@ public class PageController {
         return "pages/boardPost";
     }
 
+    @GetMapping("/board/qnaPost") //작성
+    public String qnaBoardPost() {
+        return "pages/qnaBoardPost";
+    }
+
     @GetMapping("/board/info") //게시글 상세조회
     public String boardInfo() {
         return "pages/boardInfo";
     }
 
+    @GetMapping("/qnaboard/info") //1:1 문의 상세조회
+    public String qnaBoardInfo() {
+        return "pages/qnaBoardInfo";
+    }
+
     @GetMapping("/board/edit") //게시글 수정
     public String boardEdit() {
         return "pages/boardEdit";
+    }
+    @GetMapping("/qnaboard/edit") //게시글 수정
+    public String qnaBoardEdit() {
+        return "pages/qnaBoardEdit";
     }
 
     @GetMapping("/board/faq") //자주묻는질문
