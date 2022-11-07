@@ -6,6 +6,7 @@ import com.danakga.webservice.admin.dto.response.ResUserInfoDetailDto;
 import com.danakga.webservice.admin.dto.response.ResUserInfoDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
+import com.danakga.webservice.util.responseDto.ResResultDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface AdminService {
     ResUserInfoDetailDto findUserInfoDetail(UserInfo userInfo,String userId);
 
     ResManagerInfoDetailDto findManagerInfoDetail(UserInfo userInfo, String userId);
+
+    Long stopUsing(UserInfo userInfo,String userId);
 }
