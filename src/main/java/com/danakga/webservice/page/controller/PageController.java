@@ -57,6 +57,11 @@ public class PageController {
         return "pages/basic-boardlist";
     }
 
+    @GetMapping("/board/data") //정보 게시판 조회
+    public String dataBoardList() {
+        return "pages/data-boardlist";
+    }
+
     @GetMapping("/board/qa") //문의 게시판 조회
     public String qaBoardList() {
         return "pages/qa-boardlist";
