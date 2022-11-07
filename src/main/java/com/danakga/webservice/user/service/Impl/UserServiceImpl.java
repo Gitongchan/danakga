@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
                         .name(userInfoDto.getName())
                         .phone(userInfoDto.getPhone())
                         .email(userInfoDto.getEmail())
-                        .role(UserRole.ROLE_USER)//임시로 권한 USER로 지정
+                        .role(UserRole.ROLE_ADMIN)//임시로 권한 USER로 지정
                         .userAdrNum(userInfoDto.getUserAdrNum())
                         .userLotAdr(userInfoDto.getUserLotAdr())
                         .userStreetAdr(userInfoDto.getUserStreetAdr())
