@@ -1,6 +1,8 @@
 package com.danakga.webservice.qna.controller;
 
+import com.danakga.webservice.qna.dto.response.ResAnswerDto;
 import com.danakga.webservice.qna.dto.response.ResQnaDto;
+import com.danakga.webservice.qna.service.AnswerService;
 import com.danakga.webservice.qna.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class QnaPermitAllController {
 
     private final QnaService qnaService;
+    private final AnswerService answerService;
 
     /* 문의사항 목록 */
     /* /list/{q_sort}/{p_id} 상품 문의사항 목록 --- /list/site/{q_sort} 사이트, 전체 가게 문의사항 목록*/
@@ -40,5 +43,13 @@ public class QnaPermitAllController {
     public ResQnaDto qnaPost(@PathVariable("qn_id") Long qn_id) {
 
         return qnaService.qnaPost(qn_id);
+    }
+
+    /* 문의사항 답변 조회 */
+    @GetMapping("/answer_post/{qn_id}")
+    public ResAnswerDto answerPost(@PathVariable("qn_id") Long qn_id,
+                                   Pageable pageable, int page) {
+
+        return answerService.answerPost(qn_id, pageable, page);
     }
 }
