@@ -13,7 +13,6 @@ import javax.validation.constraints.NotBlank;
 @ToString
 public class ReqQnaDto {
 
-    @NotBlank(message = "유형은 필수로 선택해야 합니다.")
     private String qnaType;
 
     private String qnaTitle;
