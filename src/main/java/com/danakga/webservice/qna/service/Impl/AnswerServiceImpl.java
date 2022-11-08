@@ -222,7 +222,7 @@ public class AnswerServiceImpl implements AnswerService {
         Qna checkQna = qnaRepository.findById(qn_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
 
-        Answer checkAnswer = answerRepository.findByAnIdAndQna(qn_id, checkQna)
+        Answer checkAnswer = answerRepository.findByAnIdAndQna(an_id, checkQna)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("답변을 찾을 수 없습니다."));
 
         /* 사이트 관리자가 아닌 경우 수정 불가 */
