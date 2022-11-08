@@ -42,7 +42,7 @@ public class OrdersServiceImpl implements OrdersService {
         );
 
         for (OrdersDto orderDto : ordersDto) {
-            Product ordersProduct = productRepository.findByProductId(orderDto.getProductId()).orElseThrow(
+            Product ordersProduct = productRepository.findByProductIdAndCompanyEnabled(orderDto.getProductId()).orElseThrow(
                     ()->new CustomException.ResourceNotFoundException("해당 상품을 찾을 수 없습니다")
             );
 
@@ -251,7 +251,7 @@ public class OrdersServiceImpl implements OrdersService {
         Orders orders = ordersRepository.findByOrdersId(ordersId).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("판매내역을 찾을 수 없습니다.")
         );
-        Product product = productRepository.findByProductId(orders.getProduct().getProductId()).orElseThrow(
+        Product product = productRepository.findByProductIdAndCompanyEnabled(orders.getProduct().getProductId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다.")
         );
         String inputStatus = orders.getOrdersStatus();
@@ -293,7 +293,7 @@ public class OrdersServiceImpl implements OrdersService {
         Orders orders = ordersRepository.findByOrdersId(ordersId).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("판매내역을 찾을 수 없습니다.")
         );
-        Product product = productRepository.findByProductId(orders.getProduct().getProductId()).orElseThrow(
+        Product product = productRepository.findByProductIdAndCompanyEnabled(orders.getProduct().getProductId()).orElseThrow(
                 ()->new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다.")
         );
         String inputStatus = orders.getOrdersStatus();

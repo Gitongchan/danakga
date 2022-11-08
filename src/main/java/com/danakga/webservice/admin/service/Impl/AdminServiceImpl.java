@@ -162,5 +162,4 @@ public class AdminServiceImpl implements AdminService {
 
         return new ResManagerInfoDetailDto(checkCompanyInfo);
     }
-
 }
