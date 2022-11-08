@@ -92,3 +92,23 @@
 .review-info button:hover{
     color: #0167F3;
 }
+
+.single-block > div button {
+    background: none;
+    border: 1px solid grey;
+    border-radius: 15px;
+    font-size: 16px;
+    color: black;
+    padding: 10px;
+    margin: 0;
+}
+
+.single-block > div button.active {
+    background:#0167F3;
+    color: #fff;
+}
+
+.single-block > div button:hover {
+    background: #017af3;
+    color: #fff;
+}
