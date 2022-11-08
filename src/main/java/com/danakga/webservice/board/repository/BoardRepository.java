@@ -64,7 +64,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(
             value = "select b "
                     + "from Board b "
-                    + "where b.bdWriter = :writer and b.bdDeleted = :deleted and b.bdType = :type"
+                    + "where b.bdWriter Like %:writer% and b.bdDeleted = :deleted and b.bdType = :type"
     )
     Page<Board> SearchBoardWriter(@Param("deleted") String deleted,
                                   @Param("writer") String content,

@@ -244,4 +244,115 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
         return new ResCommentListDto(commentList);
     }
+    
+    /* 관리자 댓글, 대댓글 검색 */
+    @Override
+    public ResCommentListDto adminCommentSearch(UserInfo userInfo, Pageable pageable, int page,
+                                                String category, String sort, String type, String content) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        Page<Board_Comment> checkComments;
+
+        List<Map<String, Object>> searchCommentList = new ArrayList<>();
+
+        //댓글, 대댓글 구분
+        final int commentStep = 0;
+        final int answerStep = 1;
+
+        /* 댓글 검색 */
+        if(type.equals("댓글")) {
+
+            switch (category) {
+                case "내용" :
+                    checkComments = commentRepository.SearchBoardContent(sort, content, commentStep, pageable);
+                    break;
+                case "작성자" :
+                    checkComments = commentRepository.SearchBoardWriter(sort, content, commentStep, pageable);
+                    break;
+                case "전체" :
+                    if(content.equals("")) {
+                        checkComments = commentRepository.findByCmDeletedAndCmStep(sort, commentStep, pageable);
+                    } else {
+                        checkComments = commentRepository.searchComment(content, sort, commentStep, pageable);
+                    }
+                    break;
+                    default :
+                        checkComments = null;
+                        break;
+            }
+
+            if(checkComments != null) {
+
+                long totalPages = checkComments.getTotalPages();
+                long totalElements = checkComments.getTotalElements();
+
+                checkComments.forEach(entity -> {
+
+                    Map<String, Object> searchCommentMap = new LinkedHashMap<>();
+
+                    searchCommentMap.put("cm_id", entity.getCmId());
+                    searchCommentMap.put("cm_content", entity.getCmContent());
+                    searchCommentMap.put("cm_writer", entity.getCmWriter());
+                    searchCommentMap.put("cm_step", entity.getCmStep());
+                    searchCommentMap.put("cm_deleted", entity.getCmDeleted());
+                    searchCommentMap.put("cm_created", entity.getCmCreated());
+                    searchCommentMap.put("cm_modify", entity.getCmModified());
+                    searchCommentMap.put("cm_answerNum", entity.getCmAnswerNum());
+                    searchCommentMap.put("totalElement", totalElements);
+                    searchCommentMap.put("totalPage", totalPages);
+                    
+                    searchCommentList.add(searchCommentMap);
+                });
+            }
+        }
+
+        if(type.equals("대댓글")) {
+            switch (category) {
+                case "내용" :
+                    checkComments = commentRepository.SearchBoardContent(sort, content, answerStep, pageable);
+                    break;
+                case "작성자" :
+                    checkComments = commentRepository.SearchBoardWriter(sort, content, answerStep, pageable);
+                    break;
+                case "전체" :
+                    if(content.equals("")) {
+                        checkComments = commentRepository.findByCmDeletedAndCmStep(sort, answerStep, pageable);
+                    } else {
+                        checkComments = commentRepository.searchComment(content, sort, answerStep, pageable);
+                    }
+                    break;
+                    default :
+                        checkComments = null;
+                        break;
+            }
+
+            if(checkComments != null) {
+
+                long totalPages = checkComments.getTotalPages();
+                long totalElements = checkComments.getTotalElements();
+
+                checkComments.forEach(entity -> {
+
+                    Map<String, Object> searchCommentMap = new LinkedHashMap<>();
+
+                    searchCommentMap.put("cm_id", entity.getCmId());
+                    searchCommentMap.put("cm_content", entity.getCmContent());
+                    searchCommentMap.put("cm_writer", entity.getCmWriter());
+                    searchCommentMap.put("cm_step", entity.getCmStep());
+                    searchCommentMap.put("cm_deleted", entity.getCmDeleted());
+                    searchCommentMap.put("cm_created", entity.getCmCreated());
+                    searchCommentMap.put("cm_modify", entity.getCmModified());
+                    searchCommentMap.put("cm_answerNum", entity.getCmAnswerNum());
+                    searchCommentMap.put("totalElement", totalElements);
+                    searchCommentMap.put("totalPage", totalPages);
+
+                    searchCommentList.add(searchCommentMap);
+                });
+            }
+        }
+
+        return new ResCommentListDto(searchCommentList);
+    }
 }

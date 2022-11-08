@@ -82,4 +82,26 @@ public class AdminActivityController {
 
         return adminActivityService.adminCommentList(userInfo, type, sort, pageable, page);
     }
+    
+    /* 관리자 댓글, 대댓글 검색 *
+    * category = 전체, 내용, 작성자
+    * sort = N, Y
+    * type = 댓글, 대댓글
+    * content = 검색어
+    * 전체 검색은 2번 url 사용
+    */
+    @GetMapping({"/commentSearch/{category}/{sort}/{type}/{content}", "/commentSearch/{category}/{sort}/{type}"})
+    public ResCommentListDto adminCommentSearch(@LoginUser UserInfo userInfo,
+                                                @PathVariable("category") String category,
+                                                @PathVariable("sort") String sort,
+                                                @PathVariable("type") String type,
+                                                @PathVariable(value = "content", required = false) String content,
+                                                Pageable pageable, int page) {
+
+        if(content == null) {
+            content = "";
+        }
+
+        return adminActivityService.adminCommentSearch(userInfo, pageable, page, category, sort, type, content);
+    }
 }

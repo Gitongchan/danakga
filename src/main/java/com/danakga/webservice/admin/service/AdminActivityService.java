@@ -23,4 +23,8 @@ public interface AdminActivityService {
     
     /* 관리자 댓글, 대댓글 목록 */
     ResCommentListDto adminCommentList(UserInfo userInfo, String type, String sort, Pageable pageable, int page);
+    
+    /* 관리자 댓글, 대댓글 검색 */
+    ResCommentListDto adminCommentSearch(UserInfo userInfo, Pageable pageable, int page,
+                                         String category, String sort, String type, String content);
 }
