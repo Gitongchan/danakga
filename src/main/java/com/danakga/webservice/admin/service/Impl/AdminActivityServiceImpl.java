@@ -355,4 +355,15 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
         return new ResCommentListDto(searchCommentList);
     }
+
+    /* 관리자 댓글, 대댓글 삭제 */
+    @Override
+    public ResResultDto adminCommentDelete(UserInfo userInfo, Long bd_id, Long cm_id) {
+        return new ResResultDto(0L,"댓글을 삭제 했습니다.");
+    }
+
+    @Override
+    public ResResultDto adminCommentAnswerDelete(UserInfo userInfo, Long bd_id, Long cm_id, Long an_id) {
+        return new ResResultDto(0L,"대댓글을 삭제 했습니다.");
+    }
 }

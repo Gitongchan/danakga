@@ -104,4 +104,21 @@ public class AdminActivityController {
 
         return adminActivityService.adminCommentSearch(userInfo, pageable, page, category, sort, type, content);
     }
+    
+    /* 관리자 댓글, 대댓글 삭제 */
+    @DeleteMapping("/commentDelete/{bd_id}/{cm_id}")
+    public ResResultDto adminCommentDelete(@LoginUser UserInfo userInfo,
+                                           @PathVariable("bd_id") Long bd_id,
+                                           @PathVariable("cm_id") Long cm_id) {
+        return adminActivityService.adminCommentDelete(userInfo, bd_id, cm_id);
+    }
+
+    @DeleteMapping("/commentAnswerDelete/{bd_id}/{cm_id}/{an_id}")
+    public ResResultDto adminCommentAnswerDelete(@LoginUser UserInfo userInfo,
+                                                 @PathVariable("bd_id") Long bd_id,
+                                                 @PathVariable("cm_id") Long cm_id,
+                                                 @PathVariable("an_id") Long an_id) {
+
+        return adminActivityService.adminCommentAnswerDelete(userInfo, bd_id, cm_id, an_id);
+    }
 }
