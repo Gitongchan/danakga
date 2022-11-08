@@ -183,7 +183,6 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
     /* ======================================= 댓글,대댓글 ======================================= */
 
-
     /* 관리자 댓글, 대댓글 목록 */
     @Override
     public ResCommentListDto adminCommentList(UserInfo userInfo, String type, String sort,Pageable pageable, int page) {
@@ -219,9 +218,30 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                 commentList.add(commentsMap);
 
             });
-
-            return new ResCommentListDto(commentList);
         }
+        
+        if(type.equals("대댓글")) {
+            pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
+            Page<Board_Comment> checkComments = commentRepository.findByCmStepAndCmDeleted(answerStep, sort, pageable);
+
+            checkComments.forEach(entity -> {
+
+                Map<String, Object> answerMap = new LinkedHashMap<>();
+
+                answerMap.put("cm_id", entity.getCmId());
+                answerMap.put("cm_content", entity.getCmContent());
+                answerMap.put("cm_writer", entity.getCmWriter());
+                answerMap.put("cm_step", entity.getCmStep());
+                answerMap.put("cm_parentNum", entity.getCmParentNum());
+                answerMap.put("cm_deleted", entity.getCmDeleted());
+                answerMap.put("cm_created", entity.getCmCreated());
+                answerMap.put("cm_modify", entity.getCmModified());
+                answerMap.put("totalElement", checkComments.getTotalElements());
+                answerMap.put("totalPage", checkComments.getTotalPages());
+                commentList.add(answerMap);
+            });
+        }
+
         return new ResCommentListDto(commentList);
     }
 }
