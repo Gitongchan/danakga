@@ -208,4 +208,61 @@ public class AdminServiceImpl implements AdminService {
         return userInfo.getId();
     }
 
+    //사업자 정지
+    @Transactional
+    @Override
+    public Long stopUsingManager(UserInfo userInfo, String companyName) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+        CompanyInfo checkCompanyInfo = companyRepository.findByCompanyName(companyName).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("사업자를 찾을 수 없습니다.")
+        );
+        //일반 사용자로 권한 변경
+        userRepository.updateUserRole(UserRole.ROLE_USER,checkCompanyInfo.getUserInfo().getId());
+
+        CompanyInfo deleteCompanyInfo = companyRepository.findByUserInfo(checkCompanyInfo.getUserInfo()).orElseThrow(
+                ()-> new CustomException.ResourceNotFoundException("사업자 정보를 찾을 수 없습니다.")
+        );
+
+        companyRepository.updateCompanyEnabled(false,LocalDateTime.now(),deleteCompanyInfo.getCompanyId());
+
+        return checkCompanyInfo.getCompanyId();
+    }
+
+    //회원 정보 삭제
+    @Transactional
+    @Override
+    public Long deleteMember(UserInfo userInfo, String userId) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+        
+        //정지되거나 탈퇴된 사용자만 삭제 가능
+        UserInfo deleteUserInfo = userRepository.findByUseridAndUserEnabled(userId,false).orElseThrow(
+                ()-> new CustomException.ResourceNotFoundException("삭제 할 사용자를 찾을 수 없거나,정지 또는 탈퇴한 사용자가 아닙니다.")
+        );
+
+        userRepository.deleteById(deleteUserInfo.getId());
+
+        return 1L;
+    }
+
+    //사업자 정보 삭제 - 회사 정보 삭제
+    @Transactional
+    @Override
+    public Long deleteManager(UserInfo userInfo, String companyName) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+
+        CompanyInfo deleteCompanyInfo = companyRepository.findByCompanyNameAndCompanyEnabled(companyName,false).orElseThrow(
+                ()-> new CustomException.ResourceNotFoundException("삭제 할 상점을 찾을 수 없거나,정지 또는 탈퇴한 상점이 아닙니다.")
+        );
+
+        companyRepository.deleteById(deleteCompanyInfo.getCompanyId());
+
+        return 1L;
+    }
+
 }

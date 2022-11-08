@@ -68,6 +68,27 @@ public class AdminController {
     public ResResultDto stopUsing(@LoginUser UserInfo userInfo , @PathVariable String userId){
 
         Long result = adminService.stopUsing(userInfo,userId);
-        return new ResResultDto(result,userId + "회원을 이용 정지 시켰습니다" );
+        return new ResResultDto(result,userId + " 회원을 이용 정지 시켰습니다" );
+    }
+
+    //사업자 이용 정지
+    @PutMapping("/members/manager/{companyName}")
+    public ResResultDto stopUsingManager(@LoginUser UserInfo userInfo , @PathVariable String companyName){
+        Long result = adminService.stopUsingManager(userInfo,companyName);
+        return new ResResultDto(result,companyName + " 상점을 정지 시켰습니다" );
+    }
+
+    //회원 삭제
+    @DeleteMapping("/members/user/{userId}")
+    public ResResultDto deleteMember(@LoginUser UserInfo userInfo , @PathVariable String userId){
+        Long result = adminService.deleteMember(userInfo,userId);
+        return new ResResultDto(result,userId + " 회원을 삭제했습니다." );
+    }
+
+    //회사 정보 삭제
+    @DeleteMapping("/members/manager/{companyName}")
+    public ResResultDto deleteManager(@LoginUser UserInfo userInfo,@PathVariable String companyName){
+        Long result = adminService.deleteManager(userInfo,companyName);
+        return new ResResultDto(result,companyName + " 상점을 삭제했습니다.");
     }
 }

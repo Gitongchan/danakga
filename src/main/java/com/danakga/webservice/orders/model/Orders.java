@@ -26,6 +26,7 @@ public class Orders {
 
     //주문한 사용자 정보
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="orders_userInfo")
     private UserInfo userInfo;
 

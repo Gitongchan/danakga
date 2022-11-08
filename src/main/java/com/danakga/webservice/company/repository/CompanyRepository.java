@@ -24,6 +24,8 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
 
     Optional<CompanyInfo> findByUserInfoAndCompanyEnabled(UserInfo userInfo,boolean enabled);
 
+    Optional<CompanyInfo> findByCompanyNameAndCompanyEnabled(UserInfo userInfo,boolean enabled);
+
     Optional<CompanyInfo> findByCompanyId(Long companyId);
 
     //사업자 이용 중지
