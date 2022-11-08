@@ -100,7 +100,7 @@
     font-size: 16px;
     color: black;
     padding: 10px;
-    margin: 0;
+    margin-bottom: 10px;
 }
 
 .single-block > div button.active {
@@ -111,4 +111,8 @@
 .single-block > div button:hover {
     background: #017af3;
     color: #fff;
+}
+
+.comment-form.hide{
+    display: none;
 }

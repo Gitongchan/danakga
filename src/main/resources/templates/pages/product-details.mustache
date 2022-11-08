@@ -114,7 +114,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="product_comment_box">
                 <div class="col-lg-4 col-12">
                     <div class="single-block give-review">
                         <h4 class="sum_star">0점</h4><span>평점</span>
@@ -169,14 +169,33 @@
                 <div class="col-lg-8 col-12">
                     <div class="single-block">
                         <div>
-                            <button class="active">리 뷰</button>
-                            <button>Q&A</button>
+                            <button id="reviewList_btn" class="active">리 뷰</button>
+                            <button id="qnaList_btn">Q&A</button>
                         </div>
                         <div class="reviews">
                             <!-- Start Single Review -->
                             <div id="reviews_list_wrap">
                             </div>
                             <!-- End Single Review -->
+                        </div>
+                        <div class="comment-form hide">
+                            <h3 class="comment-reply-title">Q&A 작성</h3>
+                            <form action="#">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-box form-group">
+                                                        <textarea name="#" id="qna-text"
+                                                                  class="form-control form-control-custom"
+                                                                  placeholder="질문사항을 입력하세요!"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="button">
+                                            <button class="btn" id="qna-post">작성</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

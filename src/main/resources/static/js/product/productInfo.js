@@ -31,6 +31,12 @@ const reviewWrap = document.getElementById('reviews_list_wrap');
 //리뷰 수정가능 여부 hidden
 const review_hidden = document.getElementById('review_edit');
 
+//Q&A작성 관련 부분
+const $product_QNA = document.querySelector('#product_comment_box');
+const $reviewList_btn = document.querySelector('#reviewList_btn');
+const $qnaList_btn = document.querySelector('#qnaList_btn');
+const $qnaComment = document.querySelector('#qna-post');
+
 const urlID = getParameterByName('productId');
 const orderID = getParameterByName('orderId');
 const status = getParameterByName('status');
@@ -249,33 +255,33 @@ const status = getParameterByName('status');
         }
     })
 
-cartButton.addEventListener('click', async () => {
-    const quantity = document.getElementById('quantity').value;
-    if(quantity > 0){
-        if(confirm('장바구니에 해당 상품을 추가하시겠습니까?')){
-            try{
-                const res = await fetch(`/api/user/cart`, {
-                    method: 'POST',
-                    headers: {
-                        'header': header,
-                        'X-CSRF-Token': token,
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify([{productId:urlID, cartAmount: Number(quantity)}])
-                })
+    cartButton.addEventListener('click', async () => {
+        const quantity = document.getElementById('quantity').value;
+        if(quantity > 0){
+            if(confirm('장바구니에 해당 상품을 추가하시겠습니까?')){
+                try{
+                    const res = await fetch(`/api/user/cart`, {
+                        method: 'POST',
+                        headers: {
+                            'header': header,
+                            'X-CSRF-Token': token,
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify([{productId:urlID, cartAmount: Number(quantity)}])
+                    })
 
-                if(res.ok){
-                    alert('장바구니에 상품이 추가되었습니다!');
+                    if(res.ok){
+                        alert('장바구니에 상품이 추가되었습니다!');
+                    }
+                }catch (e) {
+                    alert('장바구니에 상품추가 실패!');
                 }
-            }catch (e) {
-                alert('장바구니에 상품추가 실패!');
             }
+        }else{
+            alert("잘못입력된 수량입니다.")
         }
-    }else{
-        alert("잘못입력된 수량입니다.")
-    }
-})
+    })
 
     //-------------------후기 부분 --------------------
 
@@ -337,6 +343,7 @@ cartButton.addEventListener('click', async () => {
     async function reviewList(p_id, page){
         const res = await fetch(`/api/review/reviewList/${p_id}?page=${page}`);
         if(res.ok) {
+            reviewWrap.innerHTML = '';
             const data = await res.json();
             // re_content: "별로임..근데 뭐 쓸만은 함ㅋㅋㅋ"
             // re_created: "2022-08-18T18:58:32.622824"
@@ -435,4 +442,38 @@ cartButton.addEventListener('click', async () => {
                 })
             }
         }
+    }
+
+    // 리뷰버튼, Q&A버튼 클릭 시 동작하는 곳
+    $reviewList_btn.addEventListener('click', () => {
+        $reviewList_btn.classList.add('active');
+        $qnaList_btn.classList.remove('active');
+        document.querySelector('.comment-form').classList.add('hide');
+        reviewList(urlID, 0);
+    })
+
+    $qnaList_btn.addEventListener('click', () => {
+        reviewWrap.innerHTML = '';
+        $reviewList_btn.classList.remove('active');
+        $qnaList_btn.classList.add('active');
+        document.querySelector('.comment-form').classList.remove('hide');
+        qnaList(0);
+    })
+
+    //qna작성버튼 클릭 시
+    $qnaComment.addEventListener('click', (event) =>{
+        event.preventDefault();
+
+    })
+
+    async function qnaList(page){
+        const res = await fetch(`/api/qna/list/product/${urlID}?page=${page}`);
+        const data = await res.json();
+
+        if(!res.ok){
+            alert("로드 실패!")
+            return null;
+        }
+
+        console.log(data);
     }
