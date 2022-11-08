@@ -105,7 +105,6 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     }
     
     /* 관리자 게시판 검색 */
-
     @Override
     public ResBoardListDto adminBoardSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String type, String content) {
 

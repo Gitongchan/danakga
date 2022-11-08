@@ -37,6 +37,11 @@ public class AdminActivityController {
     }
     
     /* 관리자 게시판 검색 */
+    /* category = 전체, 제목, 내용, 작성자 
+    *  sort = N, Y
+    *  type = 자유, 정보
+    *  content = 검색어
+    * */
     @GetMapping({"/boardSearch/{category}/{sort}/{type}/{content}", "/boardSearch/{category}/{sort}/{type}"})
     public ResBoardListDto adminBoardSearch(@LoginUser UserInfo userInfo,
                                             Pageable pageable, int page,
