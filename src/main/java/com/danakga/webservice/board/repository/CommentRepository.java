@@ -2,6 +2,7 @@ package com.danakga.webservice.board.repository;
 
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Comment;
+import com.danakga.webservice.user.model.UserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -137,4 +138,51 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
                                        @Param("bdType") String boardType,
                                        @Param("cmDeleted") String cmDeleted,
                                        Pageable pageable);
+
+
+    /* =============== 관리자(admin) =============== */
+
+    Page<Board_Comment> findByCmStepAndCmDeleted(int step, String deleted, Pageable pageable);
+
+    Page<Board_Comment> findByCmDeletedAndCmStep(String deleted, int step, Pageable pageable);
+
+    @Transactional
+    void deleteByCmParentNum(int parentNum);
+
+    //전체 기준 게시판 검색
+    @Query(
+            value = "Select bc from Board_Comment bc "
+                    + "where (bc.cmContent Like %:content% "
+                    + "or bc.cmWriter Like %:content%) "
+                    + "and bc.cmStep = :step and bc.cmDeleted = :deleted"
+    )
+    Page<Board_Comment> searchComment(@Param("content") String content,
+                            @Param("deleted") String deleted,
+                            @Param("step") int step,
+                            Pageable pageable);
+
+
+    //작성자로 게시판 검색
+    @Query(
+            value = "select bc "
+                    + "from Board_Comment bc "
+                    + "where bc.cmWriter Like %:writer% and bc.cmDeleted = :deleted and bc.cmStep = :step"
+    )
+    Page<Board_Comment> SearchBoardWriter(@Param("deleted") String deleted,
+                                  @Param("writer") String writer,
+                                  @Param("step") int step,
+                                  Pageable pageable);
+
+
+    //내용으로 게시판 검색
+    @Query(
+            value = "select bc "
+                    + "from Board_Comment bc "
+                    + "where bc.cmContent Like %:content% and bc.cmDeleted = :deleted and bc.cmStep = :step"
+    )
+    Page<Board_Comment> SearchBoardContent(@Param("deleted") String deleted,
+                                   @Param("content") String content,
+                                   @Param("step") int step,
+                                   Pageable pageable);
+
 }

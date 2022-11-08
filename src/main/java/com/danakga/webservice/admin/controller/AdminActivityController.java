@@ -4,6 +4,7 @@ import com.danakga.webservice.admin.service.AdminActivityService;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminActivityController {
 
     private final AdminActivityService adminActivityService;
+
+    /* ======================================= 게시판 ======================================= */
 
     /* 관리자 게시판 목록 */
     /* sort == deleted N, Y */
@@ -63,5 +66,59 @@ public class AdminActivityController {
                                             @PathVariable("bd_id") Long bd_id) {
 
         return adminActivityService.adminPostDelete(userInfo, bd_id);
+    }
+
+
+    /* ======================================= 댓글,대댓글 ======================================= */
+
+    /* 관리자 댓글, 대댓글 목록 */
+    /* type = 댓글, 대댓글
+    *  sort == deleted -> N, Y */
+    @GetMapping("/commentList/{type}/{sort}")
+    public ResCommentListDto adminCommentList(@LoginUser UserInfo userInfo,
+                                              @PathVariable("type") String type,
+                                              @PathVariable("sort") String sort,
+                                              Pageable pageable, int page) {
+
+        return adminActivityService.adminCommentList(userInfo, type, sort, pageable, page);
+    }
+    
+    /* 관리자 댓글, 대댓글 검색 *
+    * category = 전체, 내용, 작성자
+    * sort = N, Y
+    * type = 댓글, 대댓글
+    * content = 검색어
+    * 전체 검색은 2번 url 사용
+    */
+    @GetMapping({"/commentSearch/{category}/{sort}/{type}/{content}", "/commentSearch/{category}/{sort}/{type}"})
+    public ResCommentListDto adminCommentSearch(@LoginUser UserInfo userInfo,
+                                                @PathVariable("category") String category,
+                                                @PathVariable("sort") String sort,
+                                                @PathVariable("type") String type,
+                                                @PathVariable(value = "content", required = false) String content,
+                                                Pageable pageable, int page) {
+
+        if(content == null) {
+            content = "";
+        }
+
+        return adminActivityService.adminCommentSearch(userInfo, pageable, page, category, sort, type, content);
+    }
+    
+    /* 관리자 댓글, 대댓글 삭제 */
+    @DeleteMapping("/commentDelete/{bd_id}/{cm_id}")
+    public ResResultDto adminCommentDelete(@LoginUser UserInfo userInfo,
+                                           @PathVariable("bd_id") Long bd_id,
+                                           @PathVariable("cm_id") Long cm_id) {
+        return adminActivityService.adminCommentDelete(userInfo, bd_id, cm_id);
+    }
+
+    @DeleteMapping("/commentAnswerDelete/{bd_id}/{cm_id}/{an_id}")
+    public ResResultDto adminCommentAnswerDelete(@LoginUser UserInfo userInfo,
+                                                 @PathVariable("bd_id") Long bd_id,
+                                                 @PathVariable("cm_id") Long cm_id,
+                                                 @PathVariable("an_id") Long an_id) {
+
+        return adminActivityService.adminCommentAnswerDelete(userInfo, bd_id, cm_id, an_id);
     }
 }
