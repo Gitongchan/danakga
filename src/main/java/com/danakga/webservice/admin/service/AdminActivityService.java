@@ -22,5 +22,5 @@ public interface AdminActivityService {
     ResResultDto adminPostDelete(UserInfo userInfo, Long bd_id);
     
     /* 관리자 댓글, 대댓글 목록 */
-    ResCommentListDto adminCommentList(UserInfo userInfo, Long bd_id, Pageable pageable, int page);
+    ResCommentListDto adminCommentList(UserInfo userInfo, String type, String sort, Pageable pageable, int page);
 }

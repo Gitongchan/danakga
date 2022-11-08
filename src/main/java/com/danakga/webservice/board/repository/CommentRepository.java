@@ -137,4 +137,10 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
                                        @Param("bdType") String boardType,
                                        @Param("cmDeleted") String cmDeleted,
                                        Pageable pageable);
+
+
+    /* =============== 관리자(admin) =============== */
+
+    Page<Board_Comment> findByCmStepAndCmDeleted(int step, String deleted, Pageable pageable);
+
 }

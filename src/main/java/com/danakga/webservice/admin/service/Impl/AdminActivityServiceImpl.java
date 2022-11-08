@@ -33,6 +33,9 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     private final BoardFileRepository boardFileRepository;
     private final CommentRepository commentRepository;
 
+
+    /* ======================================= 게시판 ======================================= */
+
     /* 관리자 게시판 목록 */
     /* sort == deleted N, Y */
     @Override
@@ -178,13 +181,12 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     }
 
 
+    /* ======================================= 댓글,대댓글 ======================================= */
+
+
     /* 관리자 댓글, 대댓글 목록 */
     @Override
-    public ResCommentListDto adminCommentList(UserInfo userInfo, Long bd_id, Pageable pageable, int page) {
-
-        //삭제여부가 "N", "M"의 값만 가져오기 위한 변수
-        final String deleted1 = "N";
-        final String deleted2 = "M";
+    public ResCommentListDto adminCommentList(UserInfo userInfo, String type, String sort,Pageable pageable, int page) {
 
         //댓글, 대댓글 구분
         final int commentStep = 0;
@@ -193,62 +195,33 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
-        //해당 bd_id값이 없다면 exception 전달
-        Board board = boardRepository.findById(bd_id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
-
-        //step이 0값 == 댓글 조회
-        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
-        Page<Board_Comment> comments = commentRepository.commentList(bd_id, deleted1, deleted2, commentStep, pageable);
-
-        //Dto에 값을 담아주기 위한 List<Map>
         List<Map<String, Object>> commentList = new ArrayList<>();
 
-        //대댓글 담을 List<map>
-        List<Map<String, Object>> answersList = new ArrayList<>();
+        if(type.equals("댓글")) {
 
-        //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
-        Map<String, Object> commentsMap = new LinkedHashMap<>();
+            pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
+            Page<Board_Comment> checkComments = commentRepository.findByCmStepAndCmDeleted(commentStep, sort, pageable);
 
-        //List 값을 반복문으로 Map에 담아줌
-        comments.forEach(comment -> {
+            checkComments.forEach(entity -> {
 
-            int parentNum = comment.getCmId().intValue();
+                Map<String, Object> commentsMap = new LinkedHashMap<>();
 
-            //DB를 조회할때 forEach로 반복되는 댓글의 id값을 받아서 각 댓글의 대댓글을 조회
-            Pageable answerPage = PageRequest.of(page, 10);
-            Page<Board_Comment> answers = commentRepository.answerList(parentNum, deleted1, answerStep, answerPage);
+                commentsMap.put("cm_id", entity.getCmId());
+                commentsMap.put("cm_content", entity.getCmContent());
+                commentsMap.put("cm_writer", entity.getCmWriter());
+                commentsMap.put("cm_step", entity.getCmStep());
+                commentsMap.put("cm_deleted", entity.getCmDeleted());
+                commentsMap.put("cm_created", entity.getCmCreated());
+                commentsMap.put("cm_modify", entity.getCmModified());
+                commentsMap.put("cm_answerNum", entity.getCmAnswerNum());
+                commentsMap.put("totalElement", checkComments.getTotalElements());
+                commentsMap.put("totalPage", checkComments.getTotalPages());
+                commentList.add(commentsMap);
 
-            answers.forEach(answer -> {
-
-                //대댓글 값 담는 Map
-                Map<String, Object> answersMap = new HashMap<>();
-
-                answersMap.put("cm_id", answer.getCmId());
-                answersMap.put("cm_content", answer.getCmContent());
-                answersMap.put("cm_writer", answer.getCmWriter());
-                answersMap.put("cm_step", answer.getCmStep());
-                answersMap.put("cm_parentNum", answer.getCmParentNum());
-                answersMap.put("cm_deleted", answer.getCmDeleted());
-                answersMap.put("cm_created", answer.getCmCreated());
-                answersMap.put("cm_modify", answer.getCmModified());
-                answersList.add(answersMap);
             });
 
-            commentsMap.put("cm_id", comment.getCmId());
-            commentsMap.put("cm_content", comment.getCmContent());
-            commentsMap.put("cm_writer", comment.getCmWriter());
-            commentsMap.put("cm_step", comment.getCmStep());
-            commentsMap.put("cm_deleted", comment.getCmDeleted());
-            commentsMap.put("cm_created", comment.getCmCreated());
-            commentsMap.put("cm_modify", comment.getCmModified());
-            commentsMap.put("cm_answerNum", comment.getCmAnswerNum());
-            commentsMap.put("totalElement", comments.getTotalElements());
-            commentsMap.put("totalPage", comments.getTotalPages());
-            commentsMap.put("answer", answersList);
-            commentList.add(commentsMap);
-        });
-
+            return new ResCommentListDto(commentList);
+        }
         return new ResCommentListDto(commentList);
     }
 }

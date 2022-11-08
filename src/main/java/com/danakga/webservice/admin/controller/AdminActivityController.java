@@ -72,11 +72,14 @@ public class AdminActivityController {
     /* ======================================= 댓글,대댓글 ======================================= */
 
     /* 관리자 댓글, 대댓글 목록 */
-    @GetMapping("/commentList/{bd_id}")
+    /* type = 댓글, 대댓글
+    *  sort == deleted -> N, Y */
+    @GetMapping("/commentList/{type}/{sort}")
     public ResCommentListDto adminCommentList(@LoginUser UserInfo userInfo,
-                                              @PathVariable("bd_id") Long bd_id,
+                                              @PathVariable("type") String type,
+                                              @PathVariable("sort") String sort,
                                               Pageable pageable, int page) {
 
-        return adminActivityService.adminCommentList(userInfo, bd_id, pageable, page);
+        return adminActivityService.adminCommentList(userInfo, type, sort, pageable, page);
     }
 }
