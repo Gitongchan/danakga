@@ -175,7 +175,12 @@ public class ReviewServiceImpl implements ReviewService {
 
             return new ResResultDto(0L, "후기를 작성할 수 있습니다.");
         }
-        return new ResResultDto(-1L, "이미 후기를 작성 했거나, 구매 확정을 하지 않았습니다.");
+
+        if (reviewRepository.findByOrders(checkOrders).isPresent()){
+            return new ResResultDto(1L, "후기를 수정할 수 있습니다.");
+        }
+
+        return new ResResultDto(-1L, "후기를 찾을 수 없습니다.");
     }
 }
 
