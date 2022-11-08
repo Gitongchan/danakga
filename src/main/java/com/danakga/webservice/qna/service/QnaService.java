@@ -1,6 +1,7 @@
 package com.danakga.webservice.qna.service;
 
 import com.danakga.webservice.qna.dto.request.ReqQnaDto;
+import com.danakga.webservice.qna.dto.response.ResAnswerDto;
 import com.danakga.webservice.qna.dto.response.ResQnaDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
