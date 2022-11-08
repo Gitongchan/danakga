@@ -7,7 +7,9 @@ import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.qna.dto.request.ReqQnaDto;
 import com.danakga.webservice.qna.dto.response.ResQnaDto;
+import com.danakga.webservice.qna.model.Answer;
 import com.danakga.webservice.qna.model.Qna;
+import com.danakga.webservice.qna.repository.AnswerRepository;
 import com.danakga.webservice.qna.service.QnaService;
 import com.danakga.webservice.qna.repository.QnaRepository;
 import com.danakga.webservice.user.model.UserInfo;
@@ -35,6 +37,7 @@ public class QnaServiceImpl implements QnaService {
     private final CompanyRepository companyRepository;
     private final ProductRepository productRepository;
     private final QnaRepository qnaRepository;
+    private final AnswerRepository answerRepository;
 
     /* 문의사항 목록 */
     @Override
@@ -43,6 +46,8 @@ public class QnaServiceImpl implements QnaService {
         final String deleted = "N";
 
         List<Map<String, Object>> qnaList = new ArrayList<>();
+
+        List<Map<String, Object>> answerList = new ArrayList<>();
 
         /* 사이트 문의사항 목록 */
         if(p_id == null) {
@@ -79,20 +84,36 @@ public class QnaServiceImpl implements QnaService {
         pageable = PageRequest.of(page, 10, Sort.by("qnCreated").descending());
         Page<Qna> checkQna = qnaRepository.findByQnDeletedAndProduct(deleted, checkProduct, pageable);
 
-        checkQna.forEach(entity -> {
+        checkQna.forEach(qna -> {
+
+            Pageable answerPageable = PageRequest.of(page, 10);
+            Page<Answer> checkAnswer = answerRepository.findByAnParentNumAndAnDeleted(qna.getQnId().intValue(), deleted, answerPageable);
+
+            checkAnswer.forEach(answer -> {
+
+                Map<String,Object> productAnswerMap = new LinkedHashMap<>();
+
+                productAnswerMap.put("an_id", answer.getAnId());
+                productAnswerMap.put("an_writer", answer.getAnWriter());
+                productAnswerMap.put("an_content", answer.getAnContent());
+                productAnswerMap.put("an_create", answer.getAnCreated());
+                productAnswerMap.put("an_parentNum", answer.getAnParentNum());
+
+                answerList.add(productAnswerMap);
+            });
 
             Map<String,Object> productQnaMap = new LinkedHashMap<>();
 
-            productQnaMap.put("qn_id", entity.getQnId());
-            productQnaMap.put("qn_type", entity.getQnType());
-            productQnaMap.put("qn_userid", entity.getUserInfo().getUserid());
-            productQnaMap.put("qn_title", entity.getQnTitle());
-            productQnaMap.put("qn_created", entity.getQnCreated());
-            productQnaMap.put("qn_state", entity.getQnState());
-            productQnaMap.put("product_name", entity.getProduct().getProductName());
-            productQnaMap.put("company_Info", entity.getCompanyInfo().getCompanyName());
+            productQnaMap.put("qn_id", qna.getQnId());
+            productQnaMap.put("qn_userid", qna.getUserInfo().getUserid());
+            productQnaMap.put("qn_content", qna.getQnContent());
+            productQnaMap.put("qn_created", qna.getQnCreated());
+            productQnaMap.put("qn_state", qna.getQnState());
+            productQnaMap.put("product_name", qna.getProduct().getProductName());
+            productQnaMap.put("company_Info", qna.getCompanyInfo().getCompanyName());
             productQnaMap.put("totalPage", checkQna.getTotalPages());
             productQnaMap.put("totalElement", checkQna.getTotalPages());
+            productQnaMap.put("answer", answerList);
 
             qnaList.add(productQnaMap);
 
@@ -120,7 +141,7 @@ public class QnaServiceImpl implements QnaService {
             companyQnaMap.put("qn_id", entity.getQnId());
             companyQnaMap.put("qn_type", entity.getQnType());
             companyQnaMap.put("qn_userid", entity.getUserInfo().getUserid());
-            companyQnaMap.put("qn_title", entity.getQnTitle());
+            companyQnaMap.put("qn_content", entity.getQnContent());
             companyQnaMap.put("qn_created", entity.getQnCreated());
             companyQnaMap.put("qn_state", entity.getQnState());
             companyQnaMap.put("product_name", entity.getProduct().getProductName());
