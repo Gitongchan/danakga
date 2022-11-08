@@ -371,6 +371,9 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
         /* 댓글 삭제 */
         commentRepository.deleteById(checkComment.getCmId());
+        
+        /* 대댓글 삭제 */
+        commentRepository.deleteByCmParentNum(checkComment.getCmId().intValue());
 
         return new ResResultDto(checkComment.getCmId(),"댓글을 삭제 했습니다.");
     }

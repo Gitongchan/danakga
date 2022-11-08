@@ -146,6 +146,9 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
 
     Page<Board_Comment> findByCmDeletedAndCmStep(String deleted, int step, Pageable pageable);
 
+    @Transactional
+    void deleteByCmParentNum(int parentNum);
+
     //전체 기준 게시판 검색
     @Query(
             value = "Select bc from Board_Comment bc "
