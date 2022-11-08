@@ -107,11 +107,11 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     //일별 판매 수익금 조회
     @Query(
             value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
-                    "function('date_format',o.ordersDate,'%Y-%m-%d'),sum(o.ordersPrice * o.ordersQuantity)) " +
+                    "function('date_format',o.ordersFinishedDate,'%Y-%m-%d'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
-                    "and function('date_format',o.ordersDate,'%Y-%m-%d') BETWEEN :startDate AND :endDate " +
-                    "group by function('date_format',o.ordersDate,'%Y-%m-%d')"
+                    "and function('date_format',o.ordersFinishedDate,'%Y-%m-%d') BETWEEN :startDate AND :endDate " +
+                    "group by function('date_format',o.ordersFinishedDate,'%Y-%m-%d')"
     )
     List<ResRevenueDto> dailySalesList(@Param("companyId")Long companyId,
                                        @Param("startDate")String startDate, @Param("endDate")String endDate);
@@ -121,11 +121,11 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     //주별 판매 수익금 조회
     @Query(
             value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
-                    "function('date_format',o.ordersDate,'%Y-%u'),sum(o.ordersPrice * o.ordersQuantity)) " +
+                    "function('date_format',o.ordersFinishedDate,'%Y%u'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
-                    "and function('date_format',o.ordersDate,'%Y-%u') BETWEEN :startDate AND :endDate " +
-                    "group by function('date_format',o.ordersDate,'%Y-%u')"
+                    "and function('date_format',o.ordersFinishedDate,'%Y-%m-%d') BETWEEN :startDate AND :endDate " +
+                    "group by function('date_format',o.ordersFinishedDate,'%Y%u')"
     )
     List<ResRevenueDto> weeklySalesList(@Param("companyId")Long companyId,
                                         @Param("startDate")String startDate, @Param("endDate")String endDate);
@@ -134,14 +134,14 @@ public interface OrdersRepository extends JpaRepository<Orders,Long>{
     // 월별 판매 수익금 조회
     @Query(
             value = "select new com.danakga.webservice.orders.dto.response.ResRevenueDto(" +
-                    "function('date_format',o.ordersDate,'%Y-%m'),sum(o.ordersPrice * o.ordersQuantity)) " +
+                    "function('date_format',o.ordersFinishedDate,'%Y-%m'),sum(o.ordersPrice * o.ordersQuantity)) " +
                     "from Orders o join o.product p join p.productCompanyId c " +
                     "where c.companyId = :companyId " +
-                    "and function('date_format',o.ordersDate,'%Y-%m') BETWEEN :startDate AND :endDate " +
-                    "group by function('date_format',o.ordersDate,'%Y-%m')"
+                    "and function('date_format',o.ordersFinishedDate,'%Y-%m') BETWEEN :startDate AND :endDate " +
+                    "group by function('date_format',o.ordersFinishedDate,'%Y-%m')"
 
     )
     List<ResRevenueDto> monthlySalesList(@Param("companyId")Long companyId,
-                                @Param("startDate")String startDate, @Param("endDate")String endDate);
+                                         @Param("startDate")String startDate, @Param("endDate")String endDate);
 
 }

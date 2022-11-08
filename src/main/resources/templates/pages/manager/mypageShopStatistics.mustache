@@ -5,6 +5,8 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 {{>pages/header2}}
@@ -25,56 +27,25 @@
 
                 <div class="shopping-cart section">
                     <div class="container">
+                        <h3 class="align-center">기간별 판매금액 통계</h3>
                         <div class="order_date_wrap d-flex justify-content-between mb-1">
                             <div class="order_date">
                                 <input type="text" name="daterange" value="" />
-                                <input type="hidden" value="" id="startDate"/>
-                                <input type="hidden" value="" id="endDate"/>
                                 <button type="button" id="search-date">검색하기</button>
-
-                                <button type="button" id="reset-date">초기화</button>
                             </div>
                             <div>
-                                <select class="form-select" id="order-status" aria-label="select order-status" onchange="changeStatusType()">
-                                    <option value="상품준비중">모든상품</option>
-<!--                                    <option value="배송완료">배송완료</option>-->
-<!--                                    <option value="반품신청">반품신청</option>-->
-<!--                                    <option value="교환신청">교환신청</option>-->
+                                <select class="form-select" aria-label="select order-status" id="sales_select">
+                                    <option value="daily" selected>일별</option>
+                                    <option value="weekly">주별</option>
+                                    <option value="monthly">월별</option>
                                 </select>
                             </div>
                         </div>
                             <!-- Cart List Title -->
                             <div class="cart-list-title">
                                 <div class="row">
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>주문번호</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>회사명</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>브랜드</p>
-                                    </div>
-                                    <div class="col-lg-3 col-md-2 col-12">
-                                        <p>상품명</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-1 col-12">
-                                        <p>수량</p>
-                                    </div>
-                                    <div class="col-lg-2 col-md-1 col-12">
-                                        <p>가격</p>
-                                    </div>
-                                    <div class="col-lg-2 col-md-3 col-12">
-                                        <p>진행상태</p>
-                                    </div>
-                                    <div class="col-lg-1 col-md-2 col-12">
-                                        <p>상세</p>
-                                    </div>
+                                    <canvas id="myChart" width="400" height="100"></canvas>
                                 </div>
-                            </div>
-                            <!-- End Cart List Title -->
-                            <!-- Cart Single List list -->
-                            <div class="cart-single-list" id="orderList">
                             </div>
                             <!-- End Single List -->
                             <div class="text-center">
@@ -127,16 +98,27 @@
 <script>
     $(function() {
         $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "format": "YYYY-MM-DD",
+                "separator": " ~ ",
+                "applyLabel": "확인",
+                "cancelLabel": "취소",
+                "fromLabel": "From",
+                "toLabel": "To",
+                "customRangeLabel": "Custom",
+                "weekLabel": "W",
+                "daysOfWeek": ["일", "월", "화", "수", "목", "금", "토"],
+                "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+            },
             opens: 'left'
         }, function(start, end, label) {
-            document.getElementById('startDate').value = start.format('YYYY-MM-DD')+'T00:00';
-            document.getElementById('endDate').value = end.format('YYYY-MM-DD')+'T00:00';
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
         });
     });
 </script>
 {{>pages/footer1}}
 
-<script src="/js/order/orderList.js"></script>
-<script src="/js/order/orderListPagination.js"></script>
+<script src="/js/company/shopStatistics.js"></script>
 
 {{>pages/footer2}}
