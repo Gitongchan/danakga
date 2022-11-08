@@ -6,6 +6,7 @@ import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
+import com.danakga.webservice.qna.dto.response.ResAnswerDto;
 import com.danakga.webservice.qna.service.AnswerService;
 import com.danakga.webservice.qna.model.Answer;
 import com.danakga.webservice.qna.model.Qna;
@@ -16,9 +17,16 @@ import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +37,36 @@ public class AnswerServiceImpl implements AnswerService {
     private final ProductRepository productRepository;
     private final QnaRepository qnaRepository;
     private final AnswerRepository answerRepository;
+    
+    /* 문의사항 답변 조회 */
+    @Override
+    public ResAnswerDto answerPost(Long qn_id, Pageable pageable, int page) {
 
+        final String deletedN = "N";
+
+        Qna checkQna = qnaRepository.findById(qn_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
+
+        pageable = PageRequest.of(page, 10, Sort.by("anCreated").descending());
+        Page<Answer> checkAnswer = answerRepository.findByQnaAndAnDeleted(checkQna, deletedN, pageable);
+
+        List<Map<String, Object>> answerList = new ArrayList<>();
+
+        checkAnswer.forEach(entity -> {
+
+            Map<String, Object> answerMap = new LinkedHashMap<>();
+
+            answerMap.put("an_id", entity.getAnId());
+            answerMap.put("an_writer", entity.getAnWriter());
+            answerMap.put("an_created", entity.getAnCreated());
+            answerMap.put("an_deleted", entity.getAnDeleted());
+            answerMap.put("an_content", entity.getAnContent());
+
+            answerList.add(answerMap);
+        });
+
+        return new ResAnswerDto(answerList);
+    }
 
     /* ======================== 가게 문의사항 답변 (manager) ======================== */
 
@@ -57,6 +94,7 @@ public class AnswerServiceImpl implements AnswerService {
                     Answer.builder()
                             .anWriter(checkCompanyInfo.getCompanyName())
                             .anContent(reqAnswerDto.getAnswerContent())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );
@@ -96,6 +134,7 @@ public class AnswerServiceImpl implements AnswerService {
                             .anContent(reqAnswerDto.getAnswerContent())
                             .anCreated(checkAnswer.getAnCreated())
                             .anDeleted(checkAnswer.getAnDeleted())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );
@@ -163,6 +202,7 @@ public class AnswerServiceImpl implements AnswerService {
                     Answer.builder()
                             .anWriter(userInfo.getUserid())
                             .anContent(reqAnswerDto.getAnswerContent())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );
@@ -198,6 +238,7 @@ public class AnswerServiceImpl implements AnswerService {
                             .anContent(reqAnswerDto.getAnswerContent())
                             .anCreated(checkAnswer.getAnCreated())
                             .anDeleted(checkAnswer.getAnDeleted())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );

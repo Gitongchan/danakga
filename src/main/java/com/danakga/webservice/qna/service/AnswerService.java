@@ -1,10 +1,15 @@
 package com.danakga.webservice.qna.service;
 
 import com.danakga.webservice.qna.dto.request.ReqAnswerDto;
+import com.danakga.webservice.qna.dto.response.ResAnswerDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
+import org.springframework.data.domain.Pageable;
 
 public interface AnswerService {
+
+    /* 문의사항 답변 조회 */
+    ResAnswerDto answerPost(Long qn_id, Pageable pageable, int page);
     
     /* 가게 문의사항 답변 (manager) */
 

@@ -2,6 +2,8 @@ package com.danakga.webservice.qna.repository;
 
 import com.danakga.webservice.qna.model.Answer;
 import com.danakga.webservice.qna.model.Qna;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,8 +18,14 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     /* 문의사항 답변 조회 */
     Optional<Answer> findByAnIdAndQna(Long an_id, Qna qna);
     
+    /* 문의사항 답변 목록 */
+    Page<Answer> findByAnParentNumAndAnDeleted(int parentNum, String deleted, Pageable pageable);
+    
     /* 문의사항 답변 조회 (삭제 상태로 변경 후 사용) */
     List<Answer> findByAnDeletedAndQna(String deleted, Qna qna);
+
+    /* 문의사항 답변 조회 (웹 출력) */
+    Page<Answer> findByQnaAndAnDeleted(Qna qna, String deleted, Pageable pageable);
 
     /* 가게 문의사항 답변 삭제 상태 변경 */
     @Transactional

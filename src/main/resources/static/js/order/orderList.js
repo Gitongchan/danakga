@@ -69,7 +69,7 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
             const checkData = await checkRes.json();
             console.log(checkData);
             //후기를 작성할 수 있다면 0, 후기를 작성할 수 없다면 -1
-            if(checkData.id === -1 ){
+            if(checkData.id === 0 ){
                 orderList.innerHTML += `
                                 <div class="row align-items-center mb-10">
                                     <div class="col-lg-1 col-md-1 col-12">

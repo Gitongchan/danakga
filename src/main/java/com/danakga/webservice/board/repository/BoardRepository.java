@@ -96,4 +96,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                                @Param("bdType") String boardType,
                                @Param("bdDeleted") String bdDeleted,
                                Pageable pageable);
+
+    /* ================ 관리자(admin) ================ */
+    Page<Board> findByBdDeleted(String sort, Pageable pageable);
+
 }

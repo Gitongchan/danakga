@@ -29,6 +29,9 @@ public class Answer {
     @Column(name = "an_deleted")
     private String anDeleted;
 
+    @Column(name = "an_parentnum")
+    private int anParentNum;
+
     @CreationTimestamp
     private LocalDateTime anCreated;
 
@@ -43,12 +46,13 @@ public class Answer {
 
     @Builder
     public Answer(Long anId, String anContent, String anDeleted, LocalDateTime anCreated,
-                  String anWriter, Qna qna) {
+                  String anWriter, int anParentNum, Qna qna) {
         this.anId = anId;
         this.anContent = anContent;
         this.anDeleted = anDeleted;
         this.anCreated = anCreated;
         this.anWriter = anWriter;
+        this.anParentNum = anParentNum;
         this.qna = qna;
     }
 }
