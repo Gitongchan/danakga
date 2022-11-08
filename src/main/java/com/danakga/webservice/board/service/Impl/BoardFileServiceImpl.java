@@ -2,7 +2,7 @@ package com.danakga.webservice.board.service.Impl;
 
 import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.board.model.Board_Files;
-import com.danakga.webservice.board.repository.FileRepository;
+import com.danakga.webservice.board.repository.BoardFileRepository;
 import com.danakga.webservice.board.service.BoardFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BoardFileServiceImpl implements BoardFileService {
 
-     private final FileRepository fileRepository;
+     private final BoardFileRepository fileRepository;
 
      //파일 저장
     @Override
