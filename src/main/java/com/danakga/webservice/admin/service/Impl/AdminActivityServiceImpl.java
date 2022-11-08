@@ -359,11 +359,43 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     /* 관리자 댓글, 대댓글 삭제 */
     @Override
     public ResResultDto adminCommentDelete(UserInfo userInfo, Long bd_id, Long cm_id) {
-        return new ResResultDto(0L,"댓글을 삭제 했습니다.");
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        Board checkBoard = boardRepository.findById(bd_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
+
+        Board_Comment checkComment = commentRepository.findById(cm_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
+
+        /* 댓글 삭제 */
+        commentRepository.deleteById(checkComment.getCmId());
+
+        return new ResResultDto(checkComment.getCmId(),"댓글을 삭제 했습니다.");
     }
 
     @Override
     public ResResultDto adminCommentAnswerDelete(UserInfo userInfo, Long bd_id, Long cm_id, Long an_id) {
-        return new ResResultDto(0L,"대댓글을 삭제 했습니다.");
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        Board checkBoard = boardRepository.findById(bd_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
+
+        Board_Comment checkComment = commentRepository.findById(cm_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("댓글을 찾을 수 없습니다."));
+
+        Board_Comment checkAnswer = commentRepository.findByCmParentNumAndCmId(cm_id.intValue(), an_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("대댓글을 찾을 수 없습니다."));
+
+        /* 대댓 삭제 */
+        commentRepository.deleteById(checkAnswer.getCmId());
+
+        //댓글의 대댓글 갯수 -1
+        commentRepository.deleteAnswerNum(cm_id);
+
+        return new ResResultDto(checkAnswer.getCmId(),"대댓글을 삭제 했습니다.");
     }
 }
