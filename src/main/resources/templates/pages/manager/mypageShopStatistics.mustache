@@ -27,21 +27,17 @@
 
                 <div class="shopping-cart section">
                     <div class="container">
+                        <h3 class="align-center">기간별 판매금액 통계</h3>
                         <div class="order_date_wrap d-flex justify-content-between mb-1">
                             <div class="order_date">
                                 <input type="text" name="daterange" value="" />
-                                <input type="hidden" value="" id="startDate"/>
-                                <input type="hidden" value="" id="endDate"/>
                                 <button type="button" id="search-date">검색하기</button>
-
-                                <button type="button" id="reset-date">초기화</button>
                             </div>
                             <div>
-                                <select class="form-select" aria-label="select order-status">
-                                    <option value="daily">일</option>
-                                    <option value="week">주</option>
-                                    <option value="month">월</option>
-                                    <option value="year">년</option>
+                                <select class="form-select" aria-label="select order-status" id="sales_select">
+                                    <option value="daily" selected>일별</option>
+                                    <option value="weekly">주별</option>
+                                    <option value="monthly">월별</option>
                                 </select>
                             </div>
                         </div>
@@ -102,10 +98,22 @@
 <script>
     $(function() {
         $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "format": "YYYY-MM-DD",
+                "separator": " ~ ",
+                "applyLabel": "확인",
+                "cancelLabel": "취소",
+                "fromLabel": "From",
+                "toLabel": "To",
+                "customRangeLabel": "Custom",
+                "weekLabel": "W",
+                "daysOfWeek": ["일", "월", "화", "수", "목", "금", "토"],
+                "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+            },
             opens: 'left'
         }, function(start, end, label) {
-            document.getElementById('startDate').value = start.format('YYYY-MM-DD')+'T00:00';
-            document.getElementById('endDate').value = end.format('YYYY-MM-DD')+'T00:00';
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
         });
     });
 </script>

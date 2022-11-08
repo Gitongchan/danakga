@@ -1,28 +1,27 @@
+const $searchBtn = document.querySelector('#search-date');
+const sales_select = document.querySelector('#sales_select');
+
+const labels = [];
+const salesData = [];
+
+// 날짜
+let today = new Date();
+
+let startDate = today.toISOString().substring(0,10);
+let endDate = today.toISOString().substring(0,10);
 const ctx = document.getElementById('myChart').getContext('2d');
-const myChart = new Chart(ctx, {
+var myChart;
+
+myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: labels,
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: '날짜별 판매금액',
+            data: salesData,
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
+                '#2b68ff'
+            ]
         }]
     },
     options: {
@@ -33,3 +32,56 @@ const myChart = new Chart(ctx, {
         }
     }
 });
+
+function setChart(){
+    myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '날짜별 판매금액',
+                data: salesData,
+                backgroundColor: [
+                    '#2b68ff'
+                ]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function destoryChart(){
+    myChart.destroy();
+}
+
+
+
+$searchBtn.addEventListener('click', () => {
+    getSales(startDate, endDate, sales_select.value);
+})
+
+async function getSales(startDate, endDate, sort){
+    destoryChart();
+    labels.length = 0;
+    salesData.length = 0;
+
+    console.log(startDate,endDate,sort)
+    const res = await fetch(`/api/manager/sales/statistics/revenue?startTime=${startDate}&endTime=${endDate}&stateByPeriod=${sort}`);
+    const data = await res.json();
+
+    console.log(data);
+
+    for(const item of data){
+        labels.push(item.date);
+        salesData.push(item.price);
+    }
+    setChart();
+}
+
+getSales(startDate, endDate, sales_select.value);
