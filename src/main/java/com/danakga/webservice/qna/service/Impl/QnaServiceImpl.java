@@ -195,8 +195,6 @@ public class QnaServiceImpl implements QnaService {
         Qna qna = qnaRepository.save(
                 Qna.builder()
                         .qnSort(reqQnaDto.getQnaSort())
-                        .qnType(reqQnaDto.getQnaType())
-                        .qnTitle(reqQnaDto.getQnaContent())
                         .qnWriter(userInfo.getUserid())
                         .qnContent(reqQnaDto.getQnaContent())
                         .userInfo(checkUserInfo)
