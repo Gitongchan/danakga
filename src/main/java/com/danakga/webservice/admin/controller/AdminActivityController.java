@@ -4,6 +4,7 @@ import com.danakga.webservice.admin.service.AdminActivityService;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
+import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminActivityController {
 
     private final AdminActivityService adminActivityService;
+
+    /* ======================================= 게시판 ======================================= */
 
     /* 관리자 게시판 목록 */
     /* sort == deleted N, Y */
@@ -63,5 +66,17 @@ public class AdminActivityController {
                                             @PathVariable("bd_id") Long bd_id) {
 
         return adminActivityService.adminPostDelete(userInfo, bd_id);
+    }
+
+
+    /* ======================================= 댓글,대댓글 ======================================= */
+
+    /* 관리자 댓글, 대댓글 목록 */
+    @GetMapping("/commentList/{bd_id}")
+    public ResCommentListDto adminCommentList(@LoginUser UserInfo userInfo,
+                                              @PathVariable("bd_id") Long bd_id,
+                                              Pageable pageable, int page) {
+
+        return adminActivityService.adminCommentList(userInfo, bd_id, pageable, page);
     }
 }
