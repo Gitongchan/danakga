@@ -36,14 +36,6 @@ public class AdminActivityController {
         return adminActivityService.adminBoardListDto(userInfo, sort, type, pageable, page);
     }
     
-    /* 관리자 게시글 조회 */
-    @GetMapping("/boardPost/{bd_id}")
-    public ResBoardPostDto adminBoardPost(@LoginUser UserInfo userInfo,
-                                          @PathVariable("bd_id") Long bd_id) {
-
-        return adminActivityService.adminBoardPost(userInfo, bd_id);
-    }
-    
     /* 관리자 게시판 검색 */
     /* category = 전체, 제목, 내용, 작성자 
     *  sort = N, Y
@@ -167,7 +159,7 @@ public class AdminActivityController {
 
     /* ======================================= 후기 ======================================= */
 
-    /* 후기 목록 조회
+    /* 관리자 후기 목록 조회
     *  sort = N, Y
     * */
     @GetMapping("/reviewList/{sort}")
@@ -176,6 +168,17 @@ public class AdminActivityController {
                                             @PathVariable("sort") String sort) {
 
         return adminActivityService.adminReviewList(userInfo, pageable, page, sort);
+    }
+
+    /* 관리자 후기 검색 */
+    @GetMapping("/reviewSearch/{category}/{sort}/{content}")
+    public ResReviewListDto adminReviewSearch(@LoginUser UserInfo userInfo,
+                                              Pageable pageable, int page,
+                                              @PathVariable("category") String category,
+                                              @PathVariable("sort") String sort,
+                                              @PathVariable("content") String content) {
+
+        return adminActivityService.adminReviewSearch(userInfo, pageable, page, category, sort, content);
     }
 
 }

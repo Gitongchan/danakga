@@ -19,9 +19,6 @@ public interface AdminActivityService {
     
     /* 관리자 게시판 목록 */
     ResBoardListDto adminBoardListDto(UserInfo userInfo, String sort, String type, Pageable pageable, int page);
-    
-    /* 관리자 게시판 조회 */
-    ResBoardPostDto adminBoardPost(UserInfo userInfo, Long bd_id);
 
     /* 관리자 게시판 검색 */
     ResBoardListDto adminBoardSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String type, String content);
@@ -59,7 +56,9 @@ public interface AdminActivityService {
 
     /* 후기 */
 
-    /* 후기 목록 조회 */
+    /* 관리자 후기 목록 조회 */
     ResReviewListDto adminReviewList(UserInfo userInfo, Pageable pageable, int page, String sort);
 
+    /* 관리자 후기 검색 */
+    ResReviewListDto adminReviewSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String content);
 }

@@ -81,48 +81,6 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
         return new ResBoardListDto(adminBoardList);
     }
-
-    /* 관리자 게시글 조회 */
-    @Override
-    public ResBoardPostDto adminBoardPost(UserInfo userInfo, Long bd_id) {
-
-        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
-
-        Board checkBoard = boardRepository.findById(bd_id)
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("게시글을 찾을 수 없습니다."));
-
-        List<Board_Files> checkFiles = boardFileRepository.findByBoard(checkBoard);
-
-        List<Map<String, Object>> postList = new ArrayList<>();
-
-        List<Map<String, Object>> fileList = new ArrayList<>();
-
-        checkFiles.forEach(entity -> {
-            Map<String, Object> filesMap = new HashMap<>();
-            filesMap.put("file_name", entity.getFileSaveName());
-            filesMap.put("file_path", entity.getFilePath());
-            fileList.add(filesMap);
-        });
-
-        //게시글 정보 담을 Map
-        Map<String, Object> postMap = new LinkedHashMap<>();
-
-        postMap.put("bd_id", checkBoard.getBdId());
-        postMap.put("bd_type", checkBoard.getBdType());
-        postMap.put("bd_writer", checkBoard.getBdWriter());
-        postMap.put("bd_title", checkBoard.getBdTitle());
-        postMap.put("bd_content", checkBoard.getBdContent());
-        postMap.put("bd_created", checkBoard.getBdCreated());
-        postMap.put("bd_modified", checkBoard.getBdModified());
-        postMap.put("bd_views", checkBoard.getBdViews());
-        postMap.put("bd_deleted", checkBoard.getBdDeleted());
-        postMap.put("files", fileList);
-
-        postList.add(postMap);
-
-        return new ResBoardPostDto(postList);
-    }
     
     /* 관리자 게시판 검색 */
     @Override
@@ -316,6 +274,8 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                     searchCommentMap.put("cm_created", entity.getCmCreated());
                     searchCommentMap.put("cm_modify", entity.getCmModified());
                     searchCommentMap.put("cm_answerNum", entity.getCmAnswerNum());
+                    searchCommentMap.put("cm_parentNum", entity.getCmParentNum());
+                    searchCommentMap.put("board_id", entity.getBoard().getBdId());
                     searchCommentMap.put("totalElement", totalElements);
                     searchCommentMap.put("totalPage", totalPages);
                     
@@ -361,6 +321,8 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                     searchCommentMap.put("cm_created", entity.getCmCreated());
                     searchCommentMap.put("cm_modify", entity.getCmModified());
                     searchCommentMap.put("cm_answerNum", entity.getCmAnswerNum());
+                    searchCommentMap.put("cm_parentNum", entity.getCmParentNum());
+                    searchCommentMap.put("board_id", entity.getBoard().getBdId());
                     searchCommentMap.put("totalElement", totalElements);
                     searchCommentMap.put("totalPage", totalPages);
 
@@ -387,9 +349,6 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
         /* 댓글 삭제 */
         commentRepository.deleteById(checkComment.getCmId());
-        
-        /* 대댓글 삭제 */
-        commentRepository.deleteByCmParentNum(checkComment.getCmId().intValue());
 
         return new ResResultDto(checkComment.getCmId(),"댓글을 삭제 했습니다.");
     }
@@ -463,7 +422,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
             adminProductMap.put("company_id", product.getProductCompanyId().getCompanyId());
             adminProductMap.put("company_name", product.getProductCompanyId().getCompanyName());
             adminProductMap.put("totalPage", checkProductList.getTotalPages());
-            adminProductMap.put("totlaElement", checkProductList.getTotalElements());
+            adminProductMap.put("totalElement", checkProductList.getTotalElements());
 
             adminProductList.add(adminProductMap);
 
@@ -534,7 +493,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                 adminProductMap.put("company_id", product.getProductCompanyId().getCompanyId());
                 adminProductMap.put("company_name", product.getProductCompanyId().getCompanyName());
                 adminProductMap.put("totalPages", totalPages);
-                adminProductMap.put("totlaElements", totalElements);
+                adminProductMap.put("totalElements", totalElements);
 
                 adminProductList.add(adminProductMap);
             });
@@ -564,7 +523,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     
     /* ======================================= 후기 ======================================= */
 
-    /* 후기 목록 조회 */
+    /* 관리자 후기 목록 조회 */
     @Override
     public ResReviewListDto adminReviewList(UserInfo userInfo, Pageable pageable, int page, String sort) {
 
@@ -594,6 +553,60 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
             adminReviewList.add(adminReviewMap);
         });
+
+        return new ResReviewListDto(adminReviewList);
+    }
+    
+    /* 관리자 후기 검색 */
+
+    @Override
+    public ResReviewListDto adminReviewSearch(UserInfo userInfo, Pageable pageable, int page,
+                                              String category, String sort, String content) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        pageable = PageRequest.of(page, 10, Sort.by("reCreated").descending());
+        Page<Review> checkReviewList;
+
+        switch (category) {
+            case "내용" :
+                checkReviewList = reviewRepository.SearchReviewContent(content, sort, pageable);
+                break;
+            case "상품" :
+                checkReviewList = reviewRepository.SearchProductName(content, sort, pageable);
+                break;
+            case "작성자" :
+                checkReviewList = reviewRepository.SearchReviewWriter(content, sort, pageable);
+                break;
+            default :
+                checkReviewList = null;
+                break;
+        }
+
+        List<Map<String, Object>> adminReviewList = new ArrayList<>();
+
+        if(checkReviewList != null) {
+
+            checkReviewList.forEach(review -> {
+
+                Map<String, Object> adminReviewMap = new LinkedHashMap<>();
+
+                adminReviewMap.put("re_id", review.getReId());
+                adminReviewMap.put("re_content", review.getReContent());
+                adminReviewMap.put("re_created", review.getReCreated());
+                adminReviewMap.put("re_score", review.getReScore());
+                adminReviewMap.put("re_writer", review.getReWriter());
+                adminReviewMap.put("product_id", review.getProduct().getProductId());
+                adminReviewMap.put("product_name", review.getProduct().getProductName());
+                adminReviewMap.put("company_id", review.getProduct().getProductCompanyId().getCompanyId());
+                adminReviewMap.put("company_name", review.getProduct().getProductCompanyId().getCompanyName());
+                adminReviewMap.put("totalPages", checkReviewList.getTotalPages());
+                adminReviewMap.put("totalElements", checkReviewList.getTotalElements());
+
+                adminReviewList.add(adminReviewMap);
+            });
+        }
 
         return new ResReviewListDto(adminReviewList);
     }
