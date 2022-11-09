@@ -138,7 +138,7 @@ public class PageController {
         return "pages/user/mypageUserWishList";
     }
 
-    @GetMapping("/mypage/cart")
+    @GetMapping("/user/cart")
     public String myPageCart() {
         return "pages/user/mypageUserCart";
     }
