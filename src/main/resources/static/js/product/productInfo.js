@@ -511,7 +511,7 @@ const status = getParameterByName('status');
                                                 </button>
                                             </div>
                                         </div>
-                                        <p>${item.qn_content}</p>
+                                        <p id="qna">${item.qn_content}</p>
                                     </div>
                                 </div>
 
@@ -543,7 +543,41 @@ const status = getParameterByName('status');
             button.addEventListener('click', (event) => {
                 const id = event.target.dataset.id;
                 console.log(id);
+                document.querySelector('#qna').innerHTML = `<div class="form-group col-sm-12">
+                    <textarea class="form-control" id="comment-val${id}"></textarea>
+                </div>
+                <div class="align-right mt-10">
+                    <span class="button">
+                        <button class="btn completeEdit${id}">수정하기</button>
+                    </span>
+                    <span class="button">
+                        <button class="btn completeCancel${id}">취소</button>
+                    </span>
+                </div>`
+
+                document.querySelector(`.btn.completeEdit${id}`).addEventListener('click',async (event)=>{
+                    //댓글 수정 버튼 클릭 시
+                    const res = await fetch(`/api/user/qna/product_edit/${productId}/${id}`,{
+                        method:'PUT',
+                        headers: {
+                            'header': header,
+                            "Content-Type": "application/json",
+                            'X-CSRF-Token': token
+                        },
+                        body: JSON.stringify({qnaType:'',qnaTitle:'', qnaContent:document.getElementById(`comment-val${id}`).value})
+                    });
+                    const data = await res.json();
+
+                    if(res.status === 200){
+                        alert(data.message);
+                        await qnaList(0);
+                    }
+                })
+                document.querySelector(`.btn.completeCancel${id}`).addEventListener('click',async (event)=>{
+                    qnaList(0);
+                })
             })
+
         }
 
         const deleteEditBtn = document.querySelectorAll('.product-qna-delete');
@@ -567,4 +601,6 @@ const status = getParameterByName('status');
                 }
             })
         }
+
+
     }
