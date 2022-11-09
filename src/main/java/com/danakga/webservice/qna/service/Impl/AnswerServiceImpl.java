@@ -130,7 +130,7 @@ public class AnswerServiceImpl implements AnswerService {
             checkAnswer = answerRepository.save(
                     Answer.builder()
                             .anId(checkAnswer.getAnId())
-                            .anWriter(checkUserInfo.getUserid())
+                            .anWriter(checkCompanyInfo.getCompanyName())
                             .anContent(reqAnswerDto.getAnswerContent())
                             .anCreated(checkAnswer.getAnCreated())
                             .anDeleted(checkAnswer.getAnDeleted())
