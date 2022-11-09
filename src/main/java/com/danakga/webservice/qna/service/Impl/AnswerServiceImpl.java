@@ -39,7 +39,6 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository answerRepository;
     
     /* 문의사항 답변 조회 */
-
     @Override
     public ResAnswerDto answerPost(Long qn_id, Pageable pageable, int page) {
 
@@ -68,6 +67,7 @@ public class AnswerServiceImpl implements AnswerService {
 
         return new ResAnswerDto(answerList);
     }
+
     /* ======================== 가게 문의사항 답변 (manager) ======================== */
 
     /* 가게 문의사항 답변 작성 */
@@ -94,6 +94,7 @@ public class AnswerServiceImpl implements AnswerService {
                     Answer.builder()
                             .anWriter(checkCompanyInfo.getCompanyName())
                             .anContent(reqAnswerDto.getAnswerContent())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );
@@ -133,6 +134,7 @@ public class AnswerServiceImpl implements AnswerService {
                             .anContent(reqAnswerDto.getAnswerContent())
                             .anCreated(checkAnswer.getAnCreated())
                             .anDeleted(checkAnswer.getAnDeleted())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );
@@ -200,6 +202,7 @@ public class AnswerServiceImpl implements AnswerService {
                     Answer.builder()
                             .anWriter(userInfo.getUserid())
                             .anContent(reqAnswerDto.getAnswerContent())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );
@@ -235,6 +238,7 @@ public class AnswerServiceImpl implements AnswerService {
                             .anContent(reqAnswerDto.getAnswerContent())
                             .anCreated(checkAnswer.getAnCreated())
                             .anDeleted(checkAnswer.getAnDeleted())
+                            .anParentNum(checkQna.getQnId().intValue())
                             .qna(checkQna)
                             .build()
             );

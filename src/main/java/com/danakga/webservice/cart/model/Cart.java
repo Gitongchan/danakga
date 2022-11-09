@@ -3,6 +3,8 @@ package com.danakga.webservice.cart.model;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.user.model.UserInfo;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,10 +19,12 @@ public class Cart {
     private Long cartId;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "pd_id")
     private Product productId;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
