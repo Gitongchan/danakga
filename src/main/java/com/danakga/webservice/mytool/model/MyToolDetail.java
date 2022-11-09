@@ -23,6 +23,7 @@ public class MyToolDetail {
 
     //상품정보
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "product_info")
     private Product product;
 

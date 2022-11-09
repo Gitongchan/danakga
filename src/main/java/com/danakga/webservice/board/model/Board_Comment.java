@@ -58,11 +58,13 @@ public class Board_Comment {
     private LocalDateTime cmModified;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "bd_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
