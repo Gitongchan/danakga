@@ -1,5 +1,6 @@
 package com.danakga.webservice.review.repository;
 
+import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.orders.model.Orders;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.review.model.Review;
@@ -30,4 +31,38 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("update Review re set re.reDeleted = 'Y' where re.reId = :reId")
     void updateReDeleted(@Param("reId") Long re_id);
 
+    /* ====================== 관리자(admin) ====================== */
+
+    /* 삭제여부로 전체 조회 */
+    Page<Review> findByReDeleted(Pageable pageable, String sort);
+
+    /* 내용으로 검색 */
+    @Query(
+            value = "select r "
+                    + "from Review r "
+                    + "where r.reContent Like %:content% and r.reDeleted = :deleted"
+    )
+    Page<Review> SearchReviewContent(@Param("content") String content,
+                                     @Param("deleted") String sort,
+                                     Pageable pageable);
+
+    /* 상품명으로 검색 */
+    @Query(
+            value = "select r "
+                    + "from Review r "
+                    + "where r.product.productName Like %:content% and r.reDeleted = :deleted"
+    )
+    Page<Review> SearchProductName(@Param("content") String content,
+                                   @Param("deleted") String sort,
+                                   Pageable pageable);
+
+    /* 작성자로 검색 */
+    @Query(
+            value = "select r "
+                    + "from Review r "
+                    + "where r.reWriter Like %:content% and r.reDeleted = :deleted"
+    )
+    Page<Review> SearchReviewWriter(@Param("content") String content,
+                                    @Param("deleted") String sort,
+                                   Pageable pageable);
 }
