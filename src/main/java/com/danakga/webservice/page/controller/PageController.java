@@ -255,7 +255,43 @@ public class PageController {
         return "admin/index";
     }
 
+    @GetMapping("/admin/user")
+    public String adminUser() {
+        return "admin/user-list";
+    }
 
+    @GetMapping("/admin/company")
+    public String adminCompany() {
+        return "admin/company-list";
+    }
+
+    @GetMapping("/admin/product")
+    public String adminProduct() { return "admin/product-list"; }
+
+    @GetMapping("/admin/basic-board")
+    public String adminBasicBoard() {
+        return "admin/basic-board-list";
+    }
+
+    @GetMapping("/admin/info-board")
+    public String adminInfoBoard() {
+        return "admin/info-board-list";
+    }
+
+    @GetMapping("/admin/comment")
+    public String adminComment() {
+        return "admin/comment-list";
+    }
+
+    @GetMapping("/admin/reply")
+    public String adminReply() {
+        return "admin/reply-list";
+    }
+
+    @GetMapping("/admin/review")
+    public String adminReview() {
+        return "admin/review-list";
+    }
     //잡
 
 
