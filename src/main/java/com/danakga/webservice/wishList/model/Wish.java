@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,10 +23,12 @@ public class Wish {
 
 
         @ManyToOne
+        @OnDelete(action = OnDeleteAction.CASCADE)
         @JoinColumn(name = "pd_id")
         private Product productId;
 
         @ManyToOne
+        @OnDelete(action = OnDeleteAction.CASCADE)
         @JoinColumn(name = "u_id")
         private UserInfo userInfo;
 

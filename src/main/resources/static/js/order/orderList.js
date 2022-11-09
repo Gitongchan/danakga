@@ -68,8 +68,8 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
             const checkRes = await fetch(`/api/user/review/check/${data[i].ordersId}`);
             const checkData = await checkRes.json();
             console.log(checkData);
-            //후기를 작성할 수 있다면 0, 후기를 작성할 수 없다면 -1
-            if(checkData.id === 0 ){
+            //후기를 작성할 수 있다면 0, 후기를 수정할 수 있다면 1, 후기가 없다면 -1
+            if(checkData.id !== 1 ){
                 orderList.innerHTML += `
                                 <div class="row align-items-center mb-10">
                                     <div class="col-lg-1 col-md-1 col-12">
@@ -142,6 +142,7 @@ async function myOrdersList(startDate = '2022-05-01T00:00', endDate = '2322-06-1
 
             `
             }
+
             if (data[i].orderStatus === "상품준비중") {
                 document.querySelector(`.status_wrap${data[i].ordersId}`).innerHTML+= `
                 <button class="order_cancel" data-id="${data[i].ordersId}">주문취소</button>

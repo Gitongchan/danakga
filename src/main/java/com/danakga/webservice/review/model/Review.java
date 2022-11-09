@@ -45,11 +45,13 @@ public class Review {
 
     //회원 정보
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "u_id")
     private UserInfo userInfo;
 
     //주문 내역
     @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "o_id")
     private Orders orders;
 

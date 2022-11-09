@@ -21,4 +21,18 @@ public interface AdminService {
     ResUserInfoDetailDto findUserInfoDetail(UserInfo userInfo,String userId);
 
     ResManagerInfoDetailDto findManagerInfoDetail(UserInfo userInfo, String userId);
+
+    //사용자 정지
+    Long stopUsing(UserInfo userInfo,String userId);
+
+    //사업자 정지
+    Long stopUsingManager(UserInfo userInfo,String companyName);
+
+    //사용자 삭제
+    Long deleteMember(UserInfo userInfo,String userId);
+
+    //사업자 정보 삭제
+    Long deleteManager(UserInfo userInfo,String companyName);
+    
+    
 }
