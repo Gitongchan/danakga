@@ -369,7 +369,7 @@ const status = getParameterByName('status');
                                                 data-bs-target="#exampleModal" data-value="${data.reviewList[i].re_id}">
                                                      <i class="lni lni-comments-reply"></i>수정하기
                                                 </button>
-                                                <button class="review-delete" data-value="${data.reviewList[i].re_id}">
+                                                <button class="btn review-delete" data-value="${data.reviewList[i].re_id}">
                                                     <i class="lni lni-close"></i>삭제하기
                                                 </button>
                                             </div>
@@ -461,9 +461,29 @@ const status = getParameterByName('status');
     })
 
     //qna작성버튼 클릭 시
-    $qnaComment.addEventListener('click', (event) =>{
+    $qnaComment.addEventListener('click', async (event) =>{
+        const content = document.querySelector('#qna-text');
         event.preventDefault();
+        const res = await fetch(`/api/user/qna/product_write/${urlID}`,{
+            method: 'POST',
+            headers: {
+                'header': header,
+                'X-CSRF-Token': token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                qnaType:'',
+                qnaTitle:'',
+                qnaContent: content.value,
+                qnaSort: 1
+            })
+        })
 
+        if(!res.ok){
+            alert("문의사항 작성에 실패했습니다!")
+        }
+        content.value = '';
+        qnaList(0);
     })
 
     async function qnaList(page){
@@ -475,5 +495,53 @@ const status = getParameterByName('status');
             return null;
         }
 
-        console.log(data);
+        for (const item of data.qnaList) {
+            if(item.qn_userid === checkName.value){
+                reviewWrap.innerHTML+= `
+                                <div class="single-review">
+                                    <div class="review-info">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4>${item.qn_userid}
+                                                  <span>${item.qn_created.split('.')[0]}</span>
+                                                </h4>
+                                            </div>
+                                             <div>
+                                                <button type="button" class="btn review-edit-btn" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal" data-value="${item.qn_id}">
+                                                     <i class="lni lni-comments-reply"></i>수정하기
+                                                </button>
+                                                <button class="btn review-delete" data-value="${item.qn_id}">
+                                                    <i class="lni lni-close"></i>삭제하기
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p>${item.qn_content}</p>
+                                    </div>
+                                </div>
+                `;
+            }else{
+                reviewWrap.innerHTML+= `
+                                <div class="single-review">
+                                    <div class="review-info">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4>${item.qn_userid}
+                                                  <span>${item.qn_created.split('.')[0]}</span>
+                                                </h4>
+                                            </div>
+                                                 <div>
+                                                <button type="button" class="btn review-edit-btn" ata-value="${item.qn_id}">
+                                                     <i class="lni lni-comments-reply"></i>답글달기
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p>${item.qn_content}</p>
+                                    </div>
+                                </div>
+                `;
+            }
+
+        }
+        console.log('상품qna',data);
     }
