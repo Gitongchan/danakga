@@ -136,5 +136,20 @@ public class AdminActivityController {
 
         return adminActivityService.adminProductList(userInfo, pageable, page);
     }
+    
+    /* 관리자 상품 검색
+    *  category = 가게, 상품, 브랜드
+    *  content = 검색어
+    * */
+    @GetMapping("/productSearch/{category}/{content}")
+    public List<ResProductListDto> adminProductSearch(@LoginUser UserInfo userInfo,
+                                                      Pageable pageable, int page,
+                                                      @PathVariable("category") String category,
+                                                      @PathVariable("content") String content) {
+
+        return adminActivityService.adminProductSearch(userInfo, pageable, page, category, content);
+    }
+
+
 
 }

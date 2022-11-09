@@ -1,5 +1,6 @@
 package com.danakga.webservice.product.repository;
 
+import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.product.model.Product;
 import org.springframework.data.domain.Page;
@@ -83,7 +84,18 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     /* 관리자 상품 목록 (진모) */
     
-    /* 상품 전체 검색 */
-    Page<Product> findAll(Pageable pageable);
+    /* 상품 전체 조회 */
+    Page<Product> findAllBy(Pageable pageable);
+    
+    /* 상품 검색 */
+    @Query(
+            value = "Select p from Product p join CompanyInfo c "
+                    + "where (c.companyName Like %:content% "
+                    + "and p.productBrand Like %:content% "
+                    + "and p.productName Like %:content%) "
+                    + "and c.companyEnabled = true"
+    )
+    Page<Product> adminProductSearch(@Param("content") String content,
+                                     Pageable pageable);
 
 }

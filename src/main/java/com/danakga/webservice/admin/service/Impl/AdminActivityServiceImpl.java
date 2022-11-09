@@ -122,6 +122,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> checkBoard;
 
         List<Map<String, Object>> adminSearchList = new ArrayList<>();
@@ -225,6 +226,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         }
         
         if(type.equals("대댓글")) {
+
             pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
             Page<Board_Comment> checkComments = commentRepository.findByCmStepAndCmDeleted(answerStep, sort, pageable);
 
@@ -257,6 +259,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
+        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> checkComments;
 
         List<Map<String, Object>> searchCommentList = new ArrayList<>();
@@ -455,6 +458,68 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
         });
 
+        return adminProductList;
+    }
+    
+    /* 관리자 상품 검색 */
+    @Override
+    public List<ResProductListDto> adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        List<ResProductListDto> adminProductList = new ArrayList<>();
+        
+        if(category.equals("가게") || category.equals("상품") || category.equals("브랜드")) {
+
+            pageable = PageRequest.of(page, 10, Sort.by("productUploadDate").descending());
+            Page<Product> productSearch = productRepository.adminProductSearch(content, pageable);
+
+            productSearch.forEach(product -> {
+
+                /* 상품 아이디 값 하나씩 순회 하면서 평점 출력 */
+                Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId()).orElseThrow(
+                        ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+                ) ;
+
+                double productRating; // 상품 평점
+                if(productRepository.selectProductRating(checkProduct) == null){
+                    productRating = 0;
+                }else{
+                    productRating = Math.round(productRepository.selectProductRating(checkProduct)*10)/10.0;
+                }
+
+                ResProductListDto listDto = new ResProductListDto();
+
+                listDto.setProductId(product.getProductId());
+                listDto.setProductBrand(product.getProductBrand());
+                listDto.setProductType(product.getProductType());
+                listDto.setProductSubType(product.getProductSubType());
+                listDto.setProductName(product.getProductName());
+                listDto.setProductPhoto(product.getProductPhoto());
+                listDto.setProductPrice(product.getProductPrice());
+                listDto.setProductStock(product.getProductStock());
+                listDto.setProductViewCount(product.getProductViewCount());
+                listDto.setProductOrderCount(product.getProductOrderCount());
+                listDto.setProductUploadDate(product.getProductUploadDate());
+                listDto.setProductRating(productRating);
+                listDto.setTotalPage(productSearch.getTotalPages());
+                listDto.setTotalElement(productSearch.getTotalElements());
+
+                adminProductList.add(listDto);
+            });
+        }
+
+//        switch (category) {
+//            case "가게" :
+//            case "상품" :
+//            case "브랜드" :
+//                checkProducts = productRepository.adminProductSearch(content, pageable);
+//                break;
+//            default :
+//                checkProducts = null;
+//                break;
+//        }
         return adminProductList;
     }
 }

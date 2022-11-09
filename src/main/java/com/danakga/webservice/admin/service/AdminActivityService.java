@@ -7,6 +7,7 @@ import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -46,5 +47,8 @@ public interface AdminActivityService {
 
     /* 관리자 상품 목록 */
     List<ResProductListDto> adminProductList(UserInfo userInfo, Pageable pageable, int page);
+    
+    /* 관리자 상품 검색 */
+    List<ResProductListDto> adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content);
 
 }
