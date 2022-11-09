@@ -5,11 +5,14 @@ import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
+import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping(value="/admin")
@@ -121,4 +124,17 @@ public class AdminActivityController {
 
         return adminActivityService.adminCommentAnswerDelete(userInfo, bd_id, cm_id, an_id);
     }
+
+    
+    
+    /* ======================================= 상품 ======================================= */
+
+    /* 관리자 상품 목록 */
+    @GetMapping("/productList")
+    public List<ResProductListDto> adminProductList(@LoginUser UserInfo userInfo,
+                                                    Pageable pageable, int page) {
+
+        return adminActivityService.adminProductList(userInfo, pageable, page);
+    }
+
 }

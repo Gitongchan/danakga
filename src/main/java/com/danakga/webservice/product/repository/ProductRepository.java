@@ -80,4 +80,10 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query("update Product p set p.productStock = p.productStock - :ordersQuantity where p.productId = :productId")
     void updateProductStock(@Param("ordersQuantity") int ordersQuantity,@Param("productId") Long productId);
 
+
+    /* 관리자 상품 목록 (진모) */
+    
+    /* 상품 전체 검색 */
+    Page<Product> findAll(Pageable pageable);
+
 }

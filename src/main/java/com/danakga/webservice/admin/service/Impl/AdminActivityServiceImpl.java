@@ -11,6 +11,9 @@ import com.danakga.webservice.board.repository.BoardFileRepository;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.CommentRepository;
 import com.danakga.webservice.exception.CustomException;
+import com.danakga.webservice.product.dto.response.ResProductListDto;
+import com.danakga.webservice.product.model.Product;
+import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -32,6 +35,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
     private final CommentRepository commentRepository;
+    private final ProductRepository productRepository;
 
 
     /* ======================================= 게시판 ======================================= */
@@ -400,5 +404,57 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         commentRepository.deleteAnswerNum(cm_id);
 
         return new ResResultDto(checkAnswer.getCmId(),"대댓글을 삭제 했습니다.");
+    }
+
+
+    /* ======================================= 상품 ======================================= */
+
+    /* 관리자 상품 목록 */
+    @Override
+    public List<ResProductListDto> adminProductList(UserInfo userInfo, Pageable pageable, int page) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        List<ResProductListDto> adminProductList = new ArrayList<>();
+
+        pageable = PageRequest.of(page, 10, Sort.by("productUploadDate").descending());
+        Page<Product> checkProductList = productRepository.findAll(pageable);
+
+        checkProductList.forEach(product -> {
+
+            /* 상품 아이디 값 하나씩 순회 하면서 평점 출력 */
+            Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId()).orElseThrow(
+                    ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            ) ;
+
+            double productRating; // 상품 평점
+            if(productRepository.selectProductRating(checkProduct) == null){
+                productRating = 0;
+            }else{
+                productRating = Math.round(productRepository.selectProductRating(checkProduct)*10)/10.0;
+            }
+
+            ResProductListDto listDto = new ResProductListDto();
+
+            listDto.setProductId(product.getProductId());
+            listDto.setProductBrand(product.getProductBrand());
+            listDto.setProductType(product.getProductType());
+            listDto.setProductSubType(product.getProductSubType());
+            listDto.setProductName(product.getProductName());
+            listDto.setProductPhoto(product.getProductPhoto());
+            listDto.setProductPrice(product.getProductPrice());
+            listDto.setProductStock(product.getProductStock());
+            listDto.setProductViewCount(product.getProductViewCount());
+            listDto.setProductOrderCount(product.getProductOrderCount());
+            listDto.setProductUploadDate(product.getProductUploadDate());
+            listDto.setProductRating(productRating);
+            listDto.setTotalPage(checkProductList.getTotalPages());
+            listDto.setTotalElement(checkProductList.getTotalElements());
+            adminProductList.add(listDto);
+
+        });
+
+        return adminProductList;
     }
 }
