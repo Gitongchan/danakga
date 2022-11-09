@@ -51,5 +51,8 @@ public interface AdminActivityService {
     
     /* 관리자 상품 검색 */
     ResAdminProductListDto adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content);
+    
+    /* 관리자 상품 삭제 */
+    ResResultDto adminProductDelete(UserInfo userInfo, Long c_id, Long p_id);
 
 }

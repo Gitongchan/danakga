@@ -11,6 +11,8 @@ import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardFileRepository;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.CommentRepository;
+import com.danakga.webservice.company.model.CompanyInfo;
+import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.product.model.Product;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -33,6 +36,7 @@ import java.util.*;
 public class AdminActivityServiceImpl implements AdminActivityService {
 
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
     private final CommentRepository commentRepository;
@@ -532,5 +536,24 @@ public class AdminActivityServiceImpl implements AdminActivityService {
             });
         }
         return new ResAdminProductListDto(adminProductList);
+    }
+    
+    /* 관리자 상품 삭제 */
+    @Override
+    public ResResultDto adminProductDelete(UserInfo userInfo, Long c_id, Long p_id) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        CompanyInfo checkCompanyInfo = companyRepository.findById(c_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
+
+        Product checkProduct = productRepository.findByProductIdAndProductCompanyId(p_id, checkCompanyInfo)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        /* 상품 삭제 -> onDelete로 이미지, 후기, qna 모두 삭제 */
+        productRepository.deleteByProductIdAndProductCompanyId(checkProduct.getProductId(), checkCompanyInfo);
+
+        return new ResResultDto(checkProduct.getProductId(),"상품을 삭제 했습니다.");
     }
 }

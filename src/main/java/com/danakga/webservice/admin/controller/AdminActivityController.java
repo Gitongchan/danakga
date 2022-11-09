@@ -151,6 +151,13 @@ public class AdminActivityController {
         return adminActivityService.adminProductSearch(userInfo, pageable, page, category, content);
     }
 
+    /* 관리자 상품 삭제 */
+    @DeleteMapping("/productDelete/{c_id}/{p_id}")
+    public ResResultDto adminProductDelete(@LoginUser UserInfo userInfo,
+                                           @PathVariable("c_id") Long c_id,
+                                           @PathVariable("p_id") Long p_id) {
 
+        return adminActivityService.adminProductDelete(userInfo, c_id, p_id);
+    }
 
 }
