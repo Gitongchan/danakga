@@ -59,13 +59,13 @@ function getParameterByName(name) {
 
 
             wish.innerHTML = `
-                <a href="/manager/wishlist">
+                <a href="/user/wishlist">
                     <i class="lni lni-heart"></i>
                     <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
                 </a>
             `
             cart.innerHTML = `
-            <a href="/manager/cart" class="main-btn">
+            <a href="/user/cart" class="main-btn">
                                   <i class="lni lni-cart"></i>
                                   <span class="total-items">${cartData.length}</span>
                                 </a>
@@ -96,6 +96,18 @@ function getParameterByName(name) {
                         </ul>
                     `
 
+                    wish.innerHTML = `
+                <a href="/manager/wishlist">
+                    <i class="lni lni-heart"></i>
+                    <span class="total-items">${wishData.length === 0 ? 0 : wishData[0].totalElement}</span>
+                </a>
+            `
+                    cart.innerHTML = `
+            <a href="/manager/cart" class="main-btn">
+                                  <i class="lni lni-cart"></i>
+                                  <span class="total-items">${cartData.length}</span>
+                                </a>
+            `
                     myShopManagement.insertAdjacentHTML('beforeend',shopHTML)
                 }
         }
