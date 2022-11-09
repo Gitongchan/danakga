@@ -610,4 +610,26 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
         return new ResReviewListDto(adminReviewList);
     }
+
+    /* 관리자 후기 삭제 */
+    @Override
+    public ResResultDto adminReviewDelete(UserInfo userInfo, Long c_id, Long p_id, Long r_id) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        CompanyInfo checkCompanyInfo = companyRepository.findById(c_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상점을 찾을 수 없습니다."));
+
+        Product checkProduct = productRepository.findById(p_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        Review checkReview = reviewRepository.findById(r_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("후기를 찾을 수 없습니다."));
+
+        /* 후기 삭제 */
+        reviewRepository.deleteById(checkReview.getReId());
+
+        return new ResResultDto(checkReview.getReId(),"후기를 삭제 했습니다.");
+    }
 }

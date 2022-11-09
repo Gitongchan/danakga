@@ -181,4 +181,13 @@ public class AdminActivityController {
         return adminActivityService.adminReviewSearch(userInfo, pageable, page, category, sort, content);
     }
 
+    @DeleteMapping("/reviewDelete/{c_id}/{p_id}/{r_id}")
+    public ResResultDto adminReviewDelete(@LoginUser UserInfo userInfo,
+                                          @PathVariable("c_id") Long c_id,
+                                          @PathVariable("p_id") Long p_id,
+                                          @PathVariable("r_id") Long r_id) {
+
+        return adminActivityService.adminReviewDelete(userInfo, c_id, p_id, r_id);
+    }
+
 }

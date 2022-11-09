@@ -61,4 +61,7 @@ public interface AdminActivityService {
 
     /* 관리자 후기 검색 */
     ResReviewListDto adminReviewSearch(UserInfo userInfo, Pageable pageable, int page, String category, String sort, String content);
+    
+    /* 관리자 후기 삭제 */
+    ResResultDto adminReviewDelete(UserInfo userInfo, Long c_id, Long p_id, Long r_id);
 }
