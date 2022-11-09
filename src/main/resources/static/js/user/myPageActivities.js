@@ -146,7 +146,7 @@ qnaBtn.addEventListener('click',async ()=>{
         try{
             console.log(cateValue.value);
             // 내가 작성한 게시글 찾기 이벤트
-            const res = await fetch(`/api/user/myPostList/문의게시판?page=0`);
+            const res = await fetch(`/api/user/myPostList/정보게시판?page=0`);
 
             if(res.ok){
                 const data = await res.json();
@@ -163,7 +163,7 @@ qnaBtn.addEventListener('click',async ()=>{
 
                     tableList.appendChild(tr);
                 }
-                freeRender('/api/user/myPostList/문의게시판?');
+                freeRender('/api/user/myPostList/정보게시판?');
             }
         }catch (e) {
 
@@ -173,7 +173,7 @@ qnaBtn.addEventListener('click',async ()=>{
         try{
             console.log(cateValue.value);
 
-            const res = await fetch(`/api/user/myCommentsPost/문의게시판?page=0`);
+            const res = await fetch(`/api/user/myCommentsPost/정보게시판?page=0`);
             if(res.ok){
                 const data = await res.json();
                 tableList.innerHTML = '';
@@ -189,7 +189,7 @@ qnaBtn.addEventListener('click',async ()=>{
 
                     tableList.appendChild(tr);
                 }
-                freeRender('/api/user/myCommentsPost/문의게시판?');
+                freeRender('/api/user/myCommentsPost/정보게시판?');
             }
         }catch (e) {
 
@@ -198,7 +198,7 @@ qnaBtn.addEventListener('click',async ()=>{
         // 내가 작성한 댓글 찾기 이벤트
         try{
             console.log(cateValue.value);
-            const res = await fetch(`/api/user/myCommentsList/문의게시판?page=0`);
+            const res = await fetch(`/api/user/myCommentsList/정보게시판?page=0`);
 
             if(res.ok){
                 const data = await res.json();
@@ -215,7 +215,7 @@ qnaBtn.addEventListener('click',async ()=>{
 
                     tableList.appendChild(tr);
                 }
-                qnaRender('/api/user/myCommentsList/문의게시판?')
+                qnaRender('/api/user/myCommentsList/정보게시판?')
             }
         }catch (e) {
 
