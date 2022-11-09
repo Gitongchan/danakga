@@ -92,3 +92,31 @@
 .review-info button:hover{
     color: #0167F3;
 }
+
+.single-block > div > button {
+    background: none;
+    border: 1px solid grey;
+    border-radius: 15px;
+    font-size: 16px;
+    color: black;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.single-block:first-child button.active {
+    background:#0167F3;
+    color: #fff;
+}
+
+.single-block > div button:hover {
+    background: #017af3;
+    color: #fff;
+}
+
+.comment-form.hide{
+    display: none;
+}
+
+.product-details-info .reviews .single-review.children{
+    padding-left: 80px;
+}

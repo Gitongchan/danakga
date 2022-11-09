@@ -10,8 +10,6 @@ const checkName = document.getElementById('checkName');
 const cart = document.getElementById('cart-items');
 const wish = document.getElementById('wishlist');
 const loginInfo = document.getElementById('user-info');
-var now = moment('202230', 'YYYYWW').format('M/D');
-console.log(now);
 // navbar
 const myShopManagement = document.querySelector('#nav');
 const shopHTML = `<li class="nav-item">
