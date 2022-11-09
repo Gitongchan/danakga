@@ -1,5 +1,6 @@
 package com.danakga.webservice.product.repository;
 
+import com.danakga.webservice.board.model.Board;
 import com.danakga.webservice.company.model.CompanyInfo;
 import com.danakga.webservice.product.model.Product;
 import org.springframework.data.domain.Page;
@@ -80,4 +81,47 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query("update Product p set p.productStock = p.productStock - :ordersQuantity where p.productId = :productId")
     void updateProductStock(@Param("ordersQuantity") int ordersQuantity,@Param("productId") Long productId);
 
+
+    /* 관리자 상품 목록 (진모) */
+    
+    /* 상품 전체 조회 */
+    Page<Product> findAll(Pageable pageable);
+    
+    /* 상품 검색 */
+    @Query(
+            value = "Select p from Product p join p.productCompanyId c "
+                    + "where (c.companyName Like %:content% "
+                    + "or p.productBrand Like %:content% "
+                    + "or p.productName Like %:content%) "
+                    + "and c.companyEnabled = true"
+    )
+    Page<Product> adminProductSearch(@Param("content") String content,
+                                     Pageable pageable);
+
+    /* 상품명 검색 */
+    @Query(
+            value = "select p from Product p join p.productCompanyId c "
+                    + "where (p.productName Like %:content%) "
+                    + "and c.companyEnabled = true"
+    )
+    Page<Product> adminProductName(@Param("content") String content,
+                                      Pageable pageable);
+
+    /* 상품 브랜드명 검색 */
+    @Query(
+            value = "select p from Product p join p.productCompanyId c "
+                    + "where (p.productBrand Like %:content%) "
+                    + "and c.companyEnabled = true"
+    )
+    Page<Product> adminProductBrand(@Param("content") String content,
+                                      Pageable pageable);
+    
+    /* 가게명 검색 */
+    @Query(
+            value = "select p from Product p join p.productCompanyId c "
+                    + "where (c.companyName Like %:content%) "
+                    + "and c.companyEnabled = true"
+    )
+    Page<Product> adminProductComName(@Param("content") String content,
+                                      Pageable pageable);
 }

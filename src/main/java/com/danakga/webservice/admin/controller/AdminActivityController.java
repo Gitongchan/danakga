@@ -1,15 +1,19 @@
 package com.danakga.webservice.admin.controller;
 
+import com.danakga.webservice.admin.dto.response.ResAdminProductListDto;
 import com.danakga.webservice.admin.service.AdminActivityService;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
+import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping(value="/admin")
@@ -121,4 +125,39 @@ public class AdminActivityController {
 
         return adminActivityService.adminCommentAnswerDelete(userInfo, bd_id, cm_id, an_id);
     }
+
+    
+    
+    /* ======================================= 상품 ======================================= */
+
+    /* 관리자 상품 목록 */
+    @GetMapping("/productList")
+    public ResAdminProductListDto adminProductList(@LoginUser UserInfo userInfo,
+                                                   Pageable pageable, int page) {
+
+        return adminActivityService.adminProductList(userInfo, pageable, page);
+    }
+    
+    /* 관리자 상품 검색
+    *  category = 가게, 상품, 브랜드
+    *  content = 검색어
+    * */
+    @GetMapping("/productSearch/{category}/{content}")
+    public ResAdminProductListDto adminProductSearch(@LoginUser UserInfo userInfo,
+                                                      Pageable pageable, int page,
+                                                      @PathVariable("category") String category,
+                                                      @PathVariable("content") String content) {
+
+        return adminActivityService.adminProductSearch(userInfo, pageable, page, category, content);
+    }
+
+    /* 관리자 상품 삭제 */
+    @DeleteMapping("/productDelete/{c_id}/{p_id}")
+    public ResResultDto adminProductDelete(@LoginUser UserInfo userInfo,
+                                           @PathVariable("c_id") Long c_id,
+                                           @PathVariable("p_id") Long p_id) {
+
+        return adminActivityService.adminProductDelete(userInfo, c_id, p_id);
+    }
+
 }

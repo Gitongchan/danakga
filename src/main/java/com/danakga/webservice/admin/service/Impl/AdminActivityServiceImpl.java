@@ -1,5 +1,6 @@
 package com.danakga.webservice.admin.service.Impl;
 
+import com.danakga.webservice.admin.dto.response.ResAdminProductListDto;
 import com.danakga.webservice.admin.service.AdminActivityService;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
@@ -10,7 +11,12 @@ import com.danakga.webservice.board.model.Board_Files;
 import com.danakga.webservice.board.repository.BoardFileRepository;
 import com.danakga.webservice.board.repository.BoardRepository;
 import com.danakga.webservice.board.repository.CommentRepository;
+import com.danakga.webservice.company.model.CompanyInfo;
+import com.danakga.webservice.company.repository.CompanyRepository;
 import com.danakga.webservice.exception.CustomException;
+import com.danakga.webservice.product.dto.response.ResProductListDto;
+import com.danakga.webservice.product.model.Product;
+import com.danakga.webservice.product.repository.ProductRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -20,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,9 +36,11 @@ import java.util.*;
 public class AdminActivityServiceImpl implements AdminActivityService {
 
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
     private final CommentRepository commentRepository;
+    private final ProductRepository productRepository;
 
 
     /* ======================================= 게시판 ======================================= */
@@ -118,6 +127,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
+        pageable = PageRequest.of(page, 10, Sort.by("bdCreated").descending());
         Page<Board> checkBoard;
 
         List<Map<String, Object>> adminSearchList = new ArrayList<>();
@@ -221,6 +231,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         }
         
         if(type.equals("대댓글")) {
+
             pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
             Page<Board_Comment> checkComments = commentRepository.findByCmStepAndCmDeleted(answerStep, sort, pageable);
 
@@ -253,6 +264,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
+        pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
         Page<Board_Comment> checkComments;
 
         List<Map<String, Object>> searchCommentList = new ArrayList<>();
@@ -400,5 +412,148 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         commentRepository.deleteAnswerNum(cm_id);
 
         return new ResResultDto(checkAnswer.getCmId(),"대댓글을 삭제 했습니다.");
+    }
+
+
+    /* ======================================= 상품 ======================================= */
+
+    /* 관리자 상품 목록 */
+    @Override
+    public ResAdminProductListDto adminProductList(UserInfo userInfo, Pageable pageable, int page) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        List<Map<String,Object>> adminProductList = new ArrayList<>();
+
+        pageable = PageRequest.of(page, 10, Sort.by("productUploadDate").descending());
+        Page<Product> checkProductList = productRepository.findAll(pageable);
+
+        checkProductList.forEach(product -> {
+
+            /* 상품 아이디 값 하나씩 순회 하면서 평점 출력 */
+            Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId()).orElseThrow(
+                    ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            ) ;
+
+            double productRating; // 상품 평점
+            if(productRepository.selectProductRating(checkProduct) == null){
+                productRating = 0;
+            }else{
+                productRating = Math.round(productRepository.selectProductRating(checkProduct)*10)/10.0;
+            }
+
+            Map<String,Object> adminProductMap = new LinkedHashMap<>();
+
+            adminProductMap.put("p_id", product.getProductId());
+            adminProductMap.put("p_brand", product.getProductBrand());
+            adminProductMap.put("p_type", product.getProductType());
+            adminProductMap.put("p_subtype", product.getProductSubType());
+            adminProductMap.put("p_name", product.getProductName());
+            adminProductMap.put("p_photo", product.getProductPhoto());
+            adminProductMap.put("p_price", product.getProductPrice());
+            adminProductMap.put("p_stock", product.getProductStock());
+            adminProductMap.put("p_viewCount", product.getProductViewCount());
+            adminProductMap.put("p_uploadDate", product.getProductUploadDate());
+            adminProductMap.put("p_rating", productRating);
+            adminProductMap.put("company_id", product.getProductCompanyId().getCompanyId());
+            adminProductMap.put("company_name", product.getProductCompanyId().getCompanyName());
+            adminProductMap.put("totalPage", checkProductList.getTotalPages());
+            adminProductMap.put("totlaElement", checkProductList.getTotalElements());
+
+            adminProductList.add(adminProductMap);
+
+        });
+
+        return new ResAdminProductListDto(adminProductList);
+    }
+    
+    /* 관리자 상품 검색 */
+    @Override
+    public ResAdminProductListDto adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        pageable = PageRequest.of(page, 10, Sort.by("productUploadDate").descending());
+        Page<Product> productSearch;
+
+        List<Map<String, Object>> adminProductList = new ArrayList<>();
+
+        switch (category) {
+            case "가게" :
+                productSearch = productRepository.adminProductComName(content, pageable);
+                break;
+            case "상품" :
+                productSearch = productRepository.adminProductName(content, pageable);
+                break;
+            case "브랜드" :
+                productSearch = productRepository.adminProductBrand(content, pageable);
+                break;
+            default :
+                productSearch = null;
+                break;
+        }
+
+        if(productSearch != null) {
+
+            long totalPages = productSearch.getTotalPages();
+            long totalElements = productSearch.getTotalElements();
+
+            productSearch.forEach(product -> {
+
+                /* 상품 아이디 값 하나씩 순회 하면서 평점 출력 */
+                Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId()).orElseThrow(
+                        ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+                ) ;
+
+                double productRating; // 상품 평점
+                if(productRepository.selectProductRating(checkProduct) == null){
+                    productRating = 0;
+                }else{
+                    productRating = Math.round(productRepository.selectProductRating(checkProduct)*10)/10.0;
+                }
+
+                Map<String,Object> adminProductMap = new LinkedHashMap<>();
+
+                adminProductMap.put("p_id", product.getProductId());
+                adminProductMap.put("p_brand", product.getProductBrand());
+                adminProductMap.put("p_type", product.getProductType());
+                adminProductMap.put("p_subtype", product.getProductSubType());
+                adminProductMap.put("p_name", product.getProductName());
+                adminProductMap.put("p_photo", product.getProductPhoto());
+                adminProductMap.put("p_price", product.getProductPrice());
+                adminProductMap.put("p_stock", product.getProductStock());
+                adminProductMap.put("p_viewCount", product.getProductViewCount());
+                adminProductMap.put("p_uploadDate", product.getProductUploadDate());
+                adminProductMap.put("p_rating", productRating);
+                adminProductMap.put("company_id", product.getProductCompanyId().getCompanyId());
+                adminProductMap.put("company_name", product.getProductCompanyId().getCompanyName());
+                adminProductMap.put("totalPages", totalPages);
+                adminProductMap.put("totlaElements", totalElements);
+
+                adminProductList.add(adminProductMap);
+            });
+        }
+        return new ResAdminProductListDto(adminProductList);
+    }
+    
+    /* 관리자 상품 삭제 */
+    @Override
+    public ResResultDto adminProductDelete(UserInfo userInfo, Long c_id, Long p_id) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        CompanyInfo checkCompanyInfo = companyRepository.findById(c_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
+
+        Product checkProduct = productRepository.findByProductIdAndProductCompanyId(p_id, checkCompanyInfo)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        /* 상품 삭제 -> onDelete로 이미지, 후기, qna 모두 삭제 */
+        productRepository.deleteByProductIdAndProductCompanyId(checkProduct.getProductId(), checkCompanyInfo);
+
+        return new ResResultDto(checkProduct.getProductId(),"상품을 삭제 했습니다.");
     }
 }

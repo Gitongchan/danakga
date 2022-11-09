@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -53,14 +55,17 @@ public class Qna {
 
     @ManyToOne
     @JoinColumn(name = "u_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserInfo userInfo;
 
     @ManyToOne
     @JoinColumn(name = "c_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private CompanyInfo companyInfo;
 
     @ManyToOne
-    @JoinColumn(name = "p_id")
+    @JoinColumn(name = "pd_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
 
     //답변, 삭제여부 기본 값 설정
