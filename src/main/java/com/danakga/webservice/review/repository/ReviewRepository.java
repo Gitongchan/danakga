@@ -30,4 +30,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("update Review re set re.reDeleted = 'Y' where re.reId = :reId")
     void updateReDeleted(@Param("reId") Long re_id);
 
+    /* ====================== 관리자(admin) ====================== */
+
+    Page<Review> findByReDeleted(Pageable pageable, String sort);
 }

@@ -17,6 +17,9 @@ import com.danakga.webservice.exception.CustomException;
 import com.danakga.webservice.product.dto.response.ResProductListDto;
 import com.danakga.webservice.product.model.Product;
 import com.danakga.webservice.product.repository.ProductRepository;
+import com.danakga.webservice.review.dto.response.ResReviewListDto;
+import com.danakga.webservice.review.model.Review;
+import com.danakga.webservice.review.repository.ReviewRepository;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.user.model.UserRole;
 import com.danakga.webservice.user.repository.UserRepository;
@@ -41,6 +44,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     private final BoardFileRepository boardFileRepository;
     private final CommentRepository commentRepository;
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
 
 
     /* ======================================= 게시판 ======================================= */
@@ -555,5 +559,42 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         productRepository.deleteByProductIdAndProductCompanyId(checkProduct.getProductId(), checkCompanyInfo);
 
         return new ResResultDto(checkProduct.getProductId(),"상품을 삭제 했습니다.");
+    }
+
+    
+    /* ======================================= 후기 ======================================= */
+
+    /* 후기 목록 조회 */
+    @Override
+    public ResReviewListDto adminReviewList(UserInfo userInfo, Pageable pageable, int page, String sort) {
+
+        UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
+
+        pageable = PageRequest.of(page, 10, Sort.by("reCreated").descending());
+        Page<Review> checkReviewList = reviewRepository.findByReDeleted(pageable, sort);
+
+        List<Map<String, Object>> adminReviewList = new ArrayList<>();
+
+        checkReviewList.forEach(review -> {
+
+            Map<String, Object> adminReviewMap = new LinkedHashMap<>();
+
+            adminReviewMap.put("re_id", review.getReId());
+            adminReviewMap.put("re_content", review.getReContent());
+            adminReviewMap.put("re_created", review.getReCreated());
+            adminReviewMap.put("re_score", review.getReScore());
+            adminReviewMap.put("re_writer", review.getReWriter());
+            adminReviewMap.put("product_id", review.getProduct().getProductId());
+            adminReviewMap.put("product_name", review.getProduct().getProductName());
+            adminReviewMap.put("company_id", review.getProduct().getProductCompanyId().getCompanyId());
+            adminReviewMap.put("company_name", review.getProduct().getProductCompanyId().getCompanyName());
+            adminReviewMap.put("totalPages", checkReviewList.getTotalPages());
+            adminReviewMap.put("totalElements", checkReviewList.getTotalElements());
+
+            adminReviewList.add(adminReviewMap);
+        });
+
+        return new ResReviewListDto(adminReviewList);
     }
 }

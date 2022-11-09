@@ -5,6 +5,7 @@ import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.product.dto.response.ResProductListDto;
+import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import org.springframework.data.domain.Pageable;
@@ -54,5 +55,11 @@ public interface AdminActivityService {
     
     /* 관리자 상품 삭제 */
     ResResultDto adminProductDelete(UserInfo userInfo, Long c_id, Long p_id);
+
+
+    /* 후기 */
+
+    /* 후기 목록 조회 */
+    ResReviewListDto adminReviewList(UserInfo userInfo, Pageable pageable, int page, String sort);
 
 }

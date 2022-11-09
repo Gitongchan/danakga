@@ -7,6 +7,7 @@ import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.product.dto.response.ResProductListDto;
+import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -130,7 +131,9 @@ public class AdminActivityController {
     
     /* ======================================= 상품 ======================================= */
 
-    /* 관리자 상품 목록 */
+    /* 관리자 상품 목록
+    * 상품은 삭제 상태 값 없어서 바로 출력
+    * */
     @GetMapping("/productList")
     public ResAdminProductListDto adminProductList(@LoginUser UserInfo userInfo,
                                                    Pageable pageable, int page) {
@@ -158,6 +161,21 @@ public class AdminActivityController {
                                            @PathVariable("p_id") Long p_id) {
 
         return adminActivityService.adminProductDelete(userInfo, c_id, p_id);
+    }
+
+    
+
+    /* ======================================= 후기 ======================================= */
+
+    /* 후기 목록 조회
+    *  sort = N, Y
+    * */
+    @GetMapping("/reviewList/{sort}")
+    public ResReviewListDto adminReviewList(@LoginUser UserInfo userInfo,
+                                            Pageable pageable, int page,
+                                            @PathVariable("sort") String sort) {
+
+        return adminActivityService.adminReviewList(userInfo, pageable, page, sort);
     }
 
 }
