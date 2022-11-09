@@ -116,3 +116,7 @@
 .comment-form.hide{
     display: none;
 }
+
+.product-details-info .reviews .single-review.children{
+    padding-left: 80px;
+}

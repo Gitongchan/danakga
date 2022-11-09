@@ -490,11 +490,32 @@ const status = getParameterByName('status');
             alert("로드 실패!")
             return null;
         }
+        console.log(data);
         reviewWrap.innerHTML = '';
         for (const item of data.qnaList) {
             if(item.qn_userid === checkName.value){
                 reviewWrap.innerHTML+= `
-                                <div class="single-review">
+                                <div class="single-review" id="review-info${item.qn_id}">
+                                    <div class="review-info" >
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4>${item.qn_userid}
+                                                  <span>${item.qn_created.split('.')[0]}</span>
+                                                </h4>
+                                            </div>
+                                             <div>
+                                                <button type="button" class="btn product-qna-edit" data-id="${item.qn_id}">
+                                                     <i class="lni lni-comments-reply"></i>수정하기
+                                                </button>
+                                                <button class="btn product-qna-delete" data-id="${item.qn_id}">
+                                                    <i class="lni lni-close"></i>삭제하기
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p id="qna">${item.qn_content}</p>
+                                    </div>
+                                </div>
+                                <div class="single-review children">
                                     <div class="review-info">
                                         <div class="d-flex justify-content-between">
                                             <div>
@@ -514,30 +535,58 @@ const status = getParameterByName('status');
                                         <p id="qna">${item.qn_content}</p>
                                     </div>
                                 </div>
-
                 `;
             }else{
                 reviewWrap.innerHTML+= `
-                                <div class="single-review">
+                                    <div class="single-review" id="review-info${item.qn_id}">
+                                        <div class="review-info">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <h4>${item.qn_userid}
+                                                      <span>${item.qn_created.split('.')[0]}</span>
+                                                    </h4>
+                                                </div>
+                                                     <div>
+                                                    <button type="button" class="btn product-qna-reply" data-id="${item.qn_id}">
+                                                         <i class="lni lni-comments-reply"></i>답글달기
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p>${item.qn_content}</p>
+                                        </div>
+                                    </div>
+                    `;
+            }
+
+            if(item.answer.length !== 0 ){
+                // 답글 출력?
+                for(const reply of item.answer){
+                    reviewWrap.innerHTML += `
+                                <div class="single-review children">
                                     <div class="review-info">
                                         <div class="d-flex justify-content-between">
                                             <div>
-                                                <h4>${item.qn_userid}
-                                                  <span>${item.qn_created.split('.')[0]}</span>
+                                                <h4>${reply.an_writer}
+                                                  <span>${reply.an_create.split('.')[0]}</span>
                                                 </h4>
                                             </div>
-                                                 <div>
-                                                <button type="button" class="btn review-edit-btn" data-id="${item.qn_id}">
-                                                     <i class="lni lni-comments-reply"></i>답글달기
+                                             <div>
+                                                <button type="button" class="btn product-qna-edit" data-id="${reply.an_id}">
+                                                     <i class="lni lni-comments-reply"></i>수정하기
+                                                </button>
+                                                <button class="btn product-qna-delete" data-id="${reply.an_id}">
+                                                    <i class="lni lni-close"></i>삭제하기
                                                 </button>
                                             </div>
                                         </div>
-                                        <p>${item.qn_content}</p>
+                                        <p id="qna">${reply.an_content}</p>
                                     </div>
-                                </div>
-                `;
+                                </div>`
+                }
             }
         }
+
+        // qna 수정 버튼
         const qnaEditBtn = document.querySelectorAll('.product-qna-edit');
         for(const button of qnaEditBtn){
             button.addEventListener('click', (event) => {
@@ -580,8 +629,9 @@ const status = getParameterByName('status');
 
         }
 
-        const deleteEditBtn = document.querySelectorAll('.product-qna-delete');
-        for(const button of deleteEditBtn){
+        // qna 삭제 버튼
+        const qnaDeleteBtn = document.querySelectorAll('.product-qna-delete');
+        for(const button of qnaDeleteBtn){
             button.addEventListener('click', async (event) => {
                 const id = event.target.dataset.id; // qn_id값
                 if(confirm('삭제하시겠습니까?')){
@@ -602,5 +652,43 @@ const status = getParameterByName('status');
             })
         }
 
+        // qna 답글달기 버튼
+        const qnaReplyBtn = document.querySelectorAll('.product-qna-reply');
+        for(const button of qnaReplyBtn){
+            button.addEventListener('click',  (event) => {
+                const id = event.target.dataset.id; // qn_id값
+                document.querySelector(`#review-info${id}`).insertAdjacentHTML('beforeend', `<div class="form-group col-sm-12">
+                                        <textarea class="form-control" id="comment-val${id}"></textarea>
+                                    </div>
+                                    <div class="align-right mt-10">
+                                        <span class="button">
+                                            <button class="btn completeReply${id}">답글달기</button>
+                                        </span>
+                                        <span class="button">
+                                            <button class="btn completeCancel${id}">취소</button>
+                                        </span>
+                                    </div>`
+                )
 
+                document.querySelector(`.btn.completeReply${id}`).addEventListener('click',async (event)=>{
+                    //댓글 수정 버튼 클릭 시
+                    const res = await fetch(`/api/manager/product_answer/write/${productId}/${id}`,{
+                        method:'POST',
+                        headers: {
+                            'header': header,
+                            "Content-Type": "application/json",
+                            'X-CSRF-Token': token
+                        },
+                        body: JSON.stringify({answerContent:document.getElementById(`comment-val${id}`).value})
+                    });
+                    const data = await res.json();
+
+                    alert(data.message);
+                    await qnaList(0);
+                })
+                document.querySelector(`.btn.completeCancel${id}`).addEventListener('click',async (event)=>{
+                    qnaList(0);
+                })
+            })
+        }
     }
