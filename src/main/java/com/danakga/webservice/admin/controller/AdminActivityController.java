@@ -1,5 +1,6 @@
 package com.danakga.webservice.admin.controller;
 
+import com.danakga.webservice.admin.dto.response.ResAdminProductListDto;
 import com.danakga.webservice.admin.service.AdminActivityService;
 import com.danakga.webservice.annotation.LoginUser;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
@@ -131,8 +132,8 @@ public class AdminActivityController {
 
     /* 관리자 상품 목록 */
     @GetMapping("/productList")
-    public List<ResProductListDto> adminProductList(@LoginUser UserInfo userInfo,
-                                                    Pageable pageable, int page) {
+    public ResAdminProductListDto adminProductList(@LoginUser UserInfo userInfo,
+                                                   Pageable pageable, int page) {
 
         return adminActivityService.adminProductList(userInfo, pageable, page);
     }
@@ -142,7 +143,7 @@ public class AdminActivityController {
     *  content = 검색어
     * */
     @GetMapping("/productSearch/{category}/{content}")
-    public List<ResProductListDto> adminProductSearch(@LoginUser UserInfo userInfo,
+    public ResAdminProductListDto adminProductSearch(@LoginUser UserInfo userInfo,
                                                       Pageable pageable, int page,
                                                       @PathVariable("category") String category,
                                                       @PathVariable("content") String content) {

@@ -1,5 +1,6 @@
 package com.danakga.webservice.admin.service.Impl;
 
+import com.danakga.webservice.admin.dto.response.ResAdminProductListDto;
 import com.danakga.webservice.admin.service.AdminActivityService;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
@@ -414,12 +415,12 @@ public class AdminActivityServiceImpl implements AdminActivityService {
 
     /* 관리자 상품 목록 */
     @Override
-    public List<ResProductListDto> adminProductList(UserInfo userInfo, Pageable pageable, int page) {
+    public ResAdminProductListDto adminProductList(UserInfo userInfo, Pageable pageable, int page) {
 
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
-        List<ResProductListDto> adminProductList = new ArrayList<>();
+        List<Map<String,Object>> adminProductList = new ArrayList<>();
 
         pageable = PageRequest.of(page, 10, Sort.by("productUploadDate").descending());
         Page<Product> checkProductList = productRepository.findAll(pageable);
@@ -438,42 +439,62 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                 productRating = Math.round(productRepository.selectProductRating(checkProduct)*10)/10.0;
             }
 
-            ResProductListDto listDto = new ResProductListDto();
+            Map<String,Object> adminProductMap = new LinkedHashMap<>();
 
-            listDto.setProductId(product.getProductId());
-            listDto.setProductBrand(product.getProductBrand());
-            listDto.setProductType(product.getProductType());
-            listDto.setProductSubType(product.getProductSubType());
-            listDto.setProductName(product.getProductName());
-            listDto.setProductPhoto(product.getProductPhoto());
-            listDto.setProductPrice(product.getProductPrice());
-            listDto.setProductStock(product.getProductStock());
-            listDto.setProductViewCount(product.getProductViewCount());
-            listDto.setProductOrderCount(product.getProductOrderCount());
-            listDto.setProductUploadDate(product.getProductUploadDate());
-            listDto.setProductRating(productRating);
-            listDto.setTotalPage(checkProductList.getTotalPages());
-            listDto.setTotalElement(checkProductList.getTotalElements());
-            adminProductList.add(listDto);
+            adminProductMap.put("p_id", product.getProductId());
+            adminProductMap.put("p_brand", product.getProductBrand());
+            adminProductMap.put("p_type", product.getProductType());
+            adminProductMap.put("p_subtype", product.getProductSubType());
+            adminProductMap.put("p_name", product.getProductName());
+            adminProductMap.put("p_photo", product.getProductPhoto());
+            adminProductMap.put("p_price", product.getProductPrice());
+            adminProductMap.put("p_stock", product.getProductStock());
+            adminProductMap.put("p_viewCount", product.getProductViewCount());
+            adminProductMap.put("p_uploadDate", product.getProductUploadDate());
+            adminProductMap.put("p_rating", productRating);
+            adminProductMap.put("company_id", product.getProductCompanyId().getCompanyId());
+            adminProductMap.put("company_name", product.getProductCompanyId().getCompanyName());
+            adminProductMap.put("totalPage", checkProductList.getTotalPages());
+            adminProductMap.put("totlaElement", checkProductList.getTotalElements());
+
+            adminProductList.add(adminProductMap);
 
         });
 
-        return adminProductList;
+        return new ResAdminProductListDto(adminProductList);
     }
     
     /* 관리자 상품 검색 */
     @Override
-    public List<ResProductListDto> adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content) {
+    public ResAdminProductListDto adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content) {
 
         UserInfo checkUserInfo = userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("어드민 사용자가 아닙니다."));
 
-        List<ResProductListDto> adminProductList = new ArrayList<>();
-        
-        if(category.equals("가게") || category.equals("상품") || category.equals("브랜드")) {
+        pageable = PageRequest.of(page, 10, Sort.by("productUploadDate").descending());
+        Page<Product> productSearch;
 
-            pageable = PageRequest.of(page, 10, Sort.by("productUploadDate").descending());
-            Page<Product> productSearch = productRepository.adminProductSearch(content, pageable);
+        List<Map<String, Object>> adminProductList = new ArrayList<>();
+
+        switch (category) {
+            case "가게" :
+                productSearch = productRepository.adminProductComName(content, pageable);
+                break;
+            case "상품" :
+                productSearch = productRepository.adminProductName(content, pageable);
+                break;
+            case "브랜드" :
+                productSearch = productRepository.adminProductBrand(content, pageable);
+                break;
+            default :
+                productSearch = null;
+                break;
+        }
+
+        if(productSearch != null) {
+
+            long totalPages = productSearch.getTotalPages();
+            long totalElements = productSearch.getTotalElements();
 
             productSearch.forEach(product -> {
 
@@ -489,37 +510,27 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                     productRating = Math.round(productRepository.selectProductRating(checkProduct)*10)/10.0;
                 }
 
-                ResProductListDto listDto = new ResProductListDto();
+                Map<String,Object> adminProductMap = new LinkedHashMap<>();
 
-                listDto.setProductId(product.getProductId());
-                listDto.setProductBrand(product.getProductBrand());
-                listDto.setProductType(product.getProductType());
-                listDto.setProductSubType(product.getProductSubType());
-                listDto.setProductName(product.getProductName());
-                listDto.setProductPhoto(product.getProductPhoto());
-                listDto.setProductPrice(product.getProductPrice());
-                listDto.setProductStock(product.getProductStock());
-                listDto.setProductViewCount(product.getProductViewCount());
-                listDto.setProductOrderCount(product.getProductOrderCount());
-                listDto.setProductUploadDate(product.getProductUploadDate());
-                listDto.setProductRating(productRating);
-                listDto.setTotalPage(productSearch.getTotalPages());
-                listDto.setTotalElement(productSearch.getTotalElements());
+                adminProductMap.put("p_id", product.getProductId());
+                adminProductMap.put("p_brand", product.getProductBrand());
+                adminProductMap.put("p_type", product.getProductType());
+                adminProductMap.put("p_subtype", product.getProductSubType());
+                adminProductMap.put("p_name", product.getProductName());
+                adminProductMap.put("p_photo", product.getProductPhoto());
+                adminProductMap.put("p_price", product.getProductPrice());
+                adminProductMap.put("p_stock", product.getProductStock());
+                adminProductMap.put("p_viewCount", product.getProductViewCount());
+                adminProductMap.put("p_uploadDate", product.getProductUploadDate());
+                adminProductMap.put("p_rating", productRating);
+                adminProductMap.put("company_id", product.getProductCompanyId().getCompanyId());
+                adminProductMap.put("company_name", product.getProductCompanyId().getCompanyName());
+                adminProductMap.put("totalPages", totalPages);
+                adminProductMap.put("totlaElements", totalElements);
 
-                adminProductList.add(listDto);
+                adminProductList.add(adminProductMap);
             });
         }
-
-//        switch (category) {
-//            case "가게" :
-//            case "상품" :
-//            case "브랜드" :
-//                checkProducts = productRepository.adminProductSearch(content, pageable);
-//                break;
-//            default :
-//                checkProducts = null;
-//                break;
-//        }
-        return adminProductList;
+        return new ResAdminProductListDto(adminProductList);
     }
 }

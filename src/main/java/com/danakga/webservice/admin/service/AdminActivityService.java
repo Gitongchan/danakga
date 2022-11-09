@@ -1,5 +1,6 @@
 package com.danakga.webservice.admin.service;
 
+import com.danakga.webservice.admin.dto.response.ResAdminProductListDto;
 import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
@@ -46,9 +47,9 @@ public interface AdminActivityService {
     /* 상품 */
 
     /* 관리자 상품 목록 */
-    List<ResProductListDto> adminProductList(UserInfo userInfo, Pageable pageable, int page);
+    ResAdminProductListDto adminProductList(UserInfo userInfo, Pageable pageable, int page);
     
     /* 관리자 상품 검색 */
-    List<ResProductListDto> adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content);
+    ResAdminProductListDto adminProductSearch(UserInfo userInfo, Pageable pageable, int page, String category, String content);
 
 }
