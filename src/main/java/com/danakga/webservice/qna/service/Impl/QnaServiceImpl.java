@@ -94,11 +94,11 @@ public class QnaServiceImpl implements QnaService {
                 Map<String,Object> productAnswerMap = new LinkedHashMap<>();
 
                 productAnswerMap.put("an_id", answer.getAnId());
-                productAnswerMap.put("an_writer", answer.getAnWriter());
+                productAnswerMap.put("company_name", answer.getAnWriter());
                 productAnswerMap.put("an_content", answer.getAnContent());
                 productAnswerMap.put("an_create", answer.getAnCreated());
                 productAnswerMap.put("an_parentNum", answer.getAnParentNum());
-
+                productAnswerMap.put("company_id", answer.getQna().getCompanyInfo().getCompanyId());
                 answerList.add(productAnswerMap);
             });
 
@@ -110,7 +110,8 @@ public class QnaServiceImpl implements QnaService {
             productQnaMap.put("qn_created", qna.getQnCreated());
             productQnaMap.put("qn_state", qna.getQnState());
             productQnaMap.put("product_name", qna.getProduct().getProductName());
-            productQnaMap.put("company_Info", qna.getCompanyInfo().getCompanyName());
+            productQnaMap.put("company_name", qna.getCompanyInfo().getCompanyName());
+            productQnaMap.put("company_id", qna.getCompanyInfo().getCompanyId());
             productQnaMap.put("totalPage", checkQna.getTotalPages());
             productQnaMap.put("totalElement", checkQna.getTotalPages());
             productQnaMap.put("answer", answerList);

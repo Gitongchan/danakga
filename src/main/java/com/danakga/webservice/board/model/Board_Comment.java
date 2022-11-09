@@ -60,7 +60,6 @@ public class Board_Comment {
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "bd_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     @ManyToOne
