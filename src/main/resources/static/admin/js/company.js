@@ -136,7 +136,7 @@ async function manager(companyEnabled, searchRequirements, searchWord, sortMetho
                                 <button class="btn user-info" data-action="info" data-id="${item.companyName}"><i class="bx bx-user me-1"></i> 상세정보</button>
                         </td>
                         <td>
-                                <button class="btn user-re-use" data-action="reuse" data-id="${item.companyName}"><i class="bx bx-recycle me-1"></i> 해제</button>
+                                <button class="btn user-re-use" data-action="reuse" data-id="${item.companyName}"><i class="bx bx-recycle me-1"></i> 복구</button>
                         </td>
                         <td>
                                 <button class="btn user-delete" data-action="delete" data-id="${item.companyName}"><i class="bx bx-trash me-1"></i> 삭제</button>
