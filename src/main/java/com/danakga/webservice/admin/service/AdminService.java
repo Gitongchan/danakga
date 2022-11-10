@@ -33,6 +33,13 @@ public interface AdminService {
 
     //사업자 정보 삭제
     Long deleteManager(UserInfo userInfo,String companyName);
-    
+
+    //사용자 복구 - 정지 탈퇴 상태에서만 가능
+    Long restoreUser(UserInfo userInfo,String userId);
+
+    //사업자 복구 - 정지,탈퇴상태에서만 가능
+    Long restoreManager(UserInfo userInfo,String companyName);
+
+
     
 }

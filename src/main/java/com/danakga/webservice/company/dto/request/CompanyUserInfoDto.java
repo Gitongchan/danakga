@@ -83,6 +83,9 @@ public class CompanyUserInfoDto {
     //회사 상세주소
     private String companyDetailAdr;
 
+    //회사 은행명
+    private String companyBankname;
+
     //회사 계좌
     private String companyBanknum;
 

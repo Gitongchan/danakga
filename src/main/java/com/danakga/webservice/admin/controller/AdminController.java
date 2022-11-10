@@ -78,6 +78,21 @@ public class AdminController {
         return new ResResultDto(result,companyName + " 상점을 정지 시켰습니다" );
     }
 
+    //회원 이용 정지
+    @PutMapping("/members/user/restore/{userId}")
+    public ResResultDto restoreUser(@LoginUser UserInfo userInfo , @PathVariable String userId){
+
+        Long result = adminService.restoreUser(userInfo,userId);
+        return new ResResultDto(result,userId + " 회원을 복구 시켰습니다" );
+    }
+
+    //사업자 이용 정지
+    @PutMapping("/members/manager/restore/{companyName}")
+    public ResResultDto restoreManager(@LoginUser UserInfo userInfo , @PathVariable String companyName){
+        Long result = adminService.restoreManager(userInfo,companyName);
+        return new ResResultDto(result,companyName + " 사업자를 복구 시켰습니다" );
+    }
+
     //회원 삭제
     @DeleteMapping("/members/user/{userId}")
     public ResResultDto deleteMember(@LoginUser UserInfo userInfo , @PathVariable String userId){
