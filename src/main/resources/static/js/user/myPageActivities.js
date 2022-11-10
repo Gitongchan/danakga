@@ -126,7 +126,7 @@ freeBtn.addEventListener('click', async ()=>{
                  <td><a href="/board/info?boardid=${data.comments[i].bd_id}">${data.comments[i].cm_content}</a></td>
                  <td>${data.comments[i].cm_writer}</td>
                  <td>${data.comments[i].cm_created.split('.')[0]}</td>
-                 <td>${data.comments[i].cm_modify}</td>`
+                 <td></td>`
 
                     tableList.appendChild(tr);
                 }
@@ -211,7 +211,7 @@ qnaBtn.addEventListener('click',async ()=>{
                  <td><a href="/board/info?boardid=${data.comments[i].bd_id}">${data.comments[i].cm_content}</a></td>
                  <td>${data.comments[i].cm_writer}</td>
                  <td>${data.comments[i].cm_created.split('.')[0]}</td>
-                 <td>${data.comments[i].cm_modify}</td>`
+                 <td></td>`
 
                     tableList.appendChild(tr);
                 }

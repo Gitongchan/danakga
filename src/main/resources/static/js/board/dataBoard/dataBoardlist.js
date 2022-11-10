@@ -7,7 +7,7 @@ fetch(`/api/board/list/정보게시판?page=0`)
             console.log(data.lists[i]);
             const tr = document.createElement('tr');
             tr.innerHTML =
-                `<td>${data.lists[i].bd_id}</td>
+                `<td>${data.lists.length - i}</td>
                  <td><a href="/board/info?bdType=data&boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
                  <td>${data.lists[i].bd_writer}</td>
                  <td>${data.lists[i].bd_created.split('.')[0]}</td>
