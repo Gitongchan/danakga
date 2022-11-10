@@ -7,6 +7,7 @@ import com.danakga.webservice.board.dto.response.ResBoardListDto;
 import com.danakga.webservice.board.dto.response.ResBoardPostDto;
 import com.danakga.webservice.board.dto.response.ResCommentListDto;
 import com.danakga.webservice.product.dto.response.ResProductListDto;
+import com.danakga.webservice.review.dto.response.ResReviewListDto;
 import com.danakga.webservice.user.model.UserInfo;
 import com.danakga.webservice.util.responseDto.ResResultDto;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +34,6 @@ public class AdminActivityController {
                                           @PathVariable("type") String type) {
 
         return adminActivityService.adminBoardListDto(userInfo, sort, type, pageable, page);
-    }
-    
-    /* 관리자 게시글 조회 */
-    @GetMapping("/boardPost/{bd_id}")
-    public ResBoardPostDto adminBoardPost(@LoginUser UserInfo userInfo,
-                                          @PathVariable("bd_id") Long bd_id) {
-
-        return adminActivityService.adminBoardPost(userInfo, bd_id);
     }
     
     /* 관리자 게시판 검색 */
@@ -130,7 +123,9 @@ public class AdminActivityController {
     
     /* ======================================= 상품 ======================================= */
 
-    /* 관리자 상품 목록 */
+    /* 관리자 상품 목록
+    * 상품은 삭제 상태 값 없어서 바로 출력
+    * */
     @GetMapping("/productList")
     public ResAdminProductListDto adminProductList(@LoginUser UserInfo userInfo,
                                                    Pageable pageable, int page) {
@@ -158,6 +153,41 @@ public class AdminActivityController {
                                            @PathVariable("p_id") Long p_id) {
 
         return adminActivityService.adminProductDelete(userInfo, c_id, p_id);
+    }
+
+    
+
+    /* ======================================= 후기 ======================================= */
+
+    /* 관리자 후기 목록 조회
+    *  sort = N, Y
+    * */
+    @GetMapping("/reviewList/{sort}")
+    public ResReviewListDto adminReviewList(@LoginUser UserInfo userInfo,
+                                            Pageable pageable, int page,
+                                            @PathVariable("sort") String sort) {
+
+        return adminActivityService.adminReviewList(userInfo, pageable, page, sort);
+    }
+
+    /* 관리자 후기 검색 */
+    @GetMapping("/reviewSearch/{category}/{sort}/{content}")
+    public ResReviewListDto adminReviewSearch(@LoginUser UserInfo userInfo,
+                                              Pageable pageable, int page,
+                                              @PathVariable("category") String category,
+                                              @PathVariable("sort") String sort,
+                                              @PathVariable("content") String content) {
+
+        return adminActivityService.adminReviewSearch(userInfo, pageable, page, category, sort, content);
+    }
+
+    @DeleteMapping("/reviewDelete/{c_id}/{p_id}/{r_id}")
+    public ResResultDto adminReviewDelete(@LoginUser UserInfo userInfo,
+                                          @PathVariable("c_id") Long c_id,
+                                          @PathVariable("p_id") Long p_id,
+                                          @PathVariable("r_id") Long r_id) {
+
+        return adminActivityService.adminReviewDelete(userInfo, c_id, p_id, r_id);
     }
 
 }

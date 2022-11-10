@@ -134,6 +134,7 @@ public class AdminServiceImpl implements AdminService {
             listDto.setCompanyName(entity.getCompanyName());
             listDto.setCompanyNum(entity.getCompanyNum());
             listDto.setCompanyDeletedDate(entity.getCompanyDeletedDate());
+            listDto.setCompanyEnabled(entity.isCompanyEnabled());
             companyInfoListDto.add(listDto);
         });
         return companyInfoListDto;
@@ -263,6 +264,82 @@ public class AdminServiceImpl implements AdminService {
         companyRepository.deleteById(deleteCompanyInfo.getCompanyId());
 
         return 1L;
+    }
+
+    @Override
+    public Long restoreUser(UserInfo userInfo, String userId) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+        UserInfo restoreUserInfo = userRepository.findByUseridAndUserEnabled(userId,false).orElseThrow(
+                () -> new CustomException.ResourceNotFoundException("탈퇴하거나 정지된 사용자를 찾을 수 없습니다.")
+        );
+        userRepository.save(
+                UserInfo.builder()
+                        .id(restoreUserInfo.getId())
+                        .userid(restoreUserInfo.getUserid())
+                        .password(restoreUserInfo.getPassword())
+                        .name(restoreUserInfo.getName())
+                        .phone(restoreUserInfo.getPhone())
+                        .email(restoreUserInfo.getEmail())
+                        .role(UserRole.ROLE_USER)
+                        .userAdrNum(restoreUserInfo.getUserAdrNum())
+                        .userStreetAdr(restoreUserInfo.getUserStreetAdr())
+                        .userLotAdr(restoreUserInfo.getUserLotAdr())
+                        .userDetailAdr(restoreUserInfo.getUserDetailAdr())
+                        .userEnabled(true)
+                        .userDeletedDate(null)
+                        .build()
+        );
+
+
+        return restoreUserInfo.getId();
+    }
+
+    @Override
+    public Long restoreManager(UserInfo userInfo, String companyName) {
+        userRepository.findByIdAndRole(userInfo.getId(), UserRole.ROLE_ADMIN).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("어드민 사용자를 찾을 수 없습니다.")
+        );
+
+        CompanyInfo restoreCompanyInfo = companyRepository.findByCompanyNameAndCompanyEnabled(companyName,false).orElseThrow(
+                ()->new CustomException.ResourceNotFoundException("탈퇴하거나 정지된 사업자 정보를 찾을 수 없습니다.")
+        );
+
+        userRepository.save(
+                UserInfo.builder()
+                        .id(restoreCompanyInfo.getUserInfo().getId())
+                        .userid(restoreCompanyInfo.getUserInfo().getUserid())
+                        .password(restoreCompanyInfo.getUserInfo().getPassword())
+                        .name(restoreCompanyInfo.getUserInfo().getName())
+                        .phone(restoreCompanyInfo.getUserInfo().getPhone())
+                        .email(restoreCompanyInfo.getUserInfo().getEmail())
+                        .role(UserRole.ROLE_MANAGER)
+                        .userAdrNum(restoreCompanyInfo.getUserInfo().getUserAdrNum())
+                        .userStreetAdr(restoreCompanyInfo.getUserInfo().getUserStreetAdr())
+                        .userLotAdr(restoreCompanyInfo.getUserInfo().getUserLotAdr())
+                        .userDetailAdr(restoreCompanyInfo.getUserInfo().getUserDetailAdr())
+                        .userEnabled(true)
+                        .userDeletedDate(null)
+                        .build()
+        );
+        companyRepository.save(
+                CompanyInfo.builder()
+                        .companyId(restoreCompanyInfo.getCompanyId())
+                        .userInfo(restoreCompanyInfo.getUserInfo())
+                        .companyName(restoreCompanyInfo.getCompanyName())
+                        .companyNum(restoreCompanyInfo.getCompanyNum())
+                        .companyAdrNum(restoreCompanyInfo.getCompanyAdrNum())
+                        .companyLotAdr(restoreCompanyInfo.getCompanyLotAdr())
+                        .companyStreetAdr(restoreCompanyInfo.getCompanyStreetAdr())
+                        .companyDetailAdr(restoreCompanyInfo.getCompanyDetailAdr())
+                        .companyBankName(restoreCompanyInfo.getCompanyBankName())
+                        .companyBanknum(restoreCompanyInfo.getCompanyBanknum())
+                        .companyEnabled(true)
+                        .companyDeletedDate(null)
+                        .build()
+        );
+        return restoreCompanyInfo.getCompanyId();
     }
 
 }
