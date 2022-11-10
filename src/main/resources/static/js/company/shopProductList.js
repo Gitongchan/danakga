@@ -75,7 +75,7 @@ async function myProductList(url){
                         <td class="stock">${item.productStock}</td>
                         <td class="imageYN">${item.productPhoto===""?"N":"Y"}</td>
                         <td><button class="info-delete" id="${item.productId}">삭제</button></td>
-                        <td class="info" id="${item.productId}"><a href="/product/edit?productId=${item.productId}">수정하기</a></td>
+                        <td class="info" id="${item.productId}"><a href="/shop/product/edit?productId=${item.productId}">수정하기</a></td>
                 `
 
                 list.appendChild(tr);
