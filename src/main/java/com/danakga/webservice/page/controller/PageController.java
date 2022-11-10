@@ -111,7 +111,7 @@ public class PageController {
         return "pages/myTools";
     }
 
-    @GetMapping("/mypage/myFolder")
+    @GetMapping("/user/myFolder")
     public String myFolder() {
         return "pages/myFolder";
     }
