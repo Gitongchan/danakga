@@ -280,7 +280,8 @@ public class UserServiceImpl implements UserService {
                             .userStreetAdr(restoreUserInfo.getUserStreetAdr())
                             .userLotAdr(restoreUserInfo.getUserLotAdr())
                             .userDetailAdr(restoreUserInfo.getUserDetailAdr())
-                            .userEnabled(restoreUserInfo.isUserEnabled())
+                            .userEnabled(true)
+                            .userDeletedDate(null)
                             .build()
             );
             companyRepository.save(

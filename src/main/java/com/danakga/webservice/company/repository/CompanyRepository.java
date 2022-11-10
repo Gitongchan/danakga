@@ -24,8 +24,6 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
 
     Optional<CompanyInfo> findByUserInfoAndCompanyEnabled(UserInfo userInfo,boolean enabled);
 
-    Optional<CompanyInfo> findByCompanyNameAndCompanyEnabled(UserInfo userInfo,boolean enabled);
-
     Optional<CompanyInfo> findByCompanyId(Long companyId);
 
     //사업자 이용 중지
@@ -49,7 +47,8 @@ public interface CompanyRepository extends JpaRepository<CompanyInfo,Long> {
     @Query(value="select c from CompanyInfo c join c.userInfo u " +
             "where u.name like %:userName% " +
             "and u.userid like %:userId% " +
-            "and u.role = :userRole " +
+            "and (u.role = :userRole " +
+            "or u.role = 'ROLE_USER') " +
             "and u.userEnabled <= :userEnabled " +
             "and c.companyEnabled <= :companyEnabled " +
             "and c.companyName like %:companyName% " +

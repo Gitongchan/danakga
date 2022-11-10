@@ -78,7 +78,7 @@ public class CompanyServiceImpl implements CompanyService {
                             .companyLotAdr(companyUserInfoDto.getCompanyLotAdr())
                             .companyStreetAdr(companyUserInfoDto.getCompanyStreetAdr())
                             .companyDetailAdr(companyUserInfoDto.getCompanyDetailAdr())
-                            .companyBankName(companyUserInfoDto.getCompanyName())
+                            .companyBankName(companyUserInfoDto.getCompanyBankname())
                             .companyBanknum(companyUserInfoDto.getCompanyBanknum())
                             .companyEnabled(true)
                             .build()
