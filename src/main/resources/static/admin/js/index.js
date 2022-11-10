@@ -14,9 +14,9 @@ function searchText(e){
         $searchInput.value = '';
         if(menuId.value === '0'){
             userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortBy.value, 'name',0)
+        }else if( menuId.value === '1'){
+            manager($selectEnabled.value, true, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }
-        console.log(txt);
-       return txt;
     }
 }
 // 공통적인 페이징 부분
