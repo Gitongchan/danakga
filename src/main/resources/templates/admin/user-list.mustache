@@ -22,8 +22,47 @@
 
               <!-- Basic Bootstrap Table -->
               <div class="card">
-                  <div>여기에 검색 종류 넣기~</div>
-                <div class="table-responsive text-nowrap">
+                  <div class="card mb-4">
+                      <h5 class="card-header">검색조건</h5>
+                      <div class="card-body">
+                          <div class="row gx-3 gy-2 align-items-center">
+                              <div class="col-md-3">
+                                  <label class="form-label" for="selectSearchRequirements">검색조건</label>
+                                  <select id="selectSearchRequirements" class="form-select color-dropdown">
+                                      <option value="%25" selected>상관없음</option>
+                                      <option value="userId">아이디</option>
+                                      <option value="userEmail">이메일</option>
+                                      <option value="userName">이름</option>
+                                      <option value="userPhone">전화번호</option>
+                                  </select>
+                              </div>
+                              <div class="col-md-3">
+                                  <label class="form-label" for="selectEnabled">탈퇴여부</label>
+                                  <select class="form-select placement-dropdown" id="selectEnabled">
+                                      <option value="true" selected>전체검색</option>
+                                      <option value="false">탈퇴</option>
+                                  </select>
+                              </div>
+                              <div class="col-md-3">
+                                  <label class="form-label" for="selectSortBy">정렬조건</label>
+                                  <select class="form-select placement-dropdown" id="selectSortBy">
+                                      <option value="userid" selected>아이디</option>
+                                      <option value="email">이메일</option>
+                                      <option value="name">이름</option>
+                                      <option value="phone">전화번호</option>
+                                  </select>
+                              </div>
+                              <div class="col-md-3">
+                                  <label class="form-label" for="selectSortMethod">정렬</label>
+                                  <select class="form-select placement-dropdown" id="selectSortMethod">
+                                      <option value="desc" selected>내림차순</option>
+                                      <option value="asc">오름차순</option>
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="table-responsive text-nowrap">
                   <table class="table">
                     <thead>
                       <tr>
@@ -32,31 +71,12 @@
                         <th>이름</th>
                         <th>핸드폰번호</th>
                         <th>상태</th>
-                        <th>상세</th>
+                        <th width="10%"></th>
+                        <th width="10%"></th>
+                        <th width="10%"></th>
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                      <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>Angular Project</strong></td>
-                        <td>Albert Cook</td>
-                        <td>
-                            이름
-                        </td>
-                        <td>핸드폰번호</td>
-                        <td><span class="badge bg-label-primary me-1">Active</span></td>
-                        <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                                <button class="dropdown-item"><i class="bx bx-user me-1"></i> 상세정보</button>
-                                <button class="dropdown-item"><i class="bx bx-stop me-1"></i> 정지</button>
-                              <button class="dropdown-item"><i class="bx bx-trash me-1"></i> 삭제</button>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
                     </tbody>
                   </table>
                 </div>

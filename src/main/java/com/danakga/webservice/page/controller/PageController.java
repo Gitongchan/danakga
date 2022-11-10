@@ -292,6 +292,16 @@ public class PageController {
     public String adminReview() {
         return "admin/review-list";
     }
+
+    @GetMapping("/admin/user-info")
+    public String adminUserInfo() {
+        return "admin/user-info";
+    }
+
+    @GetMapping("/admin/manager-info")
+    public String adminManagerInfo() {
+        return "admin/manager-info";
+    }
     //잡
 
 
