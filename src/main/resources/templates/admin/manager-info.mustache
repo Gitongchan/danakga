@@ -1,0 +1,106 @@
+    {{>admin/header}}
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+            <div class="card mb-4">
+                <h5 class="card-header">사업자 상세정보</h5>
+                <!-- Account -->
+                <hr class="my-0" />
+                <div class="card-body">
+                    <form id="formAccountSettings" method="POST" onsubmit="return false">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="username" class="form-label">이름</label>
+                                <input
+                                        class="form-control"
+                                        type="text"
+                                        id="username"
+                                        readonly
+                                />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="userid" class="form-label">아이디</label>
+                                <input class="form-control" type="text" id="userid" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input
+                                        class="form-control"
+                                        type="text"
+                                        id="email"
+                                        readonly
+                                />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="phone" class="form-label">핸드폰번호</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="phone"
+                                        readonly
+                                />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label" for="companyAdrNum">우편번호</label>
+                                    <input
+                                            type="text"
+                                            id="companyAdrNum"
+                                            class="form-control"
+                                            readonly
+                                    />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="companyStreetAdr" class="form-label">도로명주소</label>
+                                <input type="text" class="form-control" id="companyStreetAdr" readonly/>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="companyLotAdr" class="form-label">지번주소</label>
+                                <input class="form-control" type="text" id="companyLotAdr" readonly/>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="companyDetailAdr" class="form-label">상세주소</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="companyDetailAdr"
+                                        readonly
+                                />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="companyBankNum" class="form-label">은행계좌</label>
+                                <input type="text" class="form-control" id="companyBankNum" readonly/>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="companyNum" class="form-label">회사번호</label>
+                                <input class="form-control" type="text" id="companyNum" readonly/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /Account -->
+            </div>
+
+
+            <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+    <script src="/admin/js/manager-info.js"></script>
+    {{>admin/footer}}
