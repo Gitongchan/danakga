@@ -18,11 +18,11 @@ const $selectSortMethod = document.querySelector('#selectSortMethod');
 // 버튼기능
 const companyActions = {
     info: async (id) => {
-        window.open(`user-info?id=${id}`,"유저 정보", "width=600px, height=500, scrollbars=no, resizable=no, toolbars=no, menubar=no")
+        window.open(`manager-info?id=${id}`,"사업자 정보", "width=600px, height=500, scrollbars=no, resizable=no, toolbars=no, menubar=no")
     },
     stop: async (id) => {
         if(confirm("정지하시겠습니까?")){
-            const res = await fetch(`/admin/members/user/${id}`,{
+            const res = await fetch(`/admin/members/manager/${id}`,{
                 method: "PUT",
                 headers: {
                     'header': header,
@@ -33,18 +33,38 @@ const companyActions = {
 
             if(!res.ok){
                 alert("정지 실패!")
-                return null;
+                return;
             }
 
             const data = await res.json();
             alert(data.message);
-            userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+            manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }
     },
-    reuse: (id) => alert('정지풀기', id),
+    reuse: async (id) => {
+        if(confirm("계정을 복구하시겠습니까?")){
+            const res = await fetch(`/admin/members/manager/restore/${id}`,{
+                method: "PUT",
+                headers: {
+                    'header': header,
+                    'X-CSRF-Token': token,
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if(!res.ok){
+                alert("복구 실패!")
+                return;
+            }
+
+            const data = await res.json();
+            alert(data.message);
+            manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+        }
+    },
     delete: async (id) => {
         if(confirm("삭제하시겠습니까?")){
-            const res = await fetch(`/admin/members/user/${id}`,{
+            const res = await fetch(`/admin/members/manager/${id}`,{
                 method: "DELETE",
                 headers: {
                     'header': header,
@@ -55,20 +75,20 @@ const companyActions = {
 
             if(!res.ok){
                 alert("삭제 실패!")
-                return null;
+                return;
             }
 
             const data = await res.json();
             alert(data.message);
-            userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+            manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }
     },
 }
 
 
 // 일반 회원
-async function manager(companyEnabled, userEnabled, searchRequirements, searchWord, sortMethod, sortBy, page){
-    const res = await fetch(`/admin/members/managerList?companyEnabled=${companyEnabled}&userEnabled=${userEnabled}&searchRequirements=${searchRequirements}&searchWord=${searchWord}&sortMethod=${sortMethod}&sortBy=${sortBy}&page=${page}`);
+async function manager(companyEnabled, searchRequirements, searchWord, sortMethod, sortBy, page){
+    const res = await fetch(`/admin/members/managerList?companyEnabled=${companyEnabled}&userEnabled=true&searchRequirements=${searchRequirements}&searchWord=${searchWord}&sortMethod=${sortMethod}&sortBy=${sortBy}&page=${page}`);
 
     if(!res.ok){
         alert("조회에 실패하였습니다!")
@@ -82,18 +102,19 @@ async function manager(companyEnabled, userEnabled, searchRequirements, searchWo
         if(item.companyEnabled){
             $table.innerHTML+= `
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>${item.userid}</strong></td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>${item.companyName}</strong></td>
+                        <td>${item.userid}</td>
                         <td>${item.email}</td>
                         <td>
                             ${item.name}
                         </td>
                         <td>${item.phone}</td>
-                        <td><span class="badge bg-label-primary me-1">사용회원</span></td>
+                        <td><span class="badge bg-label-info me-1">사업자회원</span></td>
                         <td>
-                                <button class="btn user-info" data-action="info" data-id="${item.userid}"><i class="bx bx-user me-1"></i> 상세정보</button>
+                                <button class="btn user-info" data-action="info" data-id="${item.companyName}"><i class="bx bx-user me-1"></i> 상세정보</button>
                         </td>
                         <td>
-                                <button class="btn user-stop" data-action="stop" data-id="${item.userid}"><i class="bx bx-stop me-1"></i> 정지</button>
+                                <button class="btn user-stop" data-action="stop" data-id="${item.companyName}"><i class="bx bx-stop me-1"></i> 정지</button>
                         </td>
                         <td>
                                 
@@ -103,7 +124,8 @@ async function manager(companyEnabled, userEnabled, searchRequirements, searchWo
         }else{
             $table.innerHTML+= `
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>${item.userid}</strong></td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>${item.companyName}</strong></td>
+                        <td>${item.userid}</td>
                         <td>${item.email}</td>
                         <td>
                             ${item.name}
@@ -111,50 +133,45 @@ async function manager(companyEnabled, userEnabled, searchRequirements, searchWo
                         <td>${item.phone}</td>
                         <td><span class="badge bg-label-danger me-1">정지회원</span></td>
                         <td>
-                                <button class="btn user-info" data-action="info" data-id="${item.userid}"><i class="bx bx-user me-1"></i> 상세정보</button>
+                                <button class="btn user-info" data-action="info" data-id="${item.companyName}"><i class="bx bx-user me-1"></i> 상세정보</button>
                         </td>
                         <td>
-                                <button class="btn user-re-use" data-action="reuse" data-id="${item.userid}"><i class="bx bx-recycle me-1"></i> 해제</button>
+                                <button class="btn user-re-use" data-action="reuse" data-id="${item.companyName}"><i class="bx bx-recycle me-1"></i> 해제</button>
                         </td>
                         <td>
-                                <button class="btn user-delete" data-action="delete" data-id="${item.userid}"><i class="bx bx-trash me-1"></i> 삭제</button>
+                                <button class="btn user-delete" data-action="delete" data-id="${item.companyName}"><i class="bx bx-trash me-1"></i> 삭제</button>
                         </td>
                       </tr>
         `
         }
     }
 
-    document.querySelector('tbody').addEventListener('click', e => {
-        const action = e.target.dataset.action
-        const id = e.target.dataset.id;
-        if (action) {
-            companyActions[action](id);
-        }
-    });
-
     console.log(data);
 }
 
-function Alert(event){
-    console.log(event.target);
-}
+document.querySelector('tbody').addEventListener('click', e => {
+    const action = e.target.dataset.action
+    const id = e.target.dataset.id;
+    console.log(e)
+    if (action) {
+        companyActions[action](id);
+    }
+});
 
 // 탈퇴여부
 $selectEnabled.addEventListener('change', () => {
-    manager($selectEnabled.value,true, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+    manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
 })
 
 // 정렬조건
 $selectSortBy.addEventListener('change', () => {
-    manager($selectEnabled.value, true, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+    manager($selectEnabled.value,  $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
 })
 
 // 오름차순 내림차순 정렬
 $selectSortMethod.addEventListener('change', () =>{
-    manager($selectEnabled.value, true, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
-
+    manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
 })
 
-
 //초기 렌더링
-manager(true,true, '%25', '%25', 'desc', 'companyName', 0);
+manager(true,'%25', "%25", 'desc', 'companyName', 0);

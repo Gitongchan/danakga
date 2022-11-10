@@ -11,12 +11,14 @@ function searchText(e){
     const code = e.code;
 
     if(code === 'Enter'){
-        $searchInput.value = '';
         if(menuId.value === '0'){
-            userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortBy.value, 'name',0)
+            userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }else if( menuId.value === '1'){
-            manager($selectEnabled.value, true, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+            console.log('실행함');
+            manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }
+
+        $searchInput.value = '';
     }
 }
 // 공통적인 페이징 부분

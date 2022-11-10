@@ -55,7 +55,7 @@ const userActions = {
 
             if(!res.ok){
                 alert("정지 실패!")
-                return null;
+                return
             }
 
             const data = await res.json();
@@ -63,7 +63,27 @@ const userActions = {
             userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }
     },
-    reuse: (id) => alert('정지풀기', id),
+    reuse: async (id) => {
+        if(confirm("계정을 복구하시겠습니까?")){
+            const res = await fetch(`/admin/members/user/restore/${id}`,{
+                method: "PUT",
+                headers: {
+                    'header': header,
+                    'X-CSRF-Token': token,
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if(!res.ok){
+                alert("복구 실패!")
+                return;
+            }
+
+            const data = await res.json();
+            alert(data.message);
+            userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+        }
+    },
     delete: async (id) => {
         if(confirm("삭제하시겠습니까?")){
             const res = await fetch(`/admin/members/user/${id}`,{
@@ -77,7 +97,7 @@ const userActions = {
 
             if(!res.ok){
                 alert("삭제 실패!")
-                return null;
+                return;
             }
 
             const data = await res.json();
