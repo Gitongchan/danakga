@@ -15,10 +15,11 @@ function searchText(e){
         if(menuId.value === '0'){
             userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }else if( menuId.value === '1'){
-            console.log('실행함');
             manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }else if(menuId.value === '2'){
             searchProductList($category.value, $searchInput.value, 0)
+        }else if(menuId.value === '3'){
+            searchBaordList($category.value, $deletedConfig.value, $searchType.value, $searchInput.value, 0);
         }
 
         $searchInput.value = '';
@@ -26,8 +27,6 @@ function searchText(e){
 }
 // 공통적인 페이징 부분
 function renderPagination(currentPage, totalElement, setList) {
-
-        pagenation.innerHTML = "";
 
         //총 페이지 수
             const total = Math.ceil(totalElement/10);

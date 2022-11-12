@@ -268,14 +268,9 @@ public class PageController {
     @GetMapping("/admin/product")
     public String adminProduct() { return "admin/product-list"; }
 
-    @GetMapping("/admin/basic-board")
+    @GetMapping("/admin/board")
     public String adminBasicBoard() {
         return "admin/basic-board-list";
-    }
-
-    @GetMapping("/admin/info-board")
-    public String adminInfoBoard() {
-        return "admin/info-board-list";
     }
 
     @GetMapping("/admin/comment")
