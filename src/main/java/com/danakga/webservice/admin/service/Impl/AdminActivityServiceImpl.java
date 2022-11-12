@@ -185,6 +185,7 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                 commentsMap.put("cm_created", entity.getCmCreated());
                 commentsMap.put("cm_modify", entity.getCmModified());
                 commentsMap.put("cm_answerNum", entity.getCmAnswerNum());
+                commentsMap.put("board_id", entity.getBoard().getBdId());
                 commentsMap.put("totalElement", checkComments.getTotalElements());
                 commentsMap.put("totalPage", checkComments.getTotalPages());
                 commentList.add(commentsMap);
@@ -205,10 +206,11 @@ public class AdminActivityServiceImpl implements AdminActivityService {
                 answerMap.put("cm_content", entity.getCmContent());
                 answerMap.put("cm_writer", entity.getCmWriter());
                 answerMap.put("cm_step", entity.getCmStep());
-                answerMap.put("cm_parentNum", entity.getCmParentNum());
                 answerMap.put("cm_deleted", entity.getCmDeleted());
                 answerMap.put("cm_created", entity.getCmCreated());
                 answerMap.put("cm_modify", entity.getCmModified());
+                answerMap.put("cm_parentNum", entity.getCmParentNum());
+                answerMap.put("board_id", entity.getBoard().getBdId());
                 answerMap.put("totalElement", checkComments.getTotalElements());
                 answerMap.put("totalPage", checkComments.getTotalPages());
                 commentList.add(answerMap);
