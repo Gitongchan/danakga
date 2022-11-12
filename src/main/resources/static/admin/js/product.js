@@ -53,6 +53,8 @@ async function productList(page){
     const res = await fetch(`/admin/productList?page=${page}`);
     const data = await res.json();
 
+    pagenation.innerHTML = "";
+
     if(!res.ok){
         alert("상품조회 실패!")
     }
@@ -71,7 +73,7 @@ async function productList(page){
                         </td>
                         <td>${item.p_subtype}</td>
                         <td>
-                                <button class="btn user-info" data-action="info" data-productid="${item.p_id}"><i class="bx bx-user me-1"></i> 상품보기</button>
+                                <button class="btn user-info" data-action="info" data-productid="${item.p_id}"><i class="bx bxl-product-hunt me-1"></i> 상품보기</button>
                         </td>
                         <td>
                                 <button class="btn user-stop" data-action="delete" data-companyid="${item.company_id}" data-productid="${item.p_id}"><i class="bx bx-trash me-1"></i> 삭제</button>
@@ -89,6 +91,8 @@ async function productList(page){
 async function searchProductList(category, searchWord, page){
     const res = await fetch(`/admin/productSearch/${category}/${searchWord}?page=${page}`);
     const data = await res.json();
+
+    pagenation.innerHTML = "";
 
     if(!res.ok){
         alert("상품 검색 실패!")
@@ -109,7 +113,7 @@ async function searchProductList(category, searchWord, page){
                         </td>
                         <td>${item.p_subtype}</td>
                         <td>
-                                <button class="btn user-info" data-action="info" data-productid="${item.p_id}"><i class="bx bx-user me-1"></i> 상품보기</button>
+                                <button class="btn user-info" data-action="info" data-productid="${item.p_id}"><i class="bx bxl-product-hunt me-1"></i> 상품보기</button>
                         </td>
                         <td>
                                 <button class="btn user-stop" data-action="delete" data-companyid="${item.company_id}" data-productid="${item.p_id}"><i class="bx bx-trash me-1"></i> 삭제</button>
