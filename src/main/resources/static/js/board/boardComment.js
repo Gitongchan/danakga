@@ -143,28 +143,28 @@ const reload = async (e)=> {
                 }
                 // 대댓글을 순회하며 로그인 아이디와 대댓글 아이디 비교해서 수정삭제 버튼 보여지게
                 for (let j in data.comments[i].answer) {
-                    if(data.comments[i].answer[j].cm_writer == checkName.value){
+                    if(data.comments[i].answer[j].an_writer == checkName.value){
                         comment.innerHTML += `
                         <li class="children">
                             <div class="comment-desc">
-                                <div class="desc-top" id="${data.comments[i].answer[j].cm_id}">
+                                <div class="desc-top" id="${data.comments[i].answer[j].an_id}">
                                     <div class="comment-info-wrap">
-                                        <h6 class="comment-uid">${data.comments[i].answer[j].cm_writer}</h6>
+                                        <h6 class="comment-uid">${data.comments[i].answer[j].an_writer}</h6>
                                         <div class="btn-wrap">
-                                            <button class="edit-link reply-edit" data-id="${data.comments[i].answer[j].cm_parentNum}">
+                                            <button class="edit-link reply-edit" data-id="${data.comments[i].answer[j].an_parentNum}">
                                                 <i class="lni lni-comments-reply"></i>수정하기
                                             </button>
-                                            <button class="delete-link reply-delete" data-id="${data.comments[i].answer[j].cm_parentNum}">
+                                            <button class="delete-link reply-delete" data-id="${data.comments[i].answer[j].an_parentNum}">
                                                 <i class="lni lni-close"></i>삭제하기
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="date">${data.comments[i].answer[j].cm_created.split('.')[0]}</span>
+                                <span class="date">${data.comments[i].answer[j].an_created.split('.')[0]}</span>
                             </div>
-                            <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].answer[j].cm_id}">
+                            <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].answer[j]._id}">
                                 <p>
-                                    ${data.comments[i].answer[j].cm_content}
+                                    ${data.comments[i].answer[j].an_content}
                                 </p>
                             </div>
                         </li>`
@@ -172,18 +172,18 @@ const reload = async (e)=> {
                         comment.innerHTML += `
                         <li class="children">
                             <div class="comment-desc">
-                                <div class="desc-top" id="${data.comments[i].answer[j].cm_id}">
+                                <div class="desc-top" id="${data.comments[i].answer[j].an_id}">
                                     <div class="comment-info-wrap">
-                                        <h6 class="comment-uid">${data.comments[i].answer[j].cm_writer}</h6>
+                                        <h6 class="comment-uid">${data.comments[i].answer[j].an_writer}</h6>
                                         <div class="btn-wrap">
                                         </div>
                                     </div>
                                 </div>
-                                <span class="date">${data.comments[i].answer[j].cm_created.split('.')[0]}</span>
+                                <span class="date">${data.comments[i].answer[j].an_created.split('.')[0]}</span>
                             </div>
-                            <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].answer[j].cm_id}">
+                            <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].answer[j].an_id}">
                                 <p>
-                                    ${data.comments[i].answer[j].cm_content}
+                                    ${data.comments[i].answer[j].an_content}
                                 </p>
                             </div>
                         </li>`
