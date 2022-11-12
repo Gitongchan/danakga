@@ -5,8 +5,6 @@
 const pagenation = document.querySelector('.text-center .pagination');
 
 function productInfoPagination(currentPage, totalElement, setList) {
-    pagenation.innerHTML = "";
-
     //총 페이지 수
     const total = Math.ceil(totalElement / 10);
     //화면에 보여질 페이지 그룹
