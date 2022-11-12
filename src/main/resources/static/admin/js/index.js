@@ -13,13 +13,15 @@ function searchText(e){
 
     if(code === 'Enter'){
         if(menuId.value === '0'){
-            userList($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+            userList($selectEnabled.value, $selectSearchRequirements.value, txt ? txt : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }else if( menuId.value === '1'){
-            manager($selectEnabled.value, $selectSearchRequirements.value, $searchInput.value ? $searchInput.value : '%25', $selectSortMethod.value, $selectSortBy.value,0)
+            manager($selectEnabled.value, $selectSearchRequirements.value, txt ? txt : '%25', $selectSortMethod.value, $selectSortBy.value,0)
         }else if(menuId.value === '2'){
             searchProductList($category.value, $searchInput.value, 0)
         }else if(menuId.value === '3'){
-            searchBaordList($category.value, $deletedConfig.value, $searchType.value, $searchInput.value, 0);
+            searchBaordList($category.value, $deletedConfig.value, $searchType.value, txt, 0);
+        }else if(menuId.value === '4'){
+            searchCommentList($category.value, $deletedConfig.value, $searchType.value, txt, 0);
         }
 
         $searchInput.value = '';
