@@ -33,8 +33,8 @@ public class CommentServiceImpl implements CommentService {
     public ResCommentListDto commentsList(Long bd_id, Pageable pageable, int page) {
 
         //삭제여부가 "N", "M"의 값만 가져오기 위한 변수
-        final String deleted1 = "N";
-        final String deleted2 = "M";
+        final String deletedN = "N";
+        final String deletedM = "M";
 
         //댓글, 대댓글 구분
         final int commentStep = 0;
@@ -46,39 +46,41 @@ public class CommentServiceImpl implements CommentService {
 
         //step이 0값 == 댓글 조회
         pageable = PageRequest.of(page, 10, Sort.by("cmCreated").descending());
-        Page<Board_Comment> comments = commentRepository.commentList(bd_id, deleted1, deleted2, commentStep, pageable);
+        Page<Board_Comment> comments = commentRepository.commentList(board.getBdId(), commentStep, deletedN, deletedM, pageable);
 
         //Dto에 값을 담아주기 위한 List<Map>
         List<Map<String, Object>> commentList = new ArrayList<>();
 
-        //대댓글 담을 List<map>
-        List<Map<String, Object>> answersList = new ArrayList<>();
-
-        //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
-        Map<String, Object> commentsMap = new LinkedHashMap<>();
-
         //List 값을 반복문으로 Map에 담아줌
         comments.forEach(comment -> {
-
-            int parentNum = comment.getCmId().intValue();
-
-            //DB를 조회할때 forEach로 반복되는 댓글의 id값을 받아서 각 댓글의 대댓글을 조회
+            
+            /* 대댓글 조회 */
             Pageable answerPage = PageRequest.of(page, 10);
-            Page<Board_Comment> answers = commentRepository.answerList(parentNum, deleted1, answerStep, answerPage);
+            Page<Board_Comment> answers = commentRepository.answerList(comment.getCmId().intValue(), deletedN, answerStep, answerPage);
+
+            //댓글 담을 map (LinkedHashMap은 키값의 순서를 보장하기 위한 HashMap)
+            Map<String, Object> commentsMap = new LinkedHashMap<>();
+
+            //대댓글 담을 List<map>
+            List<Map<String, Object>> answersList = new ArrayList<>();
 
             answers.forEach(answer -> {
 
-                //대댓글 값 담는 Map
-                Map<String, Object> answersMap = new HashMap<>();
+                Map<String, Object> answersMap = new LinkedHashMap<>();
 
-                answersMap.put("cm_id", answer.getCmId());
-                answersMap.put("cm_content", answer.getCmContent());
-                answersMap.put("cm_writer", answer.getCmWriter());
-                answersMap.put("cm_step", answer.getCmStep());
-                answersMap.put("cm_parentNum", answer.getCmParentNum());
-                answersMap.put("cm_deleted", answer.getCmDeleted());
-                answersMap.put("cm_created", answer.getCmCreated());
-                answersMap.put("cm_modify", answer.getCmModified());
+                answersMap.put("an_id", answer.getCmId());
+                answersMap.put("an_content", answer.getCmContent());
+                answersMap.put("an_writer", answer.getCmWriter());
+                answersMap.put("an_step", answer.getCmStep());
+                answersMap.put("an_deleted", answer.getCmDeleted());
+                answersMap.put("an_created", answer.getCmCreated());
+                answersMap.put("an_modify", answer.getCmModified());
+                answersMap.put("an_parentNum", answer.getCmParentNum());
+                answersMap.put("an_group", answer.getCmGroup());
+                answersMap.put("an_depth", answer.getCmDepth());
+                answersMap.put("totalElement", answers.getTotalElements());
+                answersMap.put("totalPage", answers.getTotalPages());
+
                 answersList.add(answersMap);
             });
 
@@ -93,6 +95,7 @@ public class CommentServiceImpl implements CommentService {
             commentsMap.put("totalElement", comments.getTotalElements());
             commentsMap.put("totalPage", comments.getTotalPages());
             commentsMap.put("answer", answersList);
+
             commentList.add(commentsMap);
         });
 

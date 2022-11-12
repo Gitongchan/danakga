@@ -319,7 +319,7 @@ public class ProductServiceImpl implements ProductService {
 
         //썸네일이 삭제되었을때
         if(deletedThumb != null && thumb != null){
-            File deletedThumbFile = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_thumbNail\\" + deletedThumb);
+            File deletedThumbFile = new File(System.getProperty("user.dir") + "//src//main//resources//static//product_thumbNail//" + deletedThumb);
             if(deletedThumbFile.delete()){
                 String updateThumb = productFilesService.thumbFile(thumb);
                 productRepository.updateProductMainPhoto(updateThumb,productId);
@@ -344,7 +344,7 @@ public class ProductServiceImpl implements ProductService {
 
             //List<String>값을 반복문으로 파일명 빼서 삭제
             for(String deleteFile : deletedFileNameList) {
-                File deletedFiles = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\product_files\\" + deleteFile);
+                File deletedFiles = new File(System.getProperty("user.dir") + "//src//main//resources//static//product_files//" + deleteFile);
                 if(deletedFiles.delete()){
                     productFilesRepository.deleteByProductAndPfSaveName(productInfo, deleteFile);
                 }

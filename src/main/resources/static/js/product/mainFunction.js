@@ -759,7 +759,7 @@ window.call = async (data) => {
 
     if(addTool.ok){
         alert("장비 저장 완료!");
-        location.replace('/mypage/cart');
+        location.replace('/user/cart');
     }
 
 }
@@ -790,7 +790,7 @@ go_cart.addEventListener('click', async ()=>{
 
             if(res.ok){
                 alert('장바구니에 상품이 추가되었습니다!');
-                location.replace('/mypage/cart');
+                location.replace('/user/cart');
             }
         }catch (e) {
             alert('장바구니에 상품추가 실패!');
