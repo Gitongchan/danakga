@@ -63,8 +63,8 @@
     height: 300px !important;
 }
 
-.main-img-1{
-    background: url("../images/fishing.jpg") no-repeat;
+.blog-img a img{
+    height: 215px;
 }
 /*.single-banner img{*/
 /*    width: 100%;*/
