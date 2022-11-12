@@ -13,18 +13,19 @@ const urlWriter = getParameterByName('bdwriter');
 
 fetch(`/api/board/post/${urlParams}`)
     .then((res)=>res.json())
-    .then((data)=>
-    {
-        for(let i =0; i< data.files.length; i++){
+    .then((data)=> {
+        console.log(data.post[0]);
+        console.log(data.post[0].bd_content);
+        for(let i =0; i< data.post[0].files.length; i++){
             const img = document.createElement('img');
             const divImg = document.createElement('div');
             const deleteButton = document.createElement('button');
             divImg.classList.add(`current-img`);
-            divImg.id= `${data.files[i].file_name}`
+            divImg.id= `${data.post[0].files[i].file_name}`
             deleteButton.classList.add('img-btn-delete','btn-danger');
             deleteButton.innerText = 'X';
             img.classList.add(`img-item`);
-            img.src= data.files[i].file_path;
+            img.src= data.post[0].files[i].file_path;
 
             deleteButton.addEventListener('click',(e)=>{
                 console.log(e);
@@ -38,9 +39,9 @@ fetch(`/api/board/post/${urlParams}`)
         }
 
 
-        editor.setData(data.post.bd_content);
-        title.value = data.post.bd_title;
-        span.innerText= data.post.bd_writer;
+        editor.setData(data.post[0].bd_content);
+        title.value = data.post[0].bd_title;
+        span.innerText= data.post[0].bd_writer;
         userid.appendChild(span);
 
     });
