@@ -45,13 +45,13 @@ const reviewActions = {
                 }
                 const data = await res.json();
                 alert(data.message);
-            }
-            reviewList($searchType.value, $deletedConfig.value,0);
+               reviewList($deletedConfig.value,0);
+        }
         }
 }
 
 
-/* 관리자 댓글 목록 */
+/* 관리자 리뷰 목록 */
 // type = 댓글, 대댓글
 /* sort == deleted N, Y */
 
@@ -94,12 +94,8 @@ async function reviewList(sort, page){
     }
 }
 
-/* 관리자 댓글/대댓글 검색 */
-/* category = 전체, 제목, 내용, 작성자
-*  sort = N, Y
-*  type = 댓글, 대댓글
-*  content = 검색어
-* */
+// category = 작성자, 상품명, 후기내용
+// sort = "N" or "Y" 삭제 여부
 
 async function searchReviewList(category, sort, content, page){
     const res = await fetch(`/admin/reviewSearch/${category}/${sort}/${content}?page=${page}`);
