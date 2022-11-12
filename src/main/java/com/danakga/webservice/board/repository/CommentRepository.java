@@ -25,13 +25,13 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     //댓글 조회
     @Query(
             value = "select bc " +
-                    "from Board_Comment  bc " +
-                    "where bc.board.bdId = :bdId and bc.cmStep = :cmStep and bc.cmDeleted = :cmDeleted1 or bc.cmDeleted = :cmDeleted2 "
+                    "from Board_Comment bc join bc.board bd " +
+                    "where bd.bdId = :bdId and bc.cmStep = :cmStep and bc.cmDeleted = :cmDeletedN or bc.cmDeleted = :cmDeletedM"
     )
-    Page<Board_Comment> commentList(@Param("bdId") Long bd_id,
-                                    @Param("cmDeleted1") String cm_deleted1,
-                                    @Param("cmDeleted2") String cm_deleted2,
+    Page<Board_Comment> commentList(@Param("bdId") Long bdId,
                                     @Param("cmStep") int commentStep,
+                                    @Param("cmDeletedN") String cm_deletedN,
+                                    @Param("cmDeletedM") String cm_deletedM,
                                     Pageable pageable);
 
 
@@ -66,11 +66,11 @@ public interface CommentRepository extends JpaRepository<Board_Comment, Long> {
     @Query(
             value = "select bc " +
                     "from Board_Comment bc " +
-                    "where bc.cmParentNum = :cmParentNum and bc.cmDeleted = :cmDeleted and bc.cmStep = :cmStep " +
-                    "order by bc.cmGroup desc, bc.cmDepth asc"
+                    "where bc.cmParentNum = :cmParentNum and bc.cmDeleted = :cmDeletedN and bc.cmStep = :cmStep " +
+                    "order by bc.cmGroup desc, bc.cmDepth asc, bc.cmCreated desc"
     )
-    Page<Board_Comment> answerList(@Param("cmParentNum") int cmParentNum,
-                                   @Param("cmDeleted") String deleted,
+    Page<Board_Comment> answerList(@Param("cmParentNum") int parentNum,
+                                   @Param("cmDeletedN") String deleted,
                                    @Param("cmStep") int cmStep,
                                    Pageable pageable);
 
