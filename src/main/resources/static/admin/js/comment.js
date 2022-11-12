@@ -62,8 +62,6 @@ const commentActions = {
                 const data = await res.json();
                 alert(data.message);
             }else{
-                console.log('대댓글삭제 실행', an_id);
-
                 //대댓글 삭제
                 const res = await fetch(`/admin/commentAnswerDelete/${bd_id}/${cm_id}/${an_id}`,{
                     method: "DELETE",
@@ -146,16 +144,16 @@ async function searchCommentList(category, sort, type, content, page){
     }
     const res = await fetch(url);
     const data = await res.json();
+    pagenation.innerHTML = "";
 
     if(!res.ok){
         alert("댓글 검색 실패!")
     }
-    pagenation.innerHTML = "";
+    $table.innerHTML = '';
 
     const pageData = data.comments[0];
     renderPagination(pageData.totalPage, pageData.totalElement, searchCommentList);
 
-    $table.innerHTML = '';
     for(const item of data.comments){
         $table.innerHTML+= `
                       <tr>
@@ -189,7 +187,7 @@ document.querySelector('tbody').addEventListener('click', e => {
     const bd_id = e.target.dataset.bdid;
     const cm_id = e.target.dataset.myid;
     const an_id = e.target.dataset.parentid;
-    console.log(bd_id, cm_id,an_id);
+    console.log('버튼발생',bd_id, cm_id,an_id);
 
     if (action) {
         commentActions[action]({bd_id, cm_id, an_id});
