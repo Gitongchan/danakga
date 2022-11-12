@@ -41,11 +41,11 @@ public class BoardPermitAllController {
     }
 
     //댓글 조회
-    @GetMapping("/post/comments/{cm_id}")
-    public ResCommentListDto commentsList(@PathVariable("cm_id") Long cm_id,
+    @GetMapping("/post/comments/{bd_id}")
+    public ResCommentListDto commentsList(@PathVariable("bd_id") Long bd_id,
                                          Pageable pageable, int page) {
 
-        return commentService.commentsList(cm_id, pageable, page);
+        return commentService.commentsList(bd_id, pageable, page);
     }
 
     //개별 댓글 조회
