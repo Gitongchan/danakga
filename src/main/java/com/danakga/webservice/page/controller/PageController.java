@@ -270,17 +270,12 @@ public class PageController {
 
     @GetMapping("/admin/board")
     public String adminBasicBoard() {
-        return "admin/basic-board-list";
+        return "admin/board-list";
     }
 
     @GetMapping("/admin/comment")
     public String adminComment() {
         return "admin/comment-list";
-    }
-
-    @GetMapping("/admin/reply")
-    public String adminReply() {
-        return "admin/reply-list";
     }
 
     @GetMapping("/admin/review")

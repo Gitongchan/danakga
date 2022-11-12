@@ -139,7 +139,13 @@ const reload = async (e)=> {
                             </div>
                         </div>
                         <span class="date">${data.comments[i].cm_created.split('.')[0]}</span>
-                        `
+                       </div>
+                    <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].cm_id}">
+                        <p>
+                            ${data.comments[i].cm_content}
+                        </p>
+                    </div>
+                </li>`
                 }
                 // 대댓글을 순회하며 로그인 아이디와 대댓글 아이디 비교해서 수정삭제 버튼 보여지게
                 for (let j in data.comments[i].answer) {
