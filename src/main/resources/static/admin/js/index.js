@@ -22,6 +22,8 @@ function searchText(e){
             searchBaordList($category.value, $deletedConfig.value, $searchType.value, txt, 0);
         }else if(menuId.value === '4'){
             searchCommentList($category.value, $deletedConfig.value, $searchType.value, txt, 0);
+        }else if(menuId.value === '5'){
+            searchReviewList($category.value, $deletedConfig.value, txt, 0);
         }
 
         $searchInput.value = '';
