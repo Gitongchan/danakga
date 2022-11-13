@@ -41,7 +41,6 @@ public class AdminActivityServiceImpl implements AdminActivityService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final BoardRepository boardRepository;
-    private final BoardFileRepository boardFileRepository;
     private final CommentRepository commentRepository;
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;

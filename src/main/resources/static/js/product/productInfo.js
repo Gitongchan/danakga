@@ -337,6 +337,8 @@ const status = getParameterByName('status');
     // 리뷰 출력하는 곳
     async function reviewList(page){
         const res = await fetch(`/api/review/reviewList/${productId}?page=${page}`);
+        pagenation.innerHTML = "";
+
         if(res.ok) {
             reviewWrap.innerHTML = '';
             const data = await res.json();
@@ -347,6 +349,7 @@ const status = getParameterByName('status');
             // re_writer: "ppwm1111"
             // totalElements: 1
             // totalPages: 1
+
             productInfoPagination(data.reviewList[0].totalPages, data.reviewList[0].totalElements, reviewList)
             for (let i in data.reviewList) {
                 if(data.reviewList[i].re_writer === checkName.value){
@@ -485,6 +488,7 @@ const status = getParameterByName('status');
         const res = await fetch(`/api/qna/list/product/${productId}?page=${page}`);
         const data = await res.json();
 
+        pagenation.innerHTML = "";
         if(!res.ok){
             alert("로드 실패!")
             return null;

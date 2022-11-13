@@ -41,10 +41,10 @@ const commentActions = {
     info: async ({bd_id, cm_id, an_id}) => {
         window.open(`/board/info?boardid=${bd_id}`)
     },
-    delete: async ({bd_id, cm_id, an_id}) => {
+    delete: async ({bd_id, cm_id, parent_id}) => {
         if(confirm("삭제하시겠습니까?")){
             //an_id가 없을 때(댓글 삭제)
-            if(an_id === 'undefined'){
+            if(parent_id === 'undefined'){
                 console.log('댓글삭제 실행')
                 const res = await fetch(`/admin/commentDelete/${bd_id}/${cm_id}`,{
                     method: "DELETE",
@@ -63,7 +63,7 @@ const commentActions = {
                 alert(data.message);
             }else{
                 //대댓글 삭제
-                const res = await fetch(`/admin/commentAnswerDelete/${bd_id}/${cm_id}/${an_id}`,{
+                const res = await fetch(`/admin/commentAnswerDelete/${bd_id}/${parent_id}/${cm_id}`,{
                     method: "DELETE",
                     headers: {
                         'header': header,
@@ -184,13 +184,16 @@ $commentList.addEventListener('click', () => {
 
 document.querySelector('tbody').addEventListener('click', e => {
     const action = e.target.dataset.action
+    // 게시판 아이디
     const bd_id = e.target.dataset.bdid;
+    // 해당 댓글 아이디
     const cm_id = e.target.dataset.myid;
-    const an_id = e.target.dataset.parentid;
-    console.log('버튼발생',bd_id, cm_id,an_id);
+    // 상위 부모 댓글 아이디
+    const parent_id = e.target.dataset.parentid;
+    console.log('버튼발생',bd_id, cm_id, parent_id);
 
     if (action) {
-        commentActions[action]({bd_id, cm_id, an_id});
+        commentActions[action]({bd_id, cm_id, parent_id});
     }
 });
 

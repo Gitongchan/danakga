@@ -252,7 +252,7 @@ public class PageController {
 
     @GetMapping("/admin/index")
     public String adminIndex() {
-        return "admin/index";
+        return "admin/user-list";
     }
 
     @GetMapping("/admin/user")
