@@ -1,42 +1,74 @@
 <div align="center">
-
  <h1> <img src="https://user-images.githubusercontent.com/71693517/202947938-b56f3537-bcf3-4698-915a-80200a4b0524.png" width="150px"><br/>다낚아</h1>
-<div>개요, 목표, 소개, 개발환경, 시스템 아키텍처 이미지, 기능 예시, 팀원 및 역할</div>
 </div>
+
+<img src="https://user-images.githubusercontent.com/71693517/203074908-f0b4c954-853b-407d-b9c0-d990c1bd80a5.png" width="500px">
+
   
-# Features
-We got everything that you need ! Create your perfect GitHub Profile ReadMe in the best possible way. Lots of features and tools included, all for free !
+### 😃 팀원 및 역할
+- 박정현 [팀장] : Back-End
+- 유병진 [팀원] : Front-End
+- 양진모 [팀원] : Back-End
 
-### ⚡ Lightening fast Profile Creation
-Create your Profile ReadMe in just few clicks ! On an average, it takes less than one minute to create a perfect Profile ReadMe using GPRM
+### ⚡ 개요
+종합 낚시 용품 관리 및 판매 플랫폼
 
-### 📊 Flex Your GitHub Stats
-Be Honest, everyone loves to flex their achievements. With tools such as ReadMe Stats, Most Used Languages, Streak Stats you can show your achievements.
 
-### 👥 Visitor Counter
-With the use of Visitors Counter you can see how many people viewed your profile, this gives you an idea about how popular you are on GitHub.
+### 📊 소개
+요즘은 점차 낚시를 취미로 가지는 인구가 많이 늘어나고 있습니다.</br>
+그래서 사용자들에게 여러 낚시 용품에 대한 쉬운 접근성을 목표로 커뮤니티 활동을 통해
+사용자들 간의 필요한 정보를 얻거나 교환하고, 입점 상점에서 낚시 용품을 구입할 수 있는 플랫폼 입니다. 
+ 
 
-### 🌐 Add all Social Links
-We have added an option to add your Social Links to increase your reach and promote your works at one place.
+### 👥 목표
+낚시 용품의 쉽고 간편한 구매, 다양한 커뮤니티의 정보, 견적 조언 등을 통해 낚시 입문자들의 접근성을 증진합니다.</br>
+그리고 플랫폼 서비스를 통해 온라인 상점을 보유하지 못한 소규모 낚시점도 자신만의 상점을 갖고
+직접 상품을 등록 및 관리하며 판매 추이 확인, 내역 조회 등을 통해서 소규모 낚시점들의 매출 증진 및 온라인 서비스를 이용하여
+소상공인들에게도 도움이 되는 것을 목표로 하고 있습니다.
 
-### 💻 Show Your Tech Stack
-Select from over 300+ tech options and show your tech stack to everyone, Let them know what makes you awesome.
 
-### 💰 Let people help you with Donations
-No matter what your aim is, money is required at some point to boost the process for getting closer to your aim. We give you an option to add Donation Links directly into your profile so that people can help you by donating.
 
-### 😃 Fun Components
-If fun is required everywhere, how can it be missing from your profile ? Now, You can cheer up other people by adding Random Memes and Quotes in your profile.
+### ✨ 문제점 파악 및 해결방안
+낚시 용품 판매 사이트의 대부분은 비슷한 형식으로 제작되어 있거나 '네이버 모두'를 사용한 사이트들이 많기 때문에 특색이 없습니다.
+그리고 판매 사이트가 굉장히 적고 사이트별 똑같은 상품이어도 가격이 제각각입니다.
+또한 낚시는 생각보다 장르에 따른 사용 도구가 전부 다르기 때문에 품목도 굉장히 많습니다.
+그러나 장바구니, 찜하기 등의 기능의 부재로 인해서 어떤 제품을 내가 담았는지 헷갈리는 경우가 있습니다.</br>
 
-### 🏆 GitHub Trophies
-Got any trophies/medals but oops! how can you show them on your profile? Don't worry, GitHub Trophies are the virtual trophies for you. Showcase them by adding it to your profile.
+이러한 문제점들을 해결하기 위해 편리하게 낚시 장비 세트를 맞추는 서비스를 통해 구매 및 관리가 가능한 기능을 제작하고,
+직접 관리하는 장비 세트를 커뮤니티에 올려 여러 사용자들의 의견을 들을 수 있습니다.</br>
+낚시 용품을 구매할 때 여러 용품을 한눈에 볼 수 있도록 하며 가격비교, 리뷰를 확인하여 합리적인 구매를 할 수 있도록 합니다.</br>
+그리고 실시간으로 제품을 담는 즉시 구매 목록이 한 화면에 나타나 PC 부품처럼 다양한 낚시 상품을 한 번에 쉽게 담을 수 있습니다.</br>
 
-## Tech Used
-![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
-![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+
+### 🌐 시스템 아키텍처
+<img src="https://user-images.githubusercontent.com/71693517/203068217-186af690-4fd0-459b-a823-a46cbc88b9cc.png" width="700px">
+
+
+### 💻 기능 예시
+<h2>1. 낚시 용품 구매 </h2>
+<img src="https://user-images.githubusercontent.com/71693517/203079713-b3640332-48cb-4fbd-a63e-36ba7911af1f.png" width="600px">
+
+<h2>2. 낚시 용품 등록 </h2>
+<img src="https://user-images.githubusercontent.com/71693517/203080162-0bb94cec-8eca-45c3-aae2-b471851dce17.png" width="600px">
+
+<h2>3. 장바구니 및 내 견적 </h2>
+<img src="https://user-images.githubusercontent.com/71693517/203080412-d02d8e26-65e2-4f99-98d1-1f8e082b6b4a.png" width="600px">
+
+<h2>4. 주문내역 및 배송상태 확인 </h2>
+<img src="https://user-images.githubusercontent.com/71693517/203080855-56b69686-418b-4f45-afd0-3aad290d0a89.png" width="600px">
+
+## 개발 환경
+  <div>
+  <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
+  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">
+  <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white">
+  <img src="https://img.shields.io/badge/Jpa-6DB33F?style=for-the-badge&logo=Jpa&logoColor=white">
+  <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white"> 
+  <img src="https://img.shields.io/badge/Apache Tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
+  </div>
+  
+  <div>
+  <img src="https://img.shields.io/badge/Html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
+  <img src="https://img.shields.io/badge/Css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
+  <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+  </div>
