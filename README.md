@@ -45,17 +45,17 @@
 
 
 ### 💻 기능 예시
-<h2>1. 낚시 용품 구매 </h2>
+<h3>1. 낚시 용품 구매 </h3>
 <img src="https://user-images.githubusercontent.com/71693517/203079713-b3640332-48cb-4fbd-a63e-36ba7911af1f.png" width="600px">
 
-<h2>2. 낚시 용품 등록 </h2>
+<h3>2. 낚시 용품 등록 </h3>
 <img src="https://user-images.githubusercontent.com/71693517/203080162-0bb94cec-8eca-45c3-aae2-b471851dce17.png" width="600px">
 
-<h2>3. 장바구니 및 내 견적 </h2>
+<h3>3. 장바구니 및 내 견적 </h3>
 <img src="https://user-images.githubusercontent.com/71693517/203080412-d02d8e26-65e2-4f99-98d1-1f8e082b6b4a.png" width="600px">
 
-<h2>4. 주문내역 및 배송상태 확인 </h2>
-<img src="https://user-images.githubusercontent.com/71693517/203080855-56b69686-418b-4f45-afd0-3aad290d0a89.png" width="600px">
+<h3>4. 주문내역 및 배송상태 확인 </h3>
+<img src="https://user-images.githubusercontent.com/71693517/203668489-a3c6eff5-b60a-4ea2-baf2-c43c04323f00.jpg" width="600px">
 
 ## 개발 환경
   <div>
