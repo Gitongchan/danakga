@@ -1,4 +1,3 @@
-
 const title = document.getElementById('post-title');
 const content = document.getElementById('post-inner');
 const id = document.getElementById('userID');
@@ -16,42 +15,40 @@ btnWrap.appendChild(deleteBtn);
 const qnId = getParameterByName('qnId').split('?')[0];
 const userId = getParameterByName('userId');
 
-(async function() {
+(async function () {
     try {
         const res = await fetch('/api/user')
         const data = await res.json();
 
-        if(res.status === 200){
-            if(data.userid === userId){
+        if (res.status === 200) {
+            if (data.userid === userId) {
                 fetch(`/api/qna/post/${qnId}`)
-                    .then((res)=>res.json())
-                    .then((data)=> {
+                    .then((res) => res.json())
+                    .then((data) => {
                         console.log(data);
-                    metaInfo.appendChild(btnWrap);
+                        metaInfo.appendChild(btnWrap);
                         content.innerHTML += data.qnaList[0].qn_content;
                         title.innerText = data.qnaList[0].qn_title;
-                        span.innerText= data.qnaList[0].qn_userid;
+                        span.innerText = data.qnaList[0].qn_userid;
                         id.appendChild(span);
                     });
-            }
-            else{
+            } else {
                 check();
             }
         }
-    }
-    catch (e) {
+    } catch (e) {
         check();
     }
 })();
 
-editBtn.addEventListener('click',()=>{
+editBtn.addEventListener('click', () => {
     location.replace(`/qnaboard/edit?qnId=${qnId}&userid=${userId}`)
 })
 
-deleteBtn.addEventListener('click',()=>{
-    if(confirm('게시글을 삭제하시겠습니까?')) {
-        fetch(`/api/user/qna/site_delete/${qnId}`,{
-            method : "PUT",
+deleteBtn.addEventListener('click', () => {
+    if (confirm('게시글을 삭제하시겠습니까?')) {
+        fetch(`/api/user/qna/site_delete/${qnId}`, {
+            method: "PUT",
             headers: {
                 'header': header,
                 'X-Requested-With': 'XMLHttpRequest',
@@ -59,8 +56,8 @@ deleteBtn.addEventListener('click',()=>{
                 'X-CSRF-Token': token
             }
         })
-            .then((res)=>res.json())
-            .then((data)=>{
+            .then((res) => res.json())
+            .then((data) => {
                 location.replace('/board/qa?type=문의게시판');
             })
     }
@@ -68,11 +65,11 @@ deleteBtn.addEventListener('click',()=>{
 
 const check = () => {
     fetch(`/api/qna/post/${qnId}`)
-        .then((res)=>res.json())
-        .then((data)=> {
+        .then((res) => res.json())
+        .then((data) => {
             content.innerHTML += data.qnaList[0].qn_content;
             title.innerText = data.qnaList[0].qn_title;
-            span.innerText= data.qnaList[0].qn_userid;
+            span.innerText = data.qnaList[0].qn_userid;
             id.appendChild(span);
         });
 }

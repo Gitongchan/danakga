@@ -66,6 +66,10 @@
     margin-bottom: 15px;
 }
 
+.category_list_wrap{
+    margin-bottom: 1px;
+}
+
 .category_list_wrap,
 .category_list_type_wrap
 {
