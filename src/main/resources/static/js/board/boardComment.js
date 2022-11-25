@@ -27,25 +27,32 @@ commentBtn.addEventListener('click',async(event) => {
 
 
 
-const reload = async (e)=> {
-    const res = await fetch(`/api/board/post/comments/${boardID}?page=${e}`)
+const reload = async (page = 0)=> {
+    const res = await fetch(`/api/board/post/comments/${boardID}?page=${page}`)
+
+    if (!res.ok) {
+        console.log('오류 발생!');
+        return;
+    }
     const data = await res.json();
 
-    if (res.status === 200) {
+    const { comments } = data;
+
+    console.log(comments);
         console.log(data);
         comment.innerHTML = "";
-        for (let i in data.comments) {
+        for (let i in comments) {
 
             // 대댓글이 있나 확인
-            if(data.comments[i].answer.length===0){
-                if(data.comments[i].cm_writer==checkName.value){
+            if(comments[i].answer.length===0){
+                if(comments[i].cm_writer==checkName.value){
                     comment.innerHTML +=
                         `
-                <li class="parent${data.comments[i].cm_id}">
+                <li class="parent${comments[i].cm_id}">
                     <div class="comment-desc">
-                        <div class="desc-top" id="${data.comments[i].cm_id}">
+                        <div class="desc-top" id="${comments[i].cm_id}">
                             <div class="comment-info-wrap">
-                                <h6 class="comment-uid">${data.comments[i].cm_writer}</h6>
+                                <h6 class="comment-uid">${comments[i].cm_writer}</h6>
                                 <div class="btn-wrap">
                                     <button class="edit-link comment-edit">
                                         <i class="lni lni-comments-reply"></i>수정하기
@@ -59,22 +66,22 @@ const reload = async (e)=> {
                                 </div>
                             </div>
                         </div>
-                        <span class="date">${data.comments[i].cm_created.split('.')[0]}</span>
+                        <span class="date">${comments[i].cm_created.split('.')[0]}</span>
                     </div>
-                    <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].cm_id}">
+                    <div class="form-group col-sm-12 comment" id="comment-text${comments[i].cm_id}">
                         <p>
-                            ${data.comments[i].cm_content}
+                            ${comments[i].cm_content}
                         </p>
                     </div>
                  </li>`
                 }else{
                     comment.innerHTML +=
                         `
-                <li class="parent${data.comments[i].cm_id}">
+                <li class="parent${comments[i].cm_id}">
                     <div class="comment-desc">
-                        <div class="desc-top" id="${data.comments[i].cm_id}">
+                        <div class="desc-top" id="${comments[i].cm_id}">
                             <div class="comment-info-wrap">
-                                <h6 class="comment-uid">${data.comments[i].cm_writer}</h6>
+                                <h6 class="comment-uid">${comments[i].cm_writer}</h6>
                                 <div class="btn-wrap">
                                     <button class="reply-link comment-reply">
                                         <i class="lni lni-reply"></i>답글달기
@@ -82,25 +89,25 @@ const reload = async (e)=> {
                                 </div>
                             </div>
                         </div>
-                        <span class="date">${data.comments[i].cm_created.split('.')[0]}</span>
+                        <span class="date">${comments[i].cm_created.split('.')[0]}</span>
                     </div>
-                    <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].cm_id}">
+                    <div class="form-group col-sm-12 comment" id="comment-text${comments[i].cm_id}">
                         <p>
-                            ${data.comments[i].cm_content}
+                            ${comments[i].cm_content}
                         </p>
                     </div>
                 </li>`
                 }
             }else{
                 // 대댓글이 있을경우
-                if(data.comments[i].cm_writer==checkName.value){
+                if(comments[i].cm_writer==checkName.value){
                     comment.innerHTML +=
                         `
-                <li class="parent${data.comments[i].cm_id}">
+                <li class="parent${comments[i].cm_id}">
                     <div class="comment-desc">
-                        <div class="desc-top" id="${data.comments[i].cm_id}">
+                        <div class="desc-top" id="${comments[i].cm_id}">
                             <div class="comment-info-wrap">
-                                <h6 class="comment-uid">${data.comments[i].cm_writer}</h6>
+                                <h6 class="comment-uid">${comments[i].cm_writer}</h6>
                                 <div class="btn-wrap">
                                     <button class="edit-link comment-edit">
                                         <i class="lni lni-comments-reply"></i>수정하기
@@ -114,11 +121,11 @@ const reload = async (e)=> {
                                 </div>
                             </div>
                         </div>
-                        <span class="date">${data.comments[i].cm_created.split('.')[0]}</span>
+                        <span class="date">${comments[i].cm_created.split('.')[0]}</span>
                     </div>
-                    <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].cm_id}">
+                    <div class="form-group col-sm-12 comment" id="comment-text${comments[i].cm_id}">
                         <p>
-                            ${data.comments[i].cm_content}
+                            ${comments[i].cm_content}
                         </p>
                     </div>
                 </li>`
@@ -126,11 +133,11 @@ const reload = async (e)=> {
                     // 댓글작성자와 로그인한 아이디가 일치하지 않을떄
                     comment.innerHTML +=
                         `
-                <li class="parent${data.comments[i].cm_id}">
+                <li class="parent${comments[i].cm_id}">
                     <div class="comment-desc">
-                        <div class="desc-top" id="${data.comments[i].cm_id}">
+                        <div class="desc-top" id="${comments[i].cm_id}">
                             <div class="comment-info-wrap">
-                                <h6 class="comment-uid">${data.comments[i].cm_writer}</h6>
+                                <h6 class="comment-uid">${comments[i].cm_writer}</h6>
                                 <div class="btn-wrap">
                                     <button class="reply-link comment-reply">
                                         <i class="lni lni-reply"></i>답글달기
@@ -138,39 +145,39 @@ const reload = async (e)=> {
                                 </div>
                             </div>
                         </div>
-                        <span class="date">${data.comments[i].cm_created.split('.')[0]}</span>
+                        <span class="date">${comments[i].cm_created.split('.')[0]}</span>
                        </div>
-                    <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].cm_id}">
+                    <div class="form-group col-sm-12 comment" id="comment-text${comments[i].cm_id}">
                         <p>
-                            ${data.comments[i].cm_content}
+                            ${comments[i].cm_content}
                         </p>
                     </div>
                 </li>`
                 }
                 // 대댓글을 순회하며 로그인 아이디와 대댓글 아이디 비교해서 수정삭제 버튼 보여지게
-                for (let j in data.comments[i].answer) {
-                    if(data.comments[i].answer[j].an_writer == checkName.value){
+                for (let j in comments[i].answer) {
+                    if(comments[i].answer[j].an_writer == checkName.value){
                         comment.innerHTML += `
                         <li class="children">
                             <div class="comment-desc">
-                                <div class="desc-top" id="${data.comments[i].answer[j].an_id}">
+                                <div class="desc-top" id="${comments[i].answer[j].an_id}">
                                     <div class="comment-info-wrap">
-                                        <h6 class="comment-uid">${data.comments[i].answer[j].an_writer}</h6>
+                                        <h6 class="comment-uid">${comments[i].answer[j].an_writer}</h6>
                                         <div class="btn-wrap">
-                                            <button class="edit-link reply-edit" data-id="${data.comments[i].answer[j].an_parentNum}">
+                                            <button class="edit-link reply-edit" data-id="${comments[i].answer[j].an_parentNum}">
                                                 <i class="lni lni-comments-reply"></i>수정하기
                                             </button>
-                                            <button class="delete-link reply-delete" data-id="${data.comments[i].answer[j].an_parentNum}">
+                                            <button class="delete-link reply-delete" data-id="${comments[i].answer[j].an_parentNum}">
                                                 <i class="lni lni-close"></i>삭제하기
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="date">${data.comments[i].answer[j].an_created.split('.')[0]}</span>
+                                <span class="date">${comments[i].answer[j].an_created.split('.')[0]}</span>
                             </div>
-                            <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].answer[j]._id}">
+                            <div class="form-group col-sm-12 comment" id="comment-text${comments[i].answer[j]._id}">
                                 <p>
-                                    ${data.comments[i].answer[j].an_content}
+                                    ${comments[i].answer[j].an_content}
                                 </p>
                             </div>
                         </li>`
@@ -178,18 +185,18 @@ const reload = async (e)=> {
                         comment.innerHTML += `
                         <li class="children">
                             <div class="comment-desc">
-                                <div class="desc-top" id="${data.comments[i].answer[j].an_id}">
+                                <div class="desc-top" id="${comments[i].answer[j].an_id}">
                                     <div class="comment-info-wrap">
-                                        <h6 class="comment-uid">${data.comments[i].answer[j].an_writer}</h6>
+                                        <h6 class="comment-uid">${comments[i].answer[j].an_writer}</h6>
                                         <div class="btn-wrap">
                                         </div>
                                     </div>
                                 </div>
-                                <span class="date">${data.comments[i].answer[j].an_created.split('.')[0]}</span>
+                                <span class="date">${comments[i].answer[j].an_created.split('.')[0]}</span>
                             </div>
-                            <div class="form-group col-sm-12 comment" id="comment-text${data.comments[i].answer[j].an_id}">
+                            <div class="form-group col-sm-12 comment" id="comment-text${comments[i].answer[j].an_id}">
                                 <p>
-                                    ${data.comments[i].answer[j].an_content}
+                                    ${comments[i].answer[j].an_content}
                                 </p>
                             </div>
                         </li>`
@@ -406,12 +413,11 @@ const reload = async (e)=> {
                 }
             })
         }
-    }
+
+        renderPagination(comments[0].totalPage, comments[0].totalElement, reload)
 }
 
 
-// 댓글 조회 후 뿌리기
-(async ()=>{
-    await reload(0);
-})();
+reload();
+
 
