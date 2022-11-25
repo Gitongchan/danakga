@@ -3,41 +3,39 @@ const content = document.querySelector('#search');
 const category = document.querySelector('.form-select');
 const type = getParameterByName('type');
 
-const getInfo = async () => {
-    // 페이징 부분을 비워주는 곳
-    pagenation.innerHTML= '';
+const getInfo = (page = 0) => {
+    return async () => {
+        if(content.value.trim().length===0){
+            alert('값을 입력해주세요!')
+            return;
+        }
+        try{
+            const res = await  fetch(`/api/board/list/search/${type}/${category.value}/${content.value}?page=${page}`);
+            if(!res.ok){
+                alert("오류발생!");
+                return
+            }
 
-    console.log(category.value);
-    console.log(type.value);
-    console.log(content.value);
-    if(content.value.trim().length===0){
-        alert('값을 입력해주세요!')
-        return;
-    }
-    try{
-        const res = await  fetch(`/api/board/list/search/${type}/${category.value}/${content.value}?page=0`);
-        if(res.ok){
-            const data = await res.json();
+            const { lists } = await res.json();
             tablelist.innerHTML = '';
-            console.log(data);
-            for(let i=0; i<data.lists.length; i++){
+
+            for(let item in lists){
                 const tr = document.createElement('tr');
                 tr.innerHTML =
-                    `<td>${data.lists[i].bd_id}</td>
-                 <td><a href="/board/info?boardid=${data.lists[i].bd_id}?bdwriter=${data.lists[i].bd_writer}">${data.lists[i].bd_title}</a></td>
-                 <td>${data.lists[i].bd_writer}</td>
-                 <td>${data.lists[i].bd_created.split('.')[0]}</td>
-                 <td>${data.lists[i].bd_views}</td>`
+                    `<td>${lists[item].bd_id}</td>
+                 <td><a href="/board/info?boardid=${lists[item].bd_id}?bdwriter=${lists[item].bd_writer}">${lists[item].bd_title}</a></td>
+                 <td>${lists[item].bd_writer}</td>
+                 <td>${lists[item].bd_created.split('.')[0]}</td>
+                 <td>${lists[item].bd_views}</td>`
 
                 tablelist.appendChild(tr);
             }
-            //  페이징을 해주면 된다.
-            console.log(searchPagination())
-            searchPagination(data.lists[0].totalPage,data.lists[0].totalElement);
-        }
-    }catch (e) {
 
+            renderPagination(lists[0].totalPage,lists[0].totalElement, getInfo());
+        }catch (e) {
+
+        }
     }
 }
 
-searchBtn.addEventListener('click', getInfo);
+searchBtn.addEventListener('click', getInfo());
