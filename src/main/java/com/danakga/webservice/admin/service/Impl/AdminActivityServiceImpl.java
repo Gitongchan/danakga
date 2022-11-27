@@ -399,8 +399,8 @@ public class AdminActivityServiceImpl implements AdminActivityService {
         checkProductList.forEach(product -> {
 
             /* 상품 아이디 값 하나씩 순회 하면서 평점 출력 */
-            Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId()).orElseThrow(
-                    ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+            Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId())
+                    .orElseThrow(()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
             ) ;
 
             double productRating; // 상품 평점
@@ -470,8 +470,8 @@ public class AdminActivityServiceImpl implements AdminActivityService {
             productSearch.forEach(product -> {
 
                 /* 상품 아이디 값 하나씩 순회 하면서 평점 출력 */
-                Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId()).orElseThrow(
-                        ()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
+                Product checkProduct = productRepository.findByProductIdAndCompanyEnabled(product.getProductId())
+                        .orElseThrow(()->new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다.")
                 ) ;
 
                 double productRating; // 상품 평점

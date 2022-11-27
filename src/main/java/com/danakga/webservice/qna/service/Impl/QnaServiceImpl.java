@@ -263,11 +263,12 @@ public class QnaServiceImpl implements QnaService {
         Product checkProduct = productRepository.findById(p_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
 
+        CompanyInfo checkCompanyInfo = companyRepository.findById(checkProduct.getProductCompanyId().getCompanyId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
+
         Qna checkQna = qnaRepository.findByProductAndQnId(checkProduct, qn_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
 
-        CompanyInfo checkCompanyInfo = companyRepository.findById(checkProduct.getProductCompanyId().getCompanyId())
-                .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
         checkQna = qnaRepository.save(
                 Qna.builder()
@@ -312,6 +313,9 @@ public class QnaServiceImpl implements QnaService {
         /* 상품 문의사항 삭제 */
         Product checkProduct = productRepository.findById(p_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        CompanyInfo checkCompanyInfo = companyRepository.findById(checkProduct.getProductCompanyId().getCompanyId())
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
         Qna checkQna = qnaRepository.findByProductAndQnId(checkProduct, qn_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));

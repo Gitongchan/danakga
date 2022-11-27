@@ -82,6 +82,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         /* 구매확정 후 리뷰 작성 가능 */
         if(!checkOrders.getOrdersStatus().equals(OrdersStatus.CONFIRM.getStatus())) {
+
             return new ResResultDto(-1L,"구매 확정 후 후기를 작성할 수 있습니다.");
         }
 
@@ -120,7 +121,7 @@ public class ReviewServiceImpl implements ReviewService {
         Orders checkOrders = ordersRepository.findByOrdersIdAndProduct(reqReviewDto.getOrderId(), checkProduct)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
 
-        Review checkReview = reviewRepository.findById(re_id)
+        Review checkReview = reviewRepository.findByProductAndOrdersAndReId(checkProduct, checkOrders, re_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("작성한 후기를 찾을 수 없습니다."));
 
         checkReview = reviewRepository.save(
@@ -151,13 +152,13 @@ public class ReviewServiceImpl implements ReviewService {
         Product checkProduct = productRepository.findById(reqReviewDeleteDto.getProductId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품을 찾을 수 없습니다."));
 
-        Orders checkOrders = ordersRepository.findById(reqReviewDeleteDto.getOrderId())
+        Orders checkOrders = ordersRepository.findByOrdersIdAndProduct(reqReviewDeleteDto.getOrderId(), checkProduct)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("주문 내역을 찾을 수 없습니다."));
 
-        Review checkReview = reviewRepository.findById(re_id)
+        Review checkReview = reviewRepository.findByProductAndOrdersAndReId(checkProduct, checkOrders, re_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("후기를 찾을 수 없습니다."));
 
-        reviewRepository.updateReDeleted(re_id);
+        reviewRepository.updateReDeleted(checkReview.getReId());
 
         return new ResResultDto(checkReview.getReId(), "후기를 삭제 했습니다.");
     }
@@ -173,11 +174,10 @@ public class ReviewServiceImpl implements ReviewService {
         if (reviewRepository.findByOrders(checkOrders).isEmpty() &&
                 checkOrders.getOrdersStatus().equals(OrdersStatus.CONFIRM.getStatus())) {
 
-            return new ResResultDto(0L, "후기를 작성할 수 있습니다.");
-        }
+            return new ResResultDto(1L, "후기를 작성할 수 있습니다.");
+        } else if(reviewRepository.findByOrders(checkOrders).isPresent()) {
 
-        if (reviewRepository.findByOrders(checkOrders).isPresent()){
-            return new ResResultDto(1L, "후기를 수정할 수 있습니다.");
+            return new ResResultDto(2L, "후기를 수정할 수 있습니다.");
         }
 
         return new ResResultDto(-1L, "후기를 찾을 수 없습니다.");

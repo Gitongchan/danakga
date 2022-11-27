@@ -83,7 +83,7 @@ public class AnswerServiceImpl implements AnswerService {
         CompanyInfo checkCompanyInfo = companyRepository.findByUserInfo(checkUserInfo)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
-        Qna checkQna = qnaRepository.findById(qn_id)
+        Qna checkQna = qnaRepository.findByProductAndQnId(checkProduct, qn_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의 사항을 찾을 수 없습니다."));
 
         /* 가게 아이디 값이 일치하고, 매니저인 경우에만 작성 가능 */
@@ -114,10 +114,13 @@ public class AnswerServiceImpl implements AnswerService {
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
+        Product checkProduct = productRepository.findById(p_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다."));
+
         CompanyInfo checkCompanyInfo = companyRepository.findByUserInfo(checkUserInfo)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
-        Qna checkQna = qnaRepository.findById(qn_id)
+        Qna checkQna = qnaRepository.findByProductAndQnId(checkProduct, qn_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
 
         Answer checkAnswer = answerRepository.findByAnIdAndQna(an_id, checkQna)
@@ -152,10 +155,13 @@ public class AnswerServiceImpl implements AnswerService {
         UserInfo checkUserInfo = userRepository.findById(userInfo.getId())
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
 
+        Product checkProduct = productRepository.findById(p_id)
+                .orElseThrow(() -> new CustomException.ResourceNotFoundException("상품 정보를 찾을 수 없습니다."));
+
         CompanyInfo checkCompanyInfo = companyRepository.findByUserInfo(checkUserInfo)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("가게 정보를 찾을 수 없습니다."));
 
-        Qna checkQna = qnaRepository.findById(qn_id)
+        Qna checkQna = qnaRepository.findByProductAndQnId(checkProduct, qn_id)
                 .orElseThrow(() -> new CustomException.ResourceNotFoundException("문의사항을 찾을 수 없습니다."));
 
         Answer checkAnswer = answerRepository.findByAnIdAndQna(an_id, checkQna)
