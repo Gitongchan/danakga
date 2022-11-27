@@ -19,6 +19,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     /* 주문번호로 후기 조회 */
     Optional<Review> findByOrders(Orders orders);
 
+    Optional<Review> findByProductAndOrdersAndReId(Product product, Orders orders, Long re_id);
     /* 상품의 후기 목록 조회 */
     Page<Review> findByProductAndReDeleted(Product product, String deleted, Pageable pageable);
     
