@@ -43,6 +43,9 @@
 ### 🌐 시스템 아키텍처
 <img src="https://user-images.githubusercontent.com/71693517/203068217-186af690-4fd0-459b-a823-a46cbc88b9cc.png" width="700px">
 
+### 🌐 ERD
+![image](https://github.com/Gitongchan/danakga/assets/71696834/b40bb857-e440-4e74-932f-502d46c0ef32)
+
 
 ### 💻 기능 예시
 <h3>1. 낚시 용품 구매 </h3>
